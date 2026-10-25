@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>How it works · Specimen</title>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+body{margin:0}
+a{color:#111}a:hover{color:#555}
+.pg{-webkit-font-smoothing:antialiased}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px;box-sizing:border-box}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;border-bottom:1px solid #E6E6E6}
+.wm{font-weight:700;font-size:17px;letter-spacing:-0.01em;text-decoration:none;color:#111}
+.wm span{font-weight:400;color:#5F5F5F}
+.navl{display:flex;gap:28px;font-size:14px;flex-wrap:wrap}
+.navl a{text-decoration:none;color:#3A3A3A}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:8px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.btn-p{background:#111;color:#fff;border:1px solid #111}
+.btn-g{background:#fff;color:#111;border:1px solid #CFCFCF}
+.card{border:1px solid #E6E6E6;border-radius:12px;background:#fff;box-sizing:border-box}
+.muted{color:#5F5F5F}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.lbl{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#6B6B6B}
+.h2{font-size:26px;font-weight:600;letter-spacing:-0.015em;margin:0}
+.h3{font-size:16px;font-weight:600;margin:0}
+.step{display:grid;grid-template-columns:48px 1fr 150px;gap:20px;padding:18px 0;border-bottom:1px solid #EFEFEF;align-items:start}
+.step:last-child{border-bottom:0}
+.num{width:36px;height:36px;border-radius:50%;border:1px solid #111;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;font-family:"JetBrains Mono",ui-monospace,monospace}
+.who{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:999px;font-size:11px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;border:1px solid #CFCFCF;color:#3A3A3A;white-space:nowrap}
+.who.m{background:#111;color:#fff;border-color:#111}
+.code{background:#F5F5F5;border:1px solid #E6E6E6;border-radius:8px;padding:12px 14px;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12.5px;line-height:1.6;white-space:pre;overflow-x:auto;color:#222}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#6B6B6B;padding:10px 12px;border-bottom:1px solid #E6E6E6}
+.tbl td{padding:12px;border-bottom:1px solid #EFEFEF;vertical-align:top}
+</style>
+</helmet>
+<div class="pg" style="font-family: Inter, system-ui, sans-serif; color: #111; background: #fff; min-height: 100vh; display: flex; flex-direction: column;">
+
+<div class="wrap" style="width: 100%;">
+<nav class="nav" aria-label="Primary">
+<a class="wm" href="home.html">Specimen <span>· Design systems from any URL</span></a>
+<div class="navl">
+<a href="home.html">Showcase</a>
+<a href="recent-runs.html">Recent runs</a>
+<a href="how-it-works.html">How it works</a>
+<a href="https://github.com/BrandonChurch93">GitHub</a>
+</div>
+</nav>
+</div>
+
+<section class="wrap" style="width: 100%; padding-top: 56px; display: flex; flex-direction: column; gap: 16px; max-width: 880px;">
+<h1 style="margin: 0; font-size: 40px; letter-spacing: -0.02em; font-weight: 700;">How it works</h1>
+<p class="muted" style="margin: 0; font-size: 17px; line-height: 1.55;">Most of the pipeline is plain code. A model is used in two places, and only where judgment is needed: naming what a thing is, and writing the report. Everything measurable is measured.</p>
+</section>
+
+<section class="wrap" style="width: 100%; padding-top: 40px; display: flex; flex-direction: column; gap: 16px;">
+<h2 class="h2" style="font-size: 20px;">The pipeline</h2>
+<div class="card" style="padding: 8px 28px;">
+
+<div class="step"><span class="num">1</span><div style="display: flex; flex-direction: column; gap: 4px;"><span class="h3">Crawl</span><span class="muted" style="font-size: 14px;">Headless Chromium opens the URL, reads sitemap.xml, header and footer navigation, and collects candidate pages. Cookie banners are dismissed, client-rendered apps are waited for.</span></div><span class="who">Deterministic</span></div>
+
+<div class="step"><span class="num">2</span><div style="display: flex; flex-direction: column; gap: 4px;"><span class="h3">Select pages</span><span class="muted" style="font-size: 14px;">Candidates are scored for component coverage: pricing, forms, docs, lists, empty states. Pages sharing a template are folded to one. A short text-only model pass picks the final set, within the page cap.</span></div><span class="who m">Model · Haiku</span></div>
+
+<div class="step"><span class="num">3</span><div style="display: flex; flex-direction: column; gap: 4px;"><span class="h3">Capture</span><span class="muted" style="font-size: 14px;">Each page at 1440 and 390 px: DOM, computed styles for every element, screenshots. Controls are hovered, focused and tabbed through so states are captured, not guessed.</span></div><span class="who">Deterministic</span></div>
+
+<div class="step"><span class="num">4</span><div style="display: flex; flex-direction: column; gap: 4px;"><span class="h3">Cluster tokens</span><span class="muted" style="font-size: 14px;">Raw values become tokens: colors by ΔE, type by family, size, weight and line height, spacing by frequency against a base grid, radii and shadows by exact match. Usage is counted.</span></div><span class="who">Deterministic</span></div>
+
+<div class="step"><span class="num">5</span><div style="display: flex; flex-direction: column; gap: 4px;"><span class="h3">Detect components</span><span class="muted" style="font-size: 14px;">Elements are fingerprinted by tag, class pattern, computed style and box ratio, then clustered. Each cluster gets a crop, its signature and its states.</span></div><span class="who">Deterministic</span></div>
+
+<div class="step"><span class="num">6</span><div style="display: flex; flex-direction: column; gap: 4px;"><span class="h3">Name and group</span><span class="muted" style="font-size: 14px;">A model sees each cluster's crop and signature and answers one question: what is this, and which variants belong together. Batched per page, cached rubric, structured output.</span></div><span class="who m">Model · Haiku</span></div>
+
+<div class="step"><span class="num">7</span><div style="display: flex; flex-direction: column; gap: 4px;"><span class="h3">Run checks</span><span class="muted" style="font-size: 14px;">Contrast on real foreground and background pairs, focus visibility, tap target size at the mobile viewport, accessible names, reduced motion. Numbers, not opinions.</span></div><span class="who">Deterministic</span></div>
+
+<div class="step"><span class="num">8</span><div style="display: flex; flex-direction: column; gap: 4px;"><span class="h3">Compute drift</span><span class="muted" style="font-size: 14px;">Near-duplicate tokens, off-grid values, variants that differ by a pixel. A proposed clean set is derived that keeps every contrast ratio at or above the current one.</span></div><span class="who">Deterministic</span></div>
+
+<div class="step"><span class="num">9</span><div style="display: flex; flex-direction: column; gap: 4px;"><span class="h3">Write the report and exports</span><span class="muted" style="font-size: 14px;">The drift narrative, design-system.md and the prompt text are written from the computed facts. Token files and the MCP server are generated directly from the data.</span></div><span class="who m">Model · Sonnet</span></div>
+
+</div>
+</section>
+
+<section class="wrap" style="width: 100%; padding-top: 40px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px;">
+<div class="card" style="padding: 24px; display: flex; flex-direction: column; gap: 12px;">
+<h2 class="h2" style="font-size: 18px;">Cost and limits</h2>
+<p class="muted" style="margin: 0; font-size: 14px; line-height: 1.55;">A typical run costs well under a dollar. The site runs on a fixed daily budget and pauses when it is spent. Each visitor gets two runs a day and twelve pages per run.</p>
+<p class="muted" style="margin: 0; font-size: 14px; line-height: 1.55;">Your own key lifts both limits and raises the page cap to forty. It stays in your browser and is sent only with your requests.</p>
+<div class="code">model routing
+  select, name, group   claude-haiku
+  report, docs, prompt  claude-sonnet
+  anything else         no model</div>
+</div>
+<div class="card" style="padding: 24px; display: flex; flex-direction: column; gap: 12px;">
+<h2 class="h2" style="font-size: 18px;">What the checks are, and are not</h2>
+<p class="muted" style="margin: 0; font-size: 14px; line-height: 1.55;">The five checks cover the parts of WCAG 2.2 that can be measured from a rendered page. They do not cover reading order, alternative text quality, keyboard traps, or anything that needs a human.</p>
+<p class="muted" style="margin: 0; font-size: 14px; line-height: 1.55;">A component that passes every check is not "accessible". It has passed five measurements. The page says exactly which.</p>
+</div>
+</section>
+
+<section class="wrap" style="width: 100%; padding-top: 24px; display: flex; flex-direction: column; gap: 16px;">
+<h2 class="h2" style="font-size: 20px;">How it is tested</h2>
+<div class="card" style="overflow: hidden;">
+<table class="tbl">
+<thead><tr><th>Fixture site</th><th>What it proves</th><th>Tokens</th><th>Components</th><th>Preview match</th></tr></thead>
+<tbody>
+<tr><td style="font-weight: 600;">Clean</td><td class="muted">A small, well-kept system extracts with no false drift</td><td class="mono">precision 1.00 · recall 0.98</td><td class="mono">0.96 · 0.94</td><td class="mono">99.1 %</td></tr>
+<tr><td style="font-weight: 600;">Messy</td><td class="muted">Deliberate near-duplicates and off-grid values are all caught</td><td class="mono">0.97 · 0.99</td><td class="mono">0.91 · 0.90</td><td class="mono">97.4 %</td></tr>
+<tr><td style="font-weight: 600;">Tailwind</td><td class="muted">Utility classes cluster into tokens, not thousands of raw values</td><td class="mono">0.98 · 0.96</td><td class="mono">0.93 · 0.89</td><td class="mono">98.0 %</td></tr>
+<tr><td style="font-weight: 600;">CSS-in-JS</td><td class="muted">Hashed class names do not break component detection</td><td class="mono">0.96 · 0.95</td><td class="mono">0.88 · 0.87</td><td class="mono">96.2 %</td></tr>
+<tr><td style="font-weight: 600;">Component library</td><td class="muted">A site built on a known library maps back to its own component names</td><td class="mono">0.99 · 0.97</td><td class="mono">0.95 · 0.93</td><td class="mono">98.8 %</td></tr>
+</tbody>
+</table>
+</div>
+<p class="muted" style="margin: 0; font-size: 13px;">The fixture sites and their expected results live in the repository. Every change to the pipeline runs against all five before it ships. Numbers above are the current build.</p>
+</section>
+
+<section class="wrap" style="width: 100%; padding-top: 32px; padding-bottom: 48px; display: flex; gap: 12px; flex-wrap: wrap;">
+<a class="btn btn-p" href="https://github.com/BrandonChurch93">Read the source</a>
+<a class="btn btn-g" href="home.html">Try it on a site</a>
+</section>
+
+<footer class="wrap" style="width: 100%; margin-top: auto; padding-top: 24px; padding-bottom: 32px; border-top: 1px solid #E6E6E6; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 13px;">
+<span class="muted">Open source · MIT · Built by <a href="https://www.brandonchurchportfolio.com">Brandon Church</a></span>
+<span class="muted">Runs are never shown publicly unless they are in the showcase.</span>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1800}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

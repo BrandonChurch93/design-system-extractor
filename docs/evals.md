@@ -1,0 +1,109 @@
+# Evals
+
+Five fixture sites with known expected results are the proof that the pipeline works, the safety net for every change, and the numbers the How it works page shows. A sixth fixture seeds the local showcase and the Compare page and is not scored. They are built in P3 and never edited afterward except to fix a fixture defect (logged as a decision), because every later phase's thresholds depend on them.
+
+## The fixture sites
+
+Static sites in `fixtures/sites/{name}/` with an `index.html` and the pages below, served at `http://localhost:4100/sites/{name}/` by `pnpm fixtures:serve` (the crawler scopes a run to that path prefix, see `docs/specs/crawler.md`). Each has `expected.json` describing pages, tokens, components, planted check failures and planted drift. Each uses only self-hosted fonts (one open font family checked into `fixtures/fonts/`, served at `http://localhost:4100/fonts/`) so results are deterministic. All six share the host `localhost:4100`, which is what lets Compare treat `messy` and `messy-after` as two runs of one site.
+
+### 1 · clean
+
+A small, well-kept SaaS marketing site: home, pricing, features, signup, login, docs index, one docs page, contact, 404 (served as a real 404). Eight colors (navy, blue, teal, success, warning, danger, two neutrals), a 4 px grid, one radius scale, two shadows. Components: top nav (with scrolled state), footer, primary, secondary and ghost buttons in two sizes, text input with label and error instance, select, checkbox, toggle, pricing card (two variants), feature card, status badge (three semantic variants), data table, breadcrumb, tabs, code block, alert, empty state (on 404), an avatar, a dropdown menu with a trigger, and a mobile menu button. One disabled button instance, one `aria-invalid` input instance. Everything passes every check except two planted failures: one icon-only button without a name, and one caption at 4.2:1.
+
+No drift, which means the fixture must satisfy every rule in `docs/specs/drift.md` by construction: no two neutrals within ΔE 6 and no two same-hue chromatics within ΔE 8 (so hover and active colors must differ from their rest colors by more than that, or reuse an existing token), no two on-grid spacing steps within 4 px that are both under 5% of usage, no component variants within the collapse tolerances, no two type styles within 1 px of size or 2 px of line height at the same size, at most 4 radii and 3 shadows. The fixture author checks these numbers before P3 closes.
+
+Proves: tokens extract exactly, every state is captured, previews render live, no false drift, the planted check failures are found.
+
+### 2 · messy
+
+The same site rebuilt badly: 14 grays, 3 blues within ΔE 4, two off-grid spacing values (10 and 18), button variants that differ by 1 px padding and 2 px radius, two type styles 1 px apart, a consent banner on load, a third-party script tag (blocked by the tracker list), and five planted check failures (contrast on a badge, `outline: none` on a link, a 36 px tap target, a placeholder-only input, an animation with no reduced-motion rule). It also carries the capture and preview test material: a signup form that sets `data-submitted` on submit (must stay unset), a contact-page button that calls `confirm()` (must be auto-dismissed), and one component whose CSS depends on a background image that sanitization strips, so its preview must be `captured` with the `diff` reason.
+
+Proves: drift findings have 100% recall, the consent banner is dismissed, the tracker is blocked, planted failures are all found, no planted pass is flagged, forms are never submitted, dialogs are dismissed, an unfaithful preview is detected.
+
+### 3 · tailwind
+
+The clean site's design implemented with Tailwind utility classes, compiled CSS committed (built once with `pnpm fixtures:build` in P3; the compiled file is the fixture). Includes a dark variant stylesheet under `prefers-color-scheme: dark` (to exercise dark theme detection) that is not extracted.
+
+Proves: utility classes cluster to tokens, `tailwind` framework hint, dark theme detected, the Tailwind code tab appears in the panel.
+
+### 4 · css-in-js
+
+The clean site with every class name hashed (`css-1a2b3c4`, `sc-AxjAm`), inline `style` attributes on some elements, and custom properties for colors (`var(--c-primary)`), pre-rendered as static HTML.
+
+Proves: hashed classes do not break clustering, custom properties resolve, the `css-in-js` hint, live previews still work through matched CSS.
+
+### 5 · library
+
+A site built on an MIT component library's CSS (vendor a small one, for example Pico CSS or Bulma, with its real class names) using its buttons, forms, cards, tables, tags and navbar.
+
+Proves: components map to recognizable names, library-style selectors scope correctly in previews.
+
+### 6 · messy-after (not scored)
+
+The messy site with roughly half of its drift fixed: grays reduced from 14 to 9, the off-grid spacing kept, two button variants collapsed, two of the five planted failures fixed, and a toast and a stepper component added. It exists so `pnpm db:seed:fixtures` yields six showcase entries (no orphan grid rows) and so the Compare page has a real before-and-after pair on one host. It has no `expected.json` thresholds; the Compare e2e test asserts the expected deltas (grays 14 → 9, two new components, one collapsed variant pair, checks passed increasing by exactly the two fixes).
+
+## expected.json
+
+```
+{
+  "pages": [{ "path", "reason" }],
+  "tokens": {
+    "colors": [{ "value", "group", "minUsage" }],
+    "type": [{ "role", "size", "weight" }],
+    "space": { "base": 4, "steps": [4, 8, 12, 16, 24, 32, 48, 64, 96], "offGrid": [] },
+    "radius": [4, 8, 12, 999],
+    "shadowCount": 2,
+    "breakpoints": [640, 1024]
+  },
+  "components": [{ "type", "name", "page", "bbox": {x, y, w, h}, "viewport": "desktop", "variants": 3, "states": ["default","hover","focus","active","disabled"] }],
+  "checks": { "plantedFailures": [{ "component", "check", "detailContains" }], "plantedPasses": [...] },
+  "drift": { "nearDuplicateColors": [["#6B6B6B","#6E6E6E"]], "offGrid": [10, 18], "variantCollapses": [{ "component": "Button", "count": 2 }], "expectNone": false },
+  "previews": { "minLiveRate": 0.9 }
+}
+```
+
+## Metrics
+
+Computed by `pnpm evals` into `fixtures/results.json` with a per-fixture row:
+
+- **Token precision and recall**: a predicted color matches an expected one when ΔE ≤ 2 and the group matches; type by role, size (±0.5) and weight; space, radius and breakpoints exact; shadow by count.
+- **Component precision and recall**: a predicted component matches when type matches and the bbox IoU of its first-seen instance against the expected bbox is ≥ 0.5 at the same viewport. Name is reported but not scored (names come from a model; the eval records agreement as a separate number).
+- **Variant accuracy**: expected variant count matched exactly, per matched component.
+- **State capture rate**: captured states / expected states, over matched components.
+- **Check accuracy**: planted failures found / planted; planted passes not flagged / planted. Both must be 100%.
+- **Drift recall**: planted findings found / planted; **false drift**: findings on `expectNone` fixtures (must be 0; raw-spread evidence rows are not findings).
+- **Preview live rate**: live components / components. On the How it works page this is shown as "Live previews" with the counts, "38 of 46".
+- **Selection exactness**: selected pages equal expected pages.
+
+## Thresholds (the floor)
+
+| Fixture | Tokens P / R | Components P / R | Variants | States | Checks | Drift recall · false | Live rate |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| clean | 1.00 / 0.98 | 0.95 / 0.95 | 0.95 | 0.95 | 100% · 100% | n/a · 0 | 0.90 |
+| messy | 0.97 / 0.98 | 0.90 / 0.90 | 0.90 | 0.90 | 100% · 100% | 100% · n/a | 0.85 |
+| tailwind | 0.98 / 0.96 | 0.92 / 0.90 | 0.90 | 0.90 | 100% · 100% | n/a · 0 | 0.90 |
+| css-in-js | 0.96 / 0.95 | 0.88 / 0.87 | 0.85 | 0.90 | 100% · 100% | n/a · 0 | 0.75 |
+| library | 0.99 / 0.97 | 0.95 / 0.93 | 0.90 | 0.90 | 100% · 100% | n/a · 0 | 0.90 |
+
+Selection exactness is 100% on all five. The `pnpm evals` command fails if any cell is below its floor. With `--through <stage>` it scores only the metrics available up to that stage (selection through `capture`; tokens through `tokens`; components, variants and states through `components`; live rate through `previews`; checks through `checks`; drift through `drift`) and reports the rest as not yet measured. The How it works page shows the current numbers from `results.json`, never these floors.
+
+## Visual regression
+
+`pnpm qa:visual`: Playwright screenshots of every page and state at 1440 × 900, 820 × 1180 and 390 × 844, compared with committed goldens in `apps/web/test/goldens/` using a 0.1% pixel threshold with anti-aliasing ignored. The first run of a page generates its golden; from then on a diff fails the gate and an intentional update requires a line in STATUS saying which page changed and why. Goldens use fixture runs seeded by `pnpm db:seed:fixtures`, so they are deterministic.
+
+## Design QA
+
+`pnpm qa:design` writes the same screenshots plus every state (hover and focus captured by Playwright actions, the in-progress page at three poll stages, the panel open, the sheet open at 390, every state route, the catalog) into `qa/{page}/{viewport}/{state}.png` and a `qa/index.html` contact sheet. This is what the self-review looks at. It is not a test; it is the evidence the gate requires you to look at.
+
+## Accessibility and performance
+
+- `pnpm qa:axe`: axe-core on every page and state, zero violations, including the in-progress face and the open panel.
+- `pnpm qa:lighthouse`: Home and a complete fixture run page, mobile and desktop presets: performance ≥ 90, accessibility 100, best practices 100, SEO 100.
+
+## Model recordings
+
+`pnpm evals` forces `replay` regardless of `.env.local`; only `env DSE_MODEL_MODE=live pnpm evals` or `env DSE_MODEL_MODE=record pnpm evals` on the command line overrides it. In replay, a recording miss fails the eval run and names the call, so a changed prompt is noticed. Recordings for the fixtures are made with `record` once per phase that adds a model call (P3, P4, P5, P8), and refreshed by the final live eval in P15. Recording spend is part of the $20 dev cap, with $4 reserved for P15. If a prompt changes after its recording, re-record.
+
+## Deterministic seeds and frozen partial documents
+
+`pnpm db:seed:fixtures` makes goldens and QA screenshots deterministic: it runs the six fixtures through the queue, then rewrites each seeded run's `id` (fixed ids `seedclean00`, `seedmessy00`, `seedtailwi0`, `seedcssinj0`, `seedlibrar0`, `seedmessyaf`), `createdAt`, `startedAt`, `finishedAt`, `durationMs` and `cost` to fixed values from `fixtures/seed.json` (dates in October 2026, so the Compare title reads a fixed span). It also stores three frozen in-progress documents for the clean fixture (after `select`, after `tokens`, after `components`) as runs `seedprog001`, `seedprog002`, `seedprog003` with status `running` and the column `qa_frozen = true`; the worker never picks a frozen run up, `/api/health` ignores them, and `GET /api/runs/{id}` serves them as they are, so the in-progress face can be screenshotted at three stages. `qa_frozen` runs exist only in development and test databases.

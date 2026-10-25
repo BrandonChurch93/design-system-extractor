@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Direction A · Studio</title>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+body{margin:0}
+a{color:#23201E}a:hover{color:#6A635E}
+.pg{-webkit-font-smoothing:antialiased}
+.wrap{max-width:1160px;margin:0 auto;padding:0 40px;box-sizing:border-box}
+.nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.wm{font-weight:700;font-size:17px;letter-spacing:-0.01em;text-decoration:none;color:#23201E}
+.wm span{font-weight:400;color:#6A635E}
+.navl{display:flex;gap:28px;font-size:14px;font-weight:500}
+.navl a{text-decoration:none;color:#3E3936}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 20px;border-radius:14px;font:inherit;font-size:14px;font-weight:600;text-decoration:none;box-sizing:border-box}
+.btn-p{background:#23201E;color:#fff}
+.btn-g{background:#fff;color:#23201E;border:1px solid rgba(35,32,30,0.14)}
+.card{background:#fff;border:1px solid rgba(35,32,30,0.06);border-radius:18px;box-shadow:0 12px 40px rgba(226,96,98,0.07),0 1px 3px rgba(35,32,30,0.05);box-sizing:border-box}
+.muted{color:#6A635E}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.lbl{font-size:13px;font-weight:500;color:#6A635E}
+.stat{display:flex;flex-direction:column;gap:6px;padding:22px 24px;flex:1 1 160px}
+.stat b{font-size:34px;font-weight:700;letter-spacing:-0.02em;line-height:1}
+.sw{border-radius:12px;box-shadow:0 6px 18px rgba(35,32,30,0.08);box-sizing:border-box}
+.swl{display:flex;flex-direction:column;gap:8px;flex:1 1 110px;min-width:0}
+.swl .mono{font-size:11.5px;color:#3E3936;letter-spacing:0.02em}
+.tabs{display:flex;gap:6px}
+.tabs a{text-decoration:none;color:#3E3936;font-size:14px;font-weight:500;padding:10px 16px;border-radius:999px}
+.tabs a.on{background:#23201E;color:#fff}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:#F3EFEC;font-size:11px;color:#3E3936;font-family:"JetBrains Mono",ui-monospace,monospace}
+.cc{display:flex;flex-direction:column;text-decoration:none;color:#23201E;overflow:hidden}
+.prev{height:150px;background:#FCF5F3;display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;box-sizing:border-box}
+.st{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#6A635E}
+.st i{width:8px;height:8px;border-radius:50%;border:1.5px solid #23201E;box-sizing:border-box;display:inline-block}
+.st i.on{background:#23201E}
+.ok{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
+@media (max-width: 1023px){.g3{grid-template-columns:repeat(2, minmax(0, 1fr)) !important}}
+@media (max-width: 640px){.wrap{padding:0 20px}.nav{height:auto;min-height:60px;flex-wrap:wrap;gap:8px 20px;padding:12px 0}.navl{gap:16px;flex-wrap:wrap}.g3{grid-template-columns:1fr !important}.stat{flex:1 1 40%}.stat b{font-size:28px}.tabs{overflow-x:auto;padding-bottom:4px}.tabs a{white-space:nowrap}h1{font-size:34px !important}}
+</style>
+</helmet>
+<div class="pg" style="font-family: 'Plus Jakarta Sans', system-ui, sans-serif; color: #23201E; background: #FCFAF8; min-height: 100vh; display: flex; flex-direction: column;">
+
+<div class="wrap" style="width: 100%;">
+<nav class="nav" aria-label="Primary">
+<a class="wm" href="#home">Specimen <span>· Design systems from any URL</span></a>
+<div class="navl"><a href="#s">Showcase</a><a href="#r">Recent runs</a><a href="#h">How it works</a><a href="#g">GitHub</a></div>
+</nav>
+</div>
+
+<section class="wrap" style="width: 100%; padding-top: 44px; display: flex; flex-direction: column; gap: 28px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span class="muted" style="font-size: 13px;">Showcase / tidewater.app</span>
+<h1 style="margin: 0; font-size: 44px; letter-spacing: -0.025em; font-weight: 700; line-height: 1.05;">tidewater.app</h1>
+<p class="muted" style="margin: 0; font-size: 14px;">12 pages · 2 viewports · crawled Oct 25 2026 · 2 min 41 s · Tailwind detected</p>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<a class="btn btn-g" href="#share">Share</a>
+<a class="btn btn-g" href="#again">Run again</a>
+<a class="btn btn-g" href="#cmp">Compare</a>
+<a class="btn btn-p" href="#exports">Export</a>
+</div>
+</div>
+
+<div class="card" style="display: flex; flex-wrap: wrap;">
+<div class="stat"><b>31</b><span class="lbl">Colors</span></div>
+<div class="stat"><b>14</b><span class="lbl">Type styles</span></div>
+<div class="stat"><b>9</b><span class="lbl">Spacing steps</span></div>
+<div class="stat"><b>46</b><span class="lbl">Components</span></div>
+<div class="stat"><b>118 <span class="muted mono" style="font-size: 14px; font-weight: 400;">of 132</span></b><span class="lbl">Checks passed</span></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<span class="lbl">Palette</span>
+<div style="display: flex; gap: 14px; flex-wrap: wrap;">
+<div class="swl"><div class="sw" style="height: 96px; background: #0B1F3A;"></div><span class="mono">#0B1F3A</span><span class="muted" style="font-size: 11.5px;">navy · 412 uses</span></div>
+<div class="swl"><div class="sw" style="height: 96px; background: #2458E6;"></div><span class="mono">#2458E6</span><span class="muted" style="font-size: 11.5px;">brand · 268 uses</span></div>
+<div class="swl"><div class="sw" style="height: 96px; background: #0FA3A3;"></div><span class="mono">#0FA3A3</span><span class="muted" style="font-size: 11.5px;">teal · 54 uses</span></div>
+<div class="swl"><div class="sw" style="height: 96px; background: #E8A317;"></div><span class="mono">#E8A317</span><span class="muted" style="font-size: 11.5px;">amber · 31 uses</span></div>
+<div class="swl"><div class="sw" style="height: 96px; background: #D64545;"></div><span class="mono">#D64545</span><span class="muted" style="font-size: 11.5px;">red · 19 uses</span></div>
+<div class="swl"><div class="sw" style="height: 96px; background: #3A3A3A;"></div><span class="mono">#3A3A3A</span><span class="muted" style="font-size: 11.5px;">text · 1,044 uses</span></div>
+<div class="swl"><div class="sw" style="height: 96px; background: #D6D6D6;"></div><span class="mono">#D6D6D6</span><span class="muted" style="font-size: 11.5px;">border · 388 uses</span></div>
+<div class="swl"><div class="sw" style="height: 96px; background: #F4F6FA;"></div><span class="mono">#F4F6FA</span><span class="muted" style="font-size: 11.5px;">surface · 220 uses</span></div>
+</div>
+</div>
+
+<div style="background: #23201E; color: #FCFAF8; border-radius: 18px; padding: 30px 34px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-size: 24px; font-weight: 600; letter-spacing: -0.015em;">14 grays across 12 pages. 5 would do.</span>
+<span style="font-size: 14px; color: #B9B1AB;">Six button variants where three cover every use. Nine spacing values, two of them off the 4 px grid.</span>
+</div>
+<a href="#drift" class="btn" style="background: #FCFAF8; color: #23201E;">Read the drift report</a>
+</div>
+
+<nav class="tabs" aria-label="Sections">
+<a class="on" href="#tokens">Tokens</a><a href="#components">Components</a><a href="#checks">Checks</a><a href="#drift">Drift</a><a href="#exports">Exports</a>
+</nav>
+</section>
+
+<section class="wrap" style="width: 100%; padding-top: 36px; padding-bottom: 48px; display: flex; flex-direction: column; gap: 20px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;">
+<h2 style="margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.015em;">Components</h2>
+<span class="muted" style="font-size: 14px;">46 found · open one for states, code and tokens</span>
+</div>
+<div class="g3" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+
+<a href="#c1" class="card cc">
+<div class="prev">
+<span style="display: inline-flex; align-items: center; height: 40px; padding: 0 18px; border-radius: 8px; background: #2458E6; color: #fff; font-weight: 600; font-size: 14px;">Get started</span>
+<span style="display: inline-flex; align-items: center; height: 40px; padding: 0 18px; border-radius: 8px; border: 1px solid #0B1F3A; color: #0B1F3A; font-weight: 600; font-size: 14px;">Learn more</span>
+</div>
+<div style="padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: 600; font-size: 15px;">Button</span><span class="ok">4 of 4 checks</span></div>
+<span class="muted" style="font-size: 12.5px;">First seen on /pricing · 11 pages · 3 variants</span>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;"><span class="st"><i class="on"></i>Default</span><span class="st"><i class="on"></i>Hover</span><span class="st"><i class="on"></i>Focus</span><span class="st"><i class="on"></i>Active</span><span class="st"><i class="on"></i>Disabled</span></div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">blue-600</span><span class="tag">radius-8</span><span class="tag">label</span></div>
+</div>
+</a>
+
+<a href="#c2" class="card cc">
+<div class="prev" style="flex-direction: column; align-items: stretch; gap: 6px;">
+<span style="font-size: 12px; font-weight: 500; color: #0B1F3A;">Email</span>
+<span style="display: flex; align-items: center; height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid #B5B5B5; background: #fff; color: #8A8A8A; font-size: 14px;">you@company.com</span>
+</div>
+<div style="padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: 600; font-size: 15px;">Text input</span><span class="ok">3 of 4 checks</span></div>
+<span class="muted" style="font-size: 12.5px;">First seen on /signup · 4 pages · 4 variants</span>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;"><span class="st"><i class="on"></i>Default</span><span class="st"><i class="on"></i>Hover</span><span class="st"><i class="on"></i>Focus</span><span class="st"><i class="on"></i>Error</span><span class="st"><i></i>Disabled</span></div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">gray-300</span><span class="tag">radius-8</span><span class="tag">body</span></div>
+</div>
+</a>
+
+<a href="#c3" class="card cc">
+<div class="prev">
+<span style="display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: #D8F3EE; color: #0B6B5E; font-size: 12px; font-weight: 600;">Active</span>
+<span style="display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: #FDF0D5; color: #7A5200; font-size: 12px; font-weight: 600;">Pending</span>
+<span style="display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: #FBE3E3; color: #9A2B2B; font-size: 12px; font-weight: 600;">Failed</span>
+</div>
+<div style="padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-weight: 600; font-size: 15px;">Status badge</span><span class="ok">2 of 4 checks</span></div>
+<span class="muted" style="font-size: 12.5px;">First seen on /changelog · 3 pages · 5 variants</span>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;"><span class="st"><i class="on"></i>Default</span></div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">success</span><span class="tag">warning</span><span class="tag">danger</span></div>
+</div>
+</a>
+
+</div>
+</section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1180}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

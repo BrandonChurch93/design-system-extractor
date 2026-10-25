@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Run in progress · Specimen</title>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+body{margin:0}
+a{color:#111}a:hover{color:#555}
+.pg{-webkit-font-smoothing:antialiased}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px;box-sizing:border-box}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;border-bottom:1px solid #E6E6E6}
+.wm{font-weight:700;font-size:17px;letter-spacing:-0.01em;text-decoration:none;color:#111}
+.wm span{font-weight:400;color:#5F5F5F}
+.navl{display:flex;gap:28px;font-size:14px;flex-wrap:wrap}
+.navl a{text-decoration:none;color:#3A3A3A}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:8px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.btn-p{background:#111;color:#fff;border:1px solid #111}
+.btn-g{background:#fff;color:#111;border:1px solid #CFCFCF}
+.btn-s{height:36px;padding:0 12px;font-size:13px}
+.card{border:1px solid #E6E6E6;border-radius:12px;background:#fff;box-sizing:border-box}
+.muted{color:#5F5F5F}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.lbl{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#6B6B6B}
+.h2{font-size:22px;font-weight:600;letter-spacing:-0.01em;margin:0}
+.stage{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:#111}
+.stage.todo{color:#8A8A8A;font-weight:500}
+.ring{width:18px;height:18px;border-radius:50%;border:2px solid #111;box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none}
+.ring.done{background:#111;color:#fff}
+.ring.run{border-style:dashed}
+.ring.todo{border-color:#CFCFCF}
+.skel{background:#EFEFEF;border-radius:6px}
+.sw{height:72px;border-radius:8px;border:1px solid rgba(0,0,0,0.08);box-sizing:border-box;flex:1 1 90px}
+.log{background:#111;color:#D6D6D6;border-radius:12px;padding:18px 20px;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12.5px;line-height:1.7;white-space:pre;overflow-x:auto}
+.log b{color:#fff;font-weight:500}
+</style>
+</helmet>
+<div class="pg" style="font-family: Inter, system-ui, sans-serif; color: #111; background: #fff; min-height: 100vh; display: flex; flex-direction: column; gap: 0;">
+
+<div class="wrap" style="width: 100%;">
+<nav class="nav" aria-label="Primary">
+<a class="wm" href="home.html">Specimen <span>· Design systems from any URL</span></a>
+<div class="navl">
+<a href="home.html">Showcase</a>
+<a href="recent-runs.html">Recent runs</a>
+<a href="how-it-works.html">How it works</a>
+<a href="https://github.com/BrandonChurch93">GitHub</a>
+</div>
+</nav>
+</div>
+
+<section class="wrap" style="width: 100%; padding-top: 40px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span class="lbl">Extracting</span>
+<h1 style="margin: 0; font-size: 36px; letter-spacing: -0.02em; font-weight: 700;">tidewater.app</h1>
+<p class="muted" style="margin: 0; font-size: 14px;">Crawling 7 of 12 pages · 2 viewports · 1 min 12 s elapsed · usually finishes in about 3 minutes</p>
+</div>
+<div style="display: flex; gap: 8px;">
+<a class="btn btn-g" href="home.html">Cancel</a>
+<a class="btn btn-g" href="run-complete.html" title="Prototype shortcut">Skip to finished run</a>
+</div>
+</div>
+
+<div class="card" style="padding: 18px 22px; display: flex; gap: 28px; flex-wrap: wrap; align-items: center;">
+<span class="stage"><span class="ring done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>Pages · 12 found</span>
+<span class="stage"><span class="ring done"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg></span>Palette · 31 colors</span>
+<span class="stage"><span class="ring run"></span>Type · reading 7 of 12</span>
+<span class="stage todo"><span class="ring todo"></span>Spacing</span>
+<span class="stage todo"><span class="ring todo"></span>Components</span>
+<span class="stage todo"><span class="ring todo"></span>Checks</span>
+<span class="stage todo"><span class="ring todo"></span>Drift</span>
+</div>
+</section>
+
+<section class="wrap" style="width: 100%; padding-top: 32px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px;">
+
+<div class="card" style="padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;">
+<h2 class="h2" style="font-size: 16px;">Pages</h2>
+<span class="muted" style="font-size: 12px;">12 of 12 selected · 3 templates folded</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 0; font-size: 13px;">
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #EFEFEF;"><span class="mono">/</span><span class="muted">home</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #EFEFEF;"><span class="mono">/pricing</span><span class="muted">nav · tables, toggles</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #EFEFEF;"><span class="mono">/features</span><span class="muted">nav</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #EFEFEF;"><span class="mono">/signup</span><span class="muted">forms</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #EFEFEF;"><span class="mono">/login</span><span class="muted">forms, errors</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #EFEFEF;"><span class="mono">/docs</span><span class="muted">sitemap · docs template, 1 of 212</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #EFEFEF;"><span class="mono">/docs/getting-started</span><span class="muted">docs template, code blocks</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #EFEFEF;"><span class="mono">/blog</span><span class="muted">nav · list template</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #EFEFEF;"><span class="mono">/blog/launch-week</span><span class="muted">post template, 1 of 48</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #EFEFEF;"><span class="mono">/changelog</span><span class="muted">footer · badges, timeline</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #EFEFEF;"><span class="mono">/contact</span><span class="muted">footer · forms</span></div>
+<div style="display: flex; justify-content: space-between; padding: 8px 0;"><span class="mono">/404</span><span class="muted">empty state</span></div>
+</div>
+<p class="muted" style="margin: 0; font-size: 12px;">Picked for component coverage, not importance. Legal pages, tag archives and pagination were skipped.</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 24px;">
+<div class="card" style="padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;">
+<h2 class="h2" style="font-size: 16px;">Palette</h2>
+<span class="muted" style="font-size: 12px;">31 colors · 8 shown</span>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<div class="sw" style="background: #0B1F3A;"></div>
+<div class="sw" style="background: #2458E6;"></div>
+<div class="sw" style="background: #0FA3A3;"></div>
+<div class="sw" style="background: #E8A317;"></div>
+<div class="sw" style="background: #D64545;"></div>
+<div class="sw" style="background: #6B6B6B;"></div>
+<div class="sw" style="background: #D6D6D6;"></div>
+<div class="sw" style="background: #F4F6FA;"></div>
+</div>
+</div>
+
+<div class="card" style="padding: 22px 24px; display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;">
+<h2 class="h2" style="font-size: 16px;">Type</h2>
+<span class="muted" style="font-size: 12px;">Inter · JetBrains Mono · 6 of 14 styles so far</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; align-items: baseline; gap: 16px;"><span class="mono muted" style="font-size: 11px; width: 120px; flex: none;">56 / 64 · 700</span><span style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">Display</span></div>
+<div style="display: flex; align-items: baseline; gap: 16px;"><span class="mono muted" style="font-size: 11px; width: 120px; flex: none;">40 / 48 · 700</span><span style="font-size: 22px; font-weight: 700;">Heading 1</span></div>
+<div style="display: flex; align-items: baseline; gap: 16px;"><span class="mono muted" style="font-size: 11px; width: 120px; flex: none;">16 / 26 · 400</span><span style="font-size: 16px;">Body text at reading size</span></div>
+<div style="display: flex; align-items: center; gap: 16px;"><span class="skel" style="width: 120px; height: 12px; flex: none;"></span><span class="skel" style="width: 220px; height: 16px;"></span></div>
+<div style="display: flex; align-items: center; gap: 16px;"><span class="skel" style="width: 120px; height: 12px; flex: none;"></span><span class="skel" style="width: 180px; height: 16px;"></span></div>
+<div style="display: flex; align-items: center; gap: 16px;"><span class="skel" style="width: 120px; height: 12px; flex: none;"></span><span class="skel" style="width: 260px; height: 16px;"></span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="wrap" style="width: 100%; padding-top: 24px; display: flex; flex-direction: column; gap: 24px;">
+<div class="card" style="padding: 22px 24px; display: flex; flex-direction: column; gap: 16px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;">
+<h2 class="h2" style="font-size: 16px;">Components</h2>
+<span class="muted" style="font-size: 12px;">Waiting for the crawl to finish</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px;">
+<div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 12px; border-style: dashed;"><div class="skel" style="height: 96px;"></div><div class="skel" style="height: 14px; width: 60%;"></div><div class="skel" style="height: 12px; width: 40%;"></div></div>
+<div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 12px; border-style: dashed;"><div class="skel" style="height: 96px;"></div><div class="skel" style="height: 14px; width: 50%;"></div><div class="skel" style="height: 12px; width: 35%;"></div></div>
+<div class="card" style="padding: 16px; display: flex; flex-direction: column; gap: 12px; border-style: dashed;"><div class="skel" style="height: 96px;"></div><div class="skel" style="height: 14px; width: 65%;"></div><div class="skel" style="height: 12px; width: 30%;"></div></div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;">
+<span class="lbl">Live log</span>
+<a href="#log" class="muted" style="font-size: 12px;">Collapse</a>
+</div>
+<div class="log" id="log"><b>00:00.0</b>  queue      run a3f9 accepted · budget ok · 2 runs left today for this visitor
+<b>00:00.4</b>  crawl      sitemap.xml · 281 urls · nav 11 · footer 6
+<b>00:01.1</b>  select     3 templates folded (docs ×212, blog ×48, careers ×9) · 12 pages chosen
+<b>00:03.8</b>  capture    / · 1440 and 390 · 2 screenshots · 1,204 nodes
+<b>00:09.2</b>  capture    /pricing · hover 14 · focus 9 · tab 23
+<b>00:14.6</b>  tokens     colors 31 clustered from 212 raw values · ΔE threshold 2.3
+<b>00:31.0</b>  capture    /docs/getting-started · code blocks found · mono family JetBrains Mono
+<b>01:02.5</b>  type       6 styles confirmed · 8 candidates pending
+<b>01:12.3</b>  capture    /blog/launch-week …</div>
+</div>
+</section>
+
+<footer class="wrap" style="width: 100%; margin-top: auto; padding-top: 24px; padding-bottom: 32px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 13px;">
+<span class="muted">You can leave. This page keeps its link and fills in when you come back.</span>
+<span class="muted">Share link ready: <span class="mono">specimen.dev/r/a3f9</span></span>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1700}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

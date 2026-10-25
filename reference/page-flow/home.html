@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Home · Specimen</title>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+body{margin:0}
+a{color:#111}a:hover{color:#555}
+.pg{-webkit-font-smoothing:antialiased}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px;box-sizing:border-box}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;border-bottom:1px solid #E6E6E6}
+.wm{font-weight:700;font-size:17px;letter-spacing:-0.01em;text-decoration:none;color:#111}
+.wm span{font-weight:400;color:#5F5F5F}
+.navl{display:flex;gap:28px;font-size:14px;flex-wrap:wrap}
+.navl a{text-decoration:none;color:#3A3A3A}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:8px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.btn-p{background:#111;color:#fff;border:1px solid #111}
+.btn-g{background:#fff;color:#111;border:1px solid #CFCFCF}
+.chip{display:inline-flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;border:1px solid #D6D6D6;font-size:13px;color:#3A3A3A;background:#fff;text-decoration:none}
+.chip-on{background:#111;color:#fff;border-color:#111}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;background:#F0F0F0;font-size:12px;color:#3A3A3A;font-family:"JetBrains Mono",ui-monospace,monospace}
+.card{border:1px solid #E6E6E6;border-radius:12px;background:#fff;box-sizing:border-box}
+.muted{color:#5F5F5F}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.lbl{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#6B6B6B}
+.h2{font-size:22px;font-weight:600;letter-spacing:-0.01em;margin:0}
+.sc{display:flex;flex-direction:column;text-decoration:none;color:#111;overflow:hidden}
+.sc:hover{border-color:#111;color:#111}
+.inp{height:56px;flex:1 1 320px;min-width:0;border:1px solid #CFCFCF;border-radius:10px;padding:0 18px;font:inherit;font-size:16px;color:#111;background:#fff;box-sizing:border-box}
+.inp::placeholder{color:#8A8A8A}
+.inp:focus{outline:2px solid #111;outline-offset:2px}
+</style>
+</helmet>
+<div class="pg" style="font-family: Inter, system-ui, sans-serif; color: #111; background: #fff; min-height: 100vh; display: flex; flex-direction: column;">
+
+<div class="wrap" style="width: 100%;">
+<nav class="nav" aria-label="Primary">
+<a class="wm" href="home.html">Specimen <span>· Design systems from any URL</span></a>
+<div class="navl">
+<a href="#showcase">Showcase</a>
+<a href="recent-runs.html">Recent runs</a>
+<a href="how-it-works.html">How it works</a>
+<a href="https://github.com/BrandonChurch93">GitHub</a>
+</div>
+</nav>
+</div>
+
+<section class="wrap" style="width: 100%; padding-top: 96px; padding-bottom: 72px; display: flex; flex-direction: column; gap: 28px;">
+<h1 style="margin: 0; font-size: 56px; line-height: 1.05; letter-spacing: -0.025em; font-weight: 700; max-width: 760px;">Paste a URL. Get its design system back.</h1>
+<p class="muted" style="margin: 0; font-size: 18px; line-height: 1.5; max-width: 640px;">Tokens, components with every state, accessibility checks, and a drift report showing where the system is leaking.</p>
+<form style="display: flex; gap: 12px; flex-wrap: wrap; max-width: 760px; margin-top: 8px;" action="run-in-progress.html">
+<label for="url" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0);">Site URL</label>
+<input class="inp" id="url" type="url" placeholder="https://your-product.com">
+<a class="btn btn-p" href="run-in-progress.html" style="height: 56px; padding: 0 28px; font-size: 15px;">Extract</a>
+</form>
+<p class="muted" style="margin: 0; font-size: 13px;">Free · 2 runs a day per visitor · up to 12 pages per run · <a href="#key">Use your own key</a> for more</p>
+</section>
+
+<section id="showcase" class="wrap" style="width: 100%; padding-bottom: 80px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;">
+<h2 class="h2">Showcase</h2>
+<p class="muted" style="margin: 0; font-size: 14px;">Runs on sites we picked. Every run page has a share link.</p>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<a class="chip chip-on" href="#showcase">All</a>
+<a class="chip" href="#showcase">SaaS</a>
+<a class="chip" href="#showcase">Developer tools</a>
+<a class="chip" href="#showcase">Commerce</a>
+<a class="chip" href="#showcase">Finance</a>
+<a class="chip" href="#showcase">Government</a>
+<a class="chip" href="#showcase">Media</a>
+<a class="chip" href="#showcase">Personal</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+
+<a href="run-complete.html" class="card sc">
+<div style="display: flex; height: 64px;">
+<div style="flex: 3; background: #0B1F3A;"></div>
+<div style="flex: 2; background: #2458E6;"></div>
+<div style="flex: 1; background: #0FA3A3;"></div>
+<div style="flex: 1; background: #E8A317;"></div>
+<div style="flex: 2; background: #F4F6FA;"></div>
+</div>
+<div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+<div style="font-weight: 600; font-size: 16px;">Tidewater</div>
+<div class="muted mono" style="font-size: 12px;">tidewater.app</div>
+</div>
+<div class="muted" style="font-size: 13px;">31 colors · 14 type styles · 46 components</div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+<span class="tag">SaaS</span>
+<span class="muted" style="font-size: 12px;">118 of 132 checks</span>
+</div>
+</div>
+</a>
+
+<a href="run-complete.html" class="card sc">
+<div style="display: flex; height: 64px;">
+<div style="flex: 3; background: #0E0E10;"></div>
+<div style="flex: 1; background: #1A1A1E;"></div>
+<div style="flex: 2; background: #C9A24A;"></div>
+<div style="flex: 1; background: #E8D9A8;"></div>
+<div style="flex: 2; background: #F2F2F2;"></div>
+</div>
+<div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+<div style="font-weight: 600; font-size: 16px;">Brandon Church Portfolio</div>
+<div class="muted mono" style="font-size: 12px;">brandonchurchportfolio.com</div>
+</div>
+<div class="muted" style="font-size: 13px;">12 colors · 9 type styles · 18 components</div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+<span class="tag">Personal</span>
+<span class="muted" style="font-size: 12px;">61 of 61 checks</span>
+</div>
+</div>
+</a>
+
+<a href="run-complete.html" class="card sc">
+<div style="display: flex; height: 64px;">
+<div style="flex: 3; background: #FBF9F4;"></div>
+<div style="flex: 2; background: #1E1E1E;"></div>
+<div style="flex: 1; background: #3B6EF0;"></div>
+<div style="flex: 1; background: #D9772F;"></div>
+<div style="flex: 2; background: #E9E4D8;"></div>
+</div>
+<div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+<div style="font-weight: 600; font-size: 16px;">Generative UI · GitHub</div>
+<div class="muted mono" style="font-size: 12px;">generative-ui-github.vercel.app</div>
+</div>
+<div class="muted" style="font-size: 13px;">16 colors · 11 type styles · 24 components</div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+<span class="tag">Developer tools</span>
+<span class="muted" style="font-size: 12px;">74 of 76 checks</span>
+</div>
+</div>
+</a>
+
+<a href="run-complete.html" class="card sc">
+<div style="display: flex; height: 64px;">
+<div style="flex: 2; background: #121212;"></div>
+<div style="flex: 3; background: #1F1F1F;"></div>
+<div style="flex: 1; background: #7C5CFF;"></div>
+<div style="flex: 1; background: #22C55E;"></div>
+<div style="flex: 2; background: #F5F5F5;"></div>
+</div>
+<div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+<div style="font-weight: 600; font-size: 16px;">Kettle</div>
+<div class="muted mono" style="font-size: 12px;">kettle.dev</div>
+</div>
+<div class="muted" style="font-size: 13px;">22 colors · 12 type styles · 38 components</div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+<span class="tag">Developer tools</span>
+<span class="muted" style="font-size: 12px;">101 of 110 checks</span>
+</div>
+</div>
+</a>
+
+<a href="run-complete.html" class="card sc">
+<div style="display: flex; height: 64px;">
+<div style="flex: 3; background: #FFF8EC;"></div>
+<div style="flex: 2; background: #E2731B;"></div>
+<div style="flex: 1; background: #2F5D3A;"></div>
+<div style="flex: 1; background: #B8232F;"></div>
+<div style="flex: 2; background: #2B2B2B;"></div>
+</div>
+<div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+<div style="font-weight: 600; font-size: 16px;">Marigold Market</div>
+<div class="muted mono" style="font-size: 12px;">marigold.market</div>
+</div>
+<div class="muted" style="font-size: 13px;">57 colors · 21 type styles · 83 components</div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+<span class="tag">Commerce</span>
+<span class="muted" style="font-size: 12px;">188 of 246 checks</span>
+</div>
+</div>
+</a>
+
+<a href="run-complete.html" class="card sc">
+<div style="display: flex; height: 64px;">
+<div style="flex: 3; background: #FFFFFF;"></div>
+<div style="flex: 2; background: #0F3D73;"></div>
+<div style="flex: 1; background: #C8A04B;"></div>
+<div style="flex: 1; background: #5C6B7A;"></div>
+<div style="flex: 2; background: #EEF2F6;"></div>
+</div>
+<div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+<div style="font-weight: 600; font-size: 16px;">City of Larkspur</div>
+<div class="muted mono" style="font-size: 12px;">larkspur.gov</div>
+</div>
+<div class="muted" style="font-size: 13px;">44 colors · 19 type styles · 61 components</div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+<span class="tag">Government</span>
+<span class="muted" style="font-size: 12px;">142 of 180 checks</span>
+</div>
+</div>
+</a>
+
+<a href="run-complete.html" class="card sc">
+<div style="display: flex; height: 64px;">
+<div style="flex: 3; background: #FFFFFF;"></div>
+<div style="flex: 2; background: #111111;"></div>
+<div style="flex: 1; background: #C1121F;"></div>
+<div style="flex: 1; background: #6B6B6B;"></div>
+<div style="flex: 2; background: #F3F1EC;"></div>
+</div>
+<div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+<div style="font-weight: 600; font-size: 16px;">The Daily Ledger</div>
+<div class="muted mono" style="font-size: 12px;">dailyledger.news</div>
+</div>
+<div class="muted" style="font-size: 13px;">29 colors · 26 type styles · 52 components</div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+<span class="tag">Media</span>
+<span class="muted" style="font-size: 12px;">131 of 150 checks</span>
+</div>
+</div>
+</a>
+
+<a href="run-complete.html" class="card sc">
+<div style="display: flex; height: 64px;">
+<div style="flex: 3; background: #06253F;"></div>
+<div style="flex: 2; background: #0A5BD6;"></div>
+<div style="flex: 1; background: #17A673;"></div>
+<div style="flex: 1; background: #FFFFFF;"></div>
+<div style="flex: 2; background: #E8EEF5;"></div>
+</div>
+<div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+<div style="font-weight: 600; font-size: 16px;">Northstar Bank</div>
+<div class="muted mono" style="font-size: 12px;">northstar.bank</div>
+</div>
+<div class="muted" style="font-size: 13px;">38 colors · 15 type styles · 57 components</div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+<span class="tag">Finance</span>
+<span class="muted" style="font-size: 12px;">149 of 166 checks</span>
+</div>
+</div>
+</a>
+
+<a href="run-complete.html" class="card sc">
+<div style="display: flex; height: 64px;">
+<div style="flex: 3; background: #1C1B1A;"></div>
+<div style="flex: 1; background: #2A2826;"></div>
+<div style="flex: 2; background: #D8C3A5;"></div>
+<div style="flex: 1; background: #8E8D8A;"></div>
+<div style="flex: 2; background: #F7F5F2;"></div>
+</div>
+<div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px;">
+<div style="font-weight: 600; font-size: 16px;">Modern Softworks</div>
+<div class="muted mono" style="font-size: 12px;">modernsoftworks.com</div>
+</div>
+<div class="muted" style="font-size: 13px;">14 colors · 10 type styles · 22 components</div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+<span class="tag">Personal</span>
+<span class="muted" style="font-size: 12px;">70 of 70 checks</span>
+</div>
+</div>
+</a>
+
+</div>
+</section>
+
+<footer class="wrap" style="width: 100%; margin-top: auto; padding-top: 24px; padding-bottom: 32px; border-top: 1px solid #E6E6E6; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 13px;">
+<span class="muted">Open source · MIT · Runs on a daily budget, paused when it runs out.</span>
+<span class="muted">Built by <a href="https://www.brandonchurchportfolio.com">Brandon Church</a></span>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1600}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

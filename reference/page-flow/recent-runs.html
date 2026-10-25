@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Recent runs · Specimen</title>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+body{margin:0}
+a{color:#111}a:hover{color:#555}
+.pg{-webkit-font-smoothing:antialiased}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px;box-sizing:border-box}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;border-bottom:1px solid #E6E6E6}
+.wm{font-weight:700;font-size:17px;letter-spacing:-0.01em;text-decoration:none;color:#111}
+.wm span{font-weight:400;color:#5F5F5F}
+.navl{display:flex;gap:28px;font-size:14px;flex-wrap:wrap}
+.navl a{text-decoration:none;color:#3A3A3A}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:8px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.btn-p{background:#111;color:#fff;border:1px solid #111}
+.btn-g{background:#fff;color:#111;border:1px solid #CFCFCF}
+.btn-s{height:36px;padding:0 12px;font-size:13px}
+.card{border:1px solid #E6E6E6;border-radius:12px;background:#fff;box-sizing:border-box}
+.muted{color:#5F5F5F}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.lbl{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#6B6B6B}
+.h2{font-size:26px;font-weight:600;letter-spacing:-0.015em;margin:0}
+.row{display:grid;grid-template-columns: 56px 1.4fr 1.4fr 1fr auto;gap:20px;align-items:center;padding:16px 20px;border-bottom:1px solid #EFEFEF}
+.row:last-child{border-bottom:0}
+.strip{display:flex;height:40px;width:56px;border-radius:8px;overflow:hidden;border:1px solid rgba(0,0,0,0.08)}
+.strip i{flex:1;display:block}
+.pill{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;font-size:11px;font-weight:600;border:1px solid #111;color:#111}
+.pill.sub{border-color:#CFCFCF;color:#5F5F5F}
+</style>
+</helmet>
+<div class="pg" style="font-family: Inter, system-ui, sans-serif; color: #111; background: #fff; min-height: 100vh; display: flex; flex-direction: column;">
+
+<div class="wrap" style="width: 100%;">
+<nav class="nav" aria-label="Primary">
+<a class="wm" href="home.html">Specimen <span>· Design systems from any URL</span></a>
+<div class="navl">
+<a href="home.html">Showcase</a>
+<a href="recent-runs.html">Recent runs</a>
+<a href="how-it-works.html">How it works</a>
+<a href="https://github.com/BrandonChurch93">GitHub</a>
+</div>
+</nav>
+</div>
+
+<section class="wrap" style="width: 100%; padding-top: 40px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<h1 style="margin: 0; font-size: 36px; letter-spacing: -0.02em; font-weight: 700;">Your recent runs</h1>
+<p class="muted" style="margin: 0; font-size: 14px;">Remembered in this browser. Every run keeps its share link, so it works anywhere.</p>
+</div>
+<div style="display: flex; gap: 8px; align-items: center;">
+<span class="muted" style="font-size: 13px;">1 of 2 runs left today</span>
+<a class="btn btn-p" href="home.html">New run</a>
+</div>
+</div>
+
+<div class="card">
+<div class="row" style="padding-top: 12px; padding-bottom: 12px; border-bottom: 1px solid #E6E6E6;">
+<span class="lbl"></span><span class="lbl">Site</span><span class="lbl">Result</span><span class="lbl">When</span><span class="lbl">Status</span>
+</div>
+
+<div class="row">
+<span class="strip"><i style="background: #0B1F3A;"></i><i style="background: #2458E6;"></i><i style="background: #0FA3A3;"></i><i style="background: #F4F6FA;"></i></span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><a href="run-complete.html" style="font-weight: 600; text-decoration: none;">tidewater.app</a><span class="muted mono" style="font-size: 12px;">run a3f9 · 12 pages</span></div>
+<div class="muted" style="font-size: 13px;">31 colors · 46 components · 118 of 132 checks</div>
+<div class="muted" style="font-size: 13px;">Today, 11:04</div>
+<div style="display: flex; gap: 8px; align-items: center;"><span class="pill">Complete</span><a class="btn btn-g btn-s" href="compare.html">Compare</a></div>
+</div>
+
+<div class="row">
+<span class="strip"><i style="background: #0E0E10;"></i><i style="background: #1A1A1E;"></i><i style="background: #C9A24A;"></i><i style="background: #F2F2F2;"></i></span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><a href="run-complete.html" style="font-weight: 600; text-decoration: none;">brandonchurchportfolio.com</a><span class="muted mono" style="font-size: 12px;">run 9b02 · 6 pages</span></div>
+<div class="muted" style="font-size: 13px;">12 colors · 18 components · 61 of 61 checks</div>
+<div class="muted" style="font-size: 13px;">Yesterday, 21:40</div>
+<div style="display: flex; gap: 8px; align-items: center;"><span class="pill">Complete</span><a class="btn btn-g btn-s" href="compare.html">Compare</a></div>
+</div>
+
+<div class="row">
+<span class="strip"><i style="background: #0B1F3A;"></i><i style="background: #2A5BD9;"></i><i style="background: #0FA3A3;"></i><i style="background: #F2F4F8;"></i></span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><a href="run-complete.html" style="font-weight: 600; text-decoration: none;">tidewater.app</a><span class="muted mono" style="font-size: 12px;">run 7c21 · 12 pages</span></div>
+<div class="muted" style="font-size: 13px;">38 colors · 44 components · 104 of 128 checks</div>
+<div class="muted" style="font-size: 13px;">Sep 12</div>
+<div style="display: flex; gap: 8px; align-items: center;"><span class="pill">Complete</span><a class="btn btn-g btn-s" href="compare.html">Compare</a></div>
+</div>
+
+<div class="row">
+<span class="strip" style="border-style: dashed;"><i style="background: #F5F5F5;"></i></span>
+<div style="display: flex; flex-direction: column; gap: 4px;"><span style="font-weight: 600;">app.internal-tool.example</span><span class="muted mono" style="font-size: 12px;">run 4e77 · 0 pages</span></div>
+<div class="muted" style="font-size: 13px;">Login wall. Nothing extracted.</div>
+<div class="muted" style="font-size: 13px;">Sep 9</div>
+<div style="display: flex; gap: 8px; align-items: center;"><span class="pill sub">Blocked</span><a class="btn btn-g btn-s" href="state-login-wall.html">Details</a></div>
+</div>
+</div>
+
+<p class="muted" style="margin: 0; font-size: 13px;">Clearing your browser data clears this list. Save the share links you care about.</p>
+</section>
+
+<footer class="wrap" style="width: 100%; margin-top: auto; padding-top: 24px; padding-bottom: 32px; border-top: 1px solid #E6E6E6; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 13px;">
+<span class="muted">No account needed. Runs are rate limited per visitor and by a daily budget.</span>
+<span class="muted"><a href="#key">Use your own key</a> to lift the limits</span>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

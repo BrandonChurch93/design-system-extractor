@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Component panel · Button · Specimen</title>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+body{margin:0}
+a{color:#111}a:hover{color:#555}
+.pg{-webkit-font-smoothing:antialiased}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px;box-sizing:border-box}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;border-bottom:1px solid #E6E6E6}
+.wm{font-weight:700;font-size:17px;letter-spacing:-0.01em;text-decoration:none;color:#111}
+.wm span{font-weight:400;color:#5F5F5F}
+.navl{display:flex;gap:28px;font-size:14px;flex-wrap:wrap}
+.navl a{text-decoration:none;color:#3A3A3A}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:8px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.btn-p{background:#111;color:#fff;border:1px solid #111}
+.btn-g{background:#fff;color:#111;border:1px solid #CFCFCF}
+.btn-s{height:36px;padding:0 12px;font-size:13px}
+.chip{display:inline-flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;border:1px solid #D6D6D6;font-size:13px;color:#3A3A3A;background:#fff;text-decoration:none}
+.chip-on{background:#111;color:#fff;border-color:#111}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;background:#F0F0F0;font-size:12px;color:#3A3A3A;font-family:"JetBrains Mono",ui-monospace,monospace}
+.card{border:1px solid #E6E6E6;border-radius:12px;background:#fff;box-sizing:border-box}
+.muted{color:#5F5F5F}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.lbl{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#6B6B6B}
+.h2{font-size:26px;font-weight:600;letter-spacing:-0.015em;margin:0}
+.h3{font-size:16px;font-weight:600;margin:0}
+.ok,.no{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#111}
+.no{color:#3A3A3A}
+.st{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#5F5F5F}
+.st i{width:8px;height:8px;border-radius:50%;background:#111;display:inline-block}
+.cc{display:flex;flex-direction:column;text-decoration:none;color:#111;overflow:hidden}
+.prev{height:150px;background:#FAFAFA;border-bottom:1px solid #EFEFEF;display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;box-sizing:border-box}
+.code{background:#F5F5F5;border:1px solid #E6E6E6;border-radius:8px;padding:12px 14px;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12px;line-height:1.6;white-space:pre;overflow-x:auto;color:#222}
+.tabs{display:flex;gap:2px;border-bottom:1px solid #E6E6E6}
+.tabs a{text-decoration:none;color:#3A3A3A;font-size:13px;font-weight:500;padding:10px 12px;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tabs a.on{color:#111;border-bottom-color:#111}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #EFEFEF;font-size:13px}
+.sel{outline:2px solid #111;outline-offset:2px}
+.ico{width:36px;height:36px;border-radius:8px;border:1px solid #CFCFCF;display:inline-flex;align-items:center;justify-content:center;background:#fff;color:#111;text-decoration:none}
+</style>
+</helmet>
+<div class="pg" style="font-family: Inter, system-ui, sans-serif; color: #111; background: #fff; min-height: 100vh; position: relative; overflow: hidden;">
+
+<div class="wrap" style="width: 100%;">
+<nav class="nav" aria-label="Primary">
+<a class="wm" href="home.html">Specimen <span>· Design systems from any URL</span></a>
+<div class="navl">
+<a href="home.html">Showcase</a>
+<a href="recent-runs.html">Recent runs</a>
+<a href="how-it-works.html">How it works</a>
+<a href="https://github.com/BrandonChurch93">GitHub</a>
+</div>
+</nav>
+</div>
+
+<section class="wrap" style="width: 100%; padding-top: 40px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<span class="muted" style="font-size: 13px;"><a href="run-complete.html" style="text-decoration: none;">tidewater.app</a> / Components</span>
+<h2 class="h2">Components</h2>
+</div>
+<p class="muted" style="margin: 0; font-size: 14px;">46 found · grouped by type</p>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<a class="chip chip-on" href="#c">All · 46</a>
+<a class="chip" href="#c">Buttons · 6</a>
+<a class="chip" href="#c">Inputs · 8</a>
+<a class="chip" href="#c">Navigation · 4</a>
+<a class="chip" href="#c">Cards · 7</a>
+<a class="chip" href="#c">Feedback · 5</a>
+<a class="chip" href="#c">Data · 6</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+<a href="#c" class="card cc sel">
+<div class="prev">
+<span style="display: inline-flex; align-items: center; height: 40px; padding: 0 18px; border-radius: 8px; background: #2458E6; color: #fff; font-weight: 600; font-size: 14px;">Get started</span>
+<span style="display: inline-flex; align-items: center; height: 40px; padding: 0 18px; border-radius: 8px; border: 1px solid #0B1F3A; color: #0B1F3A; font-weight: 600; font-size: 14px;">Learn more</span>
+</div>
+<div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><div style="font-weight: 600; font-size: 15px;">Button</div><span class="ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>4 of 4</span></div>
+<div class="muted" style="font-size: 12px;">3 variants · 5 states · on 11 pages</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">blue-600</span><span class="tag">radius-8</span><span class="tag">space-4</span><span class="tag">label</span></div>
+</div>
+</a>
+<a href="#c" class="card cc">
+<div class="prev" style="flex-direction: column; align-items: stretch; gap: 6px;">
+<span style="font-size: 12px; font-weight: 500; color: #0B1F3A;">Email</span>
+<span style="display: flex; align-items: center; height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid #B5B5B5; background: #fff; color: #8A8A8A; font-size: 14px;">you@company.com</span>
+</div>
+<div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><div style="font-weight: 600; font-size: 15px;">Text input</div><span class="no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>3 of 4</span></div>
+<div class="muted" style="font-size: 12px;">4 variants · 5 states · on 4 pages</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">gray-300</span><span class="tag">radius-8</span><span class="tag">body</span></div>
+</div>
+</a>
+<a href="#c" class="card cc">
+<div class="prev">
+<span style="display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: #D8F3EE; color: #0B6B5E; font-size: 12px; font-weight: 600;">Active</span>
+<span style="display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: #FDF0D5; color: #7A5200; font-size: 12px; font-weight: 600;">Pending</span>
+<span style="display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: #FBE3E3; color: #9A2B2B; font-size: 12px; font-weight: 600;">Failed</span>
+</div>
+<div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><div style="font-weight: 600; font-size: 15px;">Status badge</div><span class="no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>2 of 4</span></div>
+<div class="muted" style="font-size: 12px;">5 variants · 1 state · on 3 pages</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">success</span><span class="tag">warning</span><span class="tag">danger</span></div>
+</div>
+</a>
+<a href="#c" class="card cc">
+<div class="prev">
+<span style="display: flex; flex-direction: column; gap: 6px; width: 180px; padding: 14px; border-radius: 12px; border: 1px solid #D6D6D6; background: #fff; box-sizing: border-box;">
+<span style="font-size: 11px; font-weight: 600; color: #2458E6;">Team</span>
+<span style="font-size: 22px; font-weight: 700; color: #0B1F3A;">$24 <span style="font-size: 12px; font-weight: 400; color: #5F5F5F;">/ mo</span></span>
+<span style="display: inline-flex; align-items: center; justify-content: center; height: 32px; border-radius: 8px; background: #2458E6; color: #fff; font-weight: 600; font-size: 12px;">Choose</span>
+</span>
+</div>
+<div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><div style="font-weight: 600; font-size: 15px;">Pricing card</div><span class="ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>4 of 4</span></div>
+<div class="muted" style="font-size: 12px;">2 variants · 2 states · on 1 page</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">radius-12</span><span class="tag">shadow-md</span></div>
+</div>
+</a>
+<a href="#c" class="card cc">
+<div class="prev" style="padding: 0;">
+<span style="display: flex; align-items: center; justify-content: space-between; width: 100%; height: 48px; padding: 0 16px; box-sizing: border-box; background: #fff; border-bottom: 1px solid #D6D6D6;">
+<span style="display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; color: #0B1F3A;"><span style="width: 14px; height: 14px; border-radius: 4px; background: #2458E6; display: inline-block;"></span>Tidewater</span>
+<span style="display: inline-flex; gap: 14px; font-size: 12px; color: #3A3A3A;"><span>Product</span><span>Pricing</span><span style="color: #2458E6; font-weight: 600;">Sign in</span></span>
+</span>
+</div>
+<div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><div style="font-weight: 600; font-size: 15px;">Top navigation</div><span class="ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>4 of 4</span></div>
+<div class="muted" style="font-size: 12px;">1 variant · 2 states · on 12 pages</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">navy-900</span><span class="tag">label</span></div>
+</div>
+</a>
+<a href="#c" class="card cc">
+<div class="prev" style="padding: 12px;">
+<span style="display: flex; flex-direction: column; width: 100%; font-size: 11px; color: #3A3A3A; border: 1px solid #D6D6D6; border-radius: 8px; overflow: hidden; background: #fff;">
+<span style="display: flex; justify-content: space-between; padding: 7px 10px; background: #F4F6FA; font-weight: 600; color: #0B1F3A;"><span>Invoice</span><span>Status</span><span>Amount</span></span>
+<span style="display: flex; justify-content: space-between; padding: 7px 10px; border-top: 1px solid #EFEFEF;"><span>#1042</span><span>Paid</span><span>$1,200</span></span>
+</span>
+</div>
+<div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center;"><div style="font-weight: 600; font-size: 15px;">Data table</div><span class="no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>3 of 4</span></div>
+<div class="muted" style="font-size: 12px;">1 variant · 3 states · on 2 pages</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">surface</span><span class="tag">gray-300</span></div>
+</div>
+</a>
+</div>
+</section>
+
+<aside aria-label="Button details" style="position: absolute; top: 0; right: 0; bottom: 0; width: 560px; max-width: 100%; background: #fff; border-left: 1px solid #E6E6E6; box-shadow: -24px 0 48px rgba(0,0,0,0.08); display: flex; flex-direction: column; box-sizing: border-box; overflow-y: auto;">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 28px; border-bottom: 1px solid #E6E6E6; gap: 12px;">
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span class="lbl">Buttons · 1 of 6</span>
+<h2 class="h2" style="font-size: 22px;">Button</h2>
+</div>
+<div style="display: flex; gap: 8px;">
+<a class="ico" href="#prev" aria-label="Previous component"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg></a>
+<a class="ico" href="#next" aria-label="Next component"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg></a>
+<a class="ico" href="run-complete.html" aria-label="Close panel"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></a>
+</div>
+</div>
+
+<div style="padding: 24px 28px; display: flex; flex-direction: column; gap: 24px;">
+
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;"><span class="lbl">Variants</span><span class="muted" style="font-size: 12px;">Live render · matches crop within 1.2 %</span></div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<a class="chip chip-on" href="#v">Primary</a><a class="chip" href="#v">Secondary</a><a class="chip" href="#v">Ghost</a>
+</div>
+<div style="background: #FAFAFA; border: 1px solid #EFEFEF; border-radius: 12px; padding: 28px; display: flex; align-items: center; justify-content: center;">
+<span style="display: inline-flex; align-items: center; height: 44px; padding: 0 20px; border-radius: 8px; background: #2458E6; color: #fff; font-weight: 600; font-size: 15px;">Get started</span>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span class="lbl">States · 5 captured</span>
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px;">
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><span style="display: inline-flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; background: #2458E6; color: #fff; font-weight: 600; font-size: 12px;">Start</span><span class="muted" style="font-size: 11px;">Default</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><span style="display: inline-flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; background: #1B46C2; color: #fff; font-weight: 600; font-size: 12px;">Start</span><span class="muted" style="font-size: 11px;">Hover</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><span style="display: inline-flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; background: #2458E6; color: #fff; font-weight: 600; font-size: 12px; outline: 2px solid #0B1F3A; outline-offset: 2px;">Start</span><span class="muted" style="font-size: 11px;">Focus</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><span style="display: inline-flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; background: #153A9E; color: #fff; font-weight: 600; font-size: 12px;">Start</span><span class="muted" style="font-size: 11px;">Active</span></div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 8px;"><span style="display: inline-flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 8px; background: #A9BCF5; color: #fff; font-weight: 600; font-size: 12px;">Start</span><span class="muted" style="font-size: 11px;">Disabled</span></div>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 4px;">
+<span class="lbl" style="margin-bottom: 6px;">Checks · 4 of 4 on Primary</span>
+<div class="row"><span>Contrast AA</span><span class="ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg><span class="mono">5.4:1</span> on blue-600</span></div>
+<div class="row"><span>Focus visible</span><span class="ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>2 px ring, 3.1:1 against surface</span></div>
+<div class="row"><span>Tap target</span><span class="ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg><span class="mono">44 × 44</span> at 390 px</span></div>
+<div class="row"><span>Label present</span><span class="ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Text content</span></div>
+<div class="row" style="border-bottom: 0;"><span class="muted">Ghost small</span><span class="no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>Tap target <span class="mono">40 px</span> tall, 4 short</span></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<span class="lbl">Tokens used</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">color.blue-600</span><span class="tag">color.white</span><span class="tag">radius.8</span><span class="tag">space.4</span><span class="tag">space.5</span><span class="tag">type.label</span><span class="tag">motion.fast</span></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px;">
+<div class="tabs"><a class="on" href="#html">HTML</a><a href="#css">CSS</a><a href="#tw">Tailwind</a></div>
+<div class="code">&lt;button class="btn btn-primary"&gt;
+  Get started
+&lt;/button&gt;
+
+.btn {
+  height: 44px; padding: 0 20px;
+  border-radius: var(--radius-8);
+  font: 600 15px/1 var(--font-sans);
+  transition: background var(--motion-fast);
+}
+.btn-primary { background: var(--blue-600); color: #fff; }
+.btn-primary:hover { background: #1B46C2; }
+.btn-primary:focus-visible { outline: 2px solid var(--navy-900); outline-offset: 2px; }
+.btn-primary:disabled { background: #A9BCF5; }</div>
+</div>
+
+<div style="display: flex; gap: 8px; flex-wrap: wrap; padding-top: 4px;">
+<a class="btn btn-p" href="#copy"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>Copy prompt for this component</a>
+<a class="btn btn-g" href="#copy">Copy code</a>
+</div>
+<p class="muted" style="margin: 0; font-size: 12px;">Seen on /, /pricing, /features, /signup and 7 more. First captured on / at 1440 px.</p>
+
+</div>
+</aside>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":1100}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

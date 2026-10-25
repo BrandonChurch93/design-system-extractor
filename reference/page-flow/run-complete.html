@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Run · tidewater.app · Specimen</title>
+
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+body{margin:0}
+a{color:#111}a:hover{color:#555}
+.pg{-webkit-font-smoothing:antialiased}
+.wrap{max-width:1160px;margin:0 auto;padding:0 32px;box-sizing:border-box}
+.nav{display:flex;align-items:center;justify-content:space-between;height:64px;border-bottom:1px solid #E6E6E6}
+.wm{font-weight:700;font-size:17px;letter-spacing:-0.01em;text-decoration:none;color:#111}
+.wm span{font-weight:400;color:#5F5F5F}
+.navl{display:flex;gap:28px;font-size:14px;flex-wrap:wrap}
+.navl a{text-decoration:none;color:#3A3A3A}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 18px;border-radius:8px;font:inherit;font-size:14px;font-weight:600;cursor:pointer;text-decoration:none;box-sizing:border-box}
+.btn-p{background:#111;color:#fff;border:1px solid #111}
+.btn-g{background:#fff;color:#111;border:1px solid #CFCFCF}
+.btn-s{height:36px;padding:0 12px;font-size:13px}
+.chip{display:inline-flex;align-items:center;height:32px;padding:0 12px;border-radius:999px;border:1px solid #D6D6D6;font-size:13px;color:#3A3A3A;background:#fff;text-decoration:none}
+.chip-on{background:#111;color:#fff;border-color:#111}
+.tag{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;background:#F0F0F0;font-size:12px;color:#3A3A3A;font-family:"JetBrains Mono",ui-monospace,monospace}
+.card{border:1px solid #E6E6E6;border-radius:12px;background:#fff;box-sizing:border-box}
+.muted{color:#5F5F5F}
+.mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+.lbl{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#6B6B6B}
+.h2{font-size:26px;font-weight:600;letter-spacing:-0.015em;margin:0}
+.h3{font-size:16px;font-weight:600;margin:0}
+.secnav{display:flex;gap:4px;border-bottom:1px solid #E6E6E6;flex-wrap:wrap}
+.secnav a{text-decoration:none;color:#3A3A3A;font-size:14px;font-weight:500;padding:14px 14px;border-bottom:2px solid transparent;margin-bottom:-1px}
+.secnav a.on{color:#111;border-bottom-color:#111}
+.stat{display:flex;flex-direction:column;gap:6px;padding:18px 20px;flex:1 1 160px}
+.stat b{font-size:28px;font-weight:600;letter-spacing:-0.02em}
+.sw{border-radius:8px;border:1px solid rgba(0,0,0,0.08);box-sizing:border-box}
+.swl{display:flex;flex-direction:column;gap:6px;flex:1 1 110px;min-width:0}
+.swl .mono{font-size:11px;color:#3A3A3A}
+.ok,.no{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#111}
+.no{color:#3A3A3A}
+.st{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#5F5F5F}
+.st i{width:8px;height:8px;border-radius:50%;background:#111;display:inline-block}
+.st i.miss{background:#fff;border:1px solid #8A8A8A;box-sizing:border-box}
+.cc{display:flex;flex-direction:column;text-decoration:none;color:#111;overflow:hidden}
+.cc:hover{border-color:#111;color:#111}
+.prev{height:150px;background:#FAFAFA;border-bottom:1px solid #EFEFEF;display:flex;align-items:center;justify-content:center;gap:10px;padding:16px;box-sizing:border-box}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#6B6B6B;padding:10px 12px;border-bottom:1px solid #E6E6E6}
+.tbl td{padding:12px;border-bottom:1px solid #EFEFEF;vertical-align:top}
+.code{background:#F5F5F5;border:1px solid #E6E6E6;border-radius:8px;padding:12px 14px;font-family:"JetBrains Mono",ui-monospace,monospace;font-size:12.5px;line-height:1.6;white-space:pre;overflow-x:auto;color:#222}
+.bar{height:12px;background:#111;border-radius:2px}
+.ico{width:34px;height:34px;border-radius:8px;border:1px solid #CFCFCF;display:inline-flex;align-items:center;justify-content:center;background:#fff;color:#111}
+</style>
+</helmet>
+<div class="pg" style="font-family: Inter, system-ui, sans-serif; color: #111; background: #fff; min-height: 100vh; display: flex; flex-direction: column;">
+
+<div class="wrap" style="width: 100%;">
+<nav class="nav" aria-label="Primary">
+<a class="wm" href="home.html">Specimen <span>· Design systems from any URL</span></a>
+<div class="navl">
+<a href="home.html">Showcase</a>
+<a href="recent-runs.html">Recent runs</a>
+<a href="how-it-works.html">How it works</a>
+<a href="https://github.com/BrandonChurch93">GitHub</a>
+</div>
+</nav>
+</div>
+
+<section class="wrap" style="width: 100%; padding-top: 40px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 16px;">
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span class="muted" style="font-size: 13px;"><a href="home.html" style="text-decoration: none;">Showcase</a> / tidewater.app</span>
+<h1 style="margin: 0; font-size: 36px; letter-spacing: -0.02em; font-weight: 700;">tidewater.app</h1>
+<p class="muted" style="margin: 0; font-size: 14px;">12 pages · 2 viewports · crawled Oct 25 2026 · 2 min 41 s · Tailwind detected</p>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<a class="btn btn-g" href="#share"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8M16 6l-4-4-4 4M12 2v13"></path></svg>Share</a>
+<a class="btn btn-g" href="run-in-progress.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6"></path></svg>Run again</a>
+<a class="btn btn-g" href="compare.html">Compare</a>
+<a class="btn btn-p" href="#exports">Export</a>
+</div>
+</div>
+
+<div class="card" style="display: flex; flex-wrap: wrap;">
+<div class="stat"><b>31</b><span class="muted" style="font-size: 13px;">Colors</span></div>
+<div class="stat" style="border-left: 1px solid #EFEFEF;"><b>14</b><span class="muted" style="font-size: 13px;">Type styles</span></div>
+<div class="stat" style="border-left: 1px solid #EFEFEF;"><b>9</b><span class="muted" style="font-size: 13px;">Spacing steps</span></div>
+<div class="stat" style="border-left: 1px solid #EFEFEF;"><b>46</b><span class="muted" style="font-size: 13px;">Components</span></div>
+<div class="stat" style="border-left: 1px solid #EFEFEF;"><b>118 <span class="muted" style="font-size: 16px; font-weight: 500;">of 132</span></b><span class="muted" style="font-size: 13px;">Checks passed</span></div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<span class="lbl">Palette</span>
+<div style="display: flex; gap: 12px; flex-wrap: wrap;">
+<div class="swl"><div class="sw" style="height: 88px; background: #0B1F3A;"></div><span class="mono">#0B1F3A</span><span class="muted" style="font-size: 11px;">navy · 412 uses</span></div>
+<div class="swl"><div class="sw" style="height: 88px; background: #2458E6;"></div><span class="mono">#2458E6</span><span class="muted" style="font-size: 11px;">brand · 268 uses</span></div>
+<div class="swl"><div class="sw" style="height: 88px; background: #0FA3A3;"></div><span class="mono">#0FA3A3</span><span class="muted" style="font-size: 11px;">teal · 54 uses</span></div>
+<div class="swl"><div class="sw" style="height: 88px; background: #E8A317;"></div><span class="mono">#E8A317</span><span class="muted" style="font-size: 11px;">amber · 31 uses</span></div>
+<div class="swl"><div class="sw" style="height: 88px; background: #D64545;"></div><span class="mono">#D64545</span><span class="muted" style="font-size: 11px;">red · 19 uses</span></div>
+<div class="swl"><div class="sw" style="height: 88px; background: #3A3A3A;"></div><span class="mono">#3A3A3A</span><span class="muted" style="font-size: 11px;">text · 1,044 uses</span></div>
+<div class="swl"><div class="sw" style="height: 88px; background: #D6D6D6;"></div><span class="mono">#D6D6D6</span><span class="muted" style="font-size: 11px;">border · 388 uses</span></div>
+<div class="swl"><div class="sw" style="height: 88px; background: #F4F6FA;"></div><span class="mono">#F4F6FA</span><span class="muted" style="font-size: 11px;">surface · 220 uses</span></div>
+</div>
+</div>
+
+<div style="background: #111; color: #fff; border-radius: 12px; padding: 28px 32px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+<div style="display: flex; flex-direction: column; gap: 6px;">
+<span style="font-size: 22px; font-weight: 600; letter-spacing: -0.01em;">14 grays across 12 pages. 5 would do.</span>
+<span style="font-size: 14px; color: #BDBDBD;">Six button variants where three cover every use. Nine spacing values, two of them off the 4 px grid.</span>
+</div>
+<a href="#drift" class="btn" style="background: #fff; color: #111; border: 1px solid #fff;">Read the drift report<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"></path></svg></a>
+</div>
+
+<nav class="secnav" aria-label="Sections">
+<a class="on" href="#tokens">Tokens</a>
+<a href="#components">Components</a>
+<a href="#checks">Checks</a>
+<a href="#drift">Drift</a>
+<a href="#exports">Exports</a>
+</nav>
+</section>
+
+<section id="tokens" class="wrap" style="width: 100%; padding-top: 48px; display: flex; flex-direction: column; gap: 32px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;">
+<h2 class="h2">Tokens</h2>
+<p class="muted" style="margin: 0; font-size: 14px;">Clustered from 212 raw color values, 38 font declarations and 61 spacing values.</p>
+</div>
+
+<div class="card" style="padding: 24px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;"><h3 class="h3">Color</h3><span class="muted" style="font-size: 13px;">31 tokens</span></div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span class="lbl">Brand</span>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<div class="swl" style="flex: 0 1 96px;"><div class="sw" style="height: 48px; background: #0B1F3A;"></div><span class="mono">navy-900</span></div>
+<div class="swl" style="flex: 0 1 96px;"><div class="sw" style="height: 48px; background: #1B3A6B;"></div><span class="mono">navy-700</span></div>
+<div class="swl" style="flex: 0 1 96px;"><div class="sw" style="height: 48px; background: #2458E6;"></div><span class="mono">blue-600</span></div>
+<div class="swl" style="flex: 0 1 96px;"><div class="sw" style="height: 48px; background: #4F7BFF;"></div><span class="mono">blue-500</span></div>
+<div class="swl" style="flex: 0 1 96px;"><div class="sw" style="height: 48px; background: #D9E3FF;"></div><span class="mono">blue-100</span></div>
+<div class="swl" style="flex: 0 1 96px;"><div class="sw" style="height: 48px; background: #0FA3A3;"></div><span class="mono">teal-500</span></div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span class="lbl">Neutral · 14 found</span>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #111111;"></div><span class="mono">111111</span></div>
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #1A1A1A;"></div><span class="mono">1A1A1A</span></div>
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #222222;"></div><span class="mono">222222</span></div>
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #2E2E2E;"></div><span class="mono">2E2E2E</span></div>
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #3A3A3A;"></div><span class="mono">3A3A3A</span></div>
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #4A4A4A;"></div><span class="mono">4A4A4A</span></div>
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #5F5F5F;"></div><span class="mono">5F5F5F</span></div>
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #6B6B6B;"></div><span class="mono">6B6B6B</span></div>
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #6E6E6E;"></div><span class="mono">6E6E6E</span></div>
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #707070;"></div><span class="mono">707070</span></div>
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #8A8A8A;"></div><span class="mono">8A8A8A</span></div>
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #9A9A9A;"></div><span class="mono">9A9A9A</span></div>
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #B5B5B5;"></div><span class="mono">B5B5B5</span></div>
+<div class="swl" style="flex: 0 1 64px;"><div class="sw" style="height: 40px; background: #D6D6D6;"></div><span class="mono">D6D6D6</span></div>
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<span class="lbl">Semantic</span>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<div class="swl" style="flex: 0 1 96px;"><div class="sw" style="height: 48px; background: #1F9D55;"></div><span class="mono">success</span></div>
+<div class="swl" style="flex: 0 1 96px;"><div class="sw" style="height: 48px; background: #E8A317;"></div><span class="mono">warning</span></div>
+<div class="swl" style="flex: 0 1 96px;"><div class="sw" style="height: 48px; background: #D64545;"></div><span class="mono">danger</span></div>
+<div class="swl" style="flex: 0 1 96px;"><div class="sw" style="height: 48px; background: #2458E6;"></div><span class="mono">info</span></div>
+</div>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px;">
+<div class="card" style="padding: 24px; display: flex; flex-direction: column; gap: 18px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;"><h3 class="h3">Type</h3><span class="muted" style="font-size: 13px;">Inter · JetBrains Mono · 14 styles</span></div>
+<div style="display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; align-items: baseline; gap: 14px;"><span class="mono muted" style="font-size: 11px; width: 110px; flex: none;">56 / 64 · 700</span><span style="font-size: 30px; font-weight: 700; letter-spacing: -0.02em;">Display</span></div>
+<div style="display: flex; align-items: baseline; gap: 14px;"><span class="mono muted" style="font-size: 11px; width: 110px; flex: none;">40 / 48 · 700</span><span style="font-size: 24px; font-weight: 700; letter-spacing: -0.01em;">Heading 1</span></div>
+<div style="display: flex; align-items: baseline; gap: 14px;"><span class="mono muted" style="font-size: 11px; width: 110px; flex: none;">28 / 36 · 600</span><span style="font-size: 20px; font-weight: 600;">Heading 2</span></div>
+<div style="display: flex; align-items: baseline; gap: 14px;"><span class="mono muted" style="font-size: 11px; width: 110px; flex: none;">20 / 28 · 600</span><span style="font-size: 17px; font-weight: 600;">Heading 3</span></div>
+<div style="display: flex; align-items: baseline; gap: 14px;"><span class="mono muted" style="font-size: 11px; width: 110px; flex: none;">16 / 26 · 400</span><span style="font-size: 16px;">Body, the reading size</span></div>
+<div style="display: flex; align-items: baseline; gap: 14px;"><span class="mono muted" style="font-size: 11px; width: 110px; flex: none;">14 / 20 · 500</span><span style="font-size: 14px; font-weight: 500;">Label</span></div>
+<div style="display: flex; align-items: baseline; gap: 14px;"><span class="mono muted" style="font-size: 11px; width: 110px; flex: none;">12 / 16 · 400</span><span style="font-size: 12px;">Caption</span></div>
+<div style="display: flex; align-items: baseline; gap: 14px;"><span class="mono muted" style="font-size: 11px; width: 110px; flex: none;">13 / 20 · 400</span><span class="mono" style="font-size: 13px;">code · JetBrains Mono</span></div>
+</div>
+<a href="#type-all" class="muted" style="font-size: 13px;">Show all 14 styles</a>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 24px;">
+<div class="card" style="padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;"><h3 class="h3">Spacing</h3><span class="muted" style="font-size: 13px;">9 steps · 4 px base</span></div>
+<div style="display: flex; flex-direction: column; gap: 8px;">
+<div style="display: flex; align-items: center; gap: 12px;"><span class="mono muted" style="font-size: 11px; width: 28px; text-align: right;">4</span><div class="bar" style="width: 16px;"></div></div>
+<div style="display: flex; align-items: center; gap: 12px;"><span class="mono muted" style="font-size: 11px; width: 28px; text-align: right;">8</span><div class="bar" style="width: 32px;"></div></div>
+<div style="display: flex; align-items: center; gap: 12px;"><span class="mono muted" style="font-size: 11px; width: 28px; text-align: right;">12</span><div class="bar" style="width: 48px;"></div></div>
+<div style="display: flex; align-items: center; gap: 12px;"><span class="mono muted" style="font-size: 11px; width: 28px; text-align: right;">16</span><div class="bar" style="width: 64px;"></div></div>
+<div style="display: flex; align-items: center; gap: 12px;"><span class="mono muted" style="font-size: 11px; width: 28px; text-align: right;">24</span><div class="bar" style="width: 96px;"></div></div>
+<div style="display: flex; align-items: center; gap: 12px;"><span class="mono muted" style="font-size: 11px; width: 28px; text-align: right;">32</span><div class="bar" style="width: 128px;"></div></div>
+<div style="display: flex; align-items: center; gap: 12px;"><span class="mono muted" style="font-size: 11px; width: 28px; text-align: right;">48</span><div class="bar" style="width: 192px;"></div></div>
+<div style="display: flex; align-items: center; gap: 12px;"><span class="mono muted" style="font-size: 11px; width: 28px; text-align: right;">64</span><div class="bar" style="width: 256px;"></div></div>
+<div style="display: flex; align-items: center; gap: 12px;"><span class="mono muted" style="font-size: 11px; width: 28px; text-align: right;">96</span><div class="bar" style="width: 384px;"></div></div>
+</div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px;">
+<div class="card" style="padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;"><h3 class="h3">Radius</h3><span class="muted" style="font-size: 13px;">4</span></div>
+<div style="display: flex; gap: 12px; align-items: flex-end;">
+<div style="display: flex; flex-direction: column; gap: 6px; align-items: center;"><div style="width: 44px; height: 44px; border: 2px solid #111; border-radius: 4px; box-sizing: border-box;"></div><span class="mono muted" style="font-size: 11px;">4</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px; align-items: center;"><div style="width: 44px; height: 44px; border: 2px solid #111; border-radius: 8px; box-sizing: border-box;"></div><span class="mono muted" style="font-size: 11px;">8</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px; align-items: center;"><div style="width: 44px; height: 44px; border: 2px solid #111; border-radius: 12px; box-sizing: border-box;"></div><span class="mono muted" style="font-size: 11px;">12</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px; align-items: center;"><div style="width: 44px; height: 44px; border: 2px solid #111; border-radius: 999px; box-sizing: border-box;"></div><span class="mono muted" style="font-size: 11px;">pill</span></div>
+</div>
+</div>
+<div class="card" style="padding: 24px; display: flex; flex-direction: column; gap: 14px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline;"><h3 class="h3">Shadow</h3><span class="muted" style="font-size: 13px;">3</span></div>
+<div style="display: flex; gap: 14px; align-items: flex-end;">
+<div style="display: flex; flex-direction: column; gap: 6px; align-items: center;"><div style="width: 44px; height: 44px; background: #fff; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.12);"></div><span class="mono muted" style="font-size: 11px;">sm</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px; align-items: center;"><div style="width: 44px; height: 44px; background: #fff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.12);"></div><span class="mono muted" style="font-size: 11px;">md</span></div>
+<div style="display: flex; flex-direction: column; gap: 6px; align-items: center;"><div style="width: 44px; height: 44px; background: #fff; border-radius: 8px; box-shadow: 0 12px 32px rgba(0,0,0,0.16);"></div><span class="mono muted" style="font-size: 11px;">lg</span></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="components" class="wrap" style="width: 100%; padding-top: 64px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;">
+<h2 class="h2">Components</h2>
+<p class="muted" style="margin: 0; font-size: 14px;">46 found · grouped by type · open one for states, code and tokens</p>
+</div>
+<div style="display: flex; gap: 8px; flex-wrap: wrap;">
+<a class="chip chip-on" href="#components">All · 46</a>
+<a class="chip" href="#components">Buttons · 6</a>
+<a class="chip" href="#components">Inputs · 8</a>
+<a class="chip" href="#components">Navigation · 4</a>
+<a class="chip" href="#components">Cards · 7</a>
+<a class="chip" href="#components">Feedback · 5</a>
+<a class="chip" href="#components">Data · 6</a>
+<a class="chip" href="#components">Overlays · 3</a>
+<a class="chip" href="#components">Other · 7</a>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+
+<a href="component-panel.html" class="card cc">
+<div class="prev">
+<span style="display: inline-flex; align-items: center; height: 40px; padding: 0 18px; border-radius: 8px; background: #2458E6; color: #fff; font-weight: 600; font-size: 14px;">Get started</span>
+<span style="display: inline-flex; align-items: center; height: 40px; padding: 0 18px; border-radius: 8px; border: 1px solid #0B1F3A; color: #0B1F3A; font-weight: 600; font-size: 14px;">Learn more</span>
+</div>
+<div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+<div style="font-weight: 600; font-size: 15px;">Button</div>
+<span class="ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>4 of 4</span>
+</div>
+<div class="muted" style="font-size: 12px;">3 variants · 5 states · on 11 pages</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<span class="st"><i></i>Default</span><span class="st"><i></i>Hover</span><span class="st"><i></i>Focus</span><span class="st"><i></i>Active</span><span class="st"><i></i>Disabled</span>
+</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">blue-600</span><span class="tag">radius-8</span><span class="tag">space-4</span><span class="tag">label</span></div>
+</div>
+</a>
+
+<a href="component-panel.html" class="card cc">
+<div class="prev" style="flex-direction: column; align-items: stretch; gap: 6px;">
+<span style="font-size: 12px; font-weight: 500; color: #0B1F3A;">Email</span>
+<span style="display: flex; align-items: center; height: 40px; padding: 0 12px; border-radius: 8px; border: 1px solid #B5B5B5; background: #fff; color: #8A8A8A; font-size: 14px;">you@company.com</span>
+</div>
+<div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+<div style="font-weight: 600; font-size: 15px;">Text input</div>
+<span class="no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>3 of 4</span>
+</div>
+<div class="muted" style="font-size: 12px;">4 variants · 5 states · on 4 pages</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<span class="st"><i></i>Default</span><span class="st"><i></i>Hover</span><span class="st"><i></i>Focus</span><span class="st"><i></i>Error</span><span class="st"><i class="miss"></i>Disabled</span>
+</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">gray-300</span><span class="tag">radius-8</span><span class="tag">body</span></div>
+</div>
+</a>
+
+<a href="component-panel.html" class="card cc">
+<div class="prev" style="padding: 0;">
+<span style="display: flex; align-items: center; justify-content: space-between; width: 100%; height: 48px; padding: 0 16px; box-sizing: border-box; background: #fff; border-bottom: 1px solid #D6D6D6;">
+<span style="display: inline-flex; align-items: center; gap: 8px; font-weight: 700; font-size: 13px; color: #0B1F3A;"><span style="width: 14px; height: 14px; border-radius: 4px; background: #2458E6; display: inline-block;"></span>Tidewater</span>
+<span style="display: inline-flex; gap: 14px; font-size: 12px; color: #3A3A3A;"><span>Product</span><span>Pricing</span><span>Docs</span><span style="color: #2458E6; font-weight: 600;">Sign in</span></span>
+</span>
+</div>
+<div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+<div style="font-weight: 600; font-size: 15px;">Top navigation</div>
+<span class="ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>4 of 4</span>
+</div>
+<div class="muted" style="font-size: 12px;">1 variant · 2 states · on 12 pages</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<span class="st"><i></i>Default</span><span class="st"><i></i>Scrolled</span>
+</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">navy-900</span><span class="tag">gray-100</span><span class="tag">label</span></div>
+</div>
+</a>
+
+<a href="component-panel.html" class="card cc">
+<div class="prev">
+<span style="display: flex; flex-direction: column; gap: 6px; width: 180px; padding: 14px; border-radius: 12px; border: 1px solid #D6D6D6; background: #fff; box-sizing: border-box;">
+<span style="font-size: 11px; font-weight: 600; color: #2458E6;">Team</span>
+<span style="font-size: 22px; font-weight: 700; color: #0B1F3A;">$24 <span style="font-size: 12px; font-weight: 400; color: #5F5F5F;">/ mo</span></span>
+<span style="display: inline-flex; align-items: center; justify-content: center; height: 32px; border-radius: 8px; background: #2458E6; color: #fff; font-weight: 600; font-size: 12px;">Choose</span>
+</span>
+</div>
+<div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+<div style="font-weight: 600; font-size: 15px;">Pricing card</div>
+<span class="ok"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>4 of 4</span>
+</div>
+<div class="muted" style="font-size: 12px;">2 variants · 2 states · on 1 page</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<span class="st"><i></i>Default</span><span class="st"><i></i>Highlighted</span>
+</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">radius-12</span><span class="tag">shadow-md</span><span class="tag">display</span></div>
+</div>
+</a>
+
+<a href="component-panel.html" class="card cc">
+<div class="prev">
+<span style="display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: #D8F3EE; color: #0B6B5E; font-size: 12px; font-weight: 600;">Active</span>
+<span style="display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: #FDF0D5; color: #7A5200; font-size: 12px; font-weight: 600;">Pending</span>
+<span style="display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: 999px; background: #FBE3E3; color: #9A2B2B; font-size: 12px; font-weight: 600;">Failed</span>
+</div>
+<div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+<div style="font-weight: 600; font-size: 15px;">Status badge</div>
+<span class="no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>2 of 4</span>
+</div>
+<div class="muted" style="font-size: 12px;">5 variants · 1 state · on 3 pages</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<span class="st"><i></i>Default</span>
+</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">success</span><span class="tag">warning</span><span class="tag">danger</span><span class="tag">caption</span></div>
+</div>
+</a>
+
+<a href="component-panel.html" class="card cc">
+<div class="prev" style="padding: 12px;">
+<span style="display: flex; flex-direction: column; width: 100%; font-size: 11px; color: #3A3A3A; border: 1px solid #D6D6D6; border-radius: 8px; overflow: hidden; background: #fff;">
+<span style="display: flex; justify-content: space-between; padding: 7px 10px; background: #F4F6FA; font-weight: 600; color: #0B1F3A;"><span>Invoice</span><span>Status</span><span>Amount</span></span>
+<span style="display: flex; justify-content: space-between; padding: 7px 10px; border-top: 1px solid #EFEFEF;"><span>#1042</span><span>Paid</span><span>$1,200</span></span>
+<span style="display: flex; justify-content: space-between; padding: 7px 10px; border-top: 1px solid #EFEFEF;"><span>#1043</span><span>Due</span><span>$640</span></span>
+</span>
+</div>
+<div style="padding: 16px 18px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+<div style="font-weight: 600; font-size: 15px;">Data table</div>
+<span class="no"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg>3 of 4</span>
+</div>
+<div class="muted" style="font-size: 12px;">1 variant · 3 states · on 2 pages</div>
+<div style="display: flex; gap: 10px; flex-wrap: wrap;">
+<span class="st"><i></i>Default</span><span class="st"><i></i>Row hover</span><span class="st"><i></i>Sorted</span>
+</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;"><span class="tag">surface</span><span class="tag">gray-300</span><span class="tag">label</span></div>
+</div>
+</a>
+
+</div>
+<div><a class="btn btn-g" href="#components">Show all 46 components</a></div>
+</section>
+
+<section id="checks" class="wrap" style="width: 100%; padding-top: 64px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;">
+<h2 class="h2">Automated checks</h2>
+<p class="muted" style="margin: 0; font-size: 14px;">The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.</p>
+</div>
+<div class="card" style="display: flex; flex-wrap: wrap;">
+<div class="stat"><b>118</b><span class="muted" style="font-size: 13px;">Passed</span></div>
+<div class="stat" style="border-left: 1px solid #EFEFEF;"><b>14</b><span class="muted" style="font-size: 13px;">Failed</span></div>
+<div class="stat" style="border-left: 1px solid #EFEFEF;"><b>132</b><span class="muted" style="font-size: 13px;">Total · 46 components × up to 5 checks</span></div>
+</div>
+<div class="card" style="overflow: hidden;">
+<table class="tbl">
+<thead><tr><th>Check</th><th>What it measures</th><th>Passed</th><th>Failing</th></tr></thead>
+<tbody>
+<tr><td style="font-weight: 600;">Contrast AA</td><td class="muted">Text against the background it actually sits on, at the size it is rendered</td><td class="mono">38 of 46</td><td class="muted">Status badge · Pending 2.9:1 · Footer link 4.1:1 · Caption on surface 4.2:1 · 5 more</td></tr>
+<tr><td style="font-weight: 600;">Focus visible</td><td class="muted">A visible focus style when reached by keyboard</td><td class="mono">44 of 46</td><td class="muted">Icon button · Close · Tab · Docs sidebar</td></tr>
+<tr><td style="font-weight: 600;">Tap target</td><td class="muted">44 × 44 px minimum for touch controls at the mobile viewport</td><td class="mono">20 of 24</td><td class="muted">Button · Ghost small 40 px · Pagination 32 px · 2 more</td></tr>
+<tr><td style="font-weight: 600;">Label present</td><td class="muted">Inputs and icon-only buttons have an accessible name</td><td class="mono">15 of 16</td><td class="muted">Search input on /docs</td></tr>
+<tr><td style="font-weight: 600;">Reduced motion</td><td class="muted">Animations stop or shorten under prefers-reduced-motion</td><td class="mono">1 of 1</td><td class="muted">None</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="drift" class="wrap" style="width: 100%; padding-top: 64px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;">
+<h2 class="h2">Drift report</h2>
+<p class="muted" style="margin: 0; font-size: 14px;">Where the system is leaking, with a proposed clean set. Numbers first, proposal second, evidence last.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+<div class="card" style="padding: 22px 24px; display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 30px; font-weight: 600; letter-spacing: -0.02em;">14 <span class="muted" style="font-size: 18px; font-weight: 500;">grays →</span> 5</span>
+<span class="muted" style="font-size: 13px;">Nine are within ΔE 2.5 of a neighbor. Nobody can tell them apart.</span>
+</div>
+<div class="card" style="padding: 22px 24px; display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 30px; font-weight: 600; letter-spacing: -0.02em;">6 <span class="muted" style="font-size: 18px; font-weight: 500;">button variants →</span> 3</span>
+<span class="muted" style="font-size: 13px;">Three differ only by 1 px of padding or a 2 px radius.</span>
+</div>
+<div class="card" style="padding: 22px 24px; display: flex; flex-direction: column; gap: 8px;">
+<span style="font-size: 30px; font-weight: 600; letter-spacing: -0.02em;">9 <span class="muted" style="font-size: 18px; font-weight: 500;">spacing values →</span> 7</span>
+<span class="muted" style="font-size: 13px;">Two sit off the 4 px grid: 10 px and 18 px, on /pricing and /blog.</span>
+</div>
+</div>
+
+<div class="card" style="padding: 24px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px;">
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<span class="lbl">Current · 14 grays</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap;">
+<div class="sw" style="width: 36px; height: 36px; background: #111111;"></div><div class="sw" style="width: 36px; height: 36px; background: #1A1A1A;"></div><div class="sw" style="width: 36px; height: 36px; background: #222222;"></div><div class="sw" style="width: 36px; height: 36px; background: #2E2E2E;"></div><div class="sw" style="width: 36px; height: 36px; background: #3A3A3A;"></div><div class="sw" style="width: 36px; height: 36px; background: #4A4A4A;"></div><div class="sw" style="width: 36px; height: 36px; background: #5F5F5F;"></div><div class="sw" style="width: 36px; height: 36px; background: #6B6B6B;"></div><div class="sw" style="width: 36px; height: 36px; background: #6E6E6E;"></div><div class="sw" style="width: 36px; height: 36px; background: #707070;"></div><div class="sw" style="width: 36px; height: 36px; background: #8A8A8A;"></div><div class="sw" style="width: 36px; height: 36px; background: #9A9A9A;"></div><div class="sw" style="width: 36px; height: 36px; background: #B5B5B5;"></div><div class="sw" style="width: 36px; height: 36px; background: #D6D6D6;"></div>
+</div>
+<span class="muted" style="font-size: 13px;">Spread across 12 pages, 1,044 text uses and 388 border uses.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 12px;">
+<span class="lbl">Proposed · 5 grays</span>
+<div style="display: flex; flex-direction: column; gap: 8px; font-size: 13px;">
+<div style="display: flex; align-items: center; gap: 12px;"><div class="sw" style="width: 36px; height: 36px; background: #111111; flex: none;"></div><span class="mono" style="width: 80px;">gray-900</span><span class="muted">absorbs 1A1A1A, 222222</span></div>
+<div style="display: flex; align-items: center; gap: 12px;"><div class="sw" style="width: 36px; height: 36px; background: #3A3A3A; flex: none;"></div><span class="mono" style="width: 80px;">gray-700</span><span class="muted">absorbs 2E2E2E, 4A4A4A</span></div>
+<div style="display: flex; align-items: center; gap: 12px;"><div class="sw" style="width: 36px; height: 36px; background: #6B6B6B; flex: none;"></div><span class="mono" style="width: 80px;">gray-500</span><span class="muted">absorbs 5F5F5F, 6E6E6E, 707070</span></div>
+<div style="display: flex; align-items: center; gap: 12px;"><div class="sw" style="width: 36px; height: 36px; background: #9A9A9A; flex: none;"></div><span class="mono" style="width: 80px;">gray-300</span><span class="muted">absorbs 8A8A8A, B5B5B5</span></div>
+<div style="display: flex; align-items: center; gap: 12px;"><div class="sw" style="width: 36px; height: 36px; background: #D6D6D6; flex: none;"></div><span class="mono" style="width: 80px;">gray-100</span><span class="muted">unchanged</span></div>
+</div>
+<span class="muted" style="font-size: 13px;">Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.</span>
+</div>
+</div>
+
+<div class="card" style="overflow: hidden;">
+<table class="tbl">
+<thead><tr><th>Near-duplicate</th><th>And</th><th>ΔE</th><th>Seen on</th><th>Uses</th></tr></thead>
+<tbody>
+<tr><td class="mono">#6B6B6B</td><td class="mono">#6E6E6E</td><td class="mono">1.2</td><td class="muted">/pricing, /docs, /contact</td><td class="mono">212 · 48</td></tr>
+<tr><td class="mono">#1A1A1A</td><td class="mono">#222222</td><td class="mono">2.0</td><td class="muted">/, /blog, /changelog</td><td class="mono">160 · 97</td></tr>
+<tr><td class="mono">#8A8A8A</td><td class="mono">#9A9A9A</td><td class="mono">2.4</td><td class="muted">/features, /docs</td><td class="mono">74 · 41</td></tr>
+<tr><td class="mono">Button · Primary</td><td class="mono">Button · Primary alt</td><td class="mono">radius 8 vs 6</td><td class="muted">/signup only</td><td class="mono">41 · 3</td></tr>
+<tr><td class="mono">space 16</td><td class="mono">space 18</td><td class="mono">2 px</td><td class="muted">/blog post template</td><td class="mono">380 · 12</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section id="exports" class="wrap" style="width: 100%; padding-top: 64px; padding-bottom: 48px; display: flex; flex-direction: column; gap: 24px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 12px;">
+<h2 class="h2">Exports</h2>
+<p class="muted" style="margin: 0; font-size: 14px;">Every export uses the proposed clean set by default. Switch to the raw extraction in each file.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px;">
+<div class="card" style="padding: 20px 22px; display: flex; flex-direction: column; gap: 10px;"><div style="font-weight: 600; font-size: 15px;">CSS variables</div><div class="muted mono" style="font-size: 12px;">tokens.css · 4 KB</div><div style="margin-top: 6px;"><a class="btn btn-g btn-s" href="#dl">Download</a></div></div>
+<div class="card" style="padding: 20px 22px; display: flex; flex-direction: column; gap: 10px;"><div style="font-weight: 600; font-size: 15px;">JSON</div><div class="muted mono" style="font-size: 12px;">tokens.json · 11 KB</div><div style="margin-top: 6px;"><a class="btn btn-g btn-s" href="#dl">Download</a></div></div>
+<div class="card" style="padding: 20px 22px; display: flex; flex-direction: column; gap: 10px;"><div style="font-weight: 600; font-size: 15px;">Tailwind config</div><div class="muted mono" style="font-size: 12px;">tailwind.tokens.js · 3 KB</div><div style="margin-top: 6px;"><a class="btn btn-g btn-s" href="#dl">Download</a></div></div>
+<div class="card" style="padding: 20px 22px; display: flex; flex-direction: column; gap: 10px;"><div style="font-weight: 600; font-size: 15px;">W3C design tokens</div><div class="muted mono" style="font-size: 12px;">tokens.w3c.json · 12 KB</div><div style="margin-top: 6px;"><a class="btn btn-g btn-s" href="#dl">Download</a></div></div>
+<div class="card" style="padding: 20px 22px; display: flex; flex-direction: column; gap: 10px;"><div style="font-weight: 600; font-size: 15px;">design-system.md</div><div class="muted mono" style="font-size: 12px;">For a repo's CLAUDE.md or docs · 9 KB</div><div style="margin-top: 6px;"><a class="btn btn-g btn-s" href="#dl">Download</a></div></div>
+<div class="card" style="padding: 20px 22px; display: flex; flex-direction: column; gap: 10px;"><div style="font-weight: 600; font-size: 15px;">Prompt</div><div class="muted" style="font-size: 12px;">Whole system or one component, for Claude, ChatGPT or any model</div><div style="margin-top: 6px;"><a class="btn btn-g btn-s" href="#copy"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>Copy prompt</a></div></div>
+</div>
+<div class="card" style="padding: 22px 24px; display: flex; flex-direction: column; gap: 12px;">
+<div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px;">
+<div style="font-weight: 600; font-size: 15px;">MCP server</div>
+<span class="muted" style="font-size: 13px;">Claude Code and Claude Desktop read this run directly. No pasting.</span>
+</div>
+<div class="code">claude mcp add specimen -- npx -y @specimen/mcp --run a3f9</div>
+<span class="muted" style="font-size: 12px;">Tools exposed: get_tokens · get_component · list_components · get_drift · get_checks</span>
+</div>
+</section>
+
+<footer class="wrap" style="width: 100%; margin-top: auto; padding-top: 24px; padding-bottom: 32px; border-top: 1px solid #E6E6E6; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; font-size: 13px;">
+<span class="muted">Run a3f9 · cost $0.41 · Haiku for naming, Sonnet for the report · <a href="how-it-works.html">How it works</a></span>
+<span class="muted">Share link: <span class="mono">specimen.dev/r/a3f9</span></span>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":4400}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
