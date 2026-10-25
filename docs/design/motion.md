@@ -69,7 +69,7 @@ Navigating between runs: the new page's header wipes in; sections below reveal a
 
 ## Reduced motion
 
-`prefers-reduced-motion: reduce` collapses every move to a 200 ms opacity change, stops the count (numbers appear at their value), stops the stagger, and keeps layout animations instant. The in-progress page still fills stage by stage; it just does not perform.
+`prefers-reduced-motion: reduce` collapses every move to a 200 ms opacity change, stops the count (numbers appear at their value), stops the stagger, and keeps layout animations instant. The in-progress page still fills stage by stage; it just does not perform. Implementation (D-039): an element that moves on first paint carries `data-move`, and a reduced-motion stylesheet rule removes its transform and clip and fades it in over 200 ms, because its variants are rendered on the server before the preference is known; elements that mount later (a toast, a sheet, a menu, a poll's new content) read the preference in JavaScript and use opacity-only variants.
 
 ## Performance rules
 

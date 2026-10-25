@@ -1,0 +1,97 @@
+.button {
+  composes: button from '../styles/type.module.css';
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--dse-space-2);
+  border: 1px solid transparent;
+  border-radius: var(--dse-radius-md);
+  white-space: nowrap;
+  user-select: none;
+  text-decoration: none;
+  transition:
+    border-color var(--dse-motion-fast) var(--dse-ease-standard),
+    transform var(--dse-motion-fast) var(--dse-ease-standard);
+}
+
+.label {
+  transition: opacity var(--dse-motion-fast) var(--dse-ease-standard);
+}
+
+.icon {
+  flex: none;
+}
+
+.md {
+  height: 44px;
+  padding-inline: var(--dse-space-5);
+}
+
+.sm {
+  height: 36px;
+  padding-inline: var(--dse-space-4);
+}
+
+.xl {
+  height: 56px;
+  padding-inline: var(--dse-space-6);
+  font-size: var(--dse-type-button-size-xl);
+}
+
+.primary {
+  background: var(--dse-ink);
+  color: var(--dse-inverse-ink);
+}
+
+.ghost {
+  background: var(--dse-surface);
+  color: var(--dse-ink);
+  border-color: var(--dse-line);
+}
+
+.inverse {
+  background: var(--dse-inverse-ink);
+  color: var(--dse-ink);
+}
+
+.primary:hover .label,
+.primary[data-force='hover'] .label,
+.inverse:hover .label,
+.inverse[data-force='hover'] .label {
+  opacity: 0.9;
+}
+
+.ghost:hover,
+.ghost[data-force='hover'] {
+  border-color: var(--dse-line-strong);
+}
+
+.button[data-force='focus'] {
+  outline: var(--dse-focus-width) solid var(--dse-ring, var(--dse-focus));
+  outline-offset: var(--dse-focus-offset);
+}
+
+.button:active,
+.button[data-force='active'] {
+  transform: scale(0.985);
+  transition-duration: 80ms;
+}
+
+.button:disabled,
+.button[aria-disabled='true'] {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: default;
+}
+
+.block {
+  width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button:active,
+  .button[data-force='active'] {
+    transform: none;
+  }
+}

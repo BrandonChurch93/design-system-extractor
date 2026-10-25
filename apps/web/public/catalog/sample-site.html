@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tidewater.app sample</title>
+<style>
+  body { margin: 0; font-family: Georgia, 'Times New Roman', serif; background: #F4F6FA; color: #0B1F3A; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: #FFFFFF; border-bottom: 1px solid #D6D6D6; }
+  .logo { font-weight: 700; font-size: 20px; }
+  nav a { margin-left: 28px; color: #3A3A3A; text-decoration: none; font-size: 15px; }
+  .hero { padding: 96px 48px 72px; max-width: 760px; }
+  h1 { font-size: 52px; line-height: 1.08; margin: 0 0 20px; }
+  p { font-size: 18px; line-height: 1.6; color: #3A3A3A; margin: 0 0 32px; }
+  .btn { display: inline-block; padding: 12px 22px; border-radius: 8px; background: #2458E6; color: #FFFFFF; font: 600 15px system-ui, sans-serif; text-decoration: none; }
+  .btn.secondary { background: transparent; color: #0B1F3A; border: 1px solid #0B1F3A; margin-left: 12px; }
+  .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; padding: 0 48px 96px; }
+  .card { background: #FFFFFF; border-radius: 12px; padding: 28px; box-shadow: 0 4px 12px rgba(11, 31, 58, 0.08); }
+  .card h2 { font-size: 22px; margin: 0 0 10px; }
+  .card p { font-size: 15px; margin: 0; }
+  .badge { display: inline-block; margin-bottom: 14px; padding: 2px 10px; border-radius: 999px; background: #D8F3EE; color: #0B6B5E; font: 600 12px system-ui, sans-serif; }
+</style>
+</head>
+<body>
+<header><span class="logo">tidewater</span><nav><a href="#">Product</a><a href="#">Pricing</a><a href="#">Docs</a><a class="btn" href="#">Start free</a></nav></header>
+<section class="hero"><h1>Release notes your team will actually read.</h1><p>Tidewater turns merged pull requests into a calm, weekly changelog.</p><a class="btn" href="#">Start free</a><a class="btn secondary" href="#">See a sample</a></section>
+<section class="cards">
+  <div class="card"><span class="badge">New</span><h2>Weekly digests</h2><p>One email, every Friday, with what shipped.</p></div>
+  <div class="card"><span class="badge">Beta</span><h2>Slack threads</h2><p>Each release posts where the team already talks.</p></div>
+  <div class="card"><span class="badge">Stable</span><h2>Public pages</h2><p>A changelog page on your own domain.</p></div>
+</section>
+</body>
+</html>

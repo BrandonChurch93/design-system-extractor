@@ -1,0 +1,197 @@
+/* Studio · the app's design tokens. The spec is docs/design/design-system.md and
+   docs/design/motion.md; apps/web/test/tokens.test.ts diffs this file against both. */
+
+:root {
+  /* Color · light only, no chroma */
+  --dse-bg: #FCFAF8;
+  --dse-surface: #FFFFFF;
+  --dse-surface-tint: #FCF5F3;
+  --dse-ink: #23201E;
+  --dse-ink-2: #3E3936;
+  --dse-muted: #6A635E;
+  --dse-line: #23201E1A;
+  --dse-line-soft: #23201E0F;
+  --dse-line-strong: #23201E38;
+  --dse-focus: #35302C;
+  --dse-focus-inverse: #FCFAF8;
+  --dse-inverse-bg: #23201E;
+  --dse-inverse-ink: #FCFAF8;
+  --dse-inverse-muted: #B9B1AB;
+  --dse-inverse-line: #FCFAF826;
+  --dse-skeleton: #EFEBE7;
+  --dse-scrim: #23201E14;
+
+  /* Families (next/font sets --dse-font-sans-face and --dse-font-mono-face on <html>) */
+  --dse-font-sans: var(--dse-font-sans-face), 'Plus Jakarta Sans', system-ui, sans-serif;
+  --dse-font-mono: var(--dse-font-mono-face), 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Type styles · size, line height, weight, tracking, family; phone sizes where named */
+  --dse-type-headline-size: 56px;
+  --dse-type-headline-size-phone: 36px;
+  --dse-type-headline-line: 1.05;
+  --dse-type-headline-weight: 700;
+  --dse-type-headline-tracking: -0.025em;
+  --dse-type-headline-family: var(--dse-font-sans);
+
+  --dse-type-title-size: 44px;
+  --dse-type-title-size-phone: 32px;
+  --dse-type-title-line: 1.05;
+  --dse-type-title-weight: 700;
+  --dse-type-title-tracking: -0.025em;
+  --dse-type-title-family: var(--dse-font-sans);
+
+  --dse-type-title-sm-size: 30px;
+  --dse-type-title-sm-size-phone: 26px;
+  --dse-type-title-sm-line: 1.1;
+  --dse-type-title-sm-weight: 700;
+  --dse-type-title-sm-tracking: -0.02em;
+  --dse-type-title-sm-family: var(--dse-font-sans);
+
+  --dse-type-h2-size: 24px;
+  --dse-type-h2-line: 1.2;
+  --dse-type-h2-weight: 700;
+  --dse-type-h2-tracking: -0.015em;
+  --dse-type-h2-family: var(--dse-font-sans);
+
+  --dse-type-h2-sm-size: 20px;
+  --dse-type-h2-sm-line: 1.25;
+  --dse-type-h2-sm-weight: 600;
+  --dse-type-h2-sm-tracking: -0.01em;
+  --dse-type-h2-sm-family: var(--dse-font-sans);
+
+  --dse-type-h3-size: 16px;
+  --dse-type-h3-line: 1.3;
+  --dse-type-h3-weight: 600;
+  --dse-type-h3-tracking: 0;
+  --dse-type-h3-family: var(--dse-font-sans);
+
+  --dse-type-stat-size: 34px;
+  --dse-type-stat-size-phone: 28px;
+  --dse-type-stat-line: 1;
+  --dse-type-stat-weight: 700;
+  --dse-type-stat-tracking: -0.02em;
+  --dse-type-stat-family: var(--dse-font-sans);
+
+  --dse-type-drift-size: 24px;
+  --dse-type-drift-size-phone: 20px;
+  --dse-type-drift-line: 1.25;
+  --dse-type-drift-weight: 600;
+  --dse-type-drift-tracking: -0.015em;
+  --dse-type-drift-family: var(--dse-font-sans);
+
+  --dse-type-drift-sub-size: 18px;
+  --dse-type-drift-sub-line: 1.3;
+  --dse-type-drift-sub-weight: 500;
+  --dse-type-drift-sub-tracking: 0;
+  --dse-type-drift-sub-family: var(--dse-font-sans);
+
+  --dse-type-body-size: 15px;
+  --dse-type-body-line: 1.5;
+  --dse-type-body-weight: 400;
+  --dse-type-body-tracking: 0;
+  --dse-type-body-family: var(--dse-font-sans);
+
+  --dse-type-body-sm-size: 14px;
+  --dse-type-body-sm-line: 1.45;
+  --dse-type-body-sm-weight: 400;
+  --dse-type-body-sm-tracking: 0;
+  --dse-type-body-sm-family: var(--dse-font-sans);
+
+  --dse-type-label-size: 13px;
+  --dse-type-label-line: 1.3;
+  --dse-type-label-weight: 500;
+  --dse-type-label-tracking: 0;
+  --dse-type-label-family: var(--dse-font-sans);
+
+  --dse-type-caption-size: 12.5px;
+  --dse-type-caption-line: 1.4;
+  --dse-type-caption-weight: 400;
+  --dse-type-caption-tracking: 0;
+  --dse-type-caption-family: var(--dse-font-sans);
+
+  --dse-type-meta-size: 12.5px;
+  --dse-type-meta-line: 1.4;
+  --dse-type-meta-weight: 400;
+  --dse-type-meta-tracking: 0.01em;
+  --dse-type-meta-family: var(--dse-font-mono);
+
+  --dse-type-hex-size: 11.5px;
+  --dse-type-hex-line: 1.3;
+  --dse-type-hex-weight: 400;
+  --dse-type-hex-tracking: 0.02em;
+  --dse-type-hex-family: var(--dse-font-mono);
+
+  --dse-type-tag-size: 11px;
+  --dse-type-tag-line: 1.3;
+  --dse-type-tag-weight: 400;
+  --dse-type-tag-tracking: 0;
+  --dse-type-tag-family: var(--dse-font-mono);
+
+  --dse-type-code-size: 12.5px;
+  --dse-type-code-line: 1.6;
+  --dse-type-code-weight: 400;
+  --dse-type-code-tracking: 0;
+  --dse-type-code-family: var(--dse-font-mono);
+
+  --dse-type-button-size: 14px;
+  --dse-type-button-size-xl: 15px;
+  --dse-type-button-line: 1;
+  --dse-type-button-weight: 600;
+  --dse-type-button-tracking: 0;
+  --dse-type-button-family: var(--dse-font-sans);
+
+  /* Spacing · 4 px base */
+  --dse-space-1: 4px;
+  --dse-space-2: 8px;
+  --dse-space-3: 12px;
+  --dse-space-4: 16px;
+  --dse-space-5: 20px;
+  --dse-space-6: 28px;
+  --dse-space-7: 40px;
+  --dse-space-8: 64px;
+  --dse-space-9: 96px;
+
+  /* Radius */
+  --dse-radius-sm: 8px;
+  --dse-radius-md: 14px;
+  --dse-radius-lg: 18px;
+  --dse-radius-pill: 999px;
+
+  /* Shadow */
+  --dse-shadow-card: 0 12px 40px rgba(226, 96, 98, 0.07), 0 1px 3px rgba(35, 32, 30, 0.05);
+  --dse-shadow-card-hover: 0 16px 44px rgba(226, 96, 98, 0.12), 0 1px 3px rgba(35, 32, 30, 0.05);
+  --dse-shadow-swatch: 0 6px 18px rgba(35, 32, 30, 0.08);
+  --dse-shadow-panel: -24px 0 48px rgba(35, 32, 30, 0.08);
+  --dse-shadow-sheet: 0 -16px 48px rgba(35, 32, 30, 0.10);
+
+  /* Motion */
+  --dse-motion-fast: 160ms;
+  --dse-motion-base: 260ms;
+  --dse-motion-slow: 420ms;
+  --dse-motion-stage: 600ms;
+  --dse-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --dse-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --dse-stagger: 30ms;
+  --dse-stagger-cap: 12;
+
+  /* Layout */
+  --dse-content-width: 1160px;
+  --dse-gutter: 40px;
+  --dse-gutter-phone: 20px;
+  --dse-measure: 600px;
+  --dse-nav-height: 68px;
+  --dse-panel-width: 560px;
+  --dse-panel-width-tablet: 480px;
+
+  /* Focus and icons */
+  --dse-focus-width: 2px;
+  --dse-focus-offset: 2px;
+  --dse-icon-sm: 16px;
+  --dse-icon: 20px;
+  --dse-icon-stroke: 1.75;
+
+  /* Breakpoints, for reference only: media queries use the literal values
+     (max-width: 640px) for phone and (max-width: 1023px) for tablet and below. */
+  --dse-bp-phone-max: 640px;
+  --dse-bp-tablet-max: 1023px;
+}

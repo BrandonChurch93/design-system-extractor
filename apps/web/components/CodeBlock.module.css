@@ -1,0 +1,40 @@
+.block {
+  position: relative;
+  min-width: 0;
+  background: var(--dse-surface-tint);
+  border: 1px solid var(--dse-line-soft);
+  border-radius: var(--dse-radius-sm);
+}
+
+.pre {
+  composes: code from '../styles/type.module.css';
+  margin: 0;
+  padding: var(--dse-space-4) calc(var(--dse-space-4) + 36px) var(--dse-space-4) var(--dse-space-4);
+  overflow-x: auto;
+  white-space: pre;
+  color: var(--dse-ink);
+}
+
+.pre:focus-visible {
+  outline-offset: -2px;
+}
+
+.copy {
+  position: absolute;
+  top: var(--dse-space-2);
+  right: var(--dse-space-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--dse-line);
+  border-radius: var(--dse-radius-sm);
+  background: var(--dse-surface);
+  color: var(--dse-ink);
+  transition: border-color var(--dse-motion-fast) var(--dse-ease-standard);
+}
+
+.copy:hover {
+  border-color: var(--dse-line-strong);
+}

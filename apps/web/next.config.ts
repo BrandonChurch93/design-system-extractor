@@ -10,6 +10,9 @@ loadRootEnv(repoRoot);
 const config: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  devIndicators: false,
+  // The repository's agent rules live in CLAUDE.md; Next would otherwise write AGENTS.md here.
+  agentRules: false,
   outputFileTracingRoot: repoRoot,
   transpilePackages: ['@dse/schema', '@dse/pipeline'],
   env: {

@@ -1,0 +1,17 @@
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--dse-space-3);
+}
+
+.title {
+  composes: h3 from '../styles/type.module.css';
+}
+
+.body {
+  composes: bodySm from '../styles/type.module.css';
+  color: var(--dse-muted);
+  max-width: var(--dse-measure);
+  margin-bottom: var(--dse-space-2);
+}

@@ -1,0 +1,11 @@
+.popover {
+  z-index: 40;
+  background: var(--dse-surface);
+  border: 1px solid var(--dse-line-soft);
+  border-radius: var(--dse-radius-lg);
+  box-shadow: var(--dse-shadow-card);
+  padding: var(--dse-space-5);
+  overflow: auto;
+  outline: none;
+  color: var(--dse-ink);
+}

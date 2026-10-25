@@ -1,0 +1,66 @@
+.layer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--dse-scrim);
+}
+
+.sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--dse-surface);
+  border-radius: var(--dse-radius-lg) var(--dse-radius-lg) 0 0;
+  box-shadow: var(--dse-shadow-sheet);
+  outline: none;
+}
+
+.tall {
+  height: 92%;
+}
+
+.content {
+  max-height: 80%;
+}
+
+.handleHit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 28px;
+  border: 0;
+  background: none;
+  flex: none;
+  touch-action: none;
+  border-radius: var(--dse-radius-lg) var(--dse-radius-lg) 0 0;
+}
+
+.handle {
+  display: block;
+  width: 36px;
+  height: 4px;
+  border-radius: var(--dse-radius-pill);
+  background: var(--dse-line-strong);
+}
+
+.body {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 var(--dse-space-5) var(--dse-space-6);
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+@media (max-width: 640px) {
+  .body {
+    padding-inline: var(--dse-gutter-phone);
+  }
+}

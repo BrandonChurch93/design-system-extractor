@@ -10,25 +10,29 @@ None.
 
 ## Current phase
 
-P2 · Design system in code and the catalog. Started 2026-10-25.
+P3 · Crawler, selection and capture. Started 2026-10-25.
 
 ## Next action
 
-Read `docs/design/design-system.md`, `docs/design/motion.md`, `docs/design/components.md` (Primitives), `docs/quality-bar.md` and `reference/direction-a.html` in full, then build `apps/web/styles/tokens.css`, the motion utilities, every primitive and `/catalog`, then `qa:design`, `qa:visual` and `qa:axe`, per the P2 checklist below.
+Read `docs/specs/crawler.md`, `docs/specs/page-selection.md`, `docs/specs/capture-and-states.md`, `docs/specs/caps-and-budget.md` (private-address rules), `docs/specs/model-calls.md` and `docs/evals.md` in full, then build the six fixture sites with `expected.json` (checking the clean fixture's no-drift numbers), then `net/private-ranges.ts`, `discover`, the model client with modes and the dev meter, `select`, the evals harness, `capture`, `RunContext` and `run.ts`, per the P3 checklist below.
 
 ## Phase checklist
 
-P2 exit criteria (from `docs/plan.md`), plus the standing gate items:
+P3 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
-- [ ] Every token in `design-system.md` exists in `tokens.css` with the exact value; a test reads both and diffs.
-- [ ] Contrast test: every listed pair meets its WCAG threshold and the printed ratio is within 0.05 of the computed one.
-- [ ] Catalog screenshots reviewed against the design docs at 1440, 820 and 390; the catalog passes axe with zero violations; focus rings visible on every interactive primitive in the screenshots (a focused-state capture is part of `qa:design`).
-- [ ] Reduced motion: a Playwright test with `reducedMotion: 'reduce'` asserts no transform animations run.
-- [ ] Visual goldens committed for the catalog.
-- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm verify:all`, `pnpm qa:design` reviewed, commit naming P2, STATUS updated.
+- [ ] Selection matches `expected.json` exactly on all five eval fixtures.
+- [ ] Capture produces the expected element-candidate counts and states on the clean and messy fixtures (primary button hover, focus, active; disabled instance found; the dropdown `open` state; the mobile menu).
+- [ ] Blocked-state tests pass with recorded bodies for bot, login, robots, unreachable; the private-address validator passes its IPv4, IPv6 and rebinding tables.
+- [ ] The no-form-submission marker test and the dialog auto-dismiss test pass.
+- [ ] Politeness interval test passes.
+- [ ] `pnpm evals --through capture` passes selection exactness (and `verify:all` runs it).
+- [ ] Model-call tests for the select purpose: replay, malformed and timeout fallbacks, cost arithmetic, request hash stability, the dev cap refusing the next live call.
+- [ ] The catalog's dev spend readout wired to the meter file.
+- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm verify:all`, `pnpm qa:design` reviewed for touched pages, commit naming P3, STATUS updated.
 
 ## Gates passed
 
+- P2 · Design system in code and the catalog · 2026-10-25 · tokens.css diffed against design-system.md and motion.md both ways (mutation-checked) · contrast table recomputed within 0.05 · 23 primitives plus a Motion section in /catalog with 390 px frames · axe zero violations on the catalog at 1440, 820, 390 and on all 25 frame routes · reduced-motion Playwright test with a no-preference control · catalog goldens committed · qa:design reviewed at three viewports with a 60-stop keyboard focus walk · verify:all green.
 - P1 · Schema and data model · 2026-10-25 · 42 tests (schema, enums and labels verbatim from copy.md, every data-model type by name, migrations clean and idempotent, db:reset, patch merge and concurrency, events, unpublished runs hidden, storage text and binary round trip with content types) · verify:all green.
 - P0 · Preflight · 2026-10-25 · `pnpm run doctor` all services connected (Postgres 16, Redis 7, MinIO with both buckets and public read, Anthropic key with both model ids live) · `pnpm check` green · `pnpm verify:all` green end to end with empty suites · worker image builds and runs · `pnpm --filter web build` green.
 
@@ -36,6 +40,10 @@ P2 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-039 · Reduced motion for content on first paint: `data-move` plus a stylesheet rule; elements mounting later read the preference in JavaScript.
+- D-038 · Catalog phones are real 390 px iframes; axe-core runs per top document; QA captures at full document height without site isolation; CSP will allow `frame-src 'self'`.
+- D-037 · Swatch `token` is 96 wide × 48 high.
+- D-036 · `focus-inverse` ring token for inverse grounds.
 - D-035 · No `nosniff` on stored objects (S3 cannot set it); the right Content-Type on every upload.
 - D-034 · Unpublishing hides a run (404) and restores 90-day retention.
 - D-033 · Database code in `packages/pipeline/src/db/`; `run_pages` keyed by (run_id, id); the run document fields later stages need.
@@ -55,6 +63,10 @@ Things implemented differently from the spec, with the decision id that explains
 
 ## Toolchain notes
 
+- `next.config` sets `agentRules: false` (Next 16 would write an AGENTS.md with em dashes into apps/web) and `devIndicators: false`. Next 16's own docs are in `apps/web/node_modules/next/dist/docs`; read them before writing routes (P11), because the API differs from older Next.
+- QA (`qa:design`, `qa:visual`, `qa:axe`) and `test:e2e` start a fresh production build on port 3100 through `scripts/qa-server.mjs` (rebuilds when sources are newer). Kill any stray server on 3100 before running them.
+- Dev helpers: `pnpm exec tsx scripts/shot.ts <url> <out.png> [w] [h]` and `scripts/tile.ts` to cut tall screenshots for review.
+
 - Node 22.14, pnpm 9.15.9, TypeScript 5.9.3 (the native 7.x compiler is not yet supported by Next.js tooling), ESLint 9 (ESLint 10 is not supported by the React, jsx-a11y and import plugins that `eslint-config-next` uses), Next.js 16.4, React 19.3, Zod 4.6, Vitest 5, Playwright 1.64 with its Chromium.
 - Internal packages `@dse/schema` and `@dse/pipeline` are consumed as TypeScript source; the worker, MCP and CLI bundles inline them with tsup.
 - Root scripts load `.env.local` (or `DOTENV_FILE`) through `scripts/run.mjs` without overriding variables already set, so `env DSE_MODEL_MODE=live pnpm evals` wins.
@@ -69,6 +81,7 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-25 · Gate passed · P2 · tokens, contrast, catalog, axe, reduced motion, goldens, verify:all green.
 - 2026-10-25 · Gate passed · P1 · tests, migrations, storage round trip, verify:all green.
 - 2026-10-25 · Gate passed · P0 · doctor, check and verify:all green.
 - 2026-10-25 · Session started · P0 · read CLAUDE.md, 00-start-here, STATUS, handoff, decisions, quality-bar, glossary, brief, plan, evals, deploy-runbook, v2-plan, every design and spec document, reference READMEs · tree clean (new repository).

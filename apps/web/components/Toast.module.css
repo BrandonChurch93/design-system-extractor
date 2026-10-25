@@ -1,0 +1,31 @@
+.region {
+  position: fixed;
+  right: var(--dse-gutter);
+  bottom: var(--dse-space-7);
+  z-index: 60;
+  pointer-events: none;
+}
+
+.toast {
+  composes: bodySm from '../styles/type.module.css';
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--dse-space-3) var(--dse-space-5);
+  background: var(--dse-inverse-bg);
+  color: var(--dse-inverse-ink);
+  border-radius: var(--dse-radius-md);
+  box-shadow: var(--dse-shadow-card);
+  font-weight: 500;
+}
+
+@media (max-width: 640px) {
+  .region {
+    right: var(--dse-gutter-phone);
+    left: var(--dse-gutter-phone);
+    bottom: var(--dse-space-5);
+    display: flex;
+    justify-content: center;
+  }
+}

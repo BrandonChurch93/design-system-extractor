@@ -244,3 +244,28 @@ Affects: `docs/specs/data-model.md`, `packages/pipeline/src/db/`.
 Date: 2026-10-25 · Context: P1 asked for `nosniff` on upload, but S3 object metadata cannot set `X-Content-Type-Options` (only Content-Type, Cache-Control, Content-Disposition and Content-Encoding are system metadata), on MinIO or Supabase Storage.
 Decision: every upload carries the right `Content-Type`, from the key's extension (unknown extensions are refused) and immutable caching for run files. `preview-fidelity.md` already makes the sandbox attribute and the preview document's own CSP the security boundary and relies on no storage response header; that stays the rule.
 Affects: `docs/plan.md`.
+
+## D-036 · A focus ring for inverse grounds
+
+Date: 2026-10-25 · Context: the `focus` ring (`#35302C`) reads 1.24:1 against `inverse-bg`, so the inverse button inside the drift headline card, the live log's disclosure and anything inside a toast would have an invisible ring, failing the 3:1 rule the design system sets for the ring.
+Decision: a new token `focus-inverse` (`#FCFAF8`, 15.55:1 on `inverse-bg`). Any container on `inverse-bg` carries `data-inverse`, which switches the ring color through the `--dse-ring` variable. Width, offset and behavior are unchanged.
+Reasoning: the ring rule ("never removed") only holds if the ring can be seen.
+Affects: `docs/design/design-system.md`, `apps/web/styles/tokens.css`, `apps/web/styles/globals.css`.
+
+## D-037 · Swatch `token` is 96 wide and 48 high
+
+Date: 2026-10-25 · Context: `components.md` gave the `token` swatch as "48 × 96". Read as width × height (the copy rule for sizes), a 48 px wide swatch cannot carry its hex and the usage caption ("navy-900 · 412 uses") beneath it, which the same entry requires.
+Decision: 96 wide × 48 high. The caption truncates with an ellipsis when a name is long; the full value is in the token popover.
+Affects: `docs/design/components.md`.
+
+## D-038 · How the catalog shows phones, and how QA reads it
+
+Date: 2026-10-25 · Context: components use media queries, so a 390 px wide box inside a desktop page would not show phone layouts; axe and screenshots also had to cope with nested and sandboxed frames.
+Decision: each catalog section shows its states on the page and a real 390 px phone in an iframe of `/catalog/frame/{slug}` (`noindex`, sized to its content by `postMessage`, out of the tab order because it repeats the demos beside it). The TopNav demo's desktop states render in a frame of their own so the page never carries two "Primary" navs. `qa:axe` runs axe-core in each top document (frames are checked as routes of their own; a `sandbox=""` preview frame cannot run axe's injection) and `qa:design` and `qa:visual` capture with the viewport grown to the full document height, in a Chromium without site isolation, so sandboxed preview frames paint in captures. QA scrolls with `behavior: instant` because the app sets smooth scrolling. The app's CSP (P6) therefore allows `frame-src 'self'` for these frames. The catalog gains a Motion section that plays the six moves with a Replay button, and `copy.md` gains the labels the catalog and the icon buttons need.
+Affects: `apps/web/app/catalog/`, `tests/qa/`, `docs/design/copy.md`, `docs/specs/preview-fidelity.md` (P6 CSP).
+
+## D-039 · Reduced motion for content present on first paint
+
+Date: 2026-10-25 · Context: the reduced-motion test found that an element rendered on the server takes its entrance variants before the browser's preference can be read, so a reduced-motion reader could see a transform before the client switched variants.
+Decision: elements that move on first paint carry `data-move`; under `prefers-reduced-motion: reduce` a global rule sets their `transform` and `clip-path` to none and fades them in over 200 ms. Elements that mount after hydration read the preference in JavaScript as before. The test measures computed transforms, which is what a reader sees, and keeps its no-preference control.
+Affects: `docs/design/motion.md`, `apps/web/styles/globals.css`, `tests/e2e/reduced-motion.spec.ts`.

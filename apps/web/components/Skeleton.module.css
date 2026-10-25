@@ -1,0 +1,13 @@
+.skeleton {
+  display: block;
+  border-radius: var(--dse-radius-sm);
+  transform-origin: left center;
+}
+
+.bg {
+  background: var(--dse-skeleton);
+}
+
+.surface {
+  background: var(--dse-surface-tint);
+}

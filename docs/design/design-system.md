@@ -2,7 +2,7 @@
 
 The app's own design system. Direction A from the derby (D-002), a sibling of the owner's Generative UI system: the same hand (warm ink on warm white, sentence case, mono for everything counted, nothing appears without a cause), a different skin, and one rule that system does not have: **no chroma in the chrome** (D-003). The extracted palette is the only color on any page.
 
-This document is the spec. `reference/direction-a.html` shows the skin; where they differ, this document wins. The tokens below are implemented once, in `apps/web/styles/tokens.css` as CSS custom properties prefixed `--dse-`, and consumed everywhere. No component defines its own color, size, radius or shadow value.
+This document is the spec. `reference/direction-a.html` shows the skin; where they differ, this document wins. The tokens below are implemented once, in `apps/web/styles/tokens.css` as CSS custom properties prefixed `--dse-`, and consumed everywhere. No component defines its own color, size, radius or shadow value. Naming: colors, spacing, radius and shadow use the token name (`--dse-ink`, `--dse-space-5`); each type style is five properties (`--dse-type-{style}-size`, `-line`, `-weight`, `-tracking`, `-family`) plus `-size-phone` where a phone value is named; motion uses `--dse-motion-{name}`, `--dse-ease-{name}`, `--dse-stagger` and `--dse-stagger-cap`. `apps/web/test/tokens.test.ts` diffs this document against the file in both directions.
 
 ## Color
 
@@ -20,6 +20,7 @@ Light only (D-004). Every value is final; every text token has been checked agai
 | `line-soft` | `#23201E0F` (6%) | Card borders, dividers inside cards. | |
 | `line-strong` | `#23201E38` (22%) | Input and chip hover borders. An affordance, not identity. | |
 | `focus` | `#35302C` | The keyboard focus ring: 2 px solid, 2 px offset, on every interactive element. | 13.04:1 on surface · 12.52:1 on bg · 12.10:1 on surface-tint |
+| `focus-inverse` | `#FCFAF8` | The focus ring on `inverse-bg` grounds (the inverse button, the live log, toasts), where `focus` would read 1.24:1. | 15.55:1 on inverse-bg |
 | `inverse-bg` | `#23201E` | Same value as `ink`, named for grounds: the primary button, the drift headline card, the live log. | |
 | `inverse-ink` | `#FCFAF8` | Text on `inverse-bg`. | 15.55:1 on inverse-bg |
 | `inverse-muted` | `#B9B1AB` | Secondary text on `inverse-bg`. | 7.66:1 on inverse-bg |
@@ -130,7 +131,7 @@ One density. Cards use `space-5` padding at desktop and tablet, `space-4` at pho
 
 ## Focus and hover
 
-- Focus: 2 px solid `focus` ring at 2 px offset, on every interactive element, via `:focus-visible`. Never removed, never replaced by a color change alone.
+- Focus: 2 px solid `focus` ring at 2 px offset, on every interactive element, via `:focus-visible`. Never removed, never replaced by a color change alone. Inside an `inverse-bg` ground the ring is `focus-inverse` (D-036).
 - Hover on a card that is a link: `shadow-card-hover`, border stays, translateY(-1px) over `motion-fast`.
 - Hover on a row: ground becomes `surface-tint` inset by `space-2` with `radius-sm`; the hairline below hides.
 - Hover on a chip: border becomes `line-strong`. Selected chip: `ink` ground, `inverse-ink` text.

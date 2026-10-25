@@ -34,6 +34,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Contact email `{email}`: the value of `DSE_CONTACT_EMAIL`.
 - Links (constants in `apps/web/copy/links.ts`): repository `https://github.com/BrandonChurch93/design-system-extractor` (TopNav GitHub, "Read the source"); portfolio `https://www.brandonchurchportfolio.com` (Footer "Brandon Church").
 - Toasts: `Copied` · `Link copied` · `Sign-in is not enabled yet.`
+- Icon button and landmark labels (read by screen readers, never shown): `Menu` (the phone nav button) · `Close` (lightbox and sheet close) · `Copy` (code block copy) · `Primary` (the TopNav landmark) · `Sections` (the SectionNav landmark)
 - Generic validation line: `Something about that request was not right. Try again.`
 - Rate limit line: `Too many requests. Try again in a minute.`
 - App 404: title `There is nothing at that address.` · body `The link may be old, or the run may have been removed.` · button `Browse the showcase`
@@ -249,7 +250,7 @@ Buttons `Read the source` · `Try it on a site`. Footer right: `Runs are never s
 
 ## Catalog
 
-Title `Catalog` · caption `Every component of the app, in every state, from sample data.` · the dev line `Design QA · build spend {used} of {cap}` (shown only when running locally)
+Title `Catalog` · caption `Every component of the app, in every state, from sample data.` · the dev line `Design QA · build spend {used} of {cap}` (shown only when running locally) · the index landmark `Catalog index` · the frame caption `{name} at 390 px` · the motion demo button `Replay`
 
 ## Flagged v2 surfaces (rendered only with BILLING_ENABLED, always in the catalog)
 

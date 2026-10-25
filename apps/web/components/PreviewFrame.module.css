@@ -1,0 +1,7 @@
+.frame {
+  display: block;
+  border: 0;
+  max-width: 100%;
+  background: transparent;
+  pointer-events: none;
+}

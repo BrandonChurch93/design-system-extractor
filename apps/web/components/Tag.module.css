@@ -1,0 +1,20 @@
+.tag {
+  composes: tag from '../styles/type.module.css';
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding-inline: var(--dse-space-2);
+  border-radius: var(--dse-radius-pill);
+  background: var(--dse-surface-tint);
+  color: var(--dse-ink-2);
+  white-space: nowrap;
+}
+
+.button {
+  border: 1px solid transparent;
+  transition: border-color var(--dse-motion-fast) var(--dse-ease-standard);
+}
+
+.button:hover {
+  border-color: var(--dse-line-strong);
+}

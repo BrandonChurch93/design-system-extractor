@@ -1,0 +1,75 @@
+.log {
+  background: var(--dse-inverse-bg);
+  color: var(--dse-inverse-ink);
+  border-radius: var(--dse-radius-lg);
+  overflow: hidden;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dse-space-3);
+  padding: var(--dse-space-3) var(--dse-space-5);
+  border-bottom: 1px solid var(--dse-inverse-line);
+}
+
+.title {
+  composes: label from '../styles/type.module.css';
+  color: var(--dse-inverse-ink);
+}
+
+.toggle {
+  composes: label from '../styles/type.module.css';
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dse-space-1);
+  height: 32px;
+  padding-inline: var(--dse-space-2);
+  border: 0;
+  background: none;
+  color: var(--dse-inverse-muted);
+  border-radius: var(--dse-radius-sm);
+}
+
+.toggle:hover {
+  color: var(--dse-inverse-ink);
+}
+
+.flip {
+  transform: rotate(180deg);
+}
+
+.lines {
+  composes: code from '../styles/type.module.css';
+  max-height: 320px;
+  overflow-y: auto;
+  padding: var(--dse-space-3) var(--dse-space-5) var(--dse-space-4);
+  scrollbar-color: var(--dse-inverse-line) transparent;
+}
+
+.lines:focus-visible {
+  outline-offset: -4px;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--dse-space-3);
+}
+
+.ts {
+  color: var(--dse-inverse-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.text {
+  overflow-wrap: anywhere;
+}
+
+.line[data-level='warn'] .text,
+.line[data-level='error'] .text {
+  text-decoration: underline;
+  text-decoration-color: var(--dse-inverse-muted);
+  text-underline-offset: 3px;
+}

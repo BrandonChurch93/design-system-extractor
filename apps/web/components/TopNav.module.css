@@ -1,0 +1,106 @@
+.header {
+  position: relative;
+  width: 100%;
+  max-width: calc(var(--dse-content-width) + 2 * var(--dse-gutter));
+  margin-inline: auto;
+  padding-inline: var(--dse-gutter);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dse-space-5);
+  height: var(--dse-nav-height);
+}
+
+.wordmark {
+  composes: h3 from '../styles/type.module.css';
+  font-weight: 700;
+  color: var(--dse-ink);
+  white-space: nowrap;
+  border-radius: var(--dse-radius-sm);
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: var(--dse-space-6);
+}
+
+.link {
+  composes: bodySm from '../styles/type.module.css';
+  font-weight: 500;
+  color: var(--dse-ink-2);
+  border-radius: var(--dse-radius-sm);
+  transition: color var(--dse-motion-fast) var(--dse-ease-standard);
+}
+
+.link:hover,
+.link[aria-current='page'] {
+  color: var(--dse-ink);
+}
+
+.menuButton {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-right: calc(-1 * var(--dse-space-3));
+  border: 0;
+  background: none;
+  color: var(--dse-ink);
+  border-radius: var(--dse-radius-md);
+}
+
+.menu {
+  display: none;
+}
+
+.menuLink {
+  composes: body from '../styles/type.module.css';
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--dse-ink);
+  border-bottom: 1px solid var(--dse-line-soft);
+}
+
+.menuLink:last-child {
+  border-bottom: 0;
+}
+
+.rule {
+  position: absolute;
+  left: var(--dse-gutter);
+  right: var(--dse-gutter);
+  bottom: 0;
+  height: 1px;
+  background: var(--dse-line);
+}
+
+@media (max-width: 640px) {
+  .header {
+    padding-inline: var(--dse-gutter-phone);
+  }
+  .bar {
+    height: 60px;
+  }
+  .links {
+    display: none;
+  }
+  .menuButton {
+    display: inline-flex;
+  }
+  .menu {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: var(--dse-space-3);
+  }
+  .rule {
+    left: var(--dse-gutter-phone);
+    right: var(--dse-gutter-phone);
+  }
+}

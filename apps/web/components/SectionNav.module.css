@@ -1,0 +1,68 @@
+.sentinel {
+  display: block;
+  height: 1px;
+  margin-bottom: -1px;
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--dse-bg);
+  padding-block: var(--dse-space-3);
+}
+
+.scroller {
+  min-width: 0;
+}
+
+.list {
+  display: flex;
+  gap: var(--dse-space-1);
+}
+
+.item {
+  composes: label from '../styles/type.module.css';
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding-inline: var(--dse-space-4);
+  border-radius: var(--dse-radius-pill);
+  color: var(--dse-ink-2);
+  white-space: nowrap;
+  transition:
+    background-color var(--dse-motion-fast) var(--dse-ease-standard),
+    color var(--dse-motion-fast) var(--dse-ease-standard);
+}
+
+.item:hover {
+  color: var(--dse-ink);
+  background: var(--dse-surface-tint);
+}
+
+.item[aria-current='true'] {
+  background: var(--dse-ink);
+  color: var(--dse-inverse-ink);
+}
+
+.rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--dse-line);
+}
+
+@media (max-width: 640px) {
+  .scroller {
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-inline: calc(-1 * var(--dse-gutter-phone));
+    padding-inline: var(--dse-gutter-phone);
+    mask-image: linear-gradient(to right, transparent 0, #000 20px, #000 calc(100% - 20px), transparent 100%);
+  }
+  .scroller::-webkit-scrollbar {
+    display: none;
+  }
+}

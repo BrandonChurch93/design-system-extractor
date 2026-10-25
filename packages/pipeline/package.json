@@ -7,6 +7,7 @@
   "exports": {
     ".": "./src/index.ts",
     "./exports": "./src/exports/index.ts",
+    "./color": "./src/color/index.ts",
     "./db": "./src/db/index.ts",
     "./storage": "./src/storage/index.ts",
     "./models/config": "./src/models/config.ts",

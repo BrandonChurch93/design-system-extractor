@@ -1,0 +1,16 @@
+.track {
+  display: block;
+  width: 100%;
+  height: 8px;
+  background: var(--dse-skeleton);
+  border-radius: var(--dse-radius-pill);
+  overflow: hidden;
+}
+
+.fill {
+  display: block;
+  height: 100%;
+  background: var(--dse-ink);
+  border-radius: var(--dse-radius-pill);
+  transform-origin: left center;
+}

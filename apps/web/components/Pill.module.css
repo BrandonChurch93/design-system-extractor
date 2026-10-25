@@ -1,0 +1,27 @@
+.pill {
+  composes: caption from '../styles/type.module.css';
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding-inline: var(--dse-space-3);
+  border-radius: var(--dse-radius-pill);
+  border: 1px solid transparent;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.solid {
+  border-color: var(--dse-ink);
+  color: var(--dse-ink);
+}
+
+.soft {
+  border-color: var(--dse-line-strong);
+  color: var(--dse-muted);
+}
+
+.inverse {
+  background: var(--dse-ink);
+  border-color: var(--dse-ink);
+  color: var(--dse-inverse-ink);
+}

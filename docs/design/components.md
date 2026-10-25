@@ -74,7 +74,7 @@ Type styles and sizes named below are the ones in `docs/design/design-system.md`
 
 **PaletteRow** · `label` "Palette" then up to 8 Swatch `xl` with hex and usage caption. Swatches extend in a stagger. Phone: 4 per row.
 
-**Swatch** · Sizes: `xl` 96 high fluid width with `radius-md` and `shadow-swatch`; `token` 48 × 96 with `radius-sm`; `mini` 36 × 36 with `radius-sm`; `strip` (used by PaletteStrip). Near-white values get the inner `line-soft` border. Below `xl` and `token`: hex (`hex`) and a usage caption ("navy · 412 uses"). Every Swatch except `strip` is a button that opens TokenPopover.
+**Swatch** · Sizes: `xl` 96 high fluid width with `radius-md` and `shadow-swatch`; `token` 96 wide × 48 high with `radius-sm` (the width carries the hex and usage caption beneath, D-037); `mini` 36 × 36 with `radius-sm`; `strip` (used by PaletteStrip). Near-white values get the inner `line-soft` border. Below `xl` and `token`: hex (`hex`) and a usage caption ("navy · 412 uses"). Every Swatch except `strip` is a button that opens TokenPopover.
 
 **TokenPopover** · The provenance of a token (D-008): value, name, usage count, the pages it appears on with counts, the raw values it absorbed, and for colors the contrast ratios of the text pairs it is used in. A 360-wide Popover (a Sheet on phones).
 

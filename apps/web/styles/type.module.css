@@ -1,0 +1,171 @@
+/* One class per type style in docs/design/design-system.md. Components compose these. */
+
+.headline {
+  font-family: var(--dse-type-headline-family);
+  font-size: var(--dse-type-headline-size);
+  line-height: var(--dse-type-headline-line);
+  font-weight: var(--dse-type-headline-weight);
+  letter-spacing: var(--dse-type-headline-tracking);
+}
+
+.title {
+  font-family: var(--dse-type-title-family);
+  font-size: var(--dse-type-title-size);
+  line-height: var(--dse-type-title-line);
+  font-weight: var(--dse-type-title-weight);
+  letter-spacing: var(--dse-type-title-tracking);
+}
+
+.titleSm {
+  font-family: var(--dse-type-title-sm-family);
+  font-size: var(--dse-type-title-sm-size);
+  line-height: var(--dse-type-title-sm-line);
+  font-weight: var(--dse-type-title-sm-weight);
+  letter-spacing: var(--dse-type-title-sm-tracking);
+}
+
+.h2 {
+  font-family: var(--dse-type-h2-family);
+  font-size: var(--dse-type-h2-size);
+  line-height: var(--dse-type-h2-line);
+  font-weight: var(--dse-type-h2-weight);
+  letter-spacing: var(--dse-type-h2-tracking);
+}
+
+.h2Sm {
+  font-family: var(--dse-type-h2-sm-family);
+  font-size: var(--dse-type-h2-sm-size);
+  line-height: var(--dse-type-h2-sm-line);
+  font-weight: var(--dse-type-h2-sm-weight);
+  letter-spacing: var(--dse-type-h2-sm-tracking);
+}
+
+.h3 {
+  font-family: var(--dse-type-h3-family);
+  font-size: var(--dse-type-h3-size);
+  line-height: var(--dse-type-h3-line);
+  font-weight: var(--dse-type-h3-weight);
+  letter-spacing: var(--dse-type-h3-tracking);
+}
+
+.stat {
+  font-family: var(--dse-type-stat-family);
+  font-size: var(--dse-type-stat-size);
+  line-height: var(--dse-type-stat-line);
+  font-weight: var(--dse-type-stat-weight);
+  letter-spacing: var(--dse-type-stat-tracking);
+  font-variant-numeric: tabular-nums;
+}
+
+.drift {
+  font-family: var(--dse-type-drift-family);
+  font-size: var(--dse-type-drift-size);
+  line-height: var(--dse-type-drift-line);
+  font-weight: var(--dse-type-drift-weight);
+  letter-spacing: var(--dse-type-drift-tracking);
+}
+
+.driftSub {
+  font-family: var(--dse-type-drift-sub-family);
+  font-size: var(--dse-type-drift-sub-size);
+  line-height: var(--dse-type-drift-sub-line);
+  font-weight: var(--dse-type-drift-sub-weight);
+  letter-spacing: var(--dse-type-drift-sub-tracking);
+}
+
+.body {
+  font-family: var(--dse-type-body-family);
+  font-size: var(--dse-type-body-size);
+  line-height: var(--dse-type-body-line);
+  font-weight: var(--dse-type-body-weight);
+  letter-spacing: var(--dse-type-body-tracking);
+}
+
+.bodySm {
+  font-family: var(--dse-type-body-sm-family);
+  font-size: var(--dse-type-body-sm-size);
+  line-height: var(--dse-type-body-sm-line);
+  font-weight: var(--dse-type-body-sm-weight);
+  letter-spacing: var(--dse-type-body-sm-tracking);
+}
+
+.label {
+  font-family: var(--dse-type-label-family);
+  font-size: var(--dse-type-label-size);
+  line-height: var(--dse-type-label-line);
+  font-weight: var(--dse-type-label-weight);
+  letter-spacing: var(--dse-type-label-tracking);
+}
+
+.caption {
+  font-family: var(--dse-type-caption-family);
+  font-size: var(--dse-type-caption-size);
+  line-height: var(--dse-type-caption-line);
+  font-weight: var(--dse-type-caption-weight);
+  letter-spacing: var(--dse-type-caption-tracking);
+}
+
+.meta {
+  font-family: var(--dse-type-meta-family);
+  font-size: var(--dse-type-meta-size);
+  line-height: var(--dse-type-meta-line);
+  font-weight: var(--dse-type-meta-weight);
+  letter-spacing: var(--dse-type-meta-tracking);
+  font-variant-numeric: tabular-nums;
+}
+
+.hex {
+  font-family: var(--dse-type-hex-family);
+  font-size: var(--dse-type-hex-size);
+  line-height: var(--dse-type-hex-line);
+  font-weight: var(--dse-type-hex-weight);
+  letter-spacing: var(--dse-type-hex-tracking);
+  font-variant-numeric: tabular-nums;
+}
+
+.tag {
+  font-family: var(--dse-type-tag-family);
+  font-size: var(--dse-type-tag-size);
+  line-height: var(--dse-type-tag-line);
+  font-weight: var(--dse-type-tag-weight);
+  letter-spacing: var(--dse-type-tag-tracking);
+}
+
+.code {
+  font-family: var(--dse-type-code-family);
+  font-size: var(--dse-type-code-size);
+  line-height: var(--dse-type-code-line);
+  font-weight: var(--dse-type-code-weight);
+  letter-spacing: var(--dse-type-code-tracking);
+  font-variant-ligatures: none;
+}
+
+.button {
+  font-family: var(--dse-type-button-family);
+  font-size: var(--dse-type-button-size);
+  line-height: var(--dse-type-button-line);
+  font-weight: var(--dse-type-button-weight);
+  letter-spacing: var(--dse-type-button-tracking);
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .headline {
+    font-size: var(--dse-type-headline-size-phone);
+  }
+  .title {
+    font-size: var(--dse-type-title-size-phone);
+  }
+  .titleSm {
+    font-size: var(--dse-type-title-sm-size-phone);
+  }
+  .stat {
+    font-size: var(--dse-type-stat-size-phone);
+  }
+  .drift {
+    font-size: var(--dse-type-drift-size-phone);
+  }
+}

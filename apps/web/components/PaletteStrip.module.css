@@ -1,0 +1,23 @@
+.strip {
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+}
+
+.band {
+  display: block;
+  height: 100%;
+  flex: none;
+}
+
+.block {
+  width: 56px;
+  height: 40px;
+  border-radius: var(--dse-radius-sm);
+  box-shadow: inset 0 0 0 1px var(--dse-line-soft);
+}
+
+.empty.block {
+  border: 1px dashed var(--dse-line-strong);
+  box-shadow: none;
+}

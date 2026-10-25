@@ -1,0 +1,45 @@
+.card {
+  display: block;
+  position: relative;
+  background: var(--dse-surface);
+  border: 1px solid var(--dse-line-soft);
+  border-radius: var(--dse-radius-lg);
+  box-shadow: var(--dse-shadow-card);
+  padding: var(--dse-space-5);
+  color: var(--dse-ink);
+}
+
+.flush {
+  padding: 0;
+  overflow: hidden;
+}
+
+.link {
+  transition:
+    box-shadow var(--dse-motion-fast) var(--dse-ease-standard),
+    transform var(--dse-motion-fast) var(--dse-ease-standard);
+}
+
+.link:hover,
+.link[data-force='hover'] {
+  box-shadow: var(--dse-shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+.link[data-force='focus'] {
+  outline: var(--dse-focus-width) solid var(--dse-focus);
+  outline-offset: var(--dse-focus-offset);
+}
+
+@media (max-width: 640px) {
+  .card:not(.flush) {
+    padding: var(--dse-space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link:hover,
+  .link[data-force='hover'] {
+    transform: none;
+  }
+}
