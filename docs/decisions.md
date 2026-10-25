@@ -169,3 +169,39 @@ Affects: `docs/design/design-system.md`, `docs/design/components.md`, `docs/glos
 Date: 2026-10-25 · Context: D-011.
 Decision: of the $20 cap, $4 (`DSE_DEV_SPEND_RESERVE_USD`) is reserved for the final live eval in P15; the meter refuses live calls at cap minus reserve before P15. The P13 dry run stops when the meter says so.
 Affects: `docs/specs/model-calls.md`, `docs/evals.md`, `docs/plan.md`, `.env.example`.
+
+## D-026 · Verified model ids and prices
+
+Date: 2026-10-25 · Context: P0, model ids are verified, not remembered (CLAUDE.md rule 13).
+Decision: checked on platform.claude.com (docs.claude.com redirects there), Models overview and Pricing, on 2026-10-25. `models.small` is `claude-haiku-5-5` and `models.large` is `claude-sonnet-5-5`, both current, both retrieved live through the Models API by `pnpm run doctor`. Prices in USD per million tokens, written to `packages/pipeline/src/models/config.ts`, the only file that names a model id:
+
+| Model | Input | Cache write (5 min) | Cache read | Output |
+| --- | --- | --- | --- | --- |
+| `claude-haiku-5-5`, prompts up to 100,000 tokens | 0.10 | 0.125 | 0.01 | 0.50 |
+| `claude-haiku-5-5`, prompts over 100,000 tokens | 0.50 | 0.625 | 0.05 | 2.50 |
+| `claude-sonnet-5-5` | 2.00 | 2.50 | 0.10 | 10.00 |
+
+The price table gains a `cacheWrite` column and an optional long-context row, because cache writes and Haiku's long-prompt tier change the cost of a call and the cost record must be exact.
+Reasoning: rule 13; exact cost accounting.
+Affects: `packages/pipeline/src/models/config.ts`, `docs/specs/model-calls.md`.
+
+## D-027 · Structured outputs instead of forced tool use; no sampling parameters
+
+Date: 2026-10-25 · Context: `docs/specs/model-calls.md` asked for forced `tool_choice` and temperatures 0 and 0.3. On the current API, forced `tool_choice` (`any` or `tool`) returns a 400 on `claude-sonnet-5-5`, and API version `2026-10-21` rejects `temperature`, `top_p` and `top_k` on every model. Thinking cannot be disabled on `claude-sonnet-5-5`.
+Decision: every model call uses structured outputs (`output_config.format` with a JSON schema generated from the call's Zod schema by Zod 4's `z.toJSONSchema` through the SDK's `zodOutputFormat` helper), parsed and validated with the same Zod schema, retry once on a validation failure, then the fallback. No sampling parameters are sent. The small model runs with thinking disabled at effort `low`; the large model runs adaptive thinking at effort `low`. Stability comes from tight prompts, structured outputs, validation and record and replay. `zod-to-json-schema` is not used (Zod 4 has it built in).
+Reasoning: the closest faithful version of the spec on the API as it exists; the guarantees the spec wanted (schema-shaped output, a validated parse, a deterministic fallback) all hold.
+Affects: `docs/specs/model-calls.md`, `packages/pipeline/src/models/`.
+
+## D-028 · `pnpm run doctor`, and what the production check reads
+
+Date: 2026-10-25 · Context: pnpm 9 has a built-in `doctor` command, so a bare `pnpm doctor` runs pnpm's own check and never reaches the workspace script. Separately, `architecture.md` said `doctor --production` checks the web app's pooler string and the worker's session string, but the production env file holds only one `DATABASE_URL`, the session string (the runbook gives Vercel the pooler string directly).
+Decision: every document says `pnpm run doctor`. This supersedes the wording of D-012, which names `pnpm doctor`. `pnpm run doctor --production` requires the file's `DATABASE_URL` to be the session form (5432), fails on the pooler form (6543) with a note that it belongs to Vercel only, and prints that reminder when it passes.
+Reasoning: a documented command that silently runs something else is worse than two extra characters.
+Affects: `docs/plan.md`, `docs/specs/architecture.md`, `docs/specs/caps-and-budget.md`, `docs/deploy-runbook.md`, `.env.example`.
+
+## D-029 · Local MinIO from Chainguard's image
+
+Date: 2026-10-25 · Context: the `minio/minio` and `minio/mc` images are no longer published on Docker Hub or quay.io.
+Decision: Docker Compose runs MinIO from `cgr.dev/chainguard/minio` (the same MinIO server, current release) and creates the buckets with a two-line local image (`docker/storage-init`) that copies Chainguard's `mc` onto `cgr.dev/chainguard/wolfi-base` so the init container has a shell. Buckets `dse` and `dse-test` with anonymous download, as before. Production is unaffected (Supabase Storage).
+Reasoning: keeps MinIO and the spec's local shape; the closest working source of the image.
+Affects: `docker-compose.yml`, `docs/specs/architecture.md`.

@@ -1,0 +1,21 @@
+{
+  "name": "@design-system-extractor/cli",
+  "version": "1.0.0",
+  "description": "The dse command: run the Design System Extractor pipeline on your machine.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "dse": "dist/index.js"
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@dse/pipeline": "workspace:*",
+    "@dse/schema": "workspace:*",
+    "tsup": "9.0.0"
+  }
+}

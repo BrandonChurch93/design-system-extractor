@@ -16,12 +16,12 @@ Build:
 - Verify the toolchain: Node 22 or newer, pnpm, Docker Desktop running (`docker info`; if not running, `open -a Docker` and wait up to 2 minutes, retry three times), Playwright's Chromium installed for the workspace.
 - Verify the model ids and prices on docs.claude.com; write them into `packages/pipeline/src/models/config.ts` (created here as a stub) and log D-026 (the build's first decision) with the ids, prices and date.
 - `git init`, first commit of the kit as delivered.
-- Scaffold the monorepo per `architecture.md`: pnpm workspace, `apps/web` (Next.js, TypeScript strict, CSS Modules, ESLint, `next/font`), `apps/worker`, `packages/schema`, `packages/pipeline`, `packages/mcp`, `packages/cli`, `fixtures/`, `scripts/`, every root script in the architecture table (empty where its subject does not exist yet, but present and passing), Vitest config, Playwright config, `docker-compose.yml` (Postgres 16 with an init script that creates the `dse` and `dse_test` databases, Redis 7, MinIO with an init container that creates the `dse` and `dse-test` buckets), `.env.local` kept as the owner left it (create it from `.env.example` only if it is missing) with `DSE_JOB_ENCRYPTION_KEY` and `DSE_ADMIN_TOKEN` generated with the commands in `.env.example` wherever they are empty; every other value in `.env.example` is already right for local development, `pnpm doctor`, `apps/web/vercel.json`, `apps/worker/Dockerfile` (a stub that builds).
+- Scaffold the monorepo per `architecture.md`: pnpm workspace, `apps/web` (Next.js, TypeScript strict, CSS Modules, ESLint, `next/font`), `apps/worker`, `packages/schema`, `packages/pipeline`, `packages/mcp`, `packages/cli`, `fixtures/`, `scripts/`, every root script in the architecture table (empty where its subject does not exist yet, but present and passing), Vitest config, Playwright config, `docker-compose.yml` (Postgres 16 with an init script that creates the `dse` and `dse_test` databases, Redis 7, MinIO with an init container that creates the `dse` and `dse-test` buckets), `.env.local` kept as the owner left it (create it from `.env.example` only if it is missing) with `DSE_JOB_ENCRYPTION_KEY` and `DSE_ADMIN_TOKEN` generated with the commands in `.env.example` wherever they are empty; every other value in `.env.example` is already right for local development, `pnpm run doctor`, `apps/web/vercel.json`, `apps/worker/Dockerfile` (a stub that builds).
 - `.claude/settings.json` is already present; keep it.
 - A `CHANGELOG.md` started with `Unreleased`.
 
 Gate:
-- `pnpm doctor` reports every local service connected.
+- `pnpm run doctor` reports every local service connected.
 - `pnpm check` green on the scaffold; `pnpm verify:all` runs end to end with empty suites passing.
 - STATUS set up: phase pointer, next action, the P1 checklist copied in.
 
@@ -163,7 +163,7 @@ Gate:
 - Security unit tables (URL, private ranges, rebinding, key never logged) pass.
 - `GET /api/runs/{id}` serves partial documents during a run (a test polls mid-run and sees `tokens` before `components`), with the specified cache headers in each status and `queuePosition` while queued; the MCP `--run` path works against it.
 - `pnpm db:seed:fixtures` produces six complete runs and a six-entry local showcase content file.
-- `pnpm doctor` still green.
+- `pnpm run doctor` still green.
 
 ## P11 · The web app
 
@@ -210,7 +210,7 @@ Gate:
 
 Follows: `docs/specs/caps-and-budget.md`, `docs/specs/architecture.md`, every spec's caps.
 
-Build: error handling audit (every `catch` either classifies or rethrows), timeouts on every network call, memory checks under a 10-run soak against fixtures (RSS stays under the restart threshold, no leaked contexts), log review (no keys, no HTML bodies in logs), `pnpm audit` clean of high severity, dependency pinning, the worker Dockerfile finished (multi-stage, Playwright base image, non-root, root context), `pnpm doctor --production` with a committed sample production env file at `fixtures/env/production.sample` (every variable present with placeholder values of the right shape, `DSE_ALLOW_PRIVATE_HOSTS` present and empty, `BILLING_ENABLED=false`) that the build validates against.
+Build: error handling audit (every `catch` either classifies or rethrows), timeouts on every network call, memory checks under a 10-run soak against fixtures (RSS stays under the restart threshold, no leaked contexts), log review (no keys, no HTML bodies in logs), `pnpm audit` clean of high severity, dependency pinning, the worker Dockerfile finished (multi-stage, Playwright base image, non-root, root context), `pnpm run doctor --production` with a committed sample production env file at `fixtures/env/production.sample` (every variable present with placeholder values of the right shape, `DSE_ALLOW_PRIVATE_HOSTS` present and empty, `BILLING_ENABLED=false`) that the build validates against.
 
 Gate:
 - Soak test passes; chaos tests (kill the worker mid-run, Redis unavailable at enqueue, storage unavailable mid-capture) end in the specified statuses with refunds.
@@ -243,6 +243,6 @@ All true at once, on a clean checkout, with Docker services running and `DSE_MOD
 5. `docker build` of the worker from the repository root and `pnpm --filter web build` both succeed.
 6. The flag-off test passes.
 7. `pnpm qa:copy` passes.
-8. `pnpm doctor --production --env fixtures/env/production.sample` passes.
+8. `pnpm run doctor --production --env fixtures/env/production.sample` passes.
 9. The working tree is clean, committed, never pushed.
 10. STATUS says `Build complete` and the owner's end list is exactly what remains.

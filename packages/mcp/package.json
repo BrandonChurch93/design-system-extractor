@@ -1,0 +1,21 @@
+{
+  "name": "@design-system-extractor/mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Design System Extractor runs: tokens, components, checks and drift over stdio.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "dse-mcp": "dist/index.js"
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@dse/pipeline": "workspace:*",
+    "@dse/schema": "workspace:*",
+    "tsup": "9.0.0"
+  }
+}

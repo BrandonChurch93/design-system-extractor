@@ -1,0 +1,63 @@
+name: dse
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: dse
+      POSTGRES_PASSWORD: dse
+      POSTGRES_DB: dse
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/postgres-init.sql:/docker-entrypoint-initdb.d/00-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dse -d dse"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  minio:
+    image: cgr.dev/chainguard/minio:latest
+    command: ["server", "/data", "--console-address", ":9001"]
+    user: "0"
+    environment:
+      MINIO_ROOT_USER: dse
+      MINIO_ROOT_PASSWORD: dsedsedse
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ["CMD", "/usr/bin/minio", "--version"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  minio-init:
+    build: ./docker/storage-init
+    image: dse-storage-init:local
+    depends_on:
+      minio:
+        condition: service_healthy
+    command:
+      - >
+        for i in $(seq 1 30); do mc alias set local http://minio:9000 dse dsedsedse >/dev/null 2>&1 && break; sleep 1; done &&
+        mc mb --ignore-existing local/dse &&
+        mc mb --ignore-existing local/dse-test &&
+        mc anonymous set download local/dse &&
+        mc anonymous set download local/dse-test &&
+        echo buckets ready
+    restart: "no"
+volumes:
+  pgdata:
+  miniodata:

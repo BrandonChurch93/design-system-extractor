@@ -29,7 +29,7 @@ Why this split: the pipeline must run in three places (worker, CLI, tests) with 
 | --- | --- | --- | --- |
 | Postgres | Docker Compose | Supabase | runs, pages, tokens, components, events |
 | Redis | Docker Compose | Upstash | BullMQ queue, caps counters, budget counter, rate limits |
-| Object storage | MinIO (Docker Compose) | Supabase Storage via its S3-compatible endpoint | screenshots, crops, extracted HTML and CSS, captures |
+| Object storage | MinIO (Docker Compose, Chainguard's image, D-029) | Supabase Storage via its S3-compatible endpoint | screenshots, crops, extracted HTML and CSS, captures |
 | Web | `pnpm dev` on 3000 | Vercel | the app |
 | Worker | `pnpm --filter worker dev` | Railway, one service, Dockerfile in `apps/worker` | the crawler |
 | Models | Anthropic API | Anthropic API | select, name, group, narrative |
@@ -63,9 +63,9 @@ Package layout inside `packages/pipeline/src/`: `stages/` holds the entry module
 
 - `development`: Docker Compose services, `DSE_MODEL_MODE=live` with the dev spend cap, hot reload for both apps, `DSE_ALLOW_PRIVATE_HOSTS=localhost:4100,localhost:4300`.
 - `test`: Vitest with `DSE_MODEL_MODE=replay`, Postgres and Redis from Docker Compose (a separate database `dse_test`, created by the compose init), MinIO buckets `dse` and `dse-test` (both created by the bucket init container), fixture sites served by a static server on 4100, the same private-host allowance.
-- `production`: Vercel (web) and Railway (worker) with the env in `docs/deploy-runbook.md`. The dev spend cap and the private-host allowance are ignored when `NODE_ENV=production` (`pnpm doctor --production` fails if the allowance is set).
+- `production`: Vercel (web) and Railway (worker) with the env in `docs/deploy-runbook.md`. The dev spend cap and the private-host allowance are ignored when `NODE_ENV=production` (`pnpm run doctor --production` fails if the allowance is set).
 
-`pnpm doctor` validates every env var, connects to each service, and reports in one table. It is what the owner runs after deployment and what P0 runs first.
+`pnpm run doctor` validates every env var, connects to each service, and reports in one table. It is what the owner runs after deployment and what P0 runs first.
 
 Every root script loads `.env.local` from the repository root; setting `DOTENV_FILE=<path>` makes it load that file instead (the runbook uses `.env.production.local` this way for migrations and the remote showcase). Scripts never read `.env.production.local` unless told to.
 
@@ -92,7 +92,7 @@ Every root script loads `.env.local` from the repository root; setting `DOTENV_F
 | `pnpm build` | builds every package and the web app (`next build`) and the worker bundle |
 | `pnpm verify:all` | in order, failing fast: `check`, `test`, `test:e2e`, `evals`, `build`, `qa:visual`, `qa:axe`, `qa:lighthouse`, `qa:copy`, `pnpm audit --audit-level high` |
 | `pnpm showcase` | runs the showcase roster (local by default, `--remote` against production with the admin token) |
-| `pnpm doctor [--production [--env <file>]]` | env and connectivity check; `--production` checks the shape of a production env file (default `.env.production.local`) without connecting |
+| `pnpm run doctor [--production [--env <file>]]` | env and connectivity check; `--production` checks the shape of a production env file (default `.env.production.local`) without connecting. Always `pnpm run doctor`: pnpm's built-in `doctor` command shadows a bare `pnpm doctor` (D-028) |
 
 `pnpm qa:copy` rules: (1) the em dash character (U+2014) must not appear in `apps/`, `packages/`, `scripts/`, `docs/`, `prompts/`, `README.md`, `STATUS.md`, `CHANGELOG.md`, `.env.example`; `reference/`, `fixtures/sites/` and `node_modules` are excluded. (2) The forbidden words `accessible`, `compliant`, `a11y`, matched with word boundaries, case-insensitive, must not appear in `apps/web/copy/strings.ts`, `apps/web/app/**`, `apps/web/components/**`, `packages/schema/src/labels.ts`, `packages/pipeline/src/exports/**`, `packages/pipeline/src/models/prompts/**`, or `docs/design/copy.md`, except on a line that contains the marker `qa-copy-allow` (used only by the lines that state the rule). Docs other than `copy.md` are not scanned for words, so specs may name the rule.
 
@@ -100,7 +100,7 @@ Until P8, `verify:all` runs `pnpm evals --through <stage>` with the last stage t
 
 ## Database connections
 
-The web app connects through Supabase's transaction pooler in production, so its postgres-js client is created with `prepare: false`; the worker and migrations use the session connection string. Locally both use the Docker Postgres directly. `pnpm doctor --production` checks that the web `DATABASE_URL` is the pooler form (port 6543) and the worker's is the session form (port 5432).
+The web app connects through Supabase's transaction pooler in production, so its postgres-js client is created with `prepare: false`; the worker and migrations use the session connection string. Locally both use the Docker Postgres directly. `pnpm run doctor --production` checks that the production env file's `DATABASE_URL` is the session form (port 5432), which the worker and the migration read, and reminds that Vercel gets the transaction pooler form (port 6543) instead; the pooler string is never in that file (D-028).
 
 ## Deployment shape
 

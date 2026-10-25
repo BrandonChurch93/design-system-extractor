@@ -66,12 +66,12 @@ Copy `.env.example` to `.env.production.local` at the repository root and fill i
 - `DSE_USER_AGENT` · `DesignSystemExtractorBot/1.0 (+https://design-system-extractor.vercel.app/how-it-works)`
 - `DSE_CONTACT_EMAIL` · your email
 - `DSE_MODEL_MODE=live`, `BILLING_ENABLED=false`, the caps at their defaults
-- `DSE_ALLOW_PRIVATE_HOSTS` · leave it out or empty (`pnpm doctor --production` fails if it is set)
+- `DSE_ALLOW_PRIVATE_HOSTS` · leave it out or empty (`pnpm run doctor --production` fails if it is set)
 
 Then:
 
 ```
-pnpm doctor --production
+pnpm run doctor --production
 ```
 
 It reads `.env.production.local` by default (`--env <file>` for another) and checks the shape of every variable without connecting, warns if the Redis URL is not TLS, and tells you which connection string belongs where. Fix anything it flags. This file is gitignored; never commit it. `fixtures/env/production.sample` is the committed template the build validated against; copy it if you want the full variable list with placeholder values of the right shape.

@@ -11,10 +11,10 @@ export const models = {
   small: process.env.DSE_MODEL_SMALL ?? '<verified Haiku id>',
   large: process.env.DSE_MODEL_LARGE ?? '<verified Sonnet id>',
 }
-export const prices = { /* USD per million tokens: input, cachedInput, output, per model id */ }
+export const prices = { /* USD per million tokens, per model id: input, cachedInput (cache read), cacheWrite (5-minute write), output, and an optional longContext row with its prompt-size threshold */ }
 ```
 
-At P0, verify the current ids and prices on https://docs.claude.com/en/docs/about-claude/models and fill them in; record the ids and the date checked in `docs/decisions.md`. The expected ids at the time this kit was written are the current Haiku and Sonnet models of the 5.5 generation (`claude-haiku-5-5`, `claude-sonnet-5-5`); confirm rather than assume. Opus is never used at runtime.
+At P0, verify the current ids and prices on https://docs.claude.com/en/docs/about-claude/models and fill them in; record the ids and the date checked in `docs/decisions.md`. The expected ids at the time this kit was written are the current Haiku and Sonnet models of the 5.5 generation (`claude-haiku-5-5`, `claude-sonnet-5-5`); confirm rather than assume. Verified on 2026-10-25 (D-026): both ids are current, and `pnpm run doctor` retrieves both through the Models API. Opus is never used at runtime.
 
 ## The five calls
 
@@ -30,7 +30,7 @@ Select, collision, token naming and narrative run once per run each; the compone
 
 ## Structured output
 
-Every call uses the SDK's tool-use with one tool whose input schema is generated from the Zod schema for that output (`zod-to-json-schema`), `tool_choice` forced to that tool. The result is parsed with the same Zod schema. A parse failure retries once with the validation error appended to the prompt; a second failure takes the fallback. Temperature 0 for select and naming, 0.3 for narrative.
+Every call uses the API's structured outputs: `output_config.format` carries a JSON schema generated from the Zod schema for that output (Zod 4's built-in `z.toJSONSchema`, through the SDK's `zodOutputFormat` helper). Forced `tool_choice` is not used: the current Sonnet returns a 400 for it (D-027). The result is parsed with the same Zod schema. A parse failure retries once with the validation error appended to the prompt; a second failure takes the fallback. No sampling parameters are sent: API version `2026-10-21` rejects `temperature`, `top_p` and `top_k` on every model, so stable output comes from tight prompts, structured outputs, validation and record and replay, not from temperature (D-027). Thinking: the small model runs with thinking disabled at effort `low`; the large model cannot disable thinking, so it runs adaptive thinking at effort `low`. Thinking tokens are billed as output and are counted in the cost record.
 
 ## Prompt caching
 
