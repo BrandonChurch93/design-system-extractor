@@ -55,7 +55,7 @@ In `packages/pipeline/src/stages/`, one module per stage, each a function `(ctx,
 
 `run.ts` composes them and handles `emit`, timing, the run timeout, and error classification into blocked reasons. Each stage's input and output types live in `packages/schema`. `queue` and `done` are event stages (they appear in `run_events` and the live log) and have no module.
 
-Package layout inside `packages/pipeline/src/`: `stages/` holds the entry module per stage; helpers live in sibling directories named after their stage or concern (`crawl/`, `select/`, `capture/`, `tokens/`, `components/`, `previews/`, `checks/`, `drift/`, `exports/`, `models/`, `net/`, `storage/`); `run.ts` and `context.ts` at the root.
+Package layout inside `packages/pipeline/src/`: `stages/` holds the entry module per stage; helpers live in sibling directories named after their stage or concern (`crawl/`, `select/`, `capture/`, `tokens/`, `components/`, `previews/`, `checks/`, `drift/`, `exports/`, `models/`, `net/`, `storage/`, and `db/`, which holds the Drizzle tables, migrations, `applyPatch`, `appendEvent` and `getRunForViewer` shared by the web app and the worker, D-033); `run.ts` and `context.ts` at the root.
 
 `RunContext` has two implementations: `DbRunContext` (the worker: events to `run_events`, patches to the `runs` row, files to storage) and `MemoryRunContext` (the CLI, `pnpm pipeline:run` and `pnpm evals`: events and the document kept in memory, files written under an output folder). Stages never know which one they have.
 

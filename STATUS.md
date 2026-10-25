@@ -10,29 +10,38 @@ None.
 
 ## Current phase
 
-P1 · Schema and data model. Started 2026-10-25.
+P2 · Design system in code and the catalog. Started 2026-10-25.
 
 ## Next action
 
-Read `docs/specs/data-model.md`, `docs/glossary.md` and the Enum labels in `docs/design/copy.md` in full, then build `packages/schema` (enums, labels, run document, API contracts, entitlements) with its tests, then the Drizzle schema, migrations and storage adapter, per the P1 checklist below.
+Read `docs/design/design-system.md`, `docs/design/motion.md`, `docs/design/components.md` (Primitives), `docs/quality-bar.md` and `reference/direction-a.html` in full, then build `apps/web/styles/tokens.css`, the motion utilities, every primitive and `/catalog`, then `qa:design`, `qa:visual` and `qa:axe`, per the P2 checklist below.
 
 ## Phase checklist
 
-P1 exit criteria (from `docs/plan.md`), plus the standing gate items:
+P2 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
-- [ ] Schema tests: a complete fixture document validates; partial documents validate at each stage; invalid enums fail; every enum named in `data-model.md` exists with a label for every value.
-- [ ] Migrations apply on a clean database and `pnpm db:reset` returns it to empty and re-applies them; storage round trip for text and binary with the right content type.
-- [ ] Every type in `data-model.md` exists in `packages/schema` with the same name.
-- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm verify:all` (evals stub until P3), commit naming P1, STATUS updated.
+- [ ] Every token in `design-system.md` exists in `tokens.css` with the exact value; a test reads both and diffs.
+- [ ] Contrast test: every listed pair meets its WCAG threshold and the printed ratio is within 0.05 of the computed one.
+- [ ] Catalog screenshots reviewed against the design docs at 1440, 820 and 390; the catalog passes axe with zero violations; focus rings visible on every interactive primitive in the screenshots (a focused-state capture is part of `qa:design`).
+- [ ] Reduced motion: a Playwright test with `reducedMotion: 'reduce'` asserts no transform animations run.
+- [ ] Visual goldens committed for the catalog.
+- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm verify:all`, `pnpm qa:design` reviewed, commit naming P2, STATUS updated.
 
 ## Gates passed
 
+- P1 · Schema and data model · 2026-10-25 · 42 tests (schema, enums and labels verbatim from copy.md, every data-model type by name, migrations clean and idempotent, db:reset, patch merge and concurrency, events, unpublished runs hidden, storage text and binary round trip with content types) · verify:all green.
 - P0 · Preflight · 2026-10-25 · `pnpm run doctor` all services connected (Postgres 16, Redis 7, MinIO with both buckets and public read, Anthropic key with both model ids live) · `pnpm check` green · `pnpm verify:all` green end to end with empty suites · worker image builds and runs · `pnpm --filter web build` green.
 
 ## Decisions made during this build
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-035 · No `nosniff` on stored objects (S3 cannot set it); the right Content-Type on every upload.
+- D-034 · Unpublishing hides a run (404) and restores 90-day retention.
+- D-033 · Database code in `packages/pipeline/src/db/`; `run_pages` keyed by (run_id, id); the run document fields later stages need.
+- D-032 · Seed run ids are ten characters (`seedclean0` … `seedprog03`).
+- D-031 · The run breadcrumb says "Recent runs".
+- D-030 · Labels for every enum value added to copy.md.
 - D-029 · Local MinIO runs from Chainguard's image; bucket init image built locally (`docker/storage-init`).
 - D-028 · Always `pnpm run doctor` (pnpm's built-in `doctor` shadows the script); the production check requires the session string and reminds that Vercel gets the pooler string.
 - D-027 · Structured outputs (`output_config.format`) instead of forced tool use; no sampling parameters; small model thinking off at effort low, large model adaptive at effort low.
@@ -60,5 +69,6 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-25 · Gate passed · P1 · tests, migrations, storage round trip, verify:all green.
 - 2026-10-25 · Gate passed · P0 · doctor, check and verify:all green.
 - 2026-10-25 · Session started · P0 · read CLAUDE.md, 00-start-here, STATUS, handoff, decisions, quality-bar, glossary, brief, plan, evals, deploy-runbook, v2-plan, every design and spec document, reference READMEs · tree clean (new repository).

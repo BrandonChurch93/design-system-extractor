@@ -27,6 +27,7 @@ Postgres with Drizzle. The run document is the center; tables around it exist fo
 | `cost` | jsonb, null | `{inputTokens, outputTokens, usd, calls}` |
 | `framework_hint` | text, null | `tailwind` · `bootstrap` · `mui` · `chakra` · `css-in-js` · null |
 | `is_showcase` | boolean | listed on the home page |
+| `unpublished` | boolean | removed by the owner; `GET /api/runs/{id}` returns 404 (D-034) |
 | `created_at` · `started_at` · `finished_at` | timestamptz | |
 | `duration_ms` | int, null | |
 | `retention_until` | timestamptz | created + 90 days; showcase runs null |
@@ -36,7 +37,7 @@ Indexes: `host`, `visitor_id, created_at`, `status`, `retention_until`.
 
 ### `run_pages`
 
-`id` (text PK), `run_id` FK, `url`, `path`, `reason` (`PageReason`), `template_group` (text, null), `template_size` (int, null), `selected` boolean, `order` int, `status` (`pending` · `captured` · `failed`), `node_count` int, `capture_desktop_key`, `capture_mobile_key` (storage keys for full-page screenshots), `title`, `h1`.
+`id` (text), `run_id` FK, primary key (`run_id`, `id`) (D-033), `url`, `path`, `reason` (`PageReason`), `template_group` (text, null), `template_size` (int, null), `selected` boolean, `order` int, `status` (`pending` · `captured` · `failed`), `node_count` int, `capture_desktop_key`, `capture_mobile_key` (storage keys for full-page screenshots), `title`, `h1`.
 
 ### `run_events`
 
@@ -57,10 +58,10 @@ Indexes: `host`, `visitor_id, created_at`, `status`, `retention_until`.
 ```
 {
   id, url, host, status, blockedReason?, blockedDetail?,
-  createdAt, startedAt?, finishedAt?, durationMs?, pipelineVersion,
-  frameworkHint?, darkThemeDetected: boolean, sparse: boolean,
+  failedDetail?, createdAt, startedAt?, finishedAt?, durationMs?, pipelineVersion,
+  viewports: Viewport[], frameworkHint?, darkThemeDetected: boolean, sparse: boolean,
   pages: Page[],
-  tokens: { colors: ColorToken[], type: TypeToken[], space: SpaceToken[], radius: RadiusToken[], shadow: ShadowToken[], breakpoints: number[], rawCounts: { colors, fontDecls, spacingValues }, families: { name, loaded: boolean, fallback?: string }[] },
+  tokens: { colors: ColorToken[], type: TypeToken[], space: SpaceToken[], spaceBase: { value: 4 | 8, clear: boolean }, radius: RadiusToken[], shadow: ShadowToken[], breakpoints: number[], rawCounts: { colors, fontDecls, spacingValues, radii, shadows }, families: { name, loaded: boolean, fallback?: string }[] },
   components: Component[],
   checks: { summary: { passed, failed, total, applicable }, byCheck: CheckSummary[] },
   drift: Drift,
@@ -77,13 +78,13 @@ Sections are optional while running and required when complete; the schema has `
 
 ### Page
 
-`{ id, url, path, reason, templateGroup?, templateSize?, title, h1, nodeCount, captures: { desktop: CaptureRef, mobile: CaptureRef } }` where `CaptureRef = { screenshotKey, width, height }`.
+`{ id, url, path, reason, templateGroup?, templateSize?, title, h1, nodeCount, status: PageStatus, failedReason?, captures: { desktop?: CaptureRef, mobile?: CaptureRef } }` where `CaptureRef = { screenshotKey, width, height }`. Captures are present once the page is captured; `status` lets the in-progress PagesCard mark rows captured.
 
 ### Tokens
 
-- `ColorToken`: `{ id, name, value (hex, uppercase, with alpha as 8-digit when < 1), oklch: {l, c, h}, group: 'brand' | 'neutral' | 'semantic', semanticRole?: 'success' | 'warning' | 'danger' | 'info', usage: number, uses: { text, background, border, other }, pages: { pageId, count }[], rawValues: { value, count }[], contrastPairs: { fg, bg, ratio, where }[] }`
+- `ColorToken`: `{ id, name, value (hex, uppercase, with alpha as 8-digit when < 1), oklch: {l, c, h}, group: 'brand' | 'neutral' | 'semantic', semanticRole?: 'success' | 'warning' | 'danger' | 'info', usage: number, uses: { text, background, border, other }, pages: { pageId, count }[], rawValues: { value, count }[], contrastPairs: { fg, bg, ratio, large, where }[] }` where `fg` and `bg` are color token ids and `large` marks text at the large-text size (threshold 3:1)
 - `TypeToken`: `{ id, name, role: 'display' | 'h1' | 'h2' | 'h3' | 'h4' | 'body' | 'body-sm' | 'label' | 'caption' | 'code' | 'other', family, fallbackStack, size, lineHeight, weight, letterSpacing, textTransform?, usage, pages, sample }`
-- `SpaceToken`: `{ id, value, onGrid: boolean, usage, pages, contexts: { padding, margin, gap } }`
+- `SpaceToken`: `{ id, value, onGrid: boolean, usage, pages, contexts: { padding, margin, gap, layout } }`
 - `RadiusToken`: `{ id, value, isPill: boolean, usage, pages }`
 - `ShadowToken`: `{ id, name: 'sm' | 'md' | 'lg' | string, value, usage, pages }`
 
@@ -96,9 +97,10 @@ Sections are optional while running and required when complete; the schema has `
   signature: { tag, role?, classTokens: string[], structure: string, styleHash },
   variants: Variant[],
   instances: Instance[],
-  provenance: { firstSeen: { pageId, path, viewport, selector, bbox }, pages: { pageId, path, count }[] },
+  provenance: { firstSeen: { pageId, path, viewport, selector, bbox, sourceCrop?: { key, width, height, outline: bbox } }, pages: { pageId, path, count }[] },
   states: StateCapture[],
   tokensUsed: { tokenId, property }[],
+  unmapped: { property, value }[],
   preview: Preview,
   code: { html: string, css: string, tailwind?: string },
   checks: CheckResult[],
@@ -108,7 +110,7 @@ Sections are optional while running and required when complete; the schema has `
 
 - `Variant`: `{ id, name, instanceIds: string[], delta: { property, value }[], preview: Preview }`
 - `Instance`: `{ id, pageId, viewport, selector, bbox: {x, y, w, h}, variantId, text? }`
-- `StateCapture`: `{ state (State enum), captured: boolean, reason?: string, cropKey?, delta: { property, from, to }[], reachedByKeyboard?: boolean }`
+- `StateCapture`: `{ state (State enum), captured: boolean, reason?: string, cropKey?, delta: { property, from, to }[], reachedByKeyboard?: boolean, instanceId? }`
 - `Preview`: `{ mode: PreviewMode, capturedReason?: CapturedReason, cropKey, width, height, diffPct?: number, htmlKey?: string, stateHtmlKeys?: Record<State, string> }`
 - `CheckResult`: `{ check (Check enum), status: 'pass' | 'fail' | 'na', detail: string, measured?: Record<string, number | string>, variantId? }`
 
@@ -118,21 +120,22 @@ Enums (`packages/schema/src/enums.ts`), every one with a Zod enum and a label ma
 
 ```
 {
-  headline: { kind: 'grays' | 'variants' | 'spacing' | 'type', before, after, sentence },
+  headline: { kind: 'grays' | 'variants' | 'spacing' | 'type' | null, before, after, sentence },
   supporting: string[],
   numbers: { kind, before, after, caption }[],
-  proposal: { colors: ProposedColor[], spacing: number[], type: ProposedType[] },
+  proposal: { colors: ProposedColor[], spacing: number[], type: ProposedType[], contrastKept: boolean },
   variantCollapses: { componentId, keep: variantId, merge: variantId[], delta: string }[],
-  evidence: { a, b, delta: string, kind: EvidenceKind, pages: string[], usesA, usesB }[],
+  evidence: { a, b, delta: string, kind: EvidenceKind, pages: string[], usesA, usesB, evidenceOnly: boolean }[],
+  findingCount: number,
   narrative: string
 }
 ```
 
-`ProposedColor = { name, value, absorbs: string[], contrastKept: boolean }`.
+`ProposedColor = { name, value, group, absorbs: string[], contrastKept: boolean }`. `ProposedType = { name, role, family, size, lineHeight, weight, letterSpacing, absorbs: string[] }`. The headline `kind` is null when nothing drifts (the nothing-to-collapse sentence). `findingCount` counts every finding before the 40-row evidence cap.
 
 ### Cost and stats
 
-`Cost = { inputTokens, outputTokens, usd, calls: { model, purpose, inputTokens, outputTokens, usd, cached: boolean }[] }`. `Stats` as the table column.
+`Cost = { inputTokens, outputTokens, usd, calls: { model, purpose, inputTokens, outputTokens, usd, cached: boolean }[] }` where `purpose` is the `ModelPurpose` enum (`select`, `components`, `collision`, `colors`, `narrative`). `Stats` as the table column.
 
 ## Storage keys
 

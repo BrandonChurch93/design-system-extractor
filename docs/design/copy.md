@@ -65,8 +65,22 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Page reasons: `home` · `nav` · `footer` · `sitemap` · `linked` (the `body` reason) · `forms` · `forms, errors` · `tables, toggles` · `code blocks` · `list template` · `post template` · `badges, timeline` · `empty state` · `about` · `careers` · `app` · `you added it` · `{group} template, 1 of {n}`
 - Framework hints: `Tailwind` · `Bootstrap` · `MUI` · `Chakra` · `CSS-in-JS`; rendered as `{Name} detected`
 - Blocked reasons (Recent runs result line): `Blocked the crawler. Nothing extracted.` · `Login wall. One page extracted.` · `Could not be reached. Nothing extracted.` · `Crawling not allowed. Nothing extracted.` · `Budget was spent. Nothing extracted.` · `Crawler was busy. Nothing extracted.` · `Run limit reached. Nothing extracted.` · `Not a crawlable address.` (shared by `invalid-url` and `private-address`)
-- Run statuses (pills): `Complete` · `Running` · `Blocked` · `Failed` · `Cancelled`
+- Run statuses (pills): `Queued` · `Complete` · `Running` · `Blocked` · `Failed` · `Cancelled`
 - Stage display labels for the live log: `queue` · `crawl` (the `discover` stage) · `select` · `capture` · `tokens` · `components` · `previews` · `checks` · `drift` · `exports` · `done`
+- Substages (named after the rail rings they fill): `Palette` · `Type` · `Spacing`
+- Event levels: `Info` · `Warning` · `Error`
+- Viewports: `Desktop` · `Mobile`
+- Page statuses: `Pending` · `Captured` · `Failed`
+- Token kinds: `Color` · `Type` · `Spacing` · `Radius` · `Shadow` · `Breakpoint`
+- Color groups: `Brand` · `Neutral` · `Semantic`
+- Semantic roles: `Success` · `Warning` · `Danger` · `Info`
+- Preview modes: `Live` · `Captured`
+- Captured reasons: `render differed by {pct} %` · `styles too large` · `fonts unavailable`
+- Check statuses: `Pass` · `Fail` · `Not applicable`
+- Drift kinds: `Grays` · `Variants` · `Spacing values` · `Type styles`
+- Evidence kinds: `Color` · `Variant` · `Spacing` · `Type` · `Sprawl`
+- Plans: `Free` · `Pro` · `Team`
+- Export formats: `CSS variables` · `JSON` · `Tailwind config` · `W3C design tokens` · `design-system.md` · `Prompt` · `Component prompt` · `All files`
 
 ## Home
 
@@ -86,7 +100,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 
 ## Run page
 
-- Breadcrumb: `Showcase / {host}` · `Your runs / {host}` · `{host}` · `Local run`
+- Breadcrumb: `Showcase / {host}` · `Recent runs / {host}` · `{host}` · `Local run`
 - Meta complete: `{pages} pages · {viewports} viewports · crawled {date} · {duration} · {framework} detected` (framework segment omitted when none)
 - Meta queued: `Waiting for a crawler · {ahead} runs ahead of you` (`1 run ahead of you`; `next in line` when zero)
 - Meta while crawling: `Crawling {n} of {total} pages · 2 viewports · {elapsed} elapsed · usually finishes in about 3 minutes`

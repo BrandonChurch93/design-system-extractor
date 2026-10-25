@@ -32,7 +32,7 @@ Follows: `docs/specs/data-model.md`, `docs/glossary.md`, `docs/design/copy.md` (
 Build:
 - `packages/schema`: every enum in `data-model.md` with its Zod enum, the run document (partial and complete), tokens, components, checks, drift, cost, stats, API contracts (`POST /api/runs` body and responses, blocked result, `GET /api/me`), export shapes, entitlements types and the `plans` map (free real, pro and team placeholders from `docs/v2-plan.md`), `labels.ts` for every enum value in the words of `docs/design/copy.md`.
 - Drizzle schema and migrations for `runs`, `run_pages`, `run_events`, `visitors`, `users`, `subscriptions`; `pnpm db:migrate`, `pnpm db:reset`; the postgres-js client with `prepare: false` when the URL is the pooler form.
-- The storage adapter interface and S3 driver against MinIO (content types and `nosniff` on upload); key helpers for every storage path.
+- The storage adapter interface and S3 driver against MinIO (the right content type on every upload, from the key's extension; S3 objects cannot carry `X-Content-Type-Options`, so nothing relies on it, D-035); key helpers for every storage path.
 - `getRunForViewer`, `applyPatch` (JSONB merge), `appendEvent`.
 
 Gate:

@@ -205,3 +205,42 @@ Date: 2026-10-25 · Context: the `minio/minio` and `minio/mc` images are no long
 Decision: Docker Compose runs MinIO from `cgr.dev/chainguard/minio` (the same MinIO server, current release) and creates the buckets with a two-line local image (`docker/storage-init`) that copies Chainguard's `mc` onto `cgr.dev/chainguard/wolfi-base` so the init container has a shell. Buckets `dse` and `dse-test` with anonymous download, as before. Production is unaffected (Supabase Storage).
 Reasoning: keeps MinIO and the spec's local shape; the closest working source of the image.
 Affects: `docker-compose.yml`, `docs/specs/architecture.md`.
+
+## D-030 · Labels for every enum value
+
+Date: 2026-10-25 · Context: P1's gate requires a label for every value of every enum in `data-model.md`, but `copy.md` gave labels for only some enums and had no label for the `queued` run status.
+Decision: `copy.md` (Enum labels) gains `Queued` and lines for substages, event levels, viewports, page statuses, token kinds, color groups, semantic roles, preview modes, captured reasons, check statuses, drift kinds, evidence kinds, plans and export formats, written in the copy rules' voice and reusing words the copy already uses (the variant color words, the stage rail names, the export card names). `labels.ts` takes each verbatim and a test asserts every label appears in `copy.md`.
+Reasoning: one source for every word the product shows.
+Affects: `docs/design/copy.md`, `packages/schema/src/labels.ts`.
+
+## D-031 · The run breadcrumb says "Recent runs"
+
+Date: 2026-10-25 · Context: `copy.md` Global and `pages.md` say `Recent runs / {host}`; the Run page block of `copy.md` said `Your runs / {host}`.
+Decision: `Recent runs / {host}`, matching the nav label and the page it links to. `copy.md` Run page block fixed.
+Affects: `docs/design/copy.md`.
+
+## D-032 · Seed run ids are ten characters
+
+Date: 2026-10-25 · Context: `evals.md` named seed ids of eleven characters (`seedclean00`), but every run id is ten (`docs/glossary.md`), and the schema validates that.
+Decision: `seedclean0`, `seedmessy0`, `seedtailw0`, `seedcssin0`, `seedlibra0`, `seedmafter`, and the frozen in-progress runs `seedprog01`, `seedprog02`, `seedprog03`.
+Affects: `docs/evals.md`.
+
+## D-033 · Where the database code lives, and what the schema adds
+
+Date: 2026-10-25 · Context: the web app and the worker both need the Drizzle tables, `applyPatch`, `appendEvent` and `getRunForViewer`, and `architecture.md` allows only four packages. Building the schema also showed fields the UI and later stages need that `data-model.md` did not list.
+Decision: the database code lives in `packages/pipeline/src/db/` beside `storage/` (the `DbRunContext` that writes through it lives in the pipeline too), with migrations in `packages/pipeline/drizzle/`. `run_pages` has the primary key (`run_id`, `id`) so two runs of the same site can never collide on a page id. The run document gains: `viewports` and `failedDetail` at the top level; `Page.status` and `failedReason` (captures optional until captured); `tokens.spaceBase` (the inferred base and whether the 85% rule held, for "{base} px base"); `rawCounts.radii` and `rawCounts.shadows` (for the sprawl evidence); `ContrastPair.large` with `fg` and `bg` as token ids (the drift contrast constraint needs the threshold and token identity); `SpaceToken.contexts.layout`; `Component.unmapped` (the panel's Unmapped list); `firstSeen.sourceCrop` (the crop key, size and the outline box); `StateCapture.instanceId`; a nullable `drift.headline.kind`, `drift.findingCount`, `proposal.contrastKept`, `ProposedColor.group` and a defined `ProposedType`; `Evidence.evidenceOnly`; and the `ModelPurpose` enum for cost calls. `GET /api/runs/{id}` returns `{ id, status, isShowcase, document, events }`.
+Reasoning: each field is something a later spec reads; naming it once now keeps every consumer on one shape.
+Affects: `docs/specs/data-model.md`, `docs/specs/architecture.md`, `docs/design/pages.md`.
+
+## D-034 · Unpublishing hides a run
+
+Date: 2026-10-25 · Context: `showcase.md` says unpublishing removes a run from the showcase and restores a 90-day retention; `pages.md` says an unpublished run returns 404.
+Decision: unpublishing sets `is_showcase = false`, `unpublished = true` and a 90-day retention. `getRunForViewer` returns nothing for an unpublished run, so `GET /api/runs/{id}` and `/r/{id}` return 404, and the retention job deletes it later.
+Reasoning: unpublishing exists for a site owner's removal request (D-013); a link that keeps working would not honor it.
+Affects: `docs/specs/data-model.md`, `packages/pipeline/src/db/`.
+
+## D-035 · No `nosniff` on stored objects
+
+Date: 2026-10-25 · Context: P1 asked for `nosniff` on upload, but S3 object metadata cannot set `X-Content-Type-Options` (only Content-Type, Cache-Control, Content-Disposition and Content-Encoding are system metadata), on MinIO or Supabase Storage.
+Decision: every upload carries the right `Content-Type`, from the key's extension (unknown extensions are refused) and immutable caching for run files. `preview-fidelity.md` already makes the sandbox attribute and the preview document's own CSP the security boundary and relies on no storage response header; that stays the rule.
+Affects: `docs/plan.md`.
