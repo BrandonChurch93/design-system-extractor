@@ -1,0 +1,68 @@
+{
+  "generatedAt": "2026-10-25T23:55:01.976Z",
+  "mode": "replay",
+  "through": "capture",
+  "pipelineVersion": "1.0.0",
+  "fixtures": [
+    {
+      "name": "clean",
+      "metrics": {
+        "selection": {
+          "exact": true,
+          "expected": 9,
+          "selected": 9,
+          "missing": [],
+          "extra": []
+        }
+      }
+    },
+    {
+      "name": "messy",
+      "metrics": {
+        "selection": {
+          "exact": true,
+          "expected": 12,
+          "selected": 12,
+          "missing": [],
+          "extra": []
+        }
+      }
+    },
+    {
+      "name": "tailwind",
+      "metrics": {
+        "selection": {
+          "exact": true,
+          "expected": 9,
+          "selected": 9,
+          "missing": [],
+          "extra": []
+        }
+      }
+    },
+    {
+      "name": "css-in-js",
+      "metrics": {
+        "selection": {
+          "exact": true,
+          "expected": 9,
+          "selected": 9,
+          "missing": [],
+          "extra": []
+        }
+      }
+    },
+    {
+      "name": "library",
+      "metrics": {
+        "selection": {
+          "exact": true,
+          "expected": 7,
+          "selected": 7,
+          "missing": [],
+          "extra": []
+        }
+      }
+    }
+  ]
+}

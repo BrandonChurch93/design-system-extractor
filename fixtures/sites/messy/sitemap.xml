@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>http://localhost:4100/sites/messy/</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/pricing</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/features</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/signup</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/login</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/docs</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/docs/getting-started</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/contact</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/changelog</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/about</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/careers</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/blog</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/blog/release-notes-week-1</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/blog/release-notes-week-2</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/blog/release-notes-week-3</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/blog/release-notes-week-4</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/blog/release-notes-week-5</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/blog/release-notes-week-6</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/blog/release-notes-week-7</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/blog/release-notes-week-8</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/blog/release-notes-week-9</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/blog/release-notes-week-10</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/blog/release-notes-week-11</loc></url>
+  <url><loc>http://localhost:4100/sites/messy/blog/release-notes-week-12</loc></url>
+</urlset>

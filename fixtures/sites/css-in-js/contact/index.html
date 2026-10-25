@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact · Tidewater</title>
+<style data-emotion="css">
+/* clean · a small, well-kept system. Palette: navy var(--c-ink), blue var(--c-primary), teal var(--c-accent),
+   success var(--c-success), warning var(--c-warning), danger var(--c-danger), neutrals var(--c-surface) and var(--c-border), and one
+   shadow color rgba(11, 31, 58, 0.12). Spacing on a 4 px grid. Radii 8, 12, pill. */
+@import url('/fonts/inter/inter.css');
+:root { --c-ink: #0B1F3A; --c-primary: #2458E6; --c-accent: #0F8A8A; --c-success: #15803D; --c-warning: #B45309; --c-danger: #DC2626; --c-surface: #FFFFFF; --c-border: #E2E8F0; }
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body { font-family: 'Inter', system-ui, sans-serif; font-size: 16px; line-height: 26px; font-weight: 400; color: var(--c-ink); background: var(--c-surface); }
+a { color: var(--c-primary); text-decoration: none; }
+ul, ol { list-style: none; }
+img, svg { display: block; }
+button, input, select, textarea { font: inherit; color: inherit; }
+pre code { font: inherit; }
+
+.css-fb5b128 { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.css-ffa365a { padding: 64px 0; }
+.css-ec0a4f3 { display: flex; flex-direction: column; gap: 16px; }
+.css-8eecddf { display: flex; flex-direction: column; gap: 12px; }
+
+h1, .css-24d4188 { font-size: 36px; line-height: 44px; font-weight: 700; }
+.css-24d4188 { font-size: 48px; line-height: 56px; }
+h2 { font-size: 28px; line-height: 36px; font-weight: 700; }
+h3 { font-size: 20px; line-height: 28px; font-weight: 600; }
+p { font-size: 16px; line-height: 26px; }
+.css-be03325 { font-size: 14px; line-height: 22px; }
+.css-d410b8a { font-size: 12px; line-height: 16px; }
+
+/* Header */
+.css-e26c31b { position: sticky; top: 0; z-index: 10; background: var(--c-surface); border-bottom: 1px solid var(--c-border); transition: box-shadow 160ms ease; }
+.css-e26c31b.css-de81f84 { box-shadow: 0 12px 32px rgba(11, 31, 58, 0.12); }
+.css-fb1fd82 { display: flex; align-items: center; justify-content: space-between; gap: 32px; height: 72px; }
+.css-9a3581e { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--c-ink); }
+.css-6618940 { display: flex; align-items: center; gap: 24px; }
+.sc-11533 { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--c-ink); }
+.sc-11533:hover { color: var(--c-primary); }
+.css-a9d6f4d { display: flex; align-items: center; gap: 12px; }
+.css-473d86b { position: relative; }
+.css-e41d4c2 { display: inline-flex; align-items: center; gap: 4px; height: 44px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--c-ink); cursor: pointer; }
+.css-e41d4c2:hover, .css-e41d4c2[aria-expanded='true'] { background: var(--c-border); }
+.css-297a324 { position: absolute; top: 48px; left: 0; z-index: 20; min-width: 224px; padding: 8px; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; box-shadow: 0 12px 32px rgba(11, 31, 58, 0.12); }
+.css-d417eb0 { display: flex; align-items: center; height: 44px; padding: 0 12px; border-radius: 8px; font-size: 14px; line-height: 22px; color: var(--c-ink); }
+.css-d417eb0:hover { background: var(--c-border); }
+.css-6b6e276 { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0; border-radius: 8px; background: transparent; color: var(--c-ink); cursor: pointer; }
+.css-8b2e9d7 { border-top: 1px solid var(--c-border); padding: 8px 0 16px; }
+.css-e3bd7e3 { display: flex; align-items: center; height: 48px; font-size: 16px; line-height: 26px; color: var(--c-ink); }
+
+/* Buttons */
+.sc-c8816 { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: 8px; font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
+.css-ab603f3 { height: 36px; padding: 0 16px; }
+.css-9674f72 { background: var(--c-primary); color: var(--c-surface); }
+.css-9674f72:hover, .css-9674f72:active { background: var(--c-ink); }
+.css-21b13ca { background: var(--c-surface); color: var(--c-primary); border-color: var(--c-primary); }
+.css-21b13ca:hover, .css-21b13ca:active { background: var(--c-primary); color: var(--c-surface); }
+.css-e23596d { background: transparent; color: var(--c-ink); }
+.css-e23596d:hover, .css-e23596d:active { background: var(--c-border); }
+.sc-c8816:disabled, .sc-c8816[aria-disabled='true'] { opacity: 0.5; cursor: not-allowed; }
+.sc-c8816:focus-visible, .css-e41d4c2:focus-visible, .css-6b6e276:focus-visible, .css-d417eb0:focus-visible, .css-e0eac19:focus-visible, .sc-15e4d:focus-visible, .css-83d126a:focus-visible, .css-25d988e:focus-visible, .sc-11533:focus-visible, .css-846e29a:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 2px; }
+.css-e0eac19 { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--c-border); border-radius: 8px; background: var(--c-surface); color: var(--c-ink); cursor: pointer; }
+.css-e0eac19:hover { background: var(--c-border); }
+
+/* Hero and cards */
+.css-d67b940 { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; padding: 96px 0 64px; }
+.css-a155c2a { display: flex; gap: 12px; flex-wrap: wrap; }
+.css-0351604 { display: grid; grid-template-columns: 1fr; gap: 24px; }
+.sc-729cb { display: flex; flex-direction: column; gap: 12px; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; box-shadow: 0 1px 2px rgba(11, 31, 58, 0.12); }
+.css-e895312 { width: 24px; height: 24px; color: var(--c-accent); }
+.css-e5e8a1b { display: inline-flex; align-items: center; align-self: flex-start; height: 24px; padding: 0 8px; border-radius: 999px; background: var(--c-accent); color: var(--c-surface); font-size: 12px; line-height: 16px; }
+.css-cebe9da { padding: 32px; gap: 16px; }
+.css-a0b97e9 { background: var(--c-ink); border-color: var(--c-ink); color: var(--c-surface); box-shadow: 0 12px 32px rgba(11, 31, 58, 0.12); }
+.css-595da3a:focus-visible { outline-color: var(--c-surface); }
+.css-d6549a9 { font-size: 48px; line-height: 56px; font-weight: 700; }
+.css-94e010f { display: flex; flex-direction: column; gap: 8px; }
+.css-a42aafe { display: flex; align-items: center; gap: 16px; }
+.css-7b68a0b { width: 40px; height: 40px; border-radius: 50%; background: var(--c-border); }
+
+/* Badges */
+.sc-4173d { display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 999px; color: var(--c-surface); font-size: 12px; line-height: 16px; }
+.css-aeca1f5 { background: var(--c-success); }
+.css-c879360 { background: var(--c-warning); }
+.css-3d58747 { background: var(--c-danger); }
+.css-88403cd { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Forms */
+.css-4ef556b { display: flex; flex-direction: column; gap: 24px; max-width: 480px; }
+.css-40605c7 { max-width: 480px; }
+.css-10a4eaa { display: flex; flex-direction: column; gap: 8px; }
+.css-26d29b1 { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--c-ink); }
+.sc-43be9, .css-3cc2814, .css-f42725d { width: 100%; height: 44px; padding: 8px 12px; border: 1px solid var(--c-border); border-radius: 8px; background: var(--c-surface); color: var(--c-ink); font-size: 16px; line-height: 26px; }
+.css-f42725d { height: 128px; resize: vertical; }
+.css-3cc2814 { appearance: none; padding-right: 40px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230B1F3A' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+.sc-43be9:focus, .css-3cc2814:focus, .css-f42725d:focus { border-color: var(--c-primary); outline: 2px solid var(--c-primary); outline-offset: 2px; }
+.sc-43be9[aria-invalid='true'] { border-color: var(--c-danger); }
+.css-6b99d3b { font-size: 14px; line-height: 22px; color: var(--c-danger); }
+.css-3900ef0 { display: flex; align-items: center; gap: 8px; font-size: 14px; line-height: 22px; }
+.css-25d988e { appearance: none; flex: none; width: 44px; height: 44px; margin: 0 -12px; border: 0; border-radius: 8px; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect x='0.5' y='0.5' width='19' height='19' rx='3.5' fill='%23FFFFFF' stroke='%230B1F3A'/%3E%3C/svg%3E") center no-repeat; cursor: pointer; }
+.css-25d988e:checked { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect width='20' height='20' rx='4' fill='%232458E6'/%3E%3Cpath d='m5 10 3.5 3.5L15 7' fill='none' stroke='%23FFFFFF' stroke-width='2'/%3E%3C/svg%3E"); }
+.css-9b02e68 { display: flex; align-items: center; gap: 12px; font-size: 14px; line-height: 22px; }
+.css-83d126a { position: relative; flex: none; width: 52px; height: 44px; border: 0; background: transparent; cursor: pointer; }
+.css-83d126a::before { content: ''; position: absolute; left: 4px; top: 10px; width: 44px; height: 24px; border-radius: 999px; background: var(--c-border); }
+.css-83d126a::after { content: ''; position: absolute; left: 8px; top: 14px; width: 16px; height: 16px; border-radius: 999px; background: var(--c-surface); transition: transform 160ms ease; }
+.css-83d126a[aria-checked='true']::before { background: var(--c-primary); }
+.css-83d126a[aria-checked='true']::after { transform: translateX(20px); }
+
+/* Data */
+.css-4d7b9a4 { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 22px; }
+.css-68fca6b { padding: 12px 16px; border-bottom: 1px solid var(--c-border); text-align: left; font-size: 14px; line-height: 20px; font-weight: 600; }
+.css-74cdd05 { padding: 12px 16px; border-bottom: 1px solid var(--c-border); }
+.css-46ef08a { overflow-x: auto; }
+.css-6589e84 { padding: 16px 24px; border-radius: 8px; background: var(--c-ink); color: var(--c-surface); font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace; font-size: 14px; line-height: 22px; overflow-x: auto; }
+
+/* Navigation pieces */
+.css-be581ea { display: flex; align-items: center; gap: 8px; font-size: 14px; line-height: 22px; }
+.css-846e29a { color: var(--c-primary); }
+.css-75e7b61 { color: var(--c-ink); }
+.css-e434a00 { display: flex; gap: 4px; border-bottom: 1px solid var(--c-border); }
+.sc-15e4d { height: 44px; padding: 0 16px; border: 0; border-bottom: 2px solid transparent; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--c-ink); cursor: pointer; }
+.sc-15e4d[aria-selected='true'] { color: var(--c-primary); border-bottom-color: var(--c-primary); }
+.css-cd4ef9f { padding: 24px 0; }
+.css-2bf56b7 { display: flex; flex-direction: column; gap: 12px; }
+
+/* Feedback */
+.css-ddf5124 { display: flex; align-items: flex-start; gap: 12px; padding: 16px; border: 1px solid var(--c-success); border-radius: 8px; background: var(--c-surface); color: var(--c-ink); }
+.css-1bbd95a { border-color: var(--c-warning); }
+.css-0264160 { flex: none; width: 24px; height: 24px; }
+.css-1dade41 { color: var(--c-success); }
+.css-c6b3e8f { color: var(--c-warning); }
+.css-fd41b9d { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 96px 24px; text-align: center; }
+.css-c67a8e6 { width: 48px; height: 48px; color: var(--c-accent); }
+
+/* Footer */
+.css-67a120f { border-top: 1px solid var(--c-border); padding: 48px 0; }
+.css-747ee89 { display: flex; justify-content: space-between; flex-wrap: wrap; }
+.css-30cdf6f { display: flex; gap: 24px; flex-wrap: wrap; }
+.css-fd3d329 { font-size: 14px; line-height: 22px; color: var(--c-ink); }
+
+@media (min-width: 1024px) {
+  .css-0351604 { grid-template-columns: repeat(3, 1fr); }
+  .css-61cfbe9 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 640px) {
+  .css-6618940, .css-a9d6f4d { display: none; }
+  .css-6b6e276 { display: inline-flex; }
+  .css-24d4188 { font-size: 36px; line-height: 44px; }
+  .css-ab603f3 { height: 44px; }
+  .css-d67b940 { padding: 64px 0 48px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+</style>
+
+</head>
+<body>
+<header class="css-e26c31b" data-header>
+  <div class="css-fb5b128">
+    <div class="css-fb1fd82">
+      <a class="css-9a3581e" href="/sites/css-in-js/">Tidewater</a>
+      <nav class="css-6618940" aria-label="Main">
+        <a class="sc-11533" href="/sites/css-in-js/features">Product</a>
+        <a class="sc-11533" href="/sites/css-in-js/pricing">Pricing</a>
+        <a class="sc-11533" href="/sites/css-in-js/docs">Docs</a>
+        <a class="sc-11533" href="/sites/css-in-js/contact">Contact</a>
+        <div class="css-473d86b" data-dropdown>
+          <button type="button" class="css-e41d4c2" aria-haspopup="menu" aria-expanded="false" aria-controls="resources-menu">Resources <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="css-297a324" id="resources-menu" role="menu" hidden>
+            <a class="css-d417eb0" role="menuitem" href="/sites/css-in-js/docs">Guides</a>
+            <a class="css-d417eb0" role="menuitem" href="/sites/css-in-js/docs/getting-started">API reference</a>
+            <a class="css-d417eb0" role="menuitem" href="/sites/css-in-js/contact">Support</a>
+          </div>
+        </div>
+      </nav>
+      <div class="css-a9d6f4d">
+        <a class="sc-c8816 css-e23596d" href="/sites/css-in-js/login">Sign in</a>
+        <a class="sc-c8816 css-9674f72" href="/sites/css-in-js/signup">Start free</a>
+      </div>
+      <button type="button" class="css-6b6e276" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    </div>
+    <nav class="css-8b2e9d7" id="mobile-menu" aria-label="Mobile" hidden>
+      <a class="css-e3bd7e3" href="/sites/css-in-js/features">Product</a>
+      <a class="css-e3bd7e3" href="/sites/css-in-js/pricing">Pricing</a>
+      <a class="css-e3bd7e3" href="/sites/css-in-js/docs">Docs</a>
+      <a class="css-e3bd7e3" href="/sites/css-in-js/contact">Contact</a>
+      <a class="css-e3bd7e3" href="/sites/css-in-js/login">Sign in</a>
+    </nav>
+  </div>
+</header>
+<main>
+
+<div class="css-fb5b128">
+  <div class="css-8eecddf" style="padding: 48px 0 32px">
+    <h1>Contact</h1>
+    <p>We answer within one working day.</p>
+  </div>
+  <p class="css-3900ef0">
+    <span>hello@tidewater.app</span>
+    <button type="button" class="css-e0eac19"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button>
+  </p>
+  <section class="css-ffa365a">
+    <form class="css-4ef556b" action="#" method="post">
+      <div class="css-10a4eaa">
+        <label class="css-26d29b1" for="contact-name">Name</label>
+        <input class="sc-43be9" id="contact-name" name="name" type="text">
+      </div>
+      <div class="css-10a4eaa">
+        <label class="css-26d29b1" for="contact-message">Message</label>
+        <textarea class="css-f42725d" id="contact-message" name="message"></textarea>
+      </div>
+      <div class="css-a155c2a">
+        <button type="submit" class="sc-c8816 css-9674f72">Send message</button>
+        
+      </div>
+    </form>
+  </section>
+</div>
+</main>
+<footer class="css-67a120f">
+  <div class="css-fb5b128">
+    <div class="css-747ee89" style="gap: 32px">
+      <div class="css-ec0a4f3">
+        <span class="css-9a3581e">Tidewater</span>
+        <p class="css-d410b8a">Calm release notes for busy teams.</p>
+      </div>
+      <nav class="css-30cdf6f" aria-label="Footer">
+        <a class="css-fd3d329" href="/sites/css-in-js/features">Product</a>
+        <a class="css-fd3d329" href="/sites/css-in-js/pricing">Pricing</a>
+        <a class="css-fd3d329" href="/sites/css-in-js/docs">Docs</a>
+        <a class="css-fd3d329" href="/sites/css-in-js/contact">Contact</a>
+      </nav>
+      
+    </div>
+  </div>
+</footer>
+<script>
+(() => {
+  document.querySelectorAll('[data-dropdown]').forEach((dd) => {
+    const t = dd.querySelector('[aria-haspopup]');
+    const m = dd.querySelector('[role=menu]');
+    const set = (open) => { t.setAttribute('aria-expanded', String(open)); m.hidden = !open; };
+    t.addEventListener('click', () => set(t.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') set(false); });
+    document.addEventListener('click', (e) => { if (!dd.contains(e.target)) set(false); });
+  });
+  const mb = document.querySelector('[aria-controls=mobile-menu]');
+  const mm = document.getElementById('mobile-menu');
+  if (mb && mm) mb.addEventListener('click', () => { const open = mb.getAttribute('aria-expanded') !== 'true'; mb.setAttribute('aria-expanded', String(open)); mm.hidden = !open; });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && mb && mm) { mb.setAttribute('aria-expanded', 'false'); mm.hidden = true; } });
+  const h = document.querySelector('[data-header]');
+  const onScroll = () => h && h.classList.toggle('css-de81f84', window.scrollY > 0);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  document.querySelectorAll('[role=tablist]').forEach((list) => {
+    const tabs = [...list.querySelectorAll('[role=tab]')];
+    tabs.forEach((tab) => tab.addEventListener('click', () => {
+      tabs.forEach((t) => { const on = t === tab; t.setAttribute('aria-selected', String(on)); document.getElementById(t.getAttribute('aria-controls')).hidden = !on; });
+    }));
+  });
+  document.querySelectorAll('[role=switch]').forEach((sw) => sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true'))));
+})();
+</script>
+
+</body>
+</html>

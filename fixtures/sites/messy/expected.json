@@ -1,0 +1,79 @@
+{
+  "pages": [
+    {
+      "path": "/",
+      "reason": "home"
+    },
+    {
+      "path": "/pricing",
+      "reason": "tables-toggles"
+    },
+    {
+      "path": "/docs",
+      "reason": "code-blocks"
+    },
+    {
+      "path": "/login",
+      "reason": "forms-errors"
+    },
+    {
+      "path": "/signup",
+      "reason": "forms"
+    },
+    {
+      "path": "/contact",
+      "reason": "forms"
+    },
+    {
+      "path": "/features",
+      "reason": "nav"
+    },
+    {
+      "path": "/changelog",
+      "reason": "badges-timeline"
+    },
+    {
+      "path": "/{missing}-does-not-exist",
+      "reason": "empty-state"
+    },
+    {
+      "path": "/blog",
+      "reason": "list-template"
+    },
+    {
+      "path": "/about",
+      "reason": "about"
+    },
+    {
+      "path": "/blog/release-notes-week-1",
+      "reason": "post-template"
+    }
+  ],
+  "tokens": {
+    "colors": [],
+    "type": [],
+    "space": {
+      "base": 4,
+      "steps": [],
+      "offGrid": []
+    },
+    "radius": [],
+    "shadowCount": 0,
+    "breakpoints": []
+  },
+  "components": [],
+  "checks": {
+    "plantedFailures": [],
+    "plantedPasses": []
+  },
+  "drift": {
+    "nearDuplicateColors": [],
+    "offGrid": [],
+    "variantCollapses": [],
+    "typeNearDuplicates": [],
+    "expectNone": true
+  },
+  "previews": {
+    "minLiveRate": 0.9
+  }
+}

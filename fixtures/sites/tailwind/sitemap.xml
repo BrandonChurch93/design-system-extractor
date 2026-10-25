@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>http://localhost:4100/sites/tailwind/</loc></url>
+  <url><loc>http://localhost:4100/sites/tailwind/pricing</loc></url>
+  <url><loc>http://localhost:4100/sites/tailwind/features</loc></url>
+  <url><loc>http://localhost:4100/sites/tailwind/signup</loc></url>
+  <url><loc>http://localhost:4100/sites/tailwind/login</loc></url>
+  <url><loc>http://localhost:4100/sites/tailwind/docs</loc></url>
+  <url><loc>http://localhost:4100/sites/tailwind/docs/getting-started</loc></url>
+  <url><loc>http://localhost:4100/sites/tailwind/contact</loc></url>
+</urlset>

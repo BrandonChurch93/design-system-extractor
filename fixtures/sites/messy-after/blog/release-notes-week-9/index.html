@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exports · Tidewater blog</title>
+<link rel="stylesheet" href="/sites/messy-after/styles.css">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FIXTURE"></script>
+</head>
+<body>
+<header class="site-header" data-header>
+  <div class="container">
+    <div class="header-inner">
+      <a class="logo" href="/sites/messy-after/">Tidewater</a>
+      <nav class="nav-links" aria-label="Main">
+        <a class="nav-link" href="/sites/messy-after/features">Product</a>
+        <a class="nav-link" href="/sites/messy-after/pricing">Pricing</a>
+        <a class="nav-link" href="/sites/messy-after/docs">Docs</a>
+        <a class="nav-link" href="/sites/messy-after/contact">Contact</a>
+        <div class="dropdown" data-dropdown>
+          <button type="button" class="dropdown-trigger" aria-haspopup="menu" aria-expanded="false" aria-controls="resources-menu">Resources <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="dropdown-menu" id="resources-menu" role="menu" hidden>
+            <a class="menu-item" role="menuitem" href="/sites/messy-after/docs">Guides</a>
+            <a class="menu-item" role="menuitem" href="/sites/messy-after/docs/getting-started">API reference</a>
+            <a class="menu-item" role="menuitem" href="/sites/messy-after/contact">Support</a>
+          </div>
+        </div>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-ghost" href="/sites/messy-after/login">Sign in</a>
+        <a class="btn btn-primary" href="/sites/messy-after/signup">Start free</a>
+      </div>
+      <button type="button" class="menu-button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    </div>
+    <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile" hidden>
+      <a class="mobile-link" href="/sites/messy-after/features">Product</a>
+      <a class="mobile-link" href="/sites/messy-after/pricing">Pricing</a>
+      <a class="mobile-link" href="/sites/messy-after/docs">Docs</a>
+      <a class="mobile-link" href="/sites/messy-after/contact">Contact</a>
+      <a class="mobile-link" href="/sites/messy-after/login">Sign in</a>
+    </nav>
+  </div>
+</header>
+<main>
+
+<div class="container">
+  <article class="stack">
+    <span class="caption">Release notes</span>
+    <h1>Exports</h1>
+    <p>This week we shipped exports. Here is what changed and why it matters for your team.</p>
+    <div class="status-list"><button type="button" class="icon-button-sm" aria-label="Copy link to this page"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg></button></div>
+  </article>
+</div>
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="stack">
+        <span class="logo">Tidewater</span>
+        <p class="caption">Calm release notes for busy teams.</p>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <a class="footer-link" href="/sites/messy-after/features">Product</a>
+        <a class="footer-link" href="/sites/messy-after/pricing">Pricing</a>
+        <a class="footer-link" href="/sites/messy-after/docs">Docs</a>
+        <a class="footer-link" href="/sites/messy-after/contact">Contact</a>
+      </nav>
+      <form class="newsletter" action="#" method="post"><label class="label" for="newsletter-email">Newsletter</label><input class="input newsletter-input" type="email" id="newsletter-email" placeholder="Your email"><button type="submit" class="btn btn-primary btn-sm">Subscribe</button></form>
+    </div>
+  </div>
+</footer>
+<script>
+(() => {
+  document.querySelectorAll('[data-dropdown]').forEach((dd) => {
+    const t = dd.querySelector('[aria-haspopup]');
+    const m = dd.querySelector('[role=menu]');
+    const set = (open) => { t.setAttribute('aria-expanded', String(open)); m.hidden = !open; };
+    t.addEventListener('click', () => set(t.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') set(false); });
+    document.addEventListener('click', (e) => { if (!dd.contains(e.target)) set(false); });
+  });
+  const mb = document.querySelector('[aria-controls=mobile-menu]');
+  const mm = document.getElementById('mobile-menu');
+  if (mb && mm) mb.addEventListener('click', () => { const open = mb.getAttribute('aria-expanded') !== 'true'; mb.setAttribute('aria-expanded', String(open)); mm.hidden = !open; });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && mb && mm) { mb.setAttribute('aria-expanded', 'false'); mm.hidden = true; } });
+  const h = document.querySelector('[data-header]');
+  const onScroll = () => h && h.classList.toggle('is-scrolled', window.scrollY > 0);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  document.querySelectorAll('[role=tablist]').forEach((list) => {
+    const tabs = [...list.querySelectorAll('[role=tab]')];
+    tabs.forEach((tab) => tab.addEventListener('click', () => {
+      tabs.forEach((t) => { const on = t === tab; t.setAttribute('aria-selected', String(on)); document.getElementById(t.getAttribute('aria-controls')).hidden = !on; });
+    }));
+  });
+  document.querySelectorAll('[role=switch]').forEach((sw) => sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true'))));
+})();
+</script>
+<div id="cookie-consent" class="cookie-banner" role="dialog" aria-label="Cookie consent"><p class="text-sm" style="color: #FFFFFF">We use cookies to remember your settings.</p><button type="button" class="btn btn-primary btn-sm" onclick="this.closest('#cookie-consent').remove()">Accept</button></div><div class="toast" role="status"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></svg><span>Draft saved</span></div>
+</body>
+</html>

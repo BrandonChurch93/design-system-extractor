@@ -1,0 +1,23 @@
+{
+  "purpose": "select",
+  "size": "small",
+  "model": "claude-haiku-5-5",
+  "text": "{\"pageIds\": [\"u18bpkgs\", \"oigqwsuo\", \"aued7wl1\", \"lww1k5gm\", \"ugf0jllh\", \"prtpbx95\", \"dh5bcnfc\", \"kgk2jn1g\", \"qpoue356\", \"ehtkloyy\", \"r6anqd3a\", \"clkkbvnn\"]}",
+  "usage": {
+    "input_tokens": 663,
+    "cache_creation_input_tokens": 796,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 796,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 117,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-25T23:46:21.465Z"
+}

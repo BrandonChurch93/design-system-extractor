@@ -7,4 +7,6 @@ export * from './entitlements';
 export * from './exports';
 export * from './showcase';
 export * from './labels';
+export * from './stages';
+export * from './expected';
 export { validateEnv, allowedPrivateHosts, type EnvIssue, type EnvKey } from './env';

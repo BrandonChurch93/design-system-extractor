@@ -1,0 +1,44 @@
+@import "tailwindcss";
+@source "../../sites/tailwind";
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --color-navy-900: #0B1F3A;
+  --color-blue-600: #2458E6;
+  --color-teal-600: #0F8A8A;
+  --color-success-700: #15803D;
+  --color-warning-700: #B45309;
+  --color-danger-600: #DC2626;
+  --color-white: #FFFFFF;
+  --color-slate-200: #E2E8F0;
+  --shadow-card: 0 1px 2px rgba(11, 31, 58, 0.12);
+  --shadow-raised: 0 12px 32px rgba(11, 31, 58, 0.12);
+}
+
+@utility select-chevron {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230B1F3A' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+@utility checkbox-box {
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect x='0.5' y='0.5' width='19' height='19' rx='3.5' fill='%23FFFFFF' stroke='%230B1F3A'/%3E%3C/svg%3E") center no-repeat;
+}
+@utility checkbox-checked {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect width='20' height='20' rx='4' fill='%232458E6'/%3E%3Cpath d='m5 10 3.5 3.5L15 7' fill='none' stroke='%23FFFFFF' stroke-width='2'/%3E%3C/svg%3E");
+}
+
+@layer base {
+  body { font-family: var(--font-sans); font-size: 16px; line-height: 26px; color: #0B1F3A; background: #FFFFFF; }
+  a { color: #2458E6; }
+  h1 { font-size: 36px; line-height: 44px; font-weight: 700; }
+  h2 { font-size: 28px; line-height: 36px; font-weight: 700; }
+  h3 { font-size: 20px; line-height: 28px; font-weight: 600; }
+  p { font-size: 16px; line-height: 26px; }
+  img, svg { display: block; }
+  pre code { font: inherit; }
+}
+
+@media (prefers-color-scheme: dark) {
+  body { background: #0B1F3A; color: #FFFFFF; }
+}

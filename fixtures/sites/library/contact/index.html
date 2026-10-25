@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact · Ledgerly</title>
+<link rel="stylesheet" href="/sites/library/vendor/bulma.min.css">
+<link rel="stylesheet" href="/sites/library/site.css">
+</head>
+<body>
+<nav class="navbar is-white has-shadow" aria-label="Main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item has-text-weight-bold" href="/sites/library/">Ledgerly</a>
+      <a role="button" class="navbar-burger" aria-label="Open menu" aria-expanded="false" aria-controls="main-menu" data-target="main-menu"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></a>
+    </div>
+    <div id="main-menu" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" href="/sites/library/pricing">Pricing</a>
+        <a class="navbar-item" href="/sites/library/docs">Docs</a>
+        <a class="navbar-item" href="/sites/library/contact">Contact</a>
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item"><div class="buttons"><a class="button is-light" href="/sites/library/contact">Log in</a><a class="button is-primary" href="/sites/library/signup">Sign up</a></div></div>
+      </div>
+    </div>
+  </div>
+</nav>
+<section class="section"><div class="container">
+  <h1 class="title">Contact</h1>
+  <div class="field has-addons"><div class="control"><input class="input" type="text" value="help@ledgerly.dev" readonly aria-label="Support email"></div><div class="control"><button type="button" class="button is-info"><span class="icon">⧉</span></button></div></div>
+  <form action="#" method="post" style="max-width: 480px">
+    <div class="field"><label class="label" for="msg">Message</label><div class="control"><textarea class="textarea" id="msg"></textarea></div></div>
+    <div class="field"><div class="control"><button type="submit" class="button is-link">Send</button></div></div>
+  </form>
+  <article class="message is-warning"><div class="message-body">We are a two-person team. Replies take up to two days.</div></article>
+</div></section>
+<footer class="footer">
+  <div class="content has-text-centered">
+    <p><strong>Ledgerly</strong> keeps small books in order.</p>
+    <p class="is-size-7 has-text-grey-light">Made with Bulma.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('.navbar-burger').forEach((b) => b.addEventListener('click', () => {
+  const t = document.getElementById(b.dataset.target);
+  const open = !b.classList.contains('is-active');
+  b.classList.toggle('is-active', open);
+  t.classList.toggle('is-active', open);
+  b.setAttribute('aria-expanded', String(open));
+}));
+</script>
+</body>
+</html>

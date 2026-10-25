@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pricing · Ledgerly</title>
+<link rel="stylesheet" href="/sites/library/vendor/bulma.min.css">
+<link rel="stylesheet" href="/sites/library/site.css">
+</head>
+<body>
+<nav class="navbar is-white has-shadow" aria-label="Main navigation">
+  <div class="container">
+    <div class="navbar-brand">
+      <a class="navbar-item has-text-weight-bold" href="/sites/library/">Ledgerly</a>
+      <a role="button" class="navbar-burger" aria-label="Open menu" aria-expanded="false" aria-controls="main-menu" data-target="main-menu"><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span></a>
+    </div>
+    <div id="main-menu" class="navbar-menu">
+      <div class="navbar-start">
+        <a class="navbar-item" href="/sites/library/pricing">Pricing</a>
+        <a class="navbar-item" href="/sites/library/docs">Docs</a>
+        <a class="navbar-item" href="/sites/library/contact">Contact</a>
+      </div>
+      <div class="navbar-end">
+        <div class="navbar-item"><div class="buttons"><a class="button is-light" href="/sites/library/contact">Log in</a><a class="button is-primary" href="/sites/library/signup">Sign up</a></div></div>
+      </div>
+    </div>
+  </div>
+</nav>
+<section class="section"><div class="container">
+  <h1 class="title">Pricing</h1>
+  <p class="subtitle">One plan, billed monthly or yearly.</p>
+  <div class="columns">
+    <div class="column"><div class="box"><p class="title is-4">Solo</p><p class="title is-2">$9</p><p>Unlimited invoices and receipts.</p><a class="button is-primary is-fullwidth" href="/sites/library/signup">Choose Solo</a></div></div>
+    <div class="column"><div class="box"><p class="title is-4">Studio</p><p class="title is-2">$19</p><p>Everything in Solo, plus three seats.</p><a class="button is-link is-fullwidth" href="/sites/library/signup">Choose Studio</a></div></div>
+  </div>
+  <table class="table is-striped is-fullwidth">
+    <thead><tr><th>Feature</th><th>Solo</th><th>Studio</th></tr></thead>
+    <tbody>
+      <tr><td>Invoices</td><td>Unlimited</td><td>Unlimited</td></tr>
+      <tr><td>Seats</td><td>1</td><td>3</td></tr>
+      <tr><td>Bank sync</td><td><span class="tag is-success">Included</span></td><td><span class="tag is-success">Included</span></td></tr>
+    </tbody>
+  </table>
+</div></section>
+<footer class="footer">
+  <div class="content has-text-centered">
+    <p><strong>Ledgerly</strong> keeps small books in order.</p>
+    <p class="is-size-7 has-text-grey-light">Made with Bulma.</p>
+  </div>
+</footer>
+<script>
+document.querySelectorAll('.navbar-burger').forEach((b) => b.addEventListener('click', () => {
+  const t = document.getElementById(b.dataset.target);
+  const open = !b.classList.contains('is-active');
+  b.classList.toggle('is-active', open);
+  t.classList.toggle('is-active', open);
+  b.setAttribute('aria-expanded', String(open));
+}));
+</script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Features · Tidewater</title>
+<link rel="stylesheet" href="/fonts/inter/inter.css">
+<link rel="stylesheet" href="/sites/tailwind/styles.css">
+
+</head>
+<body>
+<header class="sticky top-0 z-10 bg-white border-b border-solid border-slate-200 transition-shadow duration-160 motion-reduce:transition-none dark:bg-navy-900" data-header>
+  <div class="mx-auto max-w-[1120px] px-6">
+    <div class="flex items-center justify-between gap-8 h-[72px]">
+      <a class="text-[20px] leading-[28px] font-semibold text-navy-900 dark:text-white" href="/sites/tailwind/">Tidewater</a>
+      <nav class="flex items-center gap-6 max-[640px]:hidden" aria-label="Main">
+        <a class="text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" href="/sites/tailwind/features">Product</a>
+        <a class="text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" href="/sites/tailwind/pricing">Pricing</a>
+        <a class="text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" href="/sites/tailwind/docs">Docs</a>
+        <a class="text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" href="/sites/tailwind/contact">Contact</a>
+        <div class="relative" data-dropdown>
+          <button type="button" class="inline-flex items-center gap-1 h-11 px-3 border-0 rounded-lg bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer hover:bg-slate-200 aria-expanded:bg-slate-200 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" aria-haspopup="menu" aria-expanded="false" aria-controls="resources-menu">Resources <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+          <div class="absolute top-12 left-0 z-20 min-w-56 p-2 bg-white border border-solid border-slate-200 rounded-xl shadow-raised" id="resources-menu" role="menu" hidden>
+            <a class="flex items-center h-11 px-3 rounded-lg text-[14px] leading-[22px] text-navy-900 hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" role="menuitem" href="/sites/tailwind/docs">Guides</a>
+            <a class="flex items-center h-11 px-3 rounded-lg text-[14px] leading-[22px] text-navy-900 hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" role="menuitem" href="/sites/tailwind/docs/getting-started">API reference</a>
+            <a class="flex items-center h-11 px-3 rounded-lg text-[14px] leading-[22px] text-navy-900 hover:bg-slate-200 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" role="menuitem" href="/sites/tailwind/contact">Support</a>
+          </div>
+        </div>
+      </nav>
+      <div class="flex items-center gap-3 max-[640px]:hidden">
+        <a class="inline-flex items-center justify-center gap-2 h-11 px-5 border border-solid border-transparent rounded-lg text-[14px] leading-[20px] font-semibold cursor-pointer transition-colors duration-160 motion-reduce:transition-none disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2 bg-transparent text-navy-900 hover:bg-slate-200 active:bg-slate-200" href="/sites/tailwind/login">Sign in</a>
+        <a class="inline-flex items-center justify-center gap-2 h-11 px-5 border border-solid border-transparent rounded-lg text-[14px] leading-[20px] font-semibold cursor-pointer transition-colors duration-160 motion-reduce:transition-none disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2 bg-blue-600 text-white hover:bg-navy-900 active:bg-navy-900" href="/sites/tailwind/signup">Start free</a>
+      </div>
+      <button type="button" class="hidden max-[640px]:inline-flex items-center justify-center w-11 h-11 border-0 rounded-lg bg-transparent text-navy-900 cursor-pointer focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    </div>
+    <nav class="border-t border-solid border-slate-200 pt-2 pb-4" id="mobile-menu" aria-label="Mobile" hidden>
+      <a class="flex items-center h-12 text-[16px] leading-[26px] text-navy-900" href="/sites/tailwind/features">Product</a>
+      <a class="flex items-center h-12 text-[16px] leading-[26px] text-navy-900" href="/sites/tailwind/pricing">Pricing</a>
+      <a class="flex items-center h-12 text-[16px] leading-[26px] text-navy-900" href="/sites/tailwind/docs">Docs</a>
+      <a class="flex items-center h-12 text-[16px] leading-[26px] text-navy-900" href="/sites/tailwind/contact">Contact</a>
+      <a class="flex items-center h-12 text-[16px] leading-[26px] text-navy-900" href="/sites/tailwind/login">Sign in</a>
+    </nav>
+  </div>
+</header>
+<main>
+
+<div class="mx-auto max-w-[1120px] px-6">
+  <div class="flex flex-col gap-3 pt-12 pb-8">
+    <h1>Features</h1>
+    <p>Three ways your release notes reach people.</p>
+  </div>
+  <div class="flex gap-1 border-b border-solid border-slate-200" role="tablist" aria-label="Channels">
+    <button type="button" class="h-11 px-4 border-0 border-b-2 border-solid border-transparent bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer aria-selected:text-blue-600 aria-selected:border-b-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" role="tab" id="tab-digest" aria-selected="true" aria-controls="panel-digest">Digests</button>
+    <button type="button" class="h-11 px-4 border-0 border-b-2 border-solid border-transparent bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer aria-selected:text-blue-600 aria-selected:border-b-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" role="tab" id="tab-slack" aria-selected="false" aria-controls="panel-slack">Slack</button>
+    <button type="button" class="h-11 px-4 border-0 border-b-2 border-solid border-transparent bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer aria-selected:text-blue-600 aria-selected:border-b-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" role="tab" id="tab-pages" aria-selected="false" aria-controls="panel-pages">Pages</button>
+  </div>
+  <div class="py-6" role="tabpanel" id="panel-digest" aria-labelledby="tab-digest"><p>A Friday email with every merged change, grouped by team and written in plain words.</p></div>
+  <div class="py-6" role="tabpanel" id="panel-slack" aria-labelledby="tab-slack" hidden><p>Release threads in the channels you pick, with a link to the full note.</p></div>
+  <div class="py-6" role="tabpanel" id="panel-pages" aria-labelledby="tab-pages" hidden><p>A public changelog on your own domain that updates itself.</p></div>
+  <div class="flex items-start gap-3 p-4 border border-solid border-success-700 rounded-lg bg-white text-navy-900" role="status">
+    <span class="flex-none w-6 h-6 text-success-700"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></svg></span>
+    <div class="flex flex-col gap-4">
+      <p>Digests are included in every plan.</p>
+      <a class="inline-flex items-center justify-center gap-2 border border-solid border-transparent rounded-lg text-[14px] leading-[20px] font-semibold cursor-pointer transition-colors duration-160 motion-reduce:transition-none disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2 bg-blue-600 text-white hover:bg-navy-900 active:bg-navy-900 h-9 px-4 max-[640px]:h-11" href="/sites/tailwind/pricing">Compare plans</a>
+    </div>
+  </div>
+  <section class="py-16">
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+  <article class="flex flex-col gap-3 p-6 bg-white border border-solid border-slate-200 rounded-xl shadow-card dark:bg-navy-900">
+    <span class="w-6 h-6 text-teal-600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg></span>
+    
+    <h3>Weekly digests</h3>
+    <p class="text-[14px] leading-[22px]">One email every Friday with what shipped, grouped by team.</p>
+  </article>
+  <article class="flex flex-col gap-3 p-6 bg-white border border-solid border-slate-200 rounded-xl shadow-card dark:bg-navy-900">
+    <span class="w-6 h-6 text-teal-600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></svg></span>
+    <h3>Slack threads</h3>
+    <p class="text-[14px] leading-[22px]">Each release posts where the team already talks, with a link back.</p>
+  </article>
+  <article class="flex flex-col gap-3 p-6 bg-white border border-solid border-slate-200 rounded-xl shadow-card dark:bg-navy-900">
+    <span class="w-6 h-6 text-teal-600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg></span>
+    <h3>Public pages</h3>
+    <p class="text-[14px] leading-[22px]">A changelog page on your own domain, updated on every merge.</p>
+  </article>
+</div></section>
+  
+</div>
+</main>
+<footer class="border-t border-solid border-slate-200 py-12">
+  <div class="mx-auto max-w-[1120px] px-6">
+    <div class="flex justify-between gap-8 flex-wrap">
+      <div class="flex flex-col gap-4">
+        <span class="text-[20px] leading-[28px] font-semibold text-navy-900 dark:text-white">Tidewater</span>
+        <p class="text-[12px] leading-[16px]">Calm release notes for busy teams.</p>
+      </div>
+      <nav class="flex gap-6 flex-wrap" aria-label="Footer">
+        <a class="text-[14px] leading-[22px] text-navy-900" href="/sites/tailwind/features">Product</a>
+        <a class="text-[14px] leading-[22px] text-navy-900" href="/sites/tailwind/pricing">Pricing</a>
+        <a class="text-[14px] leading-[22px] text-navy-900" href="/sites/tailwind/docs">Docs</a>
+        <a class="text-[14px] leading-[22px] text-navy-900" href="/sites/tailwind/contact">Contact</a>
+      </nav>
+      
+    </div>
+  </div>
+</footer>
+<script>
+(() => {
+  document.querySelectorAll('[data-dropdown]').forEach((dd) => {
+    const t = dd.querySelector('[aria-haspopup]');
+    const m = dd.querySelector('[role=menu]');
+    const set = (open) => { t.setAttribute('aria-expanded', String(open)); m.hidden = !open; };
+    t.addEventListener('click', () => set(t.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') set(false); });
+    document.addEventListener('click', (e) => { if (!dd.contains(e.target)) set(false); });
+  });
+  const mb = document.querySelector('[aria-controls=mobile-menu]');
+  const mm = document.getElementById('mobile-menu');
+  if (mb && mm) mb.addEventListener('click', () => { const open = mb.getAttribute('aria-expanded') !== 'true'; mb.setAttribute('aria-expanded', String(open)); mm.hidden = !open; });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && mb && mm) { mb.setAttribute('aria-expanded', 'false'); mm.hidden = true; } });
+  const h = document.querySelector('[data-header]');
+  const onScroll = () => h && h.classList.toggle('shadow-raised', window.scrollY > 0);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  document.querySelectorAll('[role=tablist]').forEach((list) => {
+    const tabs = [...list.querySelectorAll('[role=tab]')];
+    tabs.forEach((tab) => tab.addEventListener('click', () => {
+      tabs.forEach((t) => { const on = t === tab; t.setAttribute('aria-selected', String(on)); document.getElementById(t.getAttribute('aria-controls')).hidden = !on; });
+    }));
+  });
+  document.querySelectorAll('[role=switch]').forEach((sw) => sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true'))));
+})();
+</script>
+
+</body>
+</html>

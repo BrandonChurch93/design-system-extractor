@@ -11,9 +11,15 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const file = process.env.DOTENV_FILE ? resolve(process.cwd(), process.env.DOTENV_FILE) : resolve(root, '.env.local');
 if (existsSync(file)) {
   const parsed = parseEnv(readFileSync(file, 'utf8'));
+  const fromFile = [];
   for (const [key, value] of Object.entries(parsed)) {
-    if (process.env[key] === undefined) process.env[key] = value;
+    if (process.env[key] === undefined) {
+      process.env[key] = value;
+      fromFile.push(key);
+    }
   }
+  // Lets a script tell a value set on its command line from one read from the file.
+  process.env.DSE_ENV_FILE_KEYS = fromFile.join(',');
 } else if (process.env.DOTENV_FILE) {
   console.error(`Env file not found: ${file}`);
   process.exit(1);

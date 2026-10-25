@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>http://localhost:4100/sites/library/</loc></url>
+  <url><loc>http://localhost:4100/sites/library/pricing</loc></url>
+  <url><loc>http://localhost:4100/sites/library/signup</loc></url>
+  <url><loc>http://localhost:4100/sites/library/docs</loc></url>
+  <url><loc>http://localhost:4100/sites/library/docs/api</loc></url>
+  <url><loc>http://localhost:4100/sites/library/contact</loc></url>
+</urlset>

@@ -1,0 +1,59 @@
+{
+  "pages": [
+    {
+      "path": "/",
+      "reason": "home"
+    },
+    {
+      "path": "/pricing",
+      "reason": "tables-toggles"
+    },
+    {
+      "path": "/signup",
+      "reason": "forms"
+    },
+    {
+      "path": "/docs",
+      "reason": "code-blocks"
+    },
+    {
+      "path": "/docs/api",
+      "reason": "code-blocks"
+    },
+    {
+      "path": "/contact",
+      "reason": "forms"
+    },
+    {
+      "path": "/{missing}-does-not-exist",
+      "reason": "empty-state"
+    }
+  ],
+  "tokens": {
+    "colors": [],
+    "type": [],
+    "space": {
+      "base": 4,
+      "steps": [],
+      "offGrid": []
+    },
+    "radius": [],
+    "shadowCount": 0,
+    "breakpoints": []
+  },
+  "components": [],
+  "checks": {
+    "plantedFailures": [],
+    "plantedPasses": []
+  },
+  "drift": {
+    "nearDuplicateColors": [],
+    "offGrid": [],
+    "variantCollapses": [],
+    "typeNearDuplicates": [],
+    "expectNone": true
+  },
+  "previews": {
+    "minLiveRate": 0.9
+  }
+}

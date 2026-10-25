@@ -33,7 +33,8 @@
     "verify:all": "node scripts/run.mjs node scripts/steps.mjs check test test:e2e evals build qa:visual qa:axe qa:lighthouse qa:copy audit",
     "audit": "pnpm audit --audit-level high",
     "showcase": "node scripts/run.mjs tsx scripts/showcase/index.ts",
-    "doctor": "node scripts/run.mjs tsx scripts/doctor.ts"
+    "doctor": "node scripts/run.mjs tsx scripts/doctor.ts",
+    "prompts:build": "node scripts/run.mjs tsx scripts/prompts-build.ts"
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "1.3.0",
@@ -43,6 +44,7 @@
     "@dse/schema": "workspace:^",
     "@eslint/js": "9.39.5",
     "@playwright/test": "1.64.1",
+    "@tailwindcss/cli": "4.3.3",
     "@types/node": "22.20.5",
     "@types/pngjs": "^6.0.5",
     "axe-core": "4.14.0",
@@ -53,9 +55,12 @@
     "pixelmatch": "8.0.0",
     "pngjs": "7.0.0",
     "postgres": "3.4.9",
+    "tailwind-merge": "3.7.0",
+    "tailwindcss": "4.3.3",
     "tsx": "4.23.15",
     "typescript": "5.9.3",
     "typescript-eslint": "8.72.0",
-    "vitest": "5.0.5"
+    "vitest": "5.0.5",
+    "zod": "4.6.7"
   }
 }

@@ -1,0 +1,4 @@
+@import url('/fonts/inter/inter.css');
+:root { --bulma-family-primary: 'Inter', system-ui, sans-serif; --bulma-family-code: ui-monospace, 'SFMono-Regular', Menlo, monospace; }
+body { font-family: var(--bulma-family-primary); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
