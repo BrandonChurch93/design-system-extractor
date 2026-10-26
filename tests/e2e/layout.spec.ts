@@ -26,3 +26,20 @@ for (const p of qaPages) {
     });
   }
 }
+
+// The showcase never leaves an orphan row at three or two columns (docs/specs/showcase.md, P13 gate).
+for (const [width, columns] of [[1440, 3], [820, 2]] as const) {
+  test(`the showcase fills every row at ${columns} columns`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    await settle(page);
+    const rows = await page.evaluate(() => {
+      const cards = [...document.querySelectorAll('ul li a[href^="/r/"]')].map((a) => a.closest('li')!.getBoundingClientRect());
+      const byTop = new Map<number, number>();
+      for (const r of cards) byTop.set(Math.round(r.top), (byTop.get(Math.round(r.top)) ?? 0) + 1);
+      return [...byTop.values()];
+    });
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.every((n) => n === columns), rows.join(', ')).toBe(true);
+  });
+}
