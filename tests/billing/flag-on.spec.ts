@@ -2,7 +2,7 @@ import { mkdirSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
 import { axeCheck } from '../qa/axe-check';
-import { settle, viewports, withBlocked, withFullHeight } from '../qa/pages';
+import { freezeClock, settle, viewports, withBlocked, withFullHeight } from '../qa/pages';
 
 // With BILLING_ENABLED on, every flagged surface renders in its place (docs/specs/v2-seams.md):
 // captured for review into qa/billing and checked by axe at three viewports.
@@ -31,6 +31,7 @@ for (const vp of viewports) {
   for (const s of shots) {
     test(`${s.name} · ${vp.name}`, async ({ page }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
+      await freezeClock(page);
       if (s.before) await s.before(page);
       const res = await page.goto(s.path);
       expect(res?.status()).toBe(200);

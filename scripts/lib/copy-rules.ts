@@ -2,7 +2,7 @@
 export const EM_DASH = String.fromCharCode(0x2014);
 
 export const emDashRoots = ['apps', 'packages', 'scripts', 'docs', 'prompts', 'README.md', 'STATUS.md', 'CHANGELOG.md', '.env.example'];
-export const excludedDirs = new Set(['node_modules', '.next', 'dist', 'coverage', '.turbo', 'test-results', 'playwright-report']);
+export const excludedDirs = new Set(['node_modules', '.next', '.next-billing', 'dist', 'coverage', '.turbo', 'test-results', 'playwright-report']);
 export const excludedPrefixes = ['reference/', 'fixtures/sites/'];
 
 export const forbiddenWordGlobs = [
