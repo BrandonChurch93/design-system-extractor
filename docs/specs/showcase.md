@@ -13,7 +13,7 @@ Twelve sites, chosen for a mix of clean systems, dense ones where the drift repo
 | 3 | stripe.com | Finance | a famously tight system, payments |
 | 4 | linear.app | Developer tools | restraint |
 | 5 | vercel.com | Developer tools | Geist in the wild |
-| 6 | notion.so | SaaS | a large product marketing site |
+| 6 | notion.com | SaaS | a large product marketing site |
 | 7 | apple.com | Commerce | large, polished, many states |
 | 8 | wikipedia.org | Media | dense, old, plenty of drift |
 | 9 | usa.gov | Government | USWDS, the government lane |

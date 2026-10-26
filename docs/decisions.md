@@ -582,3 +582,10 @@ Decision: a run at showcase priority (10) takes `DSE_SHOWCASE_TIMEOUT_MS` (defau
 Reasoning: the showcase should show the product complete; visitors keep the promise they were given.
 Affects: `docs/specs/caps-and-budget.md`, `docs/design/copy.md`, `.env.example`, `packages/schema/src/env.ts`, `packages/pipeline/src/errors.ts`, `packages/pipeline/src/run.ts`, `apps/worker/src/`, `scripts/showcase/index.ts`, `scripts/db-seed-fixtures.ts`.
 
+
+## D-072 · Hidden text is not a type style; the Notion entry is notion.com
+
+Date: 2026-10-26 · Context: the P13 dry run of the real roster failed apple.com and airbnb.com at the end of the tokens stage. Both pages carry text set to `font-size: 0` or `line-height: 0` (screen-reader text and icon wrappers), which became a type tuple with size or line height 0, and the run document schema, which requires both to be positive, refused the document, so the run ended "The crawler stopped unexpectedly." Separately, notion.so now redirects to notion.com, another host, so the crawler blocked it as "redirected off-site", as `docs/specs/crawler.md` requires.
+Decision: type collection skips text whose computed font size or line height is zero; its colors still count. The roster's sixth entry is notion.com. The off-site redirect rule is unchanged.
+Reasoning: text at zero size is not seen, so it is not part of the system a visitor reads; the roster names the site's current home rather than loosening a security rule for one domain.
+Affects: `docs/specs/token-clustering.md`, `docs/specs/showcase.md`, `packages/pipeline/src/tokens/collect.ts`, `scripts/showcase/roster.ts`.

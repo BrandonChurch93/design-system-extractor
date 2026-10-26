@@ -24,7 +24,7 @@ Caps: 80 color tokens. Beyond that, the lowest-weight clusters merge into their 
 
 ## Type
 
-**Collect.** For every visible element with direct text, the tuple (resolved family, size px, weight, line-height px, letter-spacing px, text-transform). The resolved family is the first family in the computed `font-family` stack for which `document.fonts.check(…)` is true, else the first family. Record `fallbackStack`.
+**Collect.** For every visible element with direct text at a font size and line height above zero (text at zero is hidden, D-072), the tuple (resolved family, size px, weight, line-height px, letter-spacing px, text-transform). The resolved family is the first family in the computed `font-family` stack for which `document.fonts.check(…)` is true, else the first family. Record `fallbackStack`.
 
 **Cluster.** Exact tuples, with line height rounded to the nearest 0.5 px and letter spacing to 0.05 px. Count elements. Drop tuples with fewer than 3 elements unless the element is a heading (`h1` to `h6`) or the tuple is the largest size on a page (a page's own snapshot, not a menu it revealed, D-051).
 

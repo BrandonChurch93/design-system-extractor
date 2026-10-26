@@ -35,4 +35,13 @@ describe('collecting raw values', () => {
     const body = [...raw.type.values()].find((t) => t.size === 16 && t.lineHeight === 26)!;
     expect(body.tags.get('p')).toBe(1);
   });
+
+  it('keeps hidden text at zero size or zero line height out of type', () => {
+    const els: El[] = [
+      { tag: 'body', box: [0, 0, 1440, 900] },
+      { tag: 'span', parent: 0, own: 'Skip', box: [0, 0, 10, 10], style: { 'font-size': '0px' } },
+      { tag: 'span', parent: 0, own: 'Icon', box: [0, 20, 10, 10], style: { 'line-height': '0px' } },
+    ];
+    expect([...collect([source(els)]).type.values()]).toEqual([]);
+  });
 });

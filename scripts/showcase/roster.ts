@@ -14,7 +14,7 @@ export const roster: RosterSite[] = [
   { ...site('stripe.com', 'Stripe', 'Finance'), order: 3, why: 'a famously tight system, payments' },
   { ...site('linear.app', 'Linear', 'Developer tools'), order: 4, why: 'restraint' },
   { ...site('vercel.com', 'Vercel', 'Developer tools'), order: 5, why: 'Geist in the wild' },
-  { ...site('notion.so', 'Notion', 'SaaS'), order: 6, why: 'a large product marketing site' },
+  { ...site('notion.com', 'Notion', 'SaaS'), order: 6, why: 'a large product marketing site' },
   { ...site('apple.com', 'Apple', 'Commerce'), order: 7, why: 'large, polished, many states' },
   { ...site('wikipedia.org', 'Wikipedia', 'Media'), order: 8, why: 'dense, old, plenty of drift' },
   { ...site('usa.gov', 'USA.gov', 'Government'), order: 9, why: 'USWDS, the government lane' },

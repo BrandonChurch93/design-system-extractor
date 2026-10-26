@@ -195,10 +195,10 @@ export function collect(sources: CaptureSource[]): RawTokens {
           if (c) addColor(raw, c, 'other', 1, src.pageId, sem);
         }
       }
-      // Type: elements with their own text.
-      if (e.own) {
-        const size = px(st['font-size']);
-        const lineHeight = lineHeightPx(e);
+      // Type: elements with their own text. Text at zero size or zero line height is hidden, not a style (D-072).
+      const size = px(st['font-size']);
+      const lineHeight = lineHeightPx(e);
+      if (e.own && size > 0 && lineHeight > 0) {
         const weight = Number(st['font-weight']) || 400;
         const ls = st['letter-spacing'] === 'normal' ? 0 : Math.round(px(st['letter-spacing']) * 20) / 20;
         const transform = st['text-transform'] && st['text-transform'] !== 'none' ? st['text-transform'] : undefined;
