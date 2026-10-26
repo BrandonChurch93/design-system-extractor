@@ -1,8 +1,8 @@
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react';
 import styles from './Tag.module.css';
 
 type TagProps = { children: ReactNode; className?: string } & (
-  | ({ interactive: true } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'className'>)
+  | ({ interactive: true; ref?: Ref<HTMLButtonElement> } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'className'>)
   | { interactive?: false }
 );
 

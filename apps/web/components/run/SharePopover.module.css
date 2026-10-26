@@ -1,0 +1,28 @@
+.body {
+  display: grid;
+  gap: var(--dse-space-3);
+  justify-items: start;
+}
+
+.label {
+  composes: label from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+.row {
+  display: flex;
+  gap: var(--dse-space-2);
+  width: 100%;
+}
+
+.url {
+  composes: meta from '../../styles/type.module.css';
+  flex: 1;
+  min-width: 0;
+  height: 36px;
+  padding: 0 var(--dse-space-3);
+  background: var(--dse-surface-tint);
+  border: 1px solid var(--dse-line);
+  border-radius: var(--dse-radius-md);
+  color: var(--dse-ink-2);
+}

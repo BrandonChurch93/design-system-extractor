@@ -1,0 +1,39 @@
+.page {
+  display: grid;
+  gap: var(--dse-space-6);
+  max-width: 760px;
+  padding-top: var(--dse-space-7);
+}
+
+.header {
+  display: grid;
+  gap: var(--dse-space-2);
+}
+
+.crumbs {
+  composes: caption from '../../../../../styles/type.module.css';
+  display: flex;
+  flex-wrap: wrap;
+  color: var(--dse-muted);
+}
+
+.crumbs li + li::before {
+  content: '/';
+  padding: 0 var(--dse-space-1);
+}
+
+.crumbs a {
+  color: var(--dse-ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--dse-line-strong);
+  text-underline-offset: 3px;
+  border-radius: var(--dse-radius-sm);
+}
+
+.title {
+  composes: title from '../../../../../styles/type.module.css';
+}
+
+.back {
+  justify-self: start;
+}

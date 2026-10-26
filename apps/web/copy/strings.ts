@@ -20,6 +20,7 @@ export const global = {
   icons: { menu: 'Menu', close: 'Close', copy: 'Copy' },
   navLabel: 'Primary',
   sectionsLabel: 'Sections',
+  breadcrumbLabel: 'Breadcrumb',
   validation: 'Something about that request was not right. Try again.',
   rateLimit: 'Too many requests. Try again in a minute.',
   notFound: { title: 'There is nothing at that address.', body: 'The link may be old, or the run may have been removed.', action: 'Browse the showcase' },
@@ -86,6 +87,7 @@ export const keyPopover = {
 export const runPage = {
   meta: {
     complete: '{pages} pages · {viewports} viewports · crawled {date} · {duration}',
+    pages: '{pages} pages',
     framework: '{framework} detected',
     queued: 'Waiting for a crawler · {ahead} runs ahead of you',
     queuedOne: '1 run ahead of you',
@@ -108,6 +110,18 @@ export const runPage = {
   sectionNav: { tokens: 'Tokens', components: 'Components', checks: 'Checks', drift: 'Drift', exports: 'Exports' },
   statLabels: { colors: 'Colors', typeStyles: 'Type styles', spacingSteps: 'Spacing steps', components: 'Components', checksPassed: 'Checks passed' },
   palette: { label: 'Palette', caption: '{name} · {uses} uses' },
+  tokenPopover: {
+    uses: '{n} uses',
+    oneUse: '1 use',
+    seenOn: 'Seen on',
+    pageLine: '{path} · {n}',
+    raw: 'Raw values',
+    rawLine: '{value} · {n}',
+    contrast: 'Contrast',
+    contrastLine: '{fg} on {bg} · {ratio}',
+    contexts: 'Contexts',
+    contextLine: 'padding {padding} · margin {margin} · gap {gap}',
+  },
   driftButton: 'Read the drift report',
   tokens: {
     heading: 'Tokens',
@@ -124,6 +138,7 @@ export const runPage = {
     offGrid: 'Off the {base} px grid',
     radius: 'Radius',
     shadow: 'Shadow',
+    pill: 'pill',
     darkTheme: 'A dark theme was detected and not extracted.',
   },
   components: {
@@ -227,6 +242,8 @@ export const runPage = {
   modelSonnet: 'Model · Sonnet',
   deterministic: 'Deterministic',
   captured: 'Captured',
+  previewTitle: '{name} preview',
+  statePreviewTitle: '{name} · {state} preview',
   codeTabs: { html: 'HTML', css: 'CSS', tailwind: 'Tailwind' },
   pageListFooter: 'Picked for component coverage, not importance. Legal pages, tag archives and pagination were skipped.',
 } as const;

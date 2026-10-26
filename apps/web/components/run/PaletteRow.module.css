@@ -1,0 +1,28 @@
+.row {
+  display: grid;
+  gap: var(--dse-space-3);
+}
+
+.label {
+  composes: label from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: var(--dse-space-4);
+}
+
+.item {
+  display: grid;
+  gap: var(--dse-space-2);
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .swatches {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--dse-space-3);
+  }
+}

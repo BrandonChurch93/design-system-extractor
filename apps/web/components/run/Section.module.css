@@ -1,0 +1,41 @@
+.section {
+  display: grid;
+  gap: var(--dse-space-5);
+  scroll-margin-top: 72px;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--dse-space-4);
+  flex-wrap: wrap;
+}
+
+.title {
+  composes: h2 from '../../styles/type.module.css';
+}
+
+.caption {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+  max-width: 600px;
+}
+
+.cardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--dse-space-3);
+  flex-wrap: wrap;
+  margin-bottom: var(--dse-space-4);
+}
+
+.cardTitle {
+  composes: h3 from '../../styles/type.module.css';
+}
+
+.cardMeta {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}

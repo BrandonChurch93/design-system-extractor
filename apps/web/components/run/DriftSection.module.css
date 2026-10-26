@@ -1,0 +1,219 @@
+.narrative {
+  composes: body from '../../styles/type.module.css';
+  color: var(--dse-ink-2);
+  max-width: 600px;
+}
+
+.numbers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--dse-space-5);
+}
+
+.number {
+  min-width: 0;
+}
+
+.numberCard {
+  display: grid;
+  gap: var(--dse-space-3);
+  height: 100%;
+}
+
+.figures {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--dse-space-2);
+}
+
+.stat {
+  composes: stat from '../../styles/type.module.css';
+}
+
+.words {
+  composes: driftSub from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+.arrow {
+  align-self: center;
+  color: var(--dse-ink);
+}
+
+.numberCaption,
+.caption {
+  font-family: var(--dse-type-caption-family);
+  font-size: var(--dse-type-caption-size);
+  line-height: var(--dse-type-caption-line);
+  font-weight: var(--dse-type-caption-weight);
+  letter-spacing: var(--dse-type-caption-tracking);
+  color: var(--dse-muted);
+}
+
+.proposal {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--dse-space-7);
+}
+
+.side {
+  display: grid;
+  gap: var(--dse-space-3);
+  align-content: start;
+  min-width: 0;
+}
+
+.sideTitle {
+  composes: label from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+.minis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dse-space-2);
+}
+
+.proposedList {
+  display: grid;
+  gap: var(--dse-space-2);
+}
+
+.proposedRow {
+  display: grid;
+  grid-template-columns: 36px minmax(0, max-content) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--dse-space-3);
+}
+
+.miniChip {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--dse-radius-sm);
+  box-shadow: inset 0 0 0 1px var(--dse-line-soft);
+}
+
+.proposedName {
+  composes: hex from '../../styles/type.module.css';
+  color: var(--dse-ink-2);
+}
+
+.absorbs {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+  overflow-wrap: anywhere;
+}
+
+.collapses {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--dse-space-5);
+}
+
+.collapse {
+  display: grid;
+  gap: var(--dse-space-3);
+}
+
+.collapsePreviews {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--dse-space-3);
+}
+
+.collapseFigure {
+  display: grid;
+  gap: var(--dse-space-2);
+}
+
+.collapseGround {
+  height: 112px;
+  background: var(--dse-surface-tint);
+  border-radius: var(--dse-radius-sm);
+}
+
+.tableCard {
+  padding: 0;
+}
+
+.table {
+  composes: meta from '../../styles/type.module.css';
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  color: var(--dse-ink-2);
+}
+
+.table thead th {
+  font-family: var(--dse-type-label-family);
+  font-size: var(--dse-type-label-size);
+  line-height: var(--dse-type-label-line);
+  font-weight: var(--dse-type-label-weight);
+  letter-spacing: var(--dse-type-label-tracking);
+  color: var(--dse-muted);
+  padding: var(--dse-space-4) var(--dse-space-5) var(--dse-space-3);
+  border-bottom: 1px solid var(--dse-line);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: var(--dse-space-3) var(--dse-space-5);
+  border-bottom: 1px solid var(--dse-line-soft);
+  vertical-align: top;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.paths {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 1023px) {
+  .numbers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .collapses {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .numbers,
+  .proposal {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .proposal {
+    gap: var(--dse-space-5);
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table,
+  .table tbody,
+  .table tr,
+  .table td {
+    display: block;
+  }
+
+  .table tr {
+    padding: var(--dse-space-3) var(--dse-space-4);
+    border-bottom: 1px solid var(--dse-line-soft);
+  }
+
+  .table tbody tr:last-child {
+    border-bottom: 0;
+  }
+
+  .table td {
+    padding: 0;
+    border: 0;
+  }
+}

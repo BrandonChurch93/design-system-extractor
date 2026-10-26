@@ -3,13 +3,13 @@ import { connection } from 'next/server';
 import type { ReactNode } from 'react';
 import { Providers } from '../components/Providers';
 import '../styles/globals.css';
+import { global } from '../copy/strings';
 import { mono, sans } from './fonts';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'),
-  title: 'Design System Extractor · Paste a URL. Get its design system back.',
-  description:
-    'Tokens, components with every state, automated accessibility checks and a drift report from any public site. Exports to CSS, JSON, Tailwind, W3C tokens, a prompt and an MCP server.',
+  title: { default: global.homeTitle, template: `%s${global.titleSuffix}` },
+  description: global.description,
 };
 
 export const viewport: Viewport = { themeColor: '#FCFAF8', colorScheme: 'light' };

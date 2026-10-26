@@ -1,5 +1,5 @@
 import { isNearWhite } from '@dse/pipeline/color';
-import type { ButtonHTMLAttributes } from 'react';
+import type { ButtonHTMLAttributes, Ref } from 'react';
 import styles from './Swatch.module.css';
 
 export type SwatchSize = 'xl' | 'token' | 'mini';
@@ -12,6 +12,7 @@ type SwatchProps = {
   /** Shown under mini when the caller wants the hex only. */
   showHex?: boolean;
   forceState?: 'hover' | 'focus';
+  ref?: Ref<HTMLButtonElement>;
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children'>;
 
 /** An extracted color, unadjusted. A button that opens the token's popover. */

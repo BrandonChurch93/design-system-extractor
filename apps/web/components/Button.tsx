@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
-import type { ButtonHTMLAttributes, ReactNode } from 'react';
+import type { ButtonHTMLAttributes, ReactNode, Ref } from 'react';
 import styles from './Button.module.css';
 
 export type ButtonVariant = 'primary' | 'ghost' | 'inverse';
@@ -18,7 +18,7 @@ type Common = {
   forceState?: 'hover' | 'focus' | 'active';
 };
 
-type AsButton = Common & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'className'> & { href?: undefined };
+type AsButton = Common & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'className'> & { href?: undefined; ref?: Ref<HTMLButtonElement> };
 type AsLink = Common & { href: string; external?: boolean; onClick?: () => void; 'aria-label'?: string };
 
 export function Button(props: AsButton | AsLink) {

@@ -1,0 +1,14 @@
+.card {
+  display: grid;
+}
+
+.footer {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+  margin-top: var(--dse-space-3);
+}
+
+.skeleton {
+  display: grid;
+  gap: var(--dse-space-3);
+}

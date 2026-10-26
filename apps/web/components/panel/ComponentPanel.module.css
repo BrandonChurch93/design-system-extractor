@@ -1,0 +1,99 @@
+.panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  width: 560px;
+  display: flex;
+  flex-direction: column;
+  background: var(--dse-surface);
+  border-left: 1px solid var(--dse-line-soft);
+  box-shadow: var(--dse-shadow-panel);
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--dse-space-3);
+  padding: var(--dse-space-5) var(--dse-space-6);
+  border-bottom: 1px solid var(--dse-line-soft);
+}
+
+.titles {
+  display: grid;
+  gap: var(--dse-space-1);
+  min-width: 0;
+}
+
+.eyebrow {
+  composes: label from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+.name {
+  composes: h2 from '../../styles/type.module.css';
+  overflow-wrap: anywhere;
+}
+
+/* The heading takes focus only so a screen reader announces the panel; it is not a control. */
+.name:focus,
+.name:focus-visible {
+  outline: none;
+}
+
+.icons {
+  display: flex;
+  gap: var(--dse-space-2);
+  flex: none;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: var(--dse-surface);
+  border: 1px solid var(--dse-line);
+  border-radius: var(--dse-radius-md);
+  color: var(--dse-ink);
+  transition: border-color var(--dse-motion-fast) var(--dse-ease-standard);
+}
+
+.icon:hover {
+  border-color: var(--dse-line-strong);
+}
+
+.icon:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--dse-space-5) var(--dse-space-6) var(--dse-space-7);
+}
+
+.sheetBody {
+  display: grid;
+  gap: var(--dse-space-5);
+}
+
+.sheetBody .head {
+  flex-direction: column-reverse;
+  align-items: stretch;
+  padding: 0 0 var(--dse-space-4);
+}
+
+.sheetBody .icons {
+  justify-content: flex-end;
+}
+
+@media (max-width: 1023px) {
+  .panel {
+    width: 480px;
+  }
+}

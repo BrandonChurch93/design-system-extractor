@@ -31,6 +31,8 @@ export function SectionNav({ items, label, forceActive, forceStuck }: { items: S
         for (const e of entries) visible.set(e.target.id, e.isIntersecting ? e.boundingClientRect.top : Infinity);
         const best = [...visible.entries()].filter(([, top]) => top !== Infinity).sort((a, b) => Math.abs(a[1]) - Math.abs(b[1]))[0];
         if (best) setActive(best[0]);
+        // Above the first section nothing is in the band; the first pill is the one ahead.
+        else if (sections[0] && sections[0].getBoundingClientRect().top > 0) setActive(sections[0].id);
       },
       { rootMargin: '-80px 0px -55% 0px', threshold: [0, 0.01] },
     );

@@ -1,0 +1,103 @@
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--dse-surface);
+  border: 1px solid var(--dse-line-soft);
+  border-radius: var(--dse-radius-lg);
+  box-shadow: var(--dse-shadow-card);
+  overflow: hidden;
+  transition:
+    box-shadow var(--dse-motion-fast) var(--dse-ease-standard),
+    transform var(--dse-motion-fast) var(--dse-ease-standard),
+    outline-color var(--dse-motion-slow) var(--dse-ease-standard);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.card:hover {
+  box-shadow: var(--dse-shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+.card:has(.link:focus-visible) {
+  outline-color: var(--dse-focus);
+  transition: none;
+}
+
+.card[data-opened] {
+  animation: dse-opened var(--dse-motion-slow) var(--dse-ease-standard) both;
+}
+
+@keyframes dse-opened {
+  from {
+    outline-color: var(--dse-focus);
+  }
+  to {
+    outline-color: transparent;
+  }
+}
+
+.preview {
+  height: 152px;
+  background: var(--dse-surface-tint);
+  border-bottom: 1px solid var(--dse-line-soft);
+}
+
+.body {
+  display: grid;
+  gap: var(--dse-space-2);
+  align-content: start;
+  padding: var(--dse-space-5);
+  flex: 1;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--dse-space-3);
+}
+
+.name {
+  composes: h3 from '../../styles/type.module.css';
+  min-width: 0;
+}
+
+.link {
+  color: var(--dse-ink);
+  outline: none;
+}
+
+/* The whole card is the link; the badge, the states and nothing else sit above it. */
+.link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.source {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dse-space-2);
+  padding-top: var(--dse-space-1);
+}
+
+@media (max-width: 640px) {
+  .body {
+    padding: var(--dse-space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover {
+    transform: none;
+  }
+}

@@ -1,0 +1,95 @@
+.rail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--dse-space-3) 0;
+  padding: var(--dse-space-4) var(--dse-space-5);
+  background: var(--dse-surface);
+  border: 1px solid var(--dse-line-soft);
+  border-radius: var(--dse-radius-lg);
+  box-shadow: var(--dse-shadow-card);
+}
+
+.stage {
+  display: flex;
+  align-items: center;
+  gap: var(--dse-space-2);
+}
+
+.connector {
+  display: block;
+  width: var(--dse-space-5);
+  height: 1px;
+  margin: 0 var(--dse-space-3);
+  background: var(--dse-line);
+  overflow: hidden;
+}
+
+.connectorFill {
+  display: block;
+  height: 100%;
+  background: var(--dse-ink);
+  transform-origin: left center;
+}
+
+.ring {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+.fill {
+  fill: var(--dse-ink);
+}
+
+.tick {
+  fill: none;
+  stroke: var(--dse-inverse-ink);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.running,
+.pending {
+  fill: none;
+  stroke-width: 1.5;
+}
+
+.running {
+  stroke: var(--dse-ink);
+  stroke-dasharray: 3 3;
+}
+
+.pending {
+  stroke: var(--dse-line-strong);
+}
+
+.label {
+  composes: label from '../../styles/type.module.css';
+  color: var(--dse-muted);
+  white-space: nowrap;
+}
+
+.stage[data-state='done'] .label,
+.stage[data-state='running'] .label {
+  color: var(--dse-ink);
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .rail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--dse-space-3);
+    padding: var(--dse-space-4);
+  }
+
+  .connector {
+    display: none;
+  }
+
+  .label {
+    white-space: normal;
+  }
+}

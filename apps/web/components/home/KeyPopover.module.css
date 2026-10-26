@@ -1,7 +1,6 @@
 .body {
   display: grid;
   gap: var(--dse-space-3);
-  padding: var(--dse-space-5);
   justify-items: start;
 }
 

@@ -59,6 +59,16 @@ describe('the preview builder', () => {
     expect(hover).toContain('.dse-root > :first-child { background-color: rgb(11, 31, 58) !important; }');
     expect(hover).not.toContain('evil.example');
   });
+
+  it('security · allows fonts and images from the storage base as a path prefix, nothing else', () => {
+    const snapshot2 = snap([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'a', parent: 0, box: [10, 10, 120, 44] }]);
+    const out = buildPreview({ markup: '<a data-dse-id="e1">Go</a>', vars: {}, snapshot: snapshot2, root: snapshot2.elements[1]!, matched: { e1: { rules: [], inline: [], pseudo: [] } }, ground: 'rgb(255, 255, 255)', imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy });
+    const csp = /content="([^"]+)"/.exec(out.html)![1]!;
+    // A source path without a trailing slash matches that one path only, which would block every font file.
+    expect(csp).toContain('font-src https://fonts.gstatic.com https://store.example/dse/;');
+    expect(csp).toContain('img-src data: https://store.example/dse/');
+    expect(csp).toMatch(/^default-src 'none';/);
+  });
 });
 
 describe('the render comparison', () => {

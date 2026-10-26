@@ -1,0 +1,29 @@
+.ground {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.scaled {
+  overflow: hidden;
+}
+
+.scaled iframe,
+.scaled img {
+  max-width: none;
+}
+
+.captured {
+  composes: tag from '../styles/type.module.css';
+  position: absolute;
+  top: var(--dse-space-3);
+  right: var(--dse-space-3);
+  padding: 2px var(--dse-space-2);
+  border-radius: var(--dse-radius-pill);
+  background: var(--dse-surface);
+  color: var(--dse-ink-2);
+  border: 1px solid var(--dse-line-soft);
+}

@@ -1,0 +1,11 @@
+.center {
+  display: grid;
+  justify-items: center;
+  padding: var(--dse-space-8) 0;
+}
+
+@media (max-width: 640px) {
+  .center {
+    padding: var(--dse-space-7) 0;
+  }
+}

@@ -196,7 +196,9 @@ export function buildPreview(input: PreviewInput): PreviewDoc {
   const css = [fontCss, rootCss, ruleText].filter(Boolean).join('\n');
 
   const sanitized = sanitizeMarkup(placed, policy);
-  const csp = `default-src 'none'; style-src 'unsafe-inline' ${GOOGLE_FONTS_CSS}; font-src ${GOOGLE_FONTS_FILES} ${policy.storageBase}; img-src data: ${policy.storageBase}`;
+  // A CSP source with a path matches that exact path unless it ends with a slash; the base is a prefix.
+  const base = `${policy.storageBase.replace(/\/$/, '')}/`;
+  const csp = `default-src 'none'; style-src 'unsafe-inline' ${GOOGLE_FONTS_CSS}; font-src ${GOOGLE_FONTS_FILES} ${base}; img-src data: ${base}`;
   const links = input.fonts.googleLinks.map((href) => `<link rel="stylesheet" href="${href.replace(/"/g, '&quot;')}">`).join('');
   const html = `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${csp}"><style>html,body{margin:0;background:transparent}</style>${links}<style>\n${css.replace(/<\/style/gi, '<\\/style')}\n</style></head><body><div class="dse-root">${sanitized.html}</div></body></html>`;
   const bytes = Buffer.byteLength(css, 'utf8');

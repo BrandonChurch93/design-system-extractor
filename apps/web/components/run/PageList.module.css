@@ -1,0 +1,41 @@
+.list {
+  display: grid;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--dse-space-4);
+  padding: var(--dse-space-2) 0;
+  border-bottom: 1px solid var(--dse-line-soft);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.path {
+  composes: meta from '../../styles/type.module.css';
+  color: var(--dse-ink);
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.reason {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+  text-align: right;
+  flex: none;
+  max-width: 55%;
+}
+
+.row[data-status='pending'] .path {
+  color: var(--dse-muted);
+}
+
+.footer {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+  margin-top: var(--dse-space-3);
+}

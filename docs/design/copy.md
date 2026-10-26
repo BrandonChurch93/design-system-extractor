@@ -34,7 +34,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Contact email `{email}`: the value of `DSE_CONTACT_EMAIL`.
 - Links (constants in `apps/web/copy/links.ts`): repository `https://github.com/BrandonChurch93/design-system-extractor` (TopNav GitHub, "Read the source"); portfolio `https://www.brandonchurchportfolio.com` (Footer "Brandon Church").
 - Toasts: `Copied` · `Link copied` · `Sign-in is not enabled yet.`
-- Icon button and landmark labels (read by screen readers, never shown): `Menu` (the phone nav button) · `Close` (lightbox and sheet close) · `Copy` (code block copy) · `Primary` (the TopNav landmark) · `Sections` (the SectionNav landmark)
+- Icon button and landmark labels (read by screen readers, never shown): `Menu` (the phone nav button) · `Close` (lightbox and sheet close) · `Copy` (code block copy) · `Primary` (the TopNav landmark) · `Sections` (the SectionNav landmark) · `Breadcrumb` (the run and component breadcrumbs)
 - Generic validation line: `Something about that request was not right. Try again.`
 - Rate limit line: `Too many requests. Try again in a minute.`
 - App 404: title `There is nothing at that address.` · body `The link may be old, or the run may have been removed.` · button `Browse the showcase`
@@ -111,6 +111,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Buttons: `Share` · `Run again` · `Compare` · `Export` · in progress `Cancel`
 - Stat labels: `Colors` · `Type styles` · `Spacing steps` · `Components` · `Checks passed`
 - Palette label: `Palette`; swatch caption `{name} · {uses} uses`
+- Token popover: usage `{n} uses` (`1 use`) · `Seen on` with lines `{path} · {n}` · `Raw values` with lines `{value} · {n}` · `Contrast` with lines `{fg} on {bg} · {ratio}` · `Contexts` with lines `padding {padding} · margin {margin} · gap {gap}`
 - Drift headline patterns, by kind: grays `{n} grays across {pages} pages. {m} would do.` · variants `{n} variants across {k} components. {m} would do.` · spacing `{n} spacing values, {k} of them off the {base} px grid.` · type `{n} type styles where {m} would do.` · nothing to collapse `Nothing to collapse. {colors} colors, {steps} spacing steps, all on the grid.`
 - Drift supporting line: the next two findings as sentences following rule 9, e.g. `Six variants across four components where three would do. Nine spacing values, two of them off the 4 px grid.` Patterns: grays `{n} grays across {pages} pages where {m} would do.` · variants `{n} variants across {k} components where {m} would do.` · spacing `{n} spacing values, {k} of them off the {base} px grid.` · type `{n} type styles where {m} would do.` (D-055)
 - Drift button: `Read the drift report`
@@ -119,12 +120,13 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Color groups: `Brand` · `Neutral · {n} found` · `Semantic`
 - Type card meta: `{families} · {n} styles` (families joined by ·); show-all `Show all {n} styles`; font not loaded caption `{family} did not load; the fallback {fallback} was measured.`
 - Spacing meta: `{n} steps · {base} px base`; breakpoints caption `Breakpoints · {list}` (values joined by ·); off-grid popover `Off the {base} px grid` followed by the page list
-- Radius and shadow labels: `Radius` · `Shadow`; shadow names `sm` · `md` · `lg`
+- Radius and shadow labels: `Radius` · `Shadow`; shadow names `sm` · `md` · `lg`; the pill radius `pill`
 - Dark theme caption: `A dark theme was detected and not extracted.`
 - Components caption: `{n} found · grouped by type · open one for states, code and tokens`
 - Component chips: `All · {n}` then `{group} · {n}` for each group with a count
 - Component card source line: `First seen on {path} · {pages} pages · {variants} variants` (singular forms `1 page`, `1 variant`)
 - Captured label: `Captured`
+- Preview titles (read by screen readers): `{name} preview` · `{name} · {state} preview`
 - Check badge: `{passed} of {applicable}`
 - Show all: `Show all {n} components`
 - Checks heading: `Automated checks`
@@ -156,7 +158,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Icon labels: `Previous component` · `Next component` · `Open as page` · `Close panel`
 - Variants label: `Variants`; fidelity caption `Live render · matches crop within {pct} %` or `Captured · {reason}` with reasons `render differed by {pct} %` · `styles too large` · `fonts unavailable`
 - Source label: `Source`; lines `{path} · {viewport} px` · the selector in code · `Seen on {first four paths} and {n} more` (button) · `Show on page`
-- States label: `States · {n} captured`; missing line `Not captured: {names}` (each state name followed by its reason, joined by ·) with reasons `no instance found` · `over capture cap` · `not reachable`
+- States label: `States · {n} captured`; missing line `Not captured: {names}` (each state name followed by its reason in parentheses, joined by ·) with reasons `no instance found` · `over capture cap` · `not reachable`
 - Checks label: `Checks · {passed} of {applicable} on {variant}`; result lines from `docs/specs/checks.md`
 - Tokens label: `Tokens used`; unmapped label `Unmapped`
 - Responsive note: `Stacks at 390 px` · `Changes layout at 390 px`

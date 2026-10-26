@@ -1,10 +1,11 @@
 'use client';
 import { AnimatePresence, motion } from 'motion/react';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { ShowcaseCategory, type ShowcaseEntry } from '@dse/schema';
 import { home } from '../../copy/strings';
 import { duration, revealFrameVariants, reducedVariants } from '../../lib/motion';
 import { usePrefersReducedMotion } from '../../lib/motion/reduced';
+import { useEntered } from '../../lib/motion/use-entered';
 import { ChipGroup } from '../ChipGroup';
 import { ShowcaseCard } from './ShowcaseCard';
 import styles from './Showcase.module.css';
@@ -14,6 +15,8 @@ type Filter = 'all' | ShowcaseCategory;
 /** The heading row, the category chips and the grid (docs/design/pages.md, Home). */
 export function Showcase({ entries }: { entries: ShowcaseEntry[] }) {
   const reduced = usePrefersReducedMotion();
+  const gridRef = useRef<HTMLUListElement>(null);
+  const entered = useEntered(gridRef, 'self');
   const [filter, setFilter] = useState<Filter>('all');
   const [changed, setChanged] = useState(false);
   const sorted = useMemo(() => [...entries].sort((a, b) => a.order - b.order), [entries]);
@@ -42,7 +45,7 @@ export function Showcase({ entries }: { entries: ShowcaseEntry[] }) {
         label={home.showcase.heading}
         className={styles.chips}
       />
-      <motion.ul className={styles.grid} layout={!reduced}>
+      <motion.ul ref={gridRef} className={styles.grid} layout={!reduced}>
         <AnimatePresence mode="popLayout" initial={false}>
           {shown.map((e, i) => (
             <motion.li
@@ -53,10 +56,8 @@ export function Showcase({ entries }: { entries: ShowcaseEntry[] }) {
               custom={i}
               initial="hidden"
               data-move="reveal"
-              whileInView={changed ? undefined : 'shown'}
-              animate={changed ? 'shown' : undefined}
+              animate={changed || entered ? 'shown' : 'hidden'}
               exit="exit"
-              viewport={{ once: true, amount: 0.1 }}
               // Exits run first: an entering card waits for the leaving ones.
               transition={changed && !reduced ? { delay: duration.base } : undefined}
             >

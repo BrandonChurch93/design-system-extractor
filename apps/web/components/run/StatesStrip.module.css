@@ -1,0 +1,57 @@
+.strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dse-space-1) var(--dse-space-2);
+}
+
+.state {
+  composes: caption from '../../styles/type.module.css';
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dse-space-1);
+  padding: 2px var(--dse-space-1);
+  margin: -2px calc(-1 * var(--dse-space-1));
+  border: 0;
+  background: none;
+  color: var(--dse-muted);
+  border-radius: var(--dse-radius-sm);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid var(--dse-muted);
+}
+
+.state[data-captured='true'] .dot {
+  background: var(--dse-ink);
+  border-color: var(--dse-ink);
+}
+
+.title {
+  composes: h3 from '../../styles/type.module.css';
+  margin-bottom: var(--dse-space-3);
+}
+
+.crop {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--dse-radius-sm);
+  background: var(--dse-surface-tint);
+}
+
+.delta {
+  composes: hex from '../../styles/type.module.css';
+  display: grid;
+  gap: var(--dse-space-1);
+  margin-top: var(--dse-space-3);
+  color: var(--dse-ink-2);
+}
+
+.reason {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
