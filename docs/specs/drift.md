@@ -4,7 +4,7 @@ Stage `drift`. Where a site's system is leaking: tokens that are too close to be
 
 ## Findings
 
-**Near-duplicate colors.** Pairs of color tokens in the same group (neutral with neutral, brand with brand within the same hue band) whose representatives are within ΔE 6 (neutrals) or ΔE 8 (chromatic). The clustering threshold (2.3) already merged what is imperceptible; this finds what is perceptible but pointless. Each finding: the two tokens, the ΔE, the pages where both appear, and both usage counts.
+**Near-duplicate colors.** Pairs of color tokens in the same group (neutral with neutral, brand with brand within the same hue band) whose alphas match within 0.05 (a translucent shadow color is not a duplicate of its opaque base, D-048) and whose representatives are within ΔE 6 (neutrals) or ΔE 8 (chromatic). The clustering threshold (2.3) already merged what is imperceptible; this finds what is perceptible but pointless. Each finding: the two tokens, the ΔE, the pages where both appear, and both usage counts.
 
 **Raw spread.** For each color token, the number of raw values it absorbed. Reported in the Tokens caption and as evidence rows when a token absorbed 4 or more raw values ("#6B6B6B written 6 ways"). Raw spread is evidence only: it is never a finding, never changes the numbers or the headline, and does not count as drift on a fixture that expects none.
 

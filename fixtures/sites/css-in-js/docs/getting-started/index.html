@@ -132,7 +132,7 @@ p { font-size: 16px; line-height: 26px; }
 .css-0264160 { flex: none; width: 24px; height: 24px; }
 .css-1dade41 { color: var(--c-success); }
 .css-c6b3e8f { color: var(--c-warning); }
-.css-fd41b9d { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 96px 24px; text-align: center; }
+.css-fd41b9d { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 96px 24px; border: 1px solid var(--c-border); border-radius: 12px; text-align: center; }
 .css-c67a8e6 { width: 48px; height: 48px; color: var(--c-accent); }
 
 /* Footer */
@@ -203,6 +203,10 @@ p { font-size: 16px; line-height: 26px; }
     <p>Install the command line tool, connect a repository, and publish.</p>
   </div>
   <article class="css-ec0a4f3">
+      <p>You need a GitHub account with access to the repository and about five minutes.</p>
+      <p>The command line tool asks for a token once and keeps it in your system keychain.</p>
+      <p>Run the two commands below from the root of the repository you want to publish.</p>
+      <p>The first connects the repository. The second writes a note for everything merged since last Friday.</p>
     <pre class="css-6589e84"><code>tidewater init --repo acme/web
 tidewater publish --since last-friday</code></pre>
     <div class="css-ddf5124 css-1bbd95a" role="status">
@@ -218,7 +222,7 @@ tidewater publish --since last-friday</code></pre>
         </tbody>
       </table>
     </div>
-    <a class="sc-c8816 css-e23596d" href="/sites/css-in-js/contact">Edit this page</a>
+    <div class="css-a155c2a"><a class="sc-c8816 css-e23596d" href="/sites/css-in-js/contact">Edit this page</a></div>
   </article>
 </div>
 </main>

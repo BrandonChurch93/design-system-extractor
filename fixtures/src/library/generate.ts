@@ -14,7 +14,25 @@ function write(file: string, content: string) {
 }
 
 const siteCss = `@import url('/fonts/inter/inter.css');
-:root { --bulma-family-primary: 'Inter', system-ui, sans-serif; --bulma-family-code: ui-monospace, 'SFMono-Regular', Menlo, monospace; }
+:root { --bulma-family-primary: 'Inter', system-ui, sans-serif; --bulma-family-code: ui-monospace, 'SFMono-Regular', Menlo, monospace; --bulma-control-height: 2.75em; }
+.navbar-burger { width: 2.75rem; height: 2.75rem; }
+:root { --bulma-control-padding-vertical: 8px; --bulma-control-padding-horizontal: 12px; }
+.button { --bulma-button-padding-vertical: 8px; line-height: 1.75; min-width: 2.75em; min-height: 2.75em; }
+.hero { --bulma-hero-body-padding-medium: 11rem 4.5rem; }
+/* The site's brand layer on Bulma: one light gray, one border gray, one link blue, 4 px spacing. */
+.button.is-light, .button.is-light[disabled] { background-color: #E6E8EC; border-color: #E6E8EC; }
+.content pre { background-color: #E6E8EC; padding: 16px 24px; }
+.navbar.has-shadow { box-shadow: 0 2px 0 0 #E6E8EC; }
+.input:not(.is-danger), .textarea, .select select, .table td, .table th, .pagination-link, .pagination-next, .pagination-previous, .tabs ul, .card-footer, .card-footer-item { border-color: #C8CCD5; }
+a, .breadcrumb a, .card-footer-item, .tabs li.is-active a { color: #4258FF; }
+.tabs a { border-bottom-color: #C8CCD5; }
+.tabs li.is-active a { border-bottom-color: #4258FF; }
+.breadcrumb li.is-active a { color: #2E333D; }
+.input, .textarea, .pagination-link, .pagination-next, .pagination-previous { box-shadow: none; }
+.button.is-link, .pagination-link.is-current { color: #FFFFFF; }
+.notification.is-info.is-light { color: #002433; padding: 16px 24px; }
+.tag { padding-inline: 8px; }
+.button:focus-visible, .input:focus-visible, .textarea:focus-visible, .select select:focus-visible, .pagination-link:focus-visible, .pagination-next:focus-visible, .pagination-previous:focus-visible, .tabs a:focus-visible, .navbar-burger:focus-visible, .navbar-item:focus-visible, .card-footer-item:focus-visible { outline: 2px solid #4258FF; outline-offset: 2px; }
 body { font-family: var(--bulma-family-primary); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 `;
@@ -78,9 +96,9 @@ const pages: { path: string; file: string; title: string; body: string }[] = [
     path: '/',
     file: 'index.html',
     title: 'Ledgerly · Small books, kept in order',
-    body: `<section class="hero is-primary">
+    body: `<section class="hero is-primary is-medium">
   <div class="hero-body"><div class="container">
-    <p class="title">Small books, kept in order.</p>
+    <h1 class="title">Small books, kept in order.</h1>
     <p class="subtitle">Invoices, receipts and quarterly taxes for one-person companies.</p>
     <div class="buttons"><a class="button is-link" href="${base}/signup">Start free</a><a class="button is-light" href="${base}/pricing">See pricing</a></div>
   </div></div>
@@ -137,8 +155,8 @@ const pages: { path: string; file: string; title: string; body: string }[] = [
     body: `<section class="section"><div class="container">
   <nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="${base}/">Home</a></li><li class="is-active"><a href="${base}/docs" aria-current="page">Docs</a></li></ul></nav>
   <h1 class="title">Documentation</h1>
-  <div class="tabs"><ul><li class="is-active"><a href="${base}/docs">Guides</a></li><li><a href="${base}/docs/api">API</a></li><li><a href="${base}/contact">Support</a></li></ul></div>
-  <div class="notification is-info is-light">New: receipts can now be forwarded from any address.</div>
+  <div class="tabs"><ul role="tablist" aria-label="Docs sections"><li class="is-active" role="presentation"><a role="tab" aria-selected="true" href="${base}/docs">Guides</a></li><li role="presentation"><a role="tab" aria-selected="false" href="${base}/docs/api">API</a></li><li role="presentation"><a role="tab" aria-selected="false" href="${base}/contact">Support</a></li></ul></div>
+  <div class="notification is-info is-light" role="status"><p><strong>New:</strong> receipts can now be forwarded from any address.</p></div>
   <div class="content"><p>Start with the API guide to connect your bank.</p><pre><code>curl https://api.ledgerly.dev/v1/invoices -H "Authorization: Bearer $TOKEN"</code></pre></div>
 </div></section>`,
   },
@@ -166,7 +184,6 @@ POST /v1/receipts</code></pre></div>
     <div class="field"><label class="label" for="msg">Message</label><div class="control"><textarea class="textarea" id="msg"></textarea></div></div>
     <div class="field"><div class="control"><button type="submit" class="button is-link">Send</button></div></div>
   </form>
-  <article class="message is-warning"><div class="message-body">We are a two-person team. Replies take up to two days.</div></article>
 </div></section>`,
   },
 ];

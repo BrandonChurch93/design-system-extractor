@@ -269,3 +269,76 @@ Affects: `apps/web/app/catalog/`, `tests/qa/`, `docs/design/copy.md`, `docs/spec
 Date: 2026-10-25 · Context: the reduced-motion test found that an element rendered on the server takes its entrance variants before the browser's preference can be read, so a reduced-motion reader could see a transform before the client switched variants.
 Decision: elements that move on first paint carry `data-move`; under `prefers-reduced-motion: reduce` a global rule sets their `transform` and `clip-path` to none and fades them in over 200 ms. Elements that mount after hydration read the preference in JavaScript as before. The test measures computed transforms, which is what a reader sees, and keeps its no-preference control.
 Affects: `docs/design/motion.md`, `apps/web/styles/globals.css`, `tests/e2e/reduced-motion.spec.ts`.
+
+## D-040 · Request hashes leave out image bytes
+
+Date: 2026-10-25 · Context: P3 model client. A crop rendered on two machines differs by a few anti-aliased pixels, so a hash over image bytes would miss every recording made elsewhere.
+Decision: the request hash replaces each image block with a placeholder before hashing. The text beside each image (fingerprint, text sample, ids) identifies the item. Run ids, ISO timestamps and storage keys that embed a run id are also normalized, as before.
+Reasoning: recordings must replay on any machine; the text already pins down what the image shows.
+Affects: `docs/specs/model-calls.md`, `packages/pipeline/src/models/`.
+
+## D-041 · Deterministic page ids and synthetic missing page
+
+Date: 2026-10-25 · Context: the select call's input table carries page ids and the synthetic 404 path. With nanoid values every run would hash differently and miss its recording.
+Decision: a page id is 8 characters in the id alphabet derived from the SHA-256 of the page's normalized URL. The synthetic missing page is `{prefix}/{token}-does-not-exist`, where the token is the first 10 hex characters of the SHA-256 of `dse-404:{host}{prefix}`. Run ids stay random nanoids (they are the access control).
+Reasoning: replay, recordings and goldens need stable inputs; neither value is a secret.
+Affects: `docs/specs/crawler.md`, `docs/specs/data-model.md`.
+
+## D-042 · styled-components class names count as hashed
+
+Date: 2026-10-25 · Context: `capture-and-states.md` defines hashed class tokens to include `^sc-`, but the framework hint regex in `crawler.md` did not, so a styled-components site under-counted its hashed classes.
+Decision: the `css-in-js` hint also counts class tokens matching `/^sc-[A-Za-z0-9]+/`. One definition of hashed everywhere.
+Affects: `docs/specs/crawler.md`, `packages/pipeline/src/crawl/framework.ts`.
+
+## D-043 · Element candidate rules, made exact
+
+Date: 2026-10-25 · Context: building capture against the fixtures showed four places where the literal rules miss or double count.
+Decision: (a) the inline mark rule also accepts a flex or grid item narrower than half its parent, because the browser blockifies an `inline-flex` child of a flex container and its computed display reads `flex`; (b) the container rule treats a background image or gradient as a background that differs from the parent's; (c) table parts (`thead`, `tbody`, `tfoot`, `tr`, `td`, `th`, `caption`, `colgroup`) are never container candidates, because they belong to the table; (d) `header` and `footer` count as landmarks only where ARIA maps them to `banner` and `contentinfo`, that is, not inside `article`, `aside`, `main`, `nav` or `section` (a card footer is not a page footer).
+Affects: `docs/specs/component-detection.md`, `packages/pipeline/src/capture/candidates.ts`.
+
+## D-044 · The reduced-motion probe runs after the main load
+
+Date: 2026-10-25 · Context: `capture-and-states.md` orders the reduced-motion probe before the main load, but the probe must measure "every element that will be an element candidate", which is only known from the main load's snapshot.
+Decision: per page and viewport, the main load runs first; the probe then loads the page again under `prefers-reduced-motion: reduce` and measures, by selector, the element candidates that moved in the main load (one that does not move without the preference cannot move with it). A component's motion includes its descendants' animations (a pulsing dot inside a badge is the badge's animation), and motion is read before the freeze. `open` is never attempted on `role=tab` elements: their `aria-controls` names a tab panel, and switching it is a selection, not a popup.
+Reasoning: the same measurement, aimed at exactly the elements the check will judge.
+Affects: `docs/specs/capture-and-states.md`, `packages/pipeline/src/stages/capture.ts`.
+
+## D-045 · Centered auto margins are layout
+
+Date: 2026-10-25 · Context: `margin: 0 auto` computes to pixel values, so every centered container would add its side margins (for example 160 px) to the spacing steps.
+Decision: when an element's left and right margins are equal and it is centered in its parent, those two margins count toward `contexts.layout` and are not spacing values.
+Affects: `docs/specs/token-clustering.md`, `packages/pipeline/src/tokens/collect.ts`.
+
+## D-046 · Fixture authoring
+
+Date: 2026-10-25 · Context: P3 built the six fixture sites and their `expected.json`; measuring them against the rules showed what each fixture needed to prove what `evals.md` says it proves.
+Decision:
+- clean: the planted caption at 4.2:1 is the "New" tag, caption-size text (12 px) in white on teal `#0F8A8A`, 4.18:1, so the planted failure uses only palette colors. The empty state has a border so it is a container element candidate. Buttons stacked in a column sit in an action row so they size to their content. Prose paragraphs keep body text the most common `p` style. The no-drift numbers were checked: the nearest neutral pair is ΔE 7.2, no two same-hue chromatics are within ΔE 8 (the translucent shadow color is compared only with colors of its alpha, D-048), no spacing near-steps, no type near-duplicates, 3 radii, 2 shadows.
+- tailwind and css-in-js: built from the same source as clean and pixel-compared with it (at most 0.002% of pixels differ); their extracted inventories equal clean's, so all three share one expected design. Tailwind compiles with `source(none)` and only the classes the generator emits.
+- messy: it inherits the clean family's two planted failures (the unnamed copy button and the New tag), so it plants seven check failures, five of its own. The 10 px off-grid value is also used by the header action and check-row gaps so it clears the 2% step threshold; the footer stays white so its gray caption is not an unplanned contrast failure (the table header carries `#F5F5F5`); the small share button has no border or ground so it is its own component, not a size variant of the icon button.
+- library: Bulma 1.0.4 with a small brand layer in `site.css`, as a real site would have: 44 px controls and buttons, paddings on the 4 px grid, one light gray, one border gray, one link blue, visible focus rings, three shadows. Stock Bulma's computed shades and calc paddings fall inside the drift tolerances, and this fixture must show zero false drift. Notification gets `role=status` and a paragraph, tabs get `tablist` and `tab` roles, the hero uses an `h1` and is taller than half the viewport, and the message component is dropped. Planted failures: the `has-text-grey-light` footer caption, the unnamed icon button, and Bulma's 13 px native checkbox.
+Affects: `docs/evals.md`, `fixtures/src/`, `fixtures/sites/`.
+
+## D-047 · expected.json conventions
+
+Date: 2026-10-25 · Context: `evals.md` gives the shape of `expected.json` but not how each value is chosen, and component scoring depends on it.
+Decision: pages are listed in capture order. A component's `page`, `viewport` and `bbox` are its first-seen instance (capture order, desktop preferred) in document CSS px. `states` lists the states the capture spec takes for it. Variants exclude state-driven styles: an instance that differs only because it is selected, current, checked, invalid or disabled supplies that state, not a variant. The interactive items of a composite (tab buttons, pagination links) are components of their own; a header nav and a footer nav are two components. Planted check entries name expected components. `scripts/test/expected.test.ts` checks every file against these rules and that clean, tailwind and css-in-js share one design.
+Affects: `docs/evals.md`, `docs/specs/component-detection.md`.
+
+## D-048 · Near-duplicate colors compare equal alphas only
+
+Date: 2026-10-25 · Context: the clean fixture's shadow color `rgba(11, 31, 58, 0.12)` has the same hue and lightness as its navy, so the near-duplicate rule would report ΔE 0 between a shadow and a text color on a site with no drift.
+Decision: near-duplicate color pairs are only formed between tokens whose alpha matches within 0.05, the same alpha rule clustering uses.
+Affects: `docs/specs/drift.md`.
+
+## D-049 · An invalid field is error context
+
+Date: 2026-10-25 · Context: the semantic rule reads class, role and ancestor class, so a danger red used on an `aria-invalid="true"` input border (with class `input`) counted against the 70% semantic threshold.
+Decision: an element with `aria-invalid="true"` counts as matching the semantic pattern (as `invalid` does in a class name).
+Affects: `docs/specs/token-clustering.md`.
+
+## D-050 · Rule classification checks specific forms first
+
+Date: 2026-10-25 · Context: the rule list in `component-detection.md` takes the first match, but `button` (tag button) precedes `toggle` (`role=switch` on a button), and `nav` precedes `breadcrumb` and `pagination`, which are navs. As written, a switch could never be a toggle and a breadcrumb never a breadcrumb.
+Decision: rules are tried with the specific form before the general one: `toggle` before `button`, and `breadcrumb`, `pagination` and `tabs` before `nav`. Confidences are unchanged.
+Affects: `docs/specs/component-detection.md`.

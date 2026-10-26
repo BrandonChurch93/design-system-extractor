@@ -11,7 +11,8 @@ export function frameworkHint(classLists: string[][]): FrameworkHint | undefined
   if (count(/^chakra-/) > 0) return 'chakra';
   const all = classLists.flat();
   if (all.length) {
-    const hashed = all.filter((c) => /^[a-zA-Z_-]*[0-9a-f]{5,}/.test(c) || /^css-[a-z0-9]+/.test(c)).length;
+    // The capture spec's definition of hashed also covers styled-components' sc- prefix.
+    const hashed = all.filter((c) => /^[a-zA-Z_-]*[0-9a-f]{5,}/.test(c) || /^css-[a-z0-9]+/.test(c) || /^sc-[A-Za-z0-9]+/.test(c)).length;
     if (hashed / all.length > 0.5) return 'css-in-js';
   }
   return undefined;

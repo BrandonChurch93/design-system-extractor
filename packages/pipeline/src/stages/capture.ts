@@ -5,7 +5,7 @@ import { viewportSize } from '@dse/schema';
 import { capCandidates, findCandidates, noveltyKey, type ElementCandidate } from '../capture/candidates';
 import { matchedCss, openCssSession, type MatchedStyles } from '../capture/matched-css';
 import { scanSheets, type SheetScan } from '../capture/sheet-scan';
-import { buildSnapshot, compactSnapshot, type Snapshot } from '../capture/snapshot';
+import { buildSnapshot, compactSnapshot, descendants, type Snapshot } from '../capture/snapshot';
 import { buildSelectors, styleProps, takeSnapshot } from '../capture/snapshot-script';
 import { activeState, cropOf, hoverState, neutral, readStyles, scrolledState, styleDelta, tabWalk, type StateRecord, type StyleDelta } from '../capture/states';
 import type { RunContext } from '../context';
@@ -44,6 +44,8 @@ export type ViewportCapture = {
   opens: OpenCapture[];
   screenshot: { key: string; width: number; height: number; cut: boolean; png: Buffer };
   submitAttempts: number;
+  /** Forms that a submit handler marked as submitted; must stay 0. */
+  submittedMarkers: number;
   dialogs: string[];
 };
 
@@ -68,7 +70,7 @@ export type CaptureOutput = {
 const freezeCss = `*, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; } html { scrollbar-width: none !important; } ::-webkit-scrollbar { display: none !important; }`;
 
 // Never submit a form or let a dialog block the page (docs/specs/capture-and-states.md, Never).
-const pageGuards = () => {
+export const pageGuards = () => {
   const w = window as unknown as { __dseSubmits: number; __name?: unknown };
   w.__dseSubmits = 0;
   w.__name = w.__name ?? ((f: unknown) => f);
@@ -107,7 +109,7 @@ function motionOf(st: { 'animation-name': string; 'transition-duration': string;
   return { animation, transition };
 }
 
-function chooseForStates(snapshot: Snapshot, cands: ElementCandidate[]): string[] {
+export function chooseForStates(snapshot: Snapshot, cands: ElementCandidate[]): string[] {
   const interactive = cands.filter((c) => c.interactive).map((c) => snapshot.byDse.get(c.dse)!).filter(Boolean);
   const seen = new Set<string>();
   const first: string[] = [];
@@ -288,6 +290,7 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     await session.detach().catch(() => {});
 
     const submitAttempts = await p.evaluate(() => (window as unknown as { __dseSubmits: number }).__dseSubmits ?? 0);
+    const submittedMarkers = await p.evaluate(() => document.querySelectorAll('[data-submitted]').length);
     await ctx.emit({
       stage: 'capture',
       message: `${page.path} · ${vp.width} · hover ${hovers} · focus ${walk.focus.size + focusFallback} · tab ${walk.order.length} · active ${actives} · open ${opens.length}`,
@@ -295,10 +298,23 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     });
     if (dialogs.length) await ctx.emit({ stage: 'capture', level: 'warn', message: `${page.path} · ${dialogs.length} dialog${dialogs.length > 1 ? 's' : ''} dismissed` });
 
+    // Motion is read from the snapshot taken before the freeze, which removes all of it.
+    // A component moves when it, or anything inside it, animates; transitions count on itself.
     const motionMain: Record<string, MotionProbe> = {};
     for (const c of candidates) {
-      const e = snapshot.byDse.get(c.dse);
-      if (e) motionMain[c.dse] = motionOf(e.style);
+      const e = pre.byDse.get(c.dse) ?? snapshot.byDse.get(c.dse);
+      if (!e) continue;
+      const own = motionOf(e.style);
+      const inner = descendants(pre.byDse.has(e.d) ? pre : snapshot, e).some((d) => motionOf(d.style).animation);
+      motionMain[c.dse] = { animation: own.animation || inner, transition: own.transition };
+    }
+    for (const e of pre.elements) {
+      const s = snapshot.byDse.get(e.d);
+      if (s) {
+        s.style['animation-name'] = e.style['animation-name'];
+        s.style['transition-property'] = e.style['transition-property'];
+        s.style['transition-duration'] = e.style['transition-duration'];
+      }
     }
 
     await ctx.files.put(keys.pageSnapshot(ctx.runId, page.id, viewport), gzipSync(JSON.stringify(compactSnapshot(snapshot))), { contentType: 'application/gzip' });
@@ -320,6 +336,7 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
         opens,
         screenshot: { key: shotKey, width: vp.width, height, cut, png },
         submitAttempts,
+        submittedMarkers,
         dialogs,
       },
       finalUrl: p.url(),
@@ -365,7 +382,8 @@ async function probeReducedMotion(rc: RunBrowserContext, throttle: Throttle, pag
         const el = document.querySelector(s);
         if (!el) return null;
         const cs = getComputedStyle(el);
-        return { 'animation-name': cs.animationName, 'transition-duration': cs.transitionDuration, 'transition-property': cs.transitionProperty };
+        const inner = [...el.querySelectorAll('*')].some((c) => getComputedStyle(c).animationName !== 'none');
+        return { 'animation-name': inner ? 'inner' : cs.animationName, 'transition-duration': cs.transitionDuration, 'transition-property': cs.transitionProperty };
       }, sel);
       if (interactive) await p.mouse.move(0, 0);
       if (st) vc.motionReduced[d] = motionOf(st);

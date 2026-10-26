@@ -124,7 +124,7 @@ p { font-size: 16px; line-height: 26px; }
 .alert-icon { flex: none; width: 24px; height: 24px; }
 .alert-icon-success { color: #15803D; }
 .alert-icon-warning { color: #B45309; }
-.empty-state { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 96px 24px; text-align: center; }
+.empty-state { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 96px 24px; border: 1px solid #E2E8F0; border-radius: 12px; text-align: center; }
 .empty-icon { width: 48px; height: 48px; color: #0F8A8A; }
 
 /* Footer */

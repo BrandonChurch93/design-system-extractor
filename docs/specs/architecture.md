@@ -90,13 +90,13 @@ Every root script loads `.env.local` from the repository root; setting `DOTENV_F
 | `pnpm qa:lighthouse` | Lighthouse on home and a complete run page, against `next build` served by `next start` on a local port |
 | `pnpm qa:copy` | the em dash and forbidden-word grep (rules below) |
 | `pnpm build` | builds every package and the web app (`next build`) and the worker bundle |
-| `pnpm verify:all` | in order, failing fast: `check`, `test`, `test:e2e`, `evals`, `build`, `qa:visual`, `qa:axe`, `qa:lighthouse`, `qa:copy`, `pnpm audit --audit-level high` |
+| `pnpm verify:all` | in order, failing fast: `check`, `test`, `test:e2e`, `evals:gate`, `build`, `qa:visual`, `qa:axe`, `qa:lighthouse`, `qa:copy`, `pnpm audit --audit-level high` |
 | `pnpm showcase` | runs the showcase roster (local by default, `--remote` against production with the admin token) |
 | `pnpm run doctor [--production [--env <file>]]` | env and connectivity check; `--production` checks the shape of a production env file (default `.env.production.local`) without connecting. Always `pnpm run doctor`: pnpm's built-in `doctor` command shadows a bare `pnpm doctor` (D-028) |
 
 `pnpm qa:copy` rules: (1) the em dash character (U+2014) must not appear in `apps/`, `packages/`, `scripts/`, `docs/`, `prompts/`, `README.md`, `STATUS.md`, `CHANGELOG.md`, `.env.example`; `reference/`, `fixtures/sites/` and `node_modules` are excluded. (2) The forbidden words `accessible`, `compliant`, `a11y`, matched with word boundaries, case-insensitive, must not appear in `apps/web/copy/strings.ts`, `apps/web/app/**`, `apps/web/components/**`, `packages/schema/src/labels.ts`, `packages/pipeline/src/exports/**`, `packages/pipeline/src/models/prompts/**`, or `docs/design/copy.md`, except on a line that contains the marker `qa-copy-allow` (used only by the lines that state the rule). Docs other than `copy.md` are not scanned for words, so specs may name the rule.
 
-Until P8, `verify:all` runs `pnpm evals --through <stage>` with the last stage the build has completed (the current phase updates the script); from P8 on it runs the full `pnpm evals`.
+Until P8, `verify:all` runs `pnpm evals:gate`, which is `pnpm evals --through <stage>` with the last stage the build has completed (each phase updates the script); from P8 on `evals:gate` runs the full `pnpm evals`.
 
 ## Database connections
 

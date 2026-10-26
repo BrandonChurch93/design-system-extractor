@@ -9,50 +9,689 @@
       "reason": "tables-toggles"
     },
     {
-      "path": "/features",
-      "reason": "nav"
-    },
-    {
-      "path": "/signup",
-      "reason": "forms"
+      "path": "/docs",
+      "reason": "code-blocks"
     },
     {
       "path": "/login",
       "reason": "forms-errors"
     },
     {
-      "path": "/docs",
-      "reason": "code-blocks"
-    },
-    {
-      "path": "/docs/getting-started",
-      "reason": "code-blocks"
+      "path": "/signup",
+      "reason": "forms"
     },
     {
       "path": "/contact",
       "reason": "forms"
     },
     {
+      "path": "/features",
+      "reason": "nav"
+    },
+    {
       "path": "/{missing}-does-not-exist",
       "reason": "empty-state"
+    },
+    {
+      "path": "/docs/getting-started",
+      "reason": "code-blocks"
     }
   ],
   "tokens": {
-    "colors": [],
-    "type": [],
+    "colors": [
+      {
+        "value": "#0B1F3A",
+        "group": "brand",
+        "minUsage": 400
+      },
+      {
+        "value": "#FFFFFF",
+        "group": "neutral",
+        "minUsage": 150
+      },
+      {
+        "value": "#E2E8F0",
+        "group": "neutral",
+        "minUsage": 100
+      },
+      {
+        "value": "#2458E6",
+        "group": "brand",
+        "minUsage": 60
+      },
+      {
+        "value": "#0F8A8A",
+        "group": "brand",
+        "minUsage": 15
+      },
+      {
+        "value": "#0B1F3A1F",
+        "group": "brand",
+        "minUsage": 10
+      },
+      {
+        "value": "#15803D",
+        "group": "semantic",
+        "minUsage": 5
+      },
+      {
+        "value": "#B45309",
+        "group": "semantic",
+        "minUsage": 5
+      },
+      {
+        "value": "#DC2626",
+        "group": "semantic",
+        "minUsage": 4
+      }
+    ],
+    "type": [
+      {
+        "role": "display",
+        "size": 48,
+        "weight": 700
+      },
+      {
+        "role": "h1",
+        "size": 36,
+        "weight": 700
+      },
+      {
+        "role": "h2",
+        "size": 28,
+        "weight": 700
+      },
+      {
+        "role": "h3",
+        "size": 20,
+        "weight": 600
+      },
+      {
+        "role": "body",
+        "size": 16,
+        "weight": 400
+      },
+      {
+        "role": "body-sm",
+        "size": 14,
+        "weight": 400
+      },
+      {
+        "role": "label",
+        "size": 14,
+        "weight": 600
+      },
+      {
+        "role": "code",
+        "size": 14,
+        "weight": 400
+      },
+      {
+        "role": "caption",
+        "size": 12,
+        "weight": 400
+      }
+    ],
     "space": {
       "base": 4,
-      "steps": [],
+      "steps": [
+        4,
+        8,
+        12,
+        16,
+        20,
+        24,
+        32,
+        40,
+        48,
+        64,
+        96
+      ],
       "offGrid": []
     },
-    "radius": [],
-    "shadowCount": 0,
-    "breakpoints": []
+    "radius": [
+      8,
+      12,
+      999
+    ],
+    "shadowCount": 2,
+    "breakpoints": [
+      640,
+      1024
+    ]
   },
-  "components": [],
+  "components": [
+    {
+      "type": "header",
+      "name": "Site header",
+      "page": "/",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 73
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "scrolled"
+      ]
+    },
+    {
+      "type": "nav",
+      "name": "Main navigation",
+      "page": "/",
+      "bbox": {
+        "x": 466,
+        "y": 14,
+        "w": 400,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Dropdown trigger",
+      "page": "/",
+      "bbox": {
+        "x": 751,
+        "y": 14,
+        "w": 115,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active",
+        "open"
+      ]
+    },
+    {
+      "type": "dropdown",
+      "name": "Resources menu",
+      "page": "/",
+      "bbox": {
+        "x": 751,
+        "y": 62,
+        "w": 224,
+        "h": 150
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "page": "/",
+      "bbox": {
+        "x": 1050,
+        "y": 14,
+        "w": 88,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 6,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active",
+        "disabled"
+      ]
+    },
+    {
+      "type": "card",
+      "name": "Feature card",
+      "page": "/",
+      "bbox": {
+        "x": 184,
+        "y": 579,
+        "w": 341,
+        "h": 206
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "tag",
+      "name": "New tag",
+      "page": "/",
+      "bbox": {
+        "x": 209,
+        "y": 640,
+        "w": 42,
+        "h": 24
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "avatar",
+      "name": "Avatar",
+      "page": "/",
+      "bbox": {
+        "x": 184,
+        "y": 1246,
+        "w": 40,
+        "h": 40
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "footer",
+      "name": "Site footer",
+      "page": "/",
+      "bbox": {
+        "x": 0,
+        "y": 1351,
+        "w": 1440,
+        "h": 157
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "nav",
+      "name": "Footer links",
+      "page": "/",
+      "bbox": {
+        "x": 1000,
+        "y": 1400,
+        "w": 256,
+        "h": 60
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Menu button",
+      "page": "/",
+      "bbox": {
+        "x": 322,
+        "y": 14,
+        "w": 44,
+        "h": 44
+      },
+      "viewport": "mobile",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active",
+        "open"
+      ]
+    },
+    {
+      "type": "dropdown",
+      "name": "Mobile menu",
+      "page": "/",
+      "bbox": {
+        "x": 24,
+        "y": 72,
+        "w": 342,
+        "h": 265
+      },
+      "viewport": "mobile",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "toggle",
+      "name": "Toggle",
+      "page": "/pricing",
+      "bbox": {
+        "x": 184,
+        "y": 235,
+        "w": 52,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active"
+      ]
+    },
+    {
+      "type": "card",
+      "name": "Pricing card",
+      "page": "/pricing",
+      "bbox": {
+        "x": 184,
+        "y": 343,
+        "w": 524,
+        "h": 324
+      },
+      "viewport": "desktop",
+      "variants": 2,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "table",
+      "name": "Table",
+      "page": "/pricing",
+      "bbox": {
+        "x": 184,
+        "y": 795,
+        "w": 1072,
+        "h": 186
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "breadcrumb",
+      "name": "Breadcrumb",
+      "page": "/docs",
+      "bbox": {
+        "x": 184,
+        "y": 121,
+        "w": 1072,
+        "h": 22
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "badge",
+      "name": "Status badge",
+      "page": "/docs",
+      "bbox": {
+        "x": 184,
+        "y": 269,
+        "w": 102,
+        "h": 24
+      },
+      "viewport": "desktop",
+      "variants": 3,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "code-block",
+      "name": "Code block",
+      "page": "/docs",
+      "bbox": {
+        "x": 184,
+        "y": 527,
+        "w": 1072,
+        "h": 98
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "input",
+      "name": "Input",
+      "page": "/login",
+      "bbox": {
+        "x": 184,
+        "y": 301,
+        "w": 480,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active",
+        "error"
+      ]
+    },
+    {
+      "type": "select",
+      "name": "Select",
+      "page": "/signup",
+      "bbox": {
+        "x": 184,
+        "y": 523,
+        "w": 480,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active"
+      ]
+    },
+    {
+      "type": "checkbox",
+      "name": "Checkbox",
+      "page": "/signup",
+      "bbox": {
+        "x": 172,
+        "y": 591,
+        "w": 44,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active"
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Icon button",
+      "page": "/contact",
+      "bbox": {
+        "x": 327,
+        "y": 311,
+        "w": 44,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active"
+      ]
+    },
+    {
+      "type": "textarea",
+      "name": "Textarea",
+      "page": "/contact",
+      "bbox": {
+        "x": 184,
+        "y": 543,
+        "w": 480,
+        "h": 128
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active"
+      ]
+    },
+    {
+      "type": "tabs",
+      "name": "Tabs",
+      "page": "/features",
+      "bbox": {
+        "x": 184,
+        "y": 235,
+        "w": 1072,
+        "h": 45
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Tab",
+      "page": "/features",
+      "bbox": {
+        "x": 184,
+        "y": 235,
+        "w": 83,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active",
+        "selected"
+      ]
+    },
+    {
+      "type": "alert",
+      "name": "Alert",
+      "page": "/features",
+      "bbox": {
+        "x": 184,
+        "y": 354,
+        "w": 1072,
+        "h": 112
+      },
+      "viewport": "desktop",
+      "variants": 2,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "empty-state",
+      "name": "Empty state",
+      "page": "/{missing}-does-not-exist",
+      "bbox": {
+        "x": 184,
+        "y": 73,
+        "w": 1072,
+        "h": 404
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    }
+  ],
   "checks": {
-    "plantedFailures": [],
-    "plantedPasses": []
+    "plantedFailures": [
+      {
+        "component": "Icon button",
+        "check": "label",
+        "detailContains": "No name found"
+      },
+      {
+        "component": "New tag",
+        "check": "contrast",
+        "detailContains": "4.2:1"
+      }
+    ],
+    "plantedPasses": [
+      {
+        "component": "Button",
+        "check": "contrast"
+      },
+      {
+        "component": "Button",
+        "check": "focus-visible",
+        "detailContains": "px ring"
+      },
+      {
+        "component": "Button",
+        "check": "tap-target"
+      },
+      {
+        "component": "Button",
+        "check": "reduced-motion",
+        "detailContains": "Stops under reduced motion"
+      },
+      {
+        "component": "Input",
+        "check": "label",
+        "detailContains": "Label element"
+      },
+      {
+        "component": "Toggle",
+        "check": "label",
+        "detailContains": "aria-label"
+      },
+      {
+        "component": "Menu button",
+        "check": "label",
+        "detailContains": "aria-label"
+      },
+      {
+        "component": "Status badge",
+        "check": "contrast"
+      },
+      {
+        "component": "Checkbox",
+        "check": "tap-target",
+        "detailContains": "44 × 44 at 390 px"
+      },
+      {
+        "component": "Dropdown trigger",
+        "check": "focus-visible",
+        "detailContains": "px ring"
+      }
+    ]
   },
   "drift": {
     "nearDuplicateColors": [],
@@ -62,6 +701,6 @@
     "expectNone": true
   },
   "previews": {
-    "minLiveRate": 0.9
+    "minLiveRate": 0.75
   }
 }

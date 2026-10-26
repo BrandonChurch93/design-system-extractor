@@ -13,7 +13,7 @@ Stage `tokens`, with substages `tokens:palette`, `tokens:type`, `tokens:space` (
 **Classify.**
 
 - `neutral`: OKLCH chroma < 0.03.
-- `semantic`: a non-neutral cluster whose uses are at least 70% on elements whose class, role or ancestor class matches `/(success|ok|positive|error|danger|invalid|warning|warn|caution|info|notice|alert|badge|status|toast)/`, mapped to a role by hue: green 120 to 170 → `success`, yellow to orange 40 to 95 → `warning`, red 0 to 40 or 330 to 360 → `danger`, blue 200 to 280 → `info`. If the hue does not match any band the cluster stays `brand`.
+- `semantic`: a non-neutral cluster whose uses are at least 70% on elements whose class, role or ancestor class matches `/(success|ok|positive|error|danger|invalid|warning|warn|caution|info|notice|alert|badge|status|toast)/`, or that carry `aria-invalid="true"` (D-049), mapped to a role by hue: green 120 to 170 → `success`, yellow to orange 40 to 95 → `warning`, red 0 to 40 or 330 to 360 → `danger`, blue 200 to 280 → `info`. If the hue does not match any band the cluster stays `brand`.
 - `brand`: everything else. The brand group is ordered by weight.
 
 **Name.** Deterministic names first: neutrals become `gray-{step}` where step is derived from lightness (L ≥ 0.97 → 50, ≥ 0.93 → 100, ≥ 0.87 → 200, ≥ 0.78 → 300, ≥ 0.66 → 400, ≥ 0.55 → 500, ≥ 0.44 → 600, ≥ 0.34 → 700, ≥ 0.24 → 800, ≥ 0.15 → 900, else 950), de-duplicated by appending a letter. Chromatic clusters become `{hueWord}-{step}` with hue words from 12 bands (`red`, `orange`, `amber`, `yellow`, `lime`, `green`, `teal`, `cyan`, `blue`, `indigo`, `violet`, `pink`). Semantic clusters are named by role. Then the Haiku naming pass may rename within these rules (see `model-calls.md`): it receives the clusters with their roles, hues, and usage contexts and returns names that must match `/^[a-z]+(-[a-z0-9]+)*$/`, be unique, and keep the hue word or role; anything else is rejected and the deterministic name stands.
@@ -36,7 +36,7 @@ Cap: 24 type tokens, by element count.
 
 ## Spacing
 
-**Collect.** `padding-*`, `margin-*` (positive values only), `gap`, `row-gap`, `column-gap` from visible elements, in px, 1 to 200. Weight 1 per occurrence. Values on `html`, `body`, and full-width layout containers (width ≥ 90% of viewport) are excluded from the step list but counted as `contexts.layout`.
+**Collect.** `padding-*`, `margin-*` (positive values only), `gap`, `row-gap`, `column-gap` from visible elements, in px, 1 to 200. Weight 1 per occurrence. Values on `html`, `body`, and full-width layout containers (width ≥ 90% of viewport) are excluded from the step list but counted as `contexts.layout`, and so are the equal left and right margins of an element centered in its parent (`margin: auto` computes to pixels, D-045).
 
 **Base grid.** The base is 4 if at least 85% of weighted values are divisible by 4, else 8 if 85% are divisible by 8, else 4 with a note. Reported as "{base} px base".
 

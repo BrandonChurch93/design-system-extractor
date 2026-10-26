@@ -50,30 +50,893 @@
     }
   ],
   "tokens": {
-    "colors": [],
-    "type": [],
+    "colors": [
+      {
+        "value": "#1F1F1F",
+        "group": "neutral",
+        "minUsage": 300
+      },
+      {
+        "value": "#FFFFFF",
+        "group": "neutral",
+        "minUsage": 200
+      },
+      {
+        "value": "#0B1F3A",
+        "group": "brand",
+        "minUsage": 100
+      },
+      {
+        "value": "#2458E6",
+        "group": "brand",
+        "minUsage": 80
+      },
+      {
+        "value": "#D1D1D1",
+        "group": "neutral",
+        "minUsage": 60
+      },
+      {
+        "value": "#676767",
+        "group": "neutral",
+        "minUsage": 40
+      },
+      {
+        "value": "#505050",
+        "group": "neutral",
+        "minUsage": 40
+      },
+      {
+        "value": "#E1E1E1",
+        "group": "neutral",
+        "minUsage": 40
+      },
+      {
+        "value": "#353535",
+        "group": "neutral",
+        "minUsage": 30
+      },
+      {
+        "value": "#1C4EDB",
+        "group": "brand",
+        "minUsage": 30
+      },
+      {
+        "value": "#C4C4C4",
+        "group": "neutral",
+        "minUsage": 20
+      },
+      {
+        "value": "#0F8A8A",
+        "group": "brand",
+        "minUsage": 15
+      },
+      {
+        "value": "#868686",
+        "group": "neutral",
+        "minUsage": 15
+      },
+      {
+        "value": "#737373",
+        "group": "neutral",
+        "minUsage": 15
+      },
+      {
+        "value": "#EBEBEB",
+        "group": "neutral",
+        "minUsage": 10
+      },
+      {
+        "value": "#0B1F3A1F",
+        "group": "brand",
+        "minUsage": 10
+      },
+      {
+        "value": "#B1B1B1",
+        "group": "neutral",
+        "minUsage": 5
+      },
+      {
+        "value": "#15803D",
+        "group": "semantic",
+        "minUsage": 5
+      },
+      {
+        "value": "#DC2626",
+        "group": "semantic",
+        "minUsage": 4
+      },
+      {
+        "value": "#F5F5F5",
+        "group": "neutral",
+        "minUsage": 2
+      },
+      {
+        "value": "#2E63ED",
+        "group": "brand",
+        "minUsage": 1
+      },
+      {
+        "value": "#F59E0B",
+        "group": "semantic",
+        "minUsage": 1
+      },
+      {
+        "value": "#9E9E9E",
+        "group": "neutral",
+        "minUsage": 1
+      }
+    ],
+    "type": [
+      {
+        "role": "display",
+        "size": 48,
+        "weight": 700
+      },
+      {
+        "role": "h1",
+        "size": 36,
+        "weight": 700
+      },
+      {
+        "role": "h2",
+        "size": 28,
+        "weight": 700
+      },
+      {
+        "role": "h3",
+        "size": 20,
+        "weight": 600
+      },
+      {
+        "role": "body",
+        "size": 16,
+        "weight": 400
+      },
+      {
+        "role": "body-sm",
+        "size": 15,
+        "weight": 400
+      },
+      {
+        "role": "body-sm",
+        "size": 14,
+        "weight": 400
+      },
+      {
+        "role": "label",
+        "size": 14,
+        "weight": 600
+      },
+      {
+        "role": "code",
+        "size": 14,
+        "weight": 400
+      },
+      {
+        "role": "caption",
+        "size": 12,
+        "weight": 400
+      }
+    ],
     "space": {
       "base": 4,
-      "steps": [],
-      "offGrid": []
+      "steps": [
+        4,
+        8,
+        12,
+        16,
+        20,
+        24,
+        32,
+        40,
+        48,
+        64,
+        96
+      ],
+      "offGrid": [
+        10,
+        18
+      ]
     },
-    "radius": [],
-    "shadowCount": 0,
-    "breakpoints": []
+    "radius": [
+      6,
+      8,
+      10,
+      12,
+      999
+    ],
+    "shadowCount": 2,
+    "breakpoints": [
+      640,
+      1024
+    ]
   },
-  "components": [],
+  "components": [
+    {
+      "type": "header",
+      "name": "Site header",
+      "page": "/",
+      "bbox": {
+        "x": 0,
+        "y": 0,
+        "w": 1440,
+        "h": 73
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "scrolled"
+      ]
+    },
+    {
+      "type": "nav",
+      "name": "Main navigation",
+      "page": "/",
+      "bbox": {
+        "x": 467,
+        "y": 14,
+        "w": 400,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Dropdown trigger",
+      "page": "/",
+      "bbox": {
+        "x": 752,
+        "y": 14,
+        "w": 115,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active",
+        "open"
+      ]
+    },
+    {
+      "type": "dropdown",
+      "name": "Resources menu",
+      "page": "/",
+      "bbox": {
+        "x": 752,
+        "y": 62,
+        "w": 224,
+        "h": 150
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "page": "/",
+      "bbox": {
+        "x": 1052,
+        "y": 14,
+        "w": 88,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 7,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active",
+        "disabled"
+      ]
+    },
+    {
+      "type": "link",
+      "name": "Pill link",
+      "page": "/",
+      "bbox": {
+        "x": 184,
+        "y": 423,
+        "w": 200,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active"
+      ]
+    },
+    {
+      "type": "card",
+      "name": "Feature card",
+      "page": "/",
+      "bbox": {
+        "x": 184,
+        "y": 647,
+        "w": 341,
+        "h": 194
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "tag",
+      "name": "New tag",
+      "page": "/",
+      "bbox": {
+        "x": 203,
+        "y": 702,
+        "w": 46,
+        "h": 24
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "avatar",
+      "name": "Avatar",
+      "page": "/",
+      "bbox": {
+        "x": 184,
+        "y": 1302,
+        "w": 40,
+        "h": 40
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "footer",
+      "name": "Site footer",
+      "page": "/",
+      "bbox": {
+        "x": 0,
+        "y": 1407,
+        "w": 1440,
+        "h": 157
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "nav",
+      "name": "Footer links",
+      "page": "/",
+      "bbox": {
+        "x": 517,
+        "y": 1456,
+        "w": 256,
+        "h": 60
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "input",
+      "name": "Input",
+      "page": "/",
+      "bbox": {
+        "x": 905,
+        "y": 1464,
+        "w": 240,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active",
+        "error"
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Menu button",
+      "page": "/",
+      "bbox": {
+        "x": 322,
+        "y": 14,
+        "w": 44,
+        "h": 44
+      },
+      "viewport": "mobile",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active",
+        "open"
+      ]
+    },
+    {
+      "type": "dropdown",
+      "name": "Mobile menu",
+      "page": "/",
+      "bbox": {
+        "x": 24,
+        "y": 72,
+        "w": 342,
+        "h": 265
+      },
+      "viewport": "mobile",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "toggle",
+      "name": "Toggle",
+      "page": "/pricing",
+      "bbox": {
+        "x": 184,
+        "y": 235,
+        "w": 52,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active"
+      ]
+    },
+    {
+      "type": "card",
+      "name": "Pricing card",
+      "page": "/pricing",
+      "bbox": {
+        "x": 184,
+        "y": 343,
+        "w": 524,
+        "h": 324
+      },
+      "viewport": "desktop",
+      "variants": 2,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "table",
+      "name": "Table",
+      "page": "/pricing",
+      "bbox": {
+        "x": 184,
+        "y": 795,
+        "w": 1072,
+        "h": 186
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "breadcrumb",
+      "name": "Breadcrumb",
+      "page": "/docs",
+      "bbox": {
+        "x": 184,
+        "y": 121,
+        "w": 1072,
+        "h": 22
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "badge",
+      "name": "Status badge",
+      "page": "/docs",
+      "bbox": {
+        "x": 184,
+        "y": 269,
+        "w": 106,
+        "h": 24
+      },
+      "viewport": "desktop",
+      "variants": 3,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "code-block",
+      "name": "Code block",
+      "page": "/docs",
+      "bbox": {
+        "x": 184,
+        "y": 527,
+        "w": 1072,
+        "h": 98
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "select",
+      "name": "Select",
+      "page": "/signup",
+      "bbox": {
+        "x": 184,
+        "y": 523,
+        "w": 480,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active"
+      ]
+    },
+    {
+      "type": "checkbox",
+      "name": "Checkbox",
+      "page": "/signup",
+      "bbox": {
+        "x": 172,
+        "y": 591,
+        "w": 44,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active"
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Icon button",
+      "page": "/contact",
+      "bbox": {
+        "x": 329,
+        "y": 311,
+        "w": 44,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active"
+      ]
+    },
+    {
+      "type": "textarea",
+      "name": "Textarea",
+      "page": "/contact",
+      "bbox": {
+        "x": 184,
+        "y": 543,
+        "w": 480,
+        "h": 128
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active"
+      ]
+    },
+    {
+      "type": "tabs",
+      "name": "Tabs",
+      "page": "/features",
+      "bbox": {
+        "x": 184,
+        "y": 235,
+        "w": 1072,
+        "h": 45
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Tab",
+      "page": "/features",
+      "bbox": {
+        "x": 184,
+        "y": 235,
+        "w": 83,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active",
+        "selected"
+      ]
+    },
+    {
+      "type": "alert",
+      "name": "Alert",
+      "page": "/features",
+      "bbox": {
+        "x": 184,
+        "y": 354,
+        "w": 1072,
+        "h": 112
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "card",
+      "name": "Promo card",
+      "page": "/features",
+      "bbox": {
+        "x": 184,
+        "y": 1084,
+        "w": 1072,
+        "h": 130
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Share button",
+      "page": "/changelog",
+      "bbox": {
+        "x": 251,
+        "y": 215,
+        "w": 36,
+        "h": 36
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active"
+      ]
+    },
+    {
+      "type": "list-row",
+      "name": "Release",
+      "page": "/changelog",
+      "bbox": {
+        "x": 184,
+        "y": 283,
+        "w": 1072,
+        "h": 82
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    },
+    {
+      "type": "empty-state",
+      "name": "Empty state",
+      "page": "/{missing}-does-not-exist",
+      "bbox": {
+        "x": 184,
+        "y": 73,
+        "w": 1072,
+        "h": 404
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default"
+      ]
+    }
+  ],
   "checks": {
-    "plantedFailures": [],
-    "plantedPasses": []
+    "plantedFailures": [
+      {
+        "component": "Status badge",
+        "check": "contrast",
+        "detailContains": "needs 4.5:1"
+      },
+      {
+        "component": "Pill link",
+        "check": "focus-visible",
+        "detailContains": "No visible change on focus"
+      },
+      {
+        "component": "Share button",
+        "check": "tap-target",
+        "detailContains": "36 px tall, 8 short"
+      },
+      {
+        "component": "Input",
+        "check": "label",
+        "detailContains": "Placeholder only"
+      },
+      {
+        "component": "Status badge",
+        "check": "reduced-motion",
+        "detailContains": "Animation still runs under reduced motion"
+      },
+      {
+        "component": "Icon button",
+        "check": "label",
+        "detailContains": "No name found"
+      },
+      {
+        "component": "New tag",
+        "check": "contrast",
+        "detailContains": "4.2:1"
+      }
+    ],
+    "plantedPasses": [
+      {
+        "component": "Button",
+        "check": "contrast"
+      },
+      {
+        "component": "Button",
+        "check": "reduced-motion",
+        "detailContains": "Stops under reduced motion"
+      },
+      {
+        "component": "Checkbox",
+        "check": "label",
+        "detailContains": "Label element"
+      },
+      {
+        "component": "Toggle",
+        "check": "label",
+        "detailContains": "aria-label"
+      },
+      {
+        "component": "Tab",
+        "check": "focus-visible",
+        "detailContains": "px ring"
+      },
+      {
+        "component": "Share button",
+        "check": "label",
+        "detailContains": "aria-label"
+      },
+      {
+        "component": "Menu button",
+        "check": "label",
+        "detailContains": "aria-label"
+      }
+    ]
   },
   "drift": {
-    "nearDuplicateColors": [],
-    "offGrid": [],
-    "variantCollapses": [],
-    "typeNearDuplicates": [],
-    "expectNone": true
+    "nearDuplicateColors": [
+      [
+        "#FFFFFF",
+        "#F5F5F5"
+      ],
+      [
+        "#FFFFFF",
+        "#EBEBEB"
+      ],
+      [
+        "#F5F5F5",
+        "#EBEBEB"
+      ],
+      [
+        "#EBEBEB",
+        "#E1E1E1"
+      ],
+      [
+        "#E1E1E1",
+        "#D1D1D1"
+      ],
+      [
+        "#D1D1D1",
+        "#C4C4C4"
+      ],
+      [
+        "#C4C4C4",
+        "#B1B1B1"
+      ],
+      [
+        "#737373",
+        "#676767"
+      ],
+      [
+        "#2458E6",
+        "#1C4EDB"
+      ],
+      [
+        "#2458E6",
+        "#2E63ED"
+      ],
+      [
+        "#1C4EDB",
+        "#2E63ED"
+      ]
+    ],
+    "offGrid": [
+      10,
+      18
+    ],
+    "variantCollapses": [
+      {
+        "component": "Button",
+        "count": 2
+      }
+    ],
+    "typeNearDuplicates": [
+      [
+        14,
+        15
+      ],
+      [
+        15,
+        16
+      ]
+    ],
+    "expectNone": false
   },
   "previews": {
-    "minLiveRate": 0.9
+    "minLiveRate": 0.85
   }
 }

@@ -152,4 +152,4 @@ A daily job (`apps/worker` cron, 03:00 America/Boise) deletes runs past `retenti
 
 ## Ids
 
-Run ids, page ids, component ids, variant ids and instance ids are all nanoid with the `0-9a-z` alphabet: runs 10 characters, everything else 8. Component ids are stable within a run and appear in URLs.
+Run ids, page ids, component ids, variant ids and instance ids all use the `0-9a-z` alphabet: runs 10 characters, everything else 8. Run ids are random nanoids. Page ids are derived from the SHA-256 of the page's normalized URL, so a replayed run gets the same ids (D-041). Component ids are stable within a run and appear in URLs.

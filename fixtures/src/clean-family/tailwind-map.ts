@@ -80,7 +80,7 @@ export const twMap: Record<string, string> = {
   'alert-icon-success': 'text-success-700',
   'alert-icon-warning': 'text-warning-700',
   'alert-success': '',
-  'empty-state': 'flex flex-col items-center gap-4 py-24 px-6 text-center',
+  'empty-state': 'flex flex-col items-center gap-4 py-24 px-6 border border-solid border-slate-200 rounded-xl text-center',
   'empty-icon': 'w-12 h-12 text-teal-600',
   'site-footer': 'border-t border-solid border-slate-200 py-12',
   'footer-inner': 'flex justify-between gap-8 flex-wrap',
@@ -88,7 +88,7 @@ export const twMap: Record<string, string> = {
   'footer-link': 'text-[14px] leading-[22px] text-navy-900',
 };
 
-export const twInput = `@import "tailwindcss";
+export const twInput = `@import "tailwindcss" source(none);
 @source "../../sites/tailwind";
 
 @theme {

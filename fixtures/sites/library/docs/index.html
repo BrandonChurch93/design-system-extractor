@@ -29,8 +29,8 @@
 <section class="section"><div class="container">
   <nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/sites/library/">Home</a></li><li class="is-active"><a href="/sites/library/docs" aria-current="page">Docs</a></li></ul></nav>
   <h1 class="title">Documentation</h1>
-  <div class="tabs"><ul><li class="is-active"><a href="/sites/library/docs">Guides</a></li><li><a href="/sites/library/docs/api">API</a></li><li><a href="/sites/library/contact">Support</a></li></ul></div>
-  <div class="notification is-info is-light">New: receipts can now be forwarded from any address.</div>
+  <div class="tabs"><ul role="tablist" aria-label="Docs sections"><li class="is-active" role="presentation"><a role="tab" aria-selected="true" href="/sites/library/docs">Guides</a></li><li role="presentation"><a role="tab" aria-selected="false" href="/sites/library/docs/api">API</a></li><li role="presentation"><a role="tab" aria-selected="false" href="/sites/library/contact">Support</a></li></ul></div>
+  <div class="notification is-info is-light" role="status"><p><strong>New:</strong> receipts can now be forwarded from any address.</p></div>
   <div class="content"><p>Start with the API guide to connect your bank.</p><pre><code>curl https://api.ledgerly.dev/v1/invoices -H "Authorization: Bearer $TOKEN"</code></pre></div>
 </div></section>
 <footer class="footer">

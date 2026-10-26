@@ -11,7 +11,7 @@ Stage `discover`, plus the shared browser setup used by `capture`. The crawler i
 
 ## Scope
 
-The start URL defines the scope. A start URL at the host root (`https://tidewater.app/`) scopes the crawl to the whole host. A start URL with a path (`https://tidewater.app/docs/`, or a fixture at `http://localhost:4100/clean/`) scopes it to that path prefix: only same-host URLs whose path starts with the prefix are page candidates, "home" is the start URL itself, the synthetic 404 is `{prefix}/{nanoid}-does-not-exist`, and the run's `host` is still the host. `robots.txt` and the sitemaps are always read at the host root. This is what lets six fixtures share one host and what lets a visitor extract one product area of a large site.
+The start URL defines the scope. A start URL at the host root (`https://tidewater.app/`) scopes the crawl to the whole host. A start URL with a path (`https://tidewater.app/docs/`, or a fixture at `http://localhost:4100/clean/`) scopes it to that path prefix: only same-host URLs whose path starts with the prefix are page candidates, "home" is the start URL itself, the synthetic 404 is `{prefix}/{token}-does-not-exist` (the token is the first 10 hex characters of the SHA-256 of `dse-404:{host}{prefix}`, stable so replays hold, D-041), and the run's `host` is still the host. `robots.txt` and the sitemaps are always read at the host root. This is what lets six fixtures share one host and what lets a visitor extract one product area of a large site.
 
 ## Identity and robots
 
@@ -27,7 +27,7 @@ Input: the normalized start URL. Output: a page-candidate list with metadata.
 3. **Navigation.** On the start page, collect links inside `header`, `nav`, `[role=navigation]`, `footer`, and any element whose id or class contains `nav`, `menu`, `header`, `footer`. Record where each was found (`header`, `footer`, `nav`).
 4. **Body links.** All other same-host links on the start page, depth 1.
 5. **Visitor includes.** Up to 5 URLs the visitor added; same host required; recorded with reason `you added it`.
-6. **Synthetic 404.** `/{nanoid}-does-not-exist` is added as a page candidate with reason `empty state`; it is captured only if the response is an HTML page with a status of 404 or a soft-404 body.
+6. **Synthetic 404.** `{prefix}/{token}-does-not-exist` (see Scope) is added as a page candidate with reason `empty state`; it is captured only if the response is an HTML page with a status of 404 or a soft-404 body.
 
 Normalization: lowercase host, strip `www.` for comparison but keep the site's canonical form for fetching, strip fragments, strip tracking query params (`utm_*`, `fbclid`, `gclid`, `ref`), keep other queries only when the path alone has not been seen, remove trailing slashes except root, resolve relative URLs. Dedupe.
 
@@ -56,7 +56,7 @@ After load, once per page: find a visible element whose id, class, or `aria-labe
 
 ## Framework hint
 
-From the start page: `tailwind` if class tokens match `/^(flex|grid|px-\d|py-\d|text-\w+-\d{2,3}|bg-\w+-\d{2,3})$/` on 20 or more elements; `bootstrap` if `/^(btn|container|row|col-\w+)$/` on 20 or more; `mui` if `/^Mui\w+/`; `chakra` if `/^chakra-/`; `css-in-js` if more than 50% of classes are hashed (`/^[a-zA-Z_-]*[0-9a-f]{5,}/` or `/^css-[a-z0-9]+/`). Stored as `frameworkHint`, shown in the run meta line as "{Name} detected".
+From the start page: `tailwind` if class tokens match `/^(flex|grid|px-\d|py-\d|text-\w+-\d{2,3}|bg-\w+-\d{2,3})$/` on 20 or more elements; `bootstrap` if `/^(btn|container|row|col-\w+)$/` on 20 or more; `mui` if `/^Mui\w+/`; `chakra` if `/^chakra-/`; `css-in-js` if more than 50% of classes are hashed (`/^[a-zA-Z_-]*[0-9a-f]{5,}/`, `/^css-[a-z0-9]+/` or `/^sc-[A-Za-z0-9]+/`, D-042). Stored as `frameworkHint`, shown in the run meta line as "{Name} detected".
 
 ## Dark theme detection
 

@@ -11,12 +11,14 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const file = process.env.DOTENV_FILE ? resolve(process.cwd(), process.env.DOTENV_FILE) : resolve(root, '.env.local');
 if (existsSync(file)) {
   const parsed = parseEnv(readFileSync(file, 'utf8'));
+  // A nested run (verify:all runs scripts that run scripts) keeps what the outer run read from the file.
+  const inherited = new Set((process.env.DSE_ENV_FILE_KEYS ?? '').split(',').filter(Boolean));
   const fromFile = [];
   for (const [key, value] of Object.entries(parsed)) {
     if (process.env[key] === undefined) {
       process.env[key] = value;
       fromFile.push(key);
-    }
+    } else if (inherited.has(key)) fromFile.push(key);
   }
   // Lets a script tell a value set on its command line from one read from the file.
   process.env.DSE_ENV_FILE_KEYS = fromFile.join(',');

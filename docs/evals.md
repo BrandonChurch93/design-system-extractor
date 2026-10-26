@@ -8,7 +8,7 @@ Static sites in `fixtures/sites/{name}/` with an `index.html` and the pages belo
 
 ### 1 · clean
 
-A small, well-kept SaaS marketing site: home, pricing, features, signup, login, docs index, one docs page, contact, 404 (served as a real 404). Eight colors (navy, blue, teal, success, warning, danger, two neutrals), a 4 px grid, one radius scale, two shadows. Components: top nav (with scrolled state), footer, primary, secondary and ghost buttons in two sizes, text input with label and error instance, select, checkbox, toggle, pricing card (two variants), feature card, status badge (three semantic variants), data table, breadcrumb, tabs, code block, alert, empty state (on 404), an avatar, a dropdown menu with a trigger, and a mobile menu button. One disabled button instance, one `aria-invalid` input instance. Everything passes every check except two planted failures: one icon-only button without a name, and one caption at 4.2:1.
+A small, well-kept SaaS marketing site: home, pricing, features, signup, login, docs index, one docs page, contact, 404 (served as a real 404). Eight colors (navy, blue, teal, success, warning, danger, two neutrals), a 4 px grid, one radius scale, two shadows. Components: top nav (with scrolled state), footer, primary, secondary and ghost buttons in two sizes, text input with label and error instance, select, checkbox, toggle, pricing card (two variants), feature card, status badge (three semantic variants), data table, breadcrumb, tabs, code block, alert, empty state (on 404), an avatar, a dropdown menu with a trigger, and a mobile menu button. One disabled button instance, one `aria-invalid` input instance. Everything passes every check except two planted failures: one icon-only button without a name, and one caption-size text at 4.2:1 (the "New" tag, white on teal, D-046).
 
 No drift, which means the fixture must satisfy every rule in `docs/specs/drift.md` by construction: no two neutrals within ΔE 6 and no two same-hue chromatics within ΔE 8 (so hover and active colors must differ from their rest colors by more than that, or reuse an existing token), no two on-grid spacing steps within 4 px that are both under 5% of usage, no component variants within the collapse tolerances, no two type styles within 1 px of size or 2 px of line height at the same size, at most 4 radii and 3 shadows. The fixture author checks these numbers before P3 closes.
 
@@ -16,7 +16,7 @@ Proves: tokens extract exactly, every state is captured, previews render live, n
 
 ### 2 · messy
 
-The same site rebuilt badly: 14 grays, 3 blues within ΔE 4, two off-grid spacing values (10 and 18), button variants that differ by 1 px padding and 2 px radius, two type styles 1 px apart, a consent banner on load, a third-party script tag (blocked by the tracker list), and five planted check failures (contrast on a badge, `outline: none` on a link, a 36 px tap target, a placeholder-only input, an animation with no reduced-motion rule). It also carries the capture and preview test material: a signup form that sets `data-submitted` on submit (must stay unset), a contact-page button that calls `confirm()` (must be auto-dismissed), and one component whose CSS depends on a background image that sanitization strips, so its preview must be `captured` with the `diff` reason.
+The same site rebuilt badly: 14 grays, 3 blues within ΔE 4, two off-grid spacing values (10 and 18), button variants that differ by 1 px padding and 2 px radius, two type styles 1 px apart, a consent banner on load, a third-party script tag (blocked by the tracker list), and five planted check failures (contrast on a badge, `outline: none` on a link, a 36 px tap target, a placeholder-only input, an animation with no reduced-motion rule), plus the two it inherits from the clean pages it is built from, seven in all (D-046). It also carries the capture and preview test material: a signup form that sets `data-submitted` on submit (must stay unset), a contact-page button that calls `confirm()` (must be auto-dismissed), and one component whose CSS depends on a background image that sanitization strips, so its preview must be `captured` with the `diff` reason.
 
 Proves: drift findings have 100% recall, the consent banner is dismissed, the tracker is blocked, planted failures are all found, no planted pass is flagged, forms are never submitted, dialogs are dismissed, an unfaithful preview is detected.
 
@@ -34,7 +34,7 @@ Proves: hashed classes do not break clustering, custom properties resolve, the `
 
 ### 5 · library
 
-A site built on an MIT component library's CSS (vendor a small one, for example Pico CSS or Bulma, with its real class names) using its buttons, forms, cards, tables, tags and navbar.
+A site built on an MIT component library's CSS (vendor a small one, for example Pico CSS or Bulma, with its real class names) using its buttons, forms, cards, tables, tags and navbar. The fixture uses Bulma 1.0.4 with a small brand layer of its own, as a real site would (44 px controls, paddings on the 4 px grid, one light gray, one border gray, one link blue, visible focus rings, three shadows), because stock Bulma's computed shades and paddings fall inside the drift tolerances and this fixture must show no drift. Planted failures: a light gray footer caption, an icon button without a name, and Bulma's 13 px native checkbox (D-046).
 
 Proves: components map to recognizable names, library-style selectors scope correctly in previews.
 
@@ -57,10 +57,12 @@ The messy site with roughly half of its drift fixed: grays reduced from 14 to 9,
   },
   "components": [{ "type", "name", "page", "bbox": {x, y, w, h}, "viewport": "desktop", "variants": 3, "states": ["default","hover","focus","active","disabled"] }],
   "checks": { "plantedFailures": [{ "component", "check", "detailContains" }], "plantedPasses": [...] },
-  "drift": { "nearDuplicateColors": [["#6B6B6B","#6E6E6E"]], "offGrid": [10, 18], "variantCollapses": [{ "component": "Button", "count": 2 }], "expectNone": false },
+  "drift": { "nearDuplicateColors": [["#6B6B6B","#6E6E6E"]], "offGrid": [10, 18], "variantCollapses": [{ "component": "Button", "count": 2 }], "typeNearDuplicates": [[14, 15]], "expectNone": false },
   "previews": { "minLiveRate": 0.9 }
 }
 ```
+
+Pages are listed in capture order. A component's `page`, `viewport` and `bbox` are its first-seen instance (capture order, desktop preferred) in document CSS px; `states` lists the states the capture spec takes for it; variants never count state-driven styles (selected, current, checked, invalid or disabled instances supply a state); the interactive items of a composite (tab buttons, pagination links) are components of their own; planted check entries name expected components (D-047). `scripts/test/expected.test.ts` checks these rules on every file.
 
 ## Metrics
 

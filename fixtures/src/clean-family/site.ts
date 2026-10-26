@@ -192,6 +192,15 @@ export const pages: Page[] = [
     </div>
   </section>
   <section ${attrs(x, 'section')}>
+    <div ${attrs(x, 'stack')}>
+      <h2>Built for teams that ship every day</h2>
+      <p>Release notes are the last step of a change and the first thing everyone else sees.</p>
+      <p>Most teams skip them because writing them takes longer than the change did.</p>
+      <p>Tidewater writes the draft from the pull request and leaves the last word to the author.</p>
+      <p>The result is a short weekly note that people outside engineering actually open.</p>
+    </div>
+  </section>
+  <section ${attrs(x, 'section')}>
     <div ${attrs(x, 'testimonial')}>
       <img ${attrs(x, 'avatar')} src="${base}/assets/avatar.svg" width="40" height="40" alt="Mara Ellis">
       <div>
@@ -253,6 +262,14 @@ export const pages: Page[] = [
       </table>
     </div>
   </section>
+  <section ${attrs(x, 'section')}>
+    <div ${attrs(x, 'stack')}>
+      <h2>Questions</h2>
+      <p>Every plan includes the weekly digest. Team adds Slack threads, more changelogs and a custom domain.</p>
+      <p>Yearly billing is two months free. You can switch between monthly and yearly at any time.</p>
+      <p>There is no limit on readers. Only the people who write notes count toward the plan.</p>
+    </div>
+  </section>
 </div>`,
   },
   {
@@ -277,9 +294,18 @@ export const pages: Page[] = [
     <span ${attrs(x, 'alert-icon', 'alert-icon-success')}>${icons.check}</span>
     <div ${attrs(x, 'stack')}>
       <p>Digests are included in every plan.</p>
-      <a ${attrs(x, 'btn', 'btn-primary', 'btn-sm')} href="${base}/pricing">Compare plans</a>
+      <div ${attrs(x, 'hero-actions')}><a ${attrs(x, 'btn', 'btn-primary', 'btn-sm')} href="${base}/pricing">Compare plans</a></div>
     </div>
   </div>
+  <section ${attrs(x, 'section')}>
+    <div ${attrs(x, 'stack')}>
+      <h2>Why weekly</h2>
+      <p>A week is long enough for a change to matter and short enough to remember why it happened.</p>
+      <p>People skim a list of ten changes. They read a note that explains three of them.</p>
+      <p>Tidewater groups merged pull requests by team, drops the ones marked internal, and asks the author for one sentence.</p>
+      <p>The digest goes out on Friday morning, before the weekend, while the work is still fresh.</p>
+    </div>
+  </section>
   <section ${attrs(x, 'section')}>${featureCards(x, false)}</section>
   ${x.extra?.('features', base) ?? ''}
 </div>`,
@@ -293,6 +319,7 @@ export const pages: Page[] = [
   <div ${attrs(x, 'page-head')}>
     <h1>Create your account</h1>
     <p>Free for teams up to five people.</p>
+    <p>No card needed. You can invite the rest of the team once the first note is out.</p>
   </div>
   <form ${attrs(x, 'form')} action="#" method="post" data-form>
     <div ${attrs(x, 'field')}>
@@ -329,6 +356,7 @@ export const pages: Page[] = [
   <div ${attrs(x, 'page-head')}>
     <h1>Sign in</h1>
     <p>Welcome back.</p>
+    <p>Use the email your team invited. Single sign-on is coming later this year.</p>
   </div>
   <section ${attrs(x, 'auth-card')}>
   <form ${attrs(x, 'form')} action="#" method="post">
@@ -375,7 +403,17 @@ export const pages: Page[] = [
       <pre ${attrs(x, 'code-block')}><code>npm install @tidewater/cli
 tidewater login
 tidewater publish</code></pre>
-      <a ${attrs(x, 'btn', 'btn-secondary', 'btn-sm')} href="${base}/docs/getting-started">Read the quick start</a>
+      <div ${attrs(x, 'hero-actions')}><a ${attrs(x, 'btn', 'btn-secondary', 'btn-sm')} href="${base}/docs/getting-started">Read the quick start</a></div>
+    </div>
+  </section>
+  <section ${attrs(x, 'section')}>
+    <div ${attrs(x, 'stack')}>
+      <h2>How it fits together</h2>
+      <p>Tidewater reads merged pull requests from the repositories you connect. Nothing else in the repository is read.</p>
+      <p>Each pull request becomes a draft line. The author can edit it, mark it internal, or leave it as it is.</p>
+      <p>On publish, the drafts for the week are grouped by team and sent to every channel you have connected.</p>
+      <p>Channels are email digests, Slack threads and a public page. Each can be turned off on its own.</p>
+      <p>Everything Tidewater sends can be undone for one hour after it goes out.</p>
     </div>
   </section>
 </div>`,
@@ -392,6 +430,10 @@ tidewater publish</code></pre>
     <p>Install the command line tool, connect a repository, and publish.</p>
   </div>
   <article ${attrs(x, 'stack')}>
+      <p>You need a GitHub account with access to the repository and about five minutes.</p>
+      <p>The command line tool asks for a token once and keeps it in your system keychain.</p>
+      <p>Run the two commands below from the root of the repository you want to publish.</p>
+      <p>The first connects the repository. The second writes a note for everything merged since last Friday.</p>
     <pre ${attrs(x, 'code-block')}><code>tidewater init --repo acme/web
 tidewater publish --since last-friday</code></pre>
     <div ${attrs(x, 'alert', 'alert-warning')} role="status">
@@ -407,7 +449,7 @@ tidewater publish --since last-friday</code></pre>
         </tbody>
       </table>
     </div>
-    <a ${attrs(x, 'btn', 'btn-ghost')} href="${base}/contact">Edit this page</a>
+    <div ${attrs(x, 'hero-actions')}><a ${attrs(x, 'btn', 'btn-ghost')} href="${base}/contact">Edit this page</a></div>
   </article>
 </div>`,
   },
@@ -420,6 +462,8 @@ tidewater publish --since last-friday</code></pre>
   <div ${attrs(x, 'page-head')}>
     <h1>Contact</h1>
     <p>We answer within one working day.</p>
+    <p>Write about billing, a bug, or an idea. A person reads every message.</p>
+    <p>For anything urgent, put urgent in the first line and we will look first.</p>
   </div>
   <p ${attrs(x, 'check-row')}>
     <span>hello@tidewater.app</span>
