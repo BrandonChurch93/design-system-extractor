@@ -1,0 +1,23 @@
+.hero {
+  display: grid;
+  gap: var(--dse-space-5);
+  padding: var(--dse-space-9) 0 var(--dse-space-8);
+}
+
+.headline {
+  composes: headline from '../styles/type.module.css';
+  max-width: 760px;
+}
+
+.subline {
+  composes: body from '../styles/type.module.css';
+  color: var(--dse-muted);
+  max-width: 600px;
+  margin-bottom: var(--dse-space-3);
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: var(--dse-space-7) 0 var(--dse-space-7);
+  }
+}

@@ -1,0 +1,111 @@
+.form {
+  display: grid;
+  gap: var(--dse-space-3);
+  max-width: 760px;
+}
+
+.row {
+  display: flex;
+  gap: var(--dse-space-3);
+  align-items: flex-start;
+}
+
+.field {
+  flex: 1;
+  min-width: 0;
+}
+
+.extract {
+  flex: none;
+}
+
+.caps {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+.keyButton {
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  color: var(--dse-ink);
+  border-radius: var(--dse-radius-sm);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.disclosure {
+  composes: label from '../../styles/type.module.css';
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--dse-ink);
+  border-radius: var(--dse-radius-sm);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dse-space-1);
+  justify-self: start;
+  min-height: 32px;
+}
+
+.chevron,
+.chevronOpen {
+  transition: transform var(--dse-motion-fast) var(--dse-ease-standard);
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.include {
+  display: grid;
+  gap: var(--dse-space-2);
+}
+
+.textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 96px;
+  padding: var(--dse-space-3) var(--dse-space-4);
+  background: var(--dse-surface);
+  border: 1px solid var(--dse-line);
+  border-radius: var(--dse-radius-md);
+  font-family: var(--dse-type-meta-family);
+  font-size: var(--dse-type-meta-size);
+  line-height: var(--dse-type-code-line);
+  color: var(--dse-ink);
+  transition: border-color var(--dse-motion-fast) var(--dse-ease-standard);
+}
+
+.textarea::placeholder {
+  color: var(--dse-muted);
+}
+
+.textarea:hover {
+  border-color: var(--dse-line-strong);
+}
+
+.includeCaption {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+.error {
+  composes: caption from '../../styles/type.module.css';
+  display: flex;
+  align-items: center;
+  gap: var(--dse-space-2);
+  color: var(--dse-ink-2);
+}
+
+@media (max-width: 640px) {
+  .row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .extract {
+    width: 100%;
+  }
+}

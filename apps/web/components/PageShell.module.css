@@ -1,0 +1,15 @@
+.main {
+  width: min(var(--dse-content-width), 100% - 2 * var(--dse-gutter));
+  margin-inline: auto;
+  padding-bottom: var(--dse-space-8);
+}
+
+.narrow {
+  max-width: 720px;
+}
+
+@media (max-width: 640px) {
+  .main {
+    width: calc(100% - 2 * var(--dse-gutter-phone));
+  }
+}

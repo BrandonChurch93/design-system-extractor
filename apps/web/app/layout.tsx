@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { connection } from 'next/server';
 import type { ReactNode } from 'react';
 import { Providers } from '../components/Providers';
 import '../styles/globals.css';
@@ -13,7 +14,9 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = { themeColor: '#FCFAF8', colorScheme: 'light' };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  // Every page renders per request so its scripts carry the request's CSP nonce (proxy.ts).
+  await connection();
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable}`}>
       <body>

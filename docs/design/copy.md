@@ -117,8 +117,8 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Section nav: `Tokens` · `Components` · `Checks` · `Drift` · `Exports`
 - Tokens caption: `Clustered from {rawColors} raw color values, {fontDecls} font declarations and {spacingValues} spacing values.`
 - Color groups: `Brand` · `Neutral · {n} found` · `Semantic`
-- Type card meta: `{families joined by ·} · {n} styles`; show-all `Show all {n} styles`; font not loaded caption `{family} did not load; the fallback {fallback} was measured.`
-- Spacing meta: `{n} steps · {base} px base`; breakpoints caption `Breakpoints · {list joined by ·}`; off-grid popover `Off the {base} px grid` followed by the page list
+- Type card meta: `{families} · {n} styles` (families joined by ·); show-all `Show all {n} styles`; font not loaded caption `{family} did not load; the fallback {fallback} was measured.`
+- Spacing meta: `{n} steps · {base} px base`; breakpoints caption `Breakpoints · {list}` (values joined by ·); off-grid popover `Off the {base} px grid` followed by the page list
 - Radius and shadow labels: `Radius` · `Shadow`; shadow names `sm` · `md` · `lg`
 - Dark theme caption: `A dark theme was detected and not extracted.`
 - Components caption: `{n} found · grouped by type · open one for states, code and tokens`
@@ -133,7 +133,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Checks table headers: `Check` · `What it measures` · `Passed` · `Failing`; failing format `{component} · {detail}`; overflow button `· {n} more`; none `None`
 - Drift heading: `Drift report`; caption `Where the system is leaking, with a proposed clean set. Numbers first, proposal second, evidence last.`
 - Drift number cards: `{n} grays → {m}` · `{n} variants → {m}` · `{n} spacing values → {m}` · `{n} type styles → {m}`; captions are generated from the templates in `docs/specs/drift.md`
-- Proposal labels: `Current · {n} grays` · `Proposed · {m} grays`; spread caption `Spread across {pages} pages, {textUses} text uses and {borderUses} border uses.`; absorb line `absorbs {values joined by comma}`; unchanged `unchanged`; footer `Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.`
+- Proposal labels: `Current · {n} grays` · `Proposed · {m} grays`; spread caption `Spread across {pages} pages, {textUses} text uses and {borderUses} border uses.`; absorb line `absorbs {values}` (values joined by a comma and a space); unchanged `unchanged`; footer `Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.`
 - Evidence headers: `Near-duplicate` · `And` · `Delta` · `Seen on` · `Uses`
 - Exports heading: `Exports`; caption `Every export uses the proposed clean set by default. Switch to the raw extraction in each file.`; toggle `Proposed set` · `Raw extraction`; `Download all`
 - Export cards: `CSS variables` / `tokens.css · {size}` · `JSON` / `tokens.json · {size}` · `Tailwind config` / `tailwind.tokens.js · {size}` · `W3C design tokens` / `tokens.w3c.json · {size}` · `design-system.md` / `For a repo's CLAUDE.md or docs · {size}` · `Prompt` / `Whole system or one component, for Claude, ChatGPT or any model`; buttons `Download` · `Copy prompt`
@@ -156,7 +156,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Icon labels: `Previous component` · `Next component` · `Open as page` · `Close panel`
 - Variants label: `Variants`; fidelity caption `Live render · matches crop within {pct} %` or `Captured · {reason}` with reasons `render differed by {pct} %` · `styles too large` · `fonts unavailable`
 - Source label: `Source`; lines `{path} · {viewport} px` · the selector in code · `Seen on {first four paths} and {n} more` (button) · `Show on page`
-- States label: `States · {n} captured`; missing line `Not captured: {names with reasons}` with reasons `no instance found` · `over capture cap` · `not reachable`
+- States label: `States · {n} captured`; missing line `Not captured: {names}` (each state name followed by its reason, joined by ·) with reasons `no instance found` · `over capture cap` · `not reachable`
 - Checks label: `Checks · {passed} of {applicable} on {variant}`; result lines from `docs/specs/checks.md`
 - Tokens label: `Tokens used`; unmapped label `Unmapped`
 - Responsive note: `Stacks at 390 px` · `Changes layout at 390 px`
@@ -241,7 +241,9 @@ model routing
 
 Checks card: `The five checks cover the parts of WCAG 2.2 that can be measured from a rendered page. They do not cover reading order, alternative text quality, keyboard traps, or anything that needs a human.` · `A component that passes every check has passed five measurements. The page says exactly which.`
 
-Testing heading `How it is tested`; table headers `Fixture site` · `What it proves` · `Tokens` · `Components` · `Live previews`; fixture rows (`Clean` · `A small, well-kept system extracts with no false drift`), (`Messy` · `Deliberate near-duplicates and off-grid values are all caught`), (`Tailwind` · `Utility classes cluster into tokens, not thousands of raw values`), (`CSS-in-JS` · `Hashed class names do not break component detection`), (`Component library` · `A site built on a known library maps back to its own component names`); caption `The fixture sites and their expected results live in the repository. Every change to the pipeline runs against all five before it ships. Numbers above are the current build.`
+Pipeline heading `The pipeline`. Card titles `Cost and limits` · `What the checks are, and are not`.
+
+Testing heading `How it is tested`; table headers `Fixture site` · `What it proves` · `Tokens` · `Components` · `Live previews`; fixture rows (`Clean` · `A small, well-kept system extracts with no false drift`), (`Messy` · `Deliberate near-duplicates and off-grid values are all caught`), (`Tailwind` · `Utility classes cluster into tokens, not thousands of raw values`), (`CSS-in-JS` · `Hashed class names do not break component detection`), (`Component library` · `A site built on a known library maps back to its own component names`); cells `precision {p} · recall {r}` (two decimals) and `{live} of {total}`; caption `The fixture sites and their expected results live in the repository. Every change to the pipeline runs against all five before it ships. Numbers above are the current build.`
 
 CLI heading `The CLI`; caption `Runs the same pipeline on your machine. Point it at a logged-in Chrome with --cdp to extract private sites, then open the result on this site without uploading it.`
 

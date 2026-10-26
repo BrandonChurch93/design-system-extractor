@@ -14,7 +14,23 @@ P11 · The web app. Started 2026-10-26.
 
 ## Next action
 
-Start P11: read `docs/design/pages.md`, `docs/design/components.md`, `docs/design/copy.md`, `docs/design/motion.md`, `docs/quality-bar.md` and `docs/specs/exports-and-mcp.md` (/open) in full, plus the Next 16 docs for pages, layouts, parallel routes, metadata and middleware in `apps/web/node_modules/next/dist/docs`; then plan the files and tests in STATUS and build. The seeded runs (`seedclean0` … `seedmafter`, frozen `seedprog01`-`03`) and `apps/web/content/showcase.json` are in place for pages, QA and goldens; the API routes and `lib/showcase.ts`, `lib/palette.ts`, `lib/entitlements.ts` are ready to use. Note: `next start` (the QA server) runs with `NODE_ENV=production`, which ignores `DSE_ALLOW_PRIVATE_HOSTS`, so a P11 test that crawls a fixture through the app needs the dev server or another route to the fixtures.
+Build P11 per the plan below, step by step, committing after each meaningful unit.
+
+### P11 plan
+
+Read for P11: pages, components, copy, motion, quality-bar, design-system, exports-and-mcp (/open), preview-fidelity (Serving, CSP), the reference wireframes, and Next 16's parallel routes, proxy (the renamed middleware), CSP nonce guide, page props and metadata docs.
+
+1. Foundations: every string of `copy.md` in `apps/web/copy/strings.ts`; `lib/format.ts` (durations, dates, costs, counts, rule 9 words); `lib/run-view.ts` (view model from a document: breadcrumb, meta lines, rail state from events, regions landed); `lib/browser-store.ts` (`dse_recent`, `dse_key`, `dse_blocked`, try/catch); `lib/storage-url.ts`; `proxy.ts` with the per-request nonce CSP (`/open` allowance); every page rendered dynamically so the nonce applies.
+2. Home: UrlForm (client checks, POST, blocked navigation, 429 and 400 lines, includes), KeyPopover, ShowcaseCard, ShowcaseGrid, CategoryFilter, `revalidate` read path.
+3. Run page complete face: RunHeader, PageListPopover, StatStrip, PaletteRow, Swatch popovers (TokenPopover), DriftHeadline, SectionNav, Tokens (Color, Type, Spacing, Radius, Shadow cards), Components (filter, grid, card, StatesStrip, CheckBadge), Checks (summary, table), Drift (numbers, proposal, collapses, evidence), Exports (cards, set toggle, download all, MCP), SharePopover, footer with log link; sparse and login captions.
+4. In-progress face: StageRail, PagesCard, RegionSkeleton, LiveLog, polling every 1.5 s with ETag, diff-driven entrances, blocked navigation, queued meta from `queuePosition`, Cancel.
+5. Component panel (`@panel` slot, `?c=`) and component page; CaptureViewer; Sheet on phones.
+6. State routes, failed, cancelled, not found, 404.
+7. Recent runs (localStorage, `/api/me`), Compare (both modes, picker, phone notice).
+8. `/open`, How it works (EvalTable from `fixtures/results.json`), About, Privacy, Terms.
+9. Metadata, run OG images, home OG image, sitemap, robots, noindex rules.
+10. Catalog entries for every page-level component.
+11. QA: `tests/qa/pages.ts` with every page and state, goldens, axe, no horizontal scroll at 390, Lighthouse script and thresholds, `/open` test, polling mutation bound test, reduced-motion on the run page, a recorded video of the in-progress page reviewed, the Compare deltas test (messy to messy-after).
 
 ## Phase checklist
 

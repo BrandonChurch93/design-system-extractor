@@ -1,0 +1,31 @@
+.body {
+  display: grid;
+  gap: var(--dse-space-3);
+  padding: var(--dse-space-5);
+  justify-items: start;
+}
+
+.body > :first-child {
+  width: 100%;
+}
+
+.caption {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+.saved {
+  composes: label from '../../styles/type.module.css';
+  color: var(--dse-ink);
+}
+
+.remove {
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  color: var(--dse-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  border-radius: var(--dse-radius-sm);
+}
