@@ -13,7 +13,7 @@ import styles from './PagesCard.module.css';
 export function PagesCard({ pages }: { pages?: Page[] }) {
   return (
     <Card className={styles.card}>
-      <CardHead title={runPage.rail.pending.pages} meta={pages ? fill(runPage.meta.pages, { pages: count(pages.length) }) : undefined} />
+      <CardHead level={2} title={runPage.rail.pending.pages} meta={pages ? fill(runPage.meta.pages, { pages: count(pages.length) }) : undefined} />
       {pages ? (
         <>
           <PageList pages={pages} marks />

@@ -1,3 +1,4 @@
+import './zod-config';
 import { z } from 'zod';
 import { Check, ColorGroup, ComponentType, PageReason, State, TypeRole, Viewport } from './enums';
 

@@ -1,3 +1,4 @@
+import './zod-config';
 import { z } from 'zod';
 
 const usd = z.coerce.number().min(0);

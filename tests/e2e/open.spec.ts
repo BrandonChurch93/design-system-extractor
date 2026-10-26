@@ -13,7 +13,7 @@ test('a dropped run.json renders every section and downloads an export', async (
   await expect(page.getByText('Captured image not available locally. Run dse serve to show it.').first()).toBeAttached();
   await expect(page.getByRole('button', { name: 'Share' })).toHaveCount(0);
   const download = page.waitForEvent('download');
-  await page.locator('#exports').getByRole('button', { name: 'Download' }).first().click();
+  await page.locator('#exports').getByRole('button', { name: 'Download', exact: true }).first().click();
   const file = await download;
   expect(file.suggestedFilename()).toBe('tokens.css');
   const css = await (await file.createReadStream()).toArray();

@@ -19,12 +19,13 @@ export function Section({ id, title, caption, children }: { id: string; title: s
 }
 
 /** A card heading row inside a section: h3 left, a meta line right. */
-export function CardHead({ title, meta, id }: { title: string; meta?: ReactNode; id?: string }) {
+export function CardHead({ title, meta, id, level = 3 }: { title: string; meta?: ReactNode; id?: string; level?: 2 | 3 }) {
+  const H = level === 2 ? 'h2' : 'h3';
   return (
     <div className={styles.cardHead}>
-      <h3 id={id} className={styles.cardTitle}>
+      <H id={id} className={styles.cardTitle}>
         {title}
-      </h3>
+      </H>
       {meta ? <p className={styles.cardMeta}>{meta}</p> : null}
     </div>
   );

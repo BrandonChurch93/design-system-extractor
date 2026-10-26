@@ -18,7 +18,7 @@ import { RecentRunRow } from '../recent/RecentRunRow';
 import styles from './CompareView.module.css';
 
 type Mode = 'same' | 'two';
-type Props = { a: RunDocumentPartial; b?: RunDocumentPartial; shareUrl: string; now: string };
+type Props = { a: RunDocumentPartial; b?: RunDocumentPartial; shareUrl: string; now: string; /** The catalog shows the page inside its own: no main, no footer. */ embedded?: boolean };
 
 function Column({ doc, label, after }: { doc: RunDocumentPartial; label: string; after?: boolean }) {
   return (
@@ -91,7 +91,8 @@ function Picker({ a, now }: { a: RunDocumentPartial; now: Date }) {
 }
 
 /** Two runs side by side: tokens, components and checks (docs/design/pages.md, Compare). */
-export function CompareView({ a, b, shareUrl, now }: Props) {
+export function CompareView({ a, b, shareUrl, now, embedded }: Props) {
+  const Main = embedded ? 'div' : 'main';
   const sameHost = Boolean(b && a.host === b.host);
   const [mode, setMode] = useState<Mode>(sameHost ? 'same' : 'two');
   const today = new Date(now);
@@ -102,10 +103,10 @@ export function CompareView({ a, b, shareUrl, now }: Props) {
 
   return (
     <>
-      <main id="main" className={styles.main}>
+      <Main id={embedded ? undefined : 'main'} className={styles.main}>
         <header className={styles.header}>
           <p className={styles.crumbs}>{crumbs}</p>
-          <Enter as="h1" move="wipe" className={styles.title}>
+          <Enter as={embedded ? 'h2' : 'h1'} move="wipe" className={styles.title}>
             {title}
           </Enter>
           {after ? <p className={styles.caption}>{mode === 'same' ? C.captionSame : C.captionTwo}</p> : null}
@@ -143,8 +144,8 @@ export function CompareView({ a, b, shareUrl, now }: Props) {
             <Desktop before={before} after={after} />
           </>
         ) : null}
-      </main>
-      <Footer
+      </Main>
+      {embedded ? null : <Footer
         context={
           after ? (
             <>
@@ -153,7 +154,7 @@ export function CompareView({ a, b, shareUrl, now }: Props) {
             </>
           ) : undefined
         }
-      />
+      />}
     </>
   );
 }
@@ -186,7 +187,7 @@ function Desktop({ before, after }: { before: RunDocumentPartial; after: RunDocu
         <Delta label={L.components} stat={d.components} captions={[cap.components]} />
         <Delta label={L.checksPassed} stat={d.checksPassed} captions={[cap.checks]} />
       </div>
-      <section className={styles.section} aria-labelledby="compare-tokens">
+      <section className={styles.section}>
         <h2 id="compare-tokens" className={styles.h2}>
           {runPage.tokens.heading}
         </h2>
@@ -222,7 +223,7 @@ function Desktop({ before, after }: { before: RunDocumentPartial; after: RunDocu
           </Card>
         </div>
       </section>
-      <section className={styles.section} aria-labelledby="compare-components">
+      <section className={styles.section}>
         <h2 id="compare-components" className={styles.h2}>
           {runPage.components.heading}
         </h2>

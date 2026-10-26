@@ -8,7 +8,7 @@ import { rail, type Ring } from '../../lib/run-view';
 import { Button } from '../Button';
 import { Card } from '../Card';
 import { CompareView } from '../compare/CompareView';
-import { KeyPopover } from '../home/KeyPopover';
+import { KeyForm, KeyPopover } from '../home/KeyPopover';
 import { Showcase } from '../home/Showcase';
 import { ShowcaseCard } from '../home/ShowcaseCard';
 import { UrlForm } from '../home/UrlForm';
@@ -73,11 +73,10 @@ export const pageDemos: Demo[] = [
     frameHeight: 300,
     states: () => [
       {
-        label: stateLabels.open,
+        label: stateLabels.default,
         node: (
           <KeyPopover
             byoPageCap={40}
-            defaultOpen
             trigger={(t) => (
               <button type="button" className={styles.linkButton} {...t}>
                 {home.capsKey}
@@ -86,6 +85,7 @@ export const pageDemos: Demo[] = [
           />
         ),
       },
+      { label: stateLabels.open, node: <Card className={styles.popoverBox}><KeyForm byoPageCap={40} /></Card> },
     ],
   },
   {
@@ -112,8 +112,8 @@ export const pageDemos: Demo[] = [
     tokens: ['title', 'meta', 'caption', 'muted', 'space-7'],
     frameHeight: 420,
     states: () => [
-      { label: runPage.buttons.export, wide: true, node: <RunHeader host="tidewater.app" crumbs={[{ label: 'Showcase', href: '/' }, { label: 'tidewater.app' }]} mode="complete" meta="12 pages · 2 viewports · crawled Oct 12 2026 · 2 min 41 s · Tailwind detected" pages={doc.pages ?? []} runId="catalogmsy" url="https://tidewater.app/" shareUrl="https://design-system-extractor.vercel.app/r/catalogmsy" /> },
-      { label: runPage.eyebrow, wide: true, node: <RunHeader host="tidewater.app" crumbs={[]} mode="progress" meta="Crawling 7 of 12 pages · 2 viewports · 1 min 12 s elapsed · usually finishes in about 3 minutes" pages={[]} onCancel={() => {}} /> },
+      { label: runPage.buttons.export, wide: true, node: <RunHeader headingLevel={2} host="tidewater.app" crumbs={[{ label: 'Showcase', href: '/' }, { label: 'tidewater.app' }]} mode="complete" meta="12 pages · 2 viewports · crawled Oct 12 2026 · 2 min 41 s · Tailwind detected" pages={doc.pages ?? []} runId="catalogmsy" url="https://tidewater.app/" shareUrl="https://design-system-extractor.vercel.app/r/catalogmsy" /> },
+      { label: runPage.eyebrow, wide: true, node: <RunHeader headingLevel={2} host="tidewater.app" crumbs={[]} mode="progress" meta="Crawling 7 of 12 pages · 2 viewports · 1 min 12 s elapsed · usually finishes in about 3 minutes" pages={[]} onCancel={() => {}} /> },
     ],
   },
   {
@@ -262,7 +262,7 @@ export const pageDemos: Demo[] = [
     name: 'CompareModeToggle, CompareColumns, DeltaStrip, TokenDiff and ChangeTable',
     tokens: ['title-sm', 'h2-sm', 'stat', 'meta', 'ink (after border, selected segment)', 'line-strong'],
     frameHeight: 1600,
-    states: () => [{ label: stateLabels.default, wide: true, node: <Wide><CompareView a={messyDoc} b={{ ...cleanDoc, createdAt: '2026-11-23T16:00:00.000Z' }} shareUrl="https://design-system-extractor.vercel.app/compare" now={now.toISOString()} /></Wide> }],
+    states: () => [{ label: stateLabels.default, wide: true, node: <Wide><CompareView a={messyDoc} b={{ ...cleanDoc, createdAt: '2026-11-23T16:00:00.000Z' }} shareUrl="https://design-system-extractor.vercel.app/compare" now={now.toISOString()} embedded /></Wide> }],
   },
   {
     slug: 'recent-run-row',

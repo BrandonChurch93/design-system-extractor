@@ -1,3 +1,4 @@
+import './zod-config';
 import { customAlphabet } from 'nanoid';
 import { z } from 'zod';
 

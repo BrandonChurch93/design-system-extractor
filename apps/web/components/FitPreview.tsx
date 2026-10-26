@@ -32,7 +32,7 @@ export function FitPreview({ preview, base, title, padding = 16, htmlKey, showCa
     <div ref={box} className={styles.ground}>
       {src ? (
         <div className={styles.scaled} style={{ width: w * scale, height: h * scale }}>
-          <div style={{ width: w, height: h, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
+          <div data-fit style={{ width: w, height: h, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
             <PreviewFrame mode={preview.mode === 'live' ? 'live' : 'captured'} src={src} title={title} width={w} height={h} lazy={lazy} />
           </div>
         </div>

@@ -59,7 +59,7 @@ export default async function ComponentPage({ params }: Props) {
           </nav>
           <h1 className={styles.title}>{found.component.name}</h1>
         </header>
-        <ComponentDetail doc={found.doc} component={found.component} base={svc.env.STORAGE_PUBLIC_BASE_URL} runUrl={`${svc.appUrl}/r/${id}`} />
+        <ComponentDetail headingLevel={2} doc={found.doc} component={found.component} base={svc.env.STORAGE_PUBLIC_BASE_URL} runUrl={`${svc.appUrl}/r/${id}`} />
         <Button variant="ghost" href={`/r/${id}#components`} className={styles.back}>
           {global.backToComponents}
         </Button>

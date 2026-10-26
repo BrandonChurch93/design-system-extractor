@@ -1,3 +1,4 @@
+import './zod-config';
 import { z } from 'zod';
 import { Hex, Stats } from './run-document';
 import { RunId } from './ids';

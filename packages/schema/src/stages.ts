@@ -1,3 +1,4 @@
+import './zod-config';
 import { z } from 'zod';
 import { FrameworkHint, PageReason, Viewport } from './enums';
 import { EntityId } from './ids';

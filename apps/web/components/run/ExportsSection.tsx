@@ -152,7 +152,7 @@ export function ExportsSection({ doc, landed, runUrl, source }: { doc: RunDocume
               <Card className={styles.mcp}>
                 <div className={styles.mcpHead}>
                   <h3 className={styles.name}>{runPage.mcp.title}</h3>
-                  <p className={styles.file}>{runPage.mcp.caption}</p>
+                  <p className={styles.tools}>{runPage.mcp.caption}</p>
                 </div>
                 <CodeBlock code={fill(runPage.mcp.install, { id: source.runId })} label={runPage.mcp.title} />
                 <p className={styles.tools}>{runPage.mcp.tools}</p>

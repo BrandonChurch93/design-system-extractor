@@ -32,7 +32,8 @@ test('each stage lands in place, with no full re-render and nothing on an empty 
     w.__dseMutations = 0;
     new MutationObserver((list) => {
       for (const m of list) if (!(m.target as Element).closest?.('[data-qa-mask]') && !(m.target.parentElement?.closest('[data-qa-mask]'))) w.__dseMutations++;
-    }).observe(document, { childList: true, subtree: true, characterData: true, attributes: true });
+    // Structure and text, not attributes: an entrance animating its styles is not a re-render.
+    }).observe(document, { childList: true, subtree: true, characterData: true });
   });
   await page.goto('/r/seedprog01');
   await page.waitForTimeout(1200);
@@ -41,19 +42,26 @@ test('each stage lands in place, with no full re-render and nothing on an empty 
     (document.querySelector('nav[aria-label="Sections"]') as unknown as { __dseMark: boolean }).__dseMark = true;
   });
   const perPoll: number[] = [];
-  for (let i = 0; i < answers.length; i++) {
+  // One window per poll answer: the counter is read after each answer has rendered and animated.
+  while (served < answers.length) {
     await page.evaluate(() => ((window as unknown as { __dseMutations: number }).__dseMutations = 0));
     const before = served;
-    await expect.poll(() => served, { timeout: 5000 }).toBeGreaterThan(before);
-    await page.waitForTimeout(1300);
-    perPoll.push(await page.evaluate(() => (window as unknown as { __dseMutations: number }).__dseMutations));
-    await page.screenshot({ path: resolve(out, `poll-${i}.png`) });
+    await expect.poll(() => served, { timeout: 5000, intervals: [25] }).toBeGreaterThan(before);
+    // Inside the 1.5 s poll interval, so each window holds exactly one answer.
+    await page.waitForTimeout(1100);
+    perPoll[served - 1] = await page.evaluate(() => (window as unknown as { __dseMutations: number }).__dseMutations);
+    await page.screenshot({ path: resolve(out, `poll-${served - 1}.png`) });
   }
+  console.log(`mutations per poll: ${perPoll.join(', ')}`);
   // The same document twice: the second poll changes nothing.
   expect(perPoll[1]).toBe(0);
   expect(perPoll[3]).toBe(0);
-  // Landing polls change the page, but the header and the section nav are the same nodes throughout.
-  expect(perPoll[2]).toBeGreaterThan(0);
+  // Landing polls change the page, never most of it, and the header and the section nav stay the same nodes.
+  const elements = await page.evaluate(() => document.querySelectorAll('body *').length);
+  for (const i of [2, 4, 5]) {
+    expect(perPoll[i]).toBeGreaterThan(0);
+    expect(perPoll[i]).toBeLessThan(elements / 2);
+  }
   const kept = await page.evaluate(() => [Boolean((document.querySelector('h1') as unknown as { __dseMark?: boolean }).__dseMark), Boolean((document.querySelector('nav[aria-label="Sections"]') as unknown as { __dseMark?: boolean }).__dseMark)]);
   expect(kept).toEqual([true, true]);
   await expect(page.locator('main')).toHaveAttribute('data-run-status', 'complete');

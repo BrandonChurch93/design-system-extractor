@@ -15,7 +15,7 @@ export function PaletteRow({ doc }: { doc: RunDocumentPartial }) {
   const labelId = useId();
   const colors = [...(doc.tokens?.colors ?? [])].sort((a, b) => b.usage - a.usage).slice(0, 8);
   return (
-    <section className={styles.row} aria-labelledby={labelId}>
+    <section className={styles.row} aria-labelledby={doc.tokens?.colors ? labelId : undefined}>
       <p id={labelId} className={styles.label}>
         {runPage.palette.label}
       </p>

@@ -1,3 +1,4 @@
+import './zod-config';
 import { z } from 'zod';
 import { ColorGroup, ExportSet } from './enums';
 import { RunId } from './ids';

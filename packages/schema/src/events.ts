@@ -1,3 +1,4 @@
+import './zod-config';
 import { z } from 'zod';
 import { EventLevel, Stage, Substage } from './enums';
 import { RunId } from './ids';

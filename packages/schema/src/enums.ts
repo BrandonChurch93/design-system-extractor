@@ -1,3 +1,4 @@
+import './zod-config';
 import { z } from 'zod';
 
 export const RunStatus = z.enum(['queued', 'running', 'complete', 'blocked', 'failed', 'cancelled']);

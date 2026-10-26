@@ -22,7 +22,8 @@ const probe = () => {
   new MutationObserver((list) => {
     for (const m of list) {
       const el = m.target as HTMLElement;
-      if (!el.style?.transform) continue;
+      // A preview scaled to fit its ground is a size, not a move.
+      if (!el.style?.transform || el.closest?.('[data-fit]')) continue;
       // What the reader sees: the computed transform, after every stylesheet rule.
       const t = getComputedStyle(el).transform;
       if (!isIdentity(t)) record(`style ${el.className} ${t}`);

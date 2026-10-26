@@ -10,7 +10,7 @@ import styles from './DriftHeadline.module.css';
 export function DriftHeadline({ drift }: { drift?: Drift }) {
   if (!drift) return <Skeleton height={124} radius="lg" className={styles.skeleton} />;
   return (
-    <section className={styles.card} data-inverse aria-label={runPage.drift.heading}>
+    <div className={styles.card} data-inverse>
       <div className={styles.text}>
         <Enter as="p" move="wipe" className={styles.sentence}>
           {drift.headline.sentence}
@@ -20,6 +20,6 @@ export function DriftHeadline({ drift }: { drift?: Drift }) {
       <Button variant="inverse" href="#drift" className={styles.button}>
         {runPage.driftButton}
       </Button>
-    </section>
+    </div>
   );
 }

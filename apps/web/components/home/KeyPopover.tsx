@@ -30,7 +30,8 @@ export function useSavedKey(): [string | null, (k: string | null) => void] {
   return [key, set];
 }
 
-function KeyForm({ byoPageCap }: { byoPageCap: number }) {
+/** The popover's body; the catalog shows it on its own. */
+export function KeyForm({ byoPageCap }: { byoPageCap: number }) {
   const [key, setKey] = useSavedKey();
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | undefined>();

@@ -1,3 +1,4 @@
+import './zod-config';
 import { z } from 'zod';
 import { BlockedReason, RunStatus } from './enums';
 import { RunEvent } from './events';

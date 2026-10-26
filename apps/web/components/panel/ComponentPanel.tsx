@@ -110,7 +110,7 @@ export function ComponentPanel({ runId, doc, component: c, neighbors, base, runU
     );
   }
   return (
-    <motion.aside
+    <motion.div
       className={styles.panel}
       role="dialog"
       aria-labelledby={`panel-${c.id}`}
@@ -120,6 +120,6 @@ export function ComponentPanel({ runId, doc, component: c, neighbors, base, runU
     >
       {head}
       <div className={styles.scroll}>{body}</div>
-    </motion.aside>
+    </motion.div>
   );
 }

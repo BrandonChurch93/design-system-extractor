@@ -42,7 +42,8 @@ async function copy(text: string, toast: { show: (m: string) => void }) {
 }
 
 /** The panel's sections, also laid out as the component page (docs/design/components.md). */
-export function ComponentDetail({ doc, component: c, base, runUrl }: { doc: RunDocumentPartial; component: Component; base?: string; runUrl: string }) {
+export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel = 3 }: { doc: RunDocumentPartial; component: Component; base?: string; runUrl: string; headingLevel?: 2 | 3 }) {
+  const H = headingLevel === 2 ? 'h2' : 'h3';
   const toast = useToast();
   const [variantId, setVariantId] = useState(c.variants[0]!.id);
   const [tab, setTab] = useState<'html' | 'css' | 'tailwind'>('html');
@@ -82,9 +83,9 @@ export function ComponentDetail({ doc, component: c, base, runUrl }: { doc: RunD
     <div className={styles.detail}>
       <section className={styles.section} aria-labelledby={`v-${c.id}`}>
         <div className={styles.sectionHead}>
-          <h3 id={`v-${c.id}`} className={styles.label}>
+          <H id={`v-${c.id}`} className={styles.label}>
             {P.variants}
-          </h3>
+          </H>
           <p className={styles.caption}>{fidelity(variant)}</p>
         </div>
         {c.variants.length > 1 ? <ChipGroup label={P.variants} value={variantId} onChange={setVariantId} options={c.variants.map((v) => ({ value: v.id, label: v.name }))} /> : null}
@@ -95,9 +96,9 @@ export function ComponentDetail({ doc, component: c, base, runUrl }: { doc: RunD
       </section>
 
       <section className={styles.section} aria-labelledby={`s-${c.id}`}>
-        <h3 id={`s-${c.id}`} className={styles.label}>
+        <H id={`s-${c.id}`} className={styles.label}>
           {P.source}
-        </h3>
+        </H>
         {first.sourceCrop && base ? (
           <div className={styles.source} style={{ aspectRatio: `${first.sourceCrop.width} / ${first.sourceCrop.height}`, maxWidth: first.sourceCrop.width * 2 }}>
             {/* eslint-disable-next-line @next/next/no-img-element -- storage-origin crop at its CSS size */}
@@ -155,9 +156,9 @@ export function ComponentDetail({ doc, component: c, base, runUrl }: { doc: RunD
       </section>
 
       <section className={styles.section} aria-labelledby={`st-${c.id}`}>
-        <h3 id={`st-${c.id}`} className={styles.label}>
+        <H id={`st-${c.id}`} className={styles.label}>
           {fill(P.states, { n: count(captured.length) })}
-        </h3>
+        </H>
         <ul className={styles.states}>
           {captured.map((s) => {
             const htmlKey = c.preview.mode === 'live' ? (s.state === 'default' ? c.preview.htmlKey : c.preview.stateHtmlKeys?.[s.state]) : undefined;
@@ -176,9 +177,9 @@ export function ComponentDetail({ doc, component: c, base, runUrl }: { doc: RunD
       </section>
 
       <section className={styles.section} aria-labelledby={`ch-${c.id}`}>
-        <h3 id={`ch-${c.id}`} className={styles.label}>
+        <H id={`ch-${c.id}`} className={styles.label}>
           {fill(P.checks, { passed: count(counts.passed), applicable: count(counts.applicable), variant: c.variants[0]!.name })}
-        </h3>
+        </H>
         <CheckList checks={ownChecks} />
         {otherChecks.length ? (
           <div className={styles.rule}>
@@ -188,9 +189,9 @@ export function ComponentDetail({ doc, component: c, base, runUrl }: { doc: RunD
       </section>
 
       <section className={styles.section} aria-labelledby={`t-${c.id}`}>
-        <h3 id={`t-${c.id}`} className={styles.label}>
+        <H id={`t-${c.id}`} className={styles.label}>
           {P.tokens}
-        </h3>
+        </H>
         <div className={styles.tags}>
           {tokens.map((u) => {
             const info = tokenInfo(doc, u.tokenId);

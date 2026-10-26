@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { CatalogFrame } from '../../../../components/catalog/CatalogView';
 import { demoIndex } from '../../../../components/catalog/demo-index';
+import { fill } from '@dse/schema/labels';
+import { catalog } from '../../../../copy/strings';
 
 export const metadata: Metadata = { robots: { index: false, follow: false } };
 
@@ -17,6 +19,8 @@ export default async function CatalogFramePage({ params, searchParams }: { param
   return (
     <main>
       <h1 className="visually-hidden">{entry.name}</h1>
+      {/* The catalog page puts each demo under an h2; the frame keeps the same outline. */}
+      <h2 className="visually-hidden">{fill(catalog.frameTitle, { name: entry.name })}</h2>
       <CatalogFrame slug={slug} view={view === 'states' ? 'states' : 'phone'} />
     </main>
   );

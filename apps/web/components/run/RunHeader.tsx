@@ -31,10 +31,12 @@ type Props = {
   noCompare?: boolean;
   onCancel?: () => void;
   cancelling?: boolean;
+  /** The catalog shows a header inside its own page, under its own h1. */
+  headingLevel?: 1 | 2;
 };
 
 /** Breadcrumb or eyebrow, the host as the title, the meta line and the actions. */
-export function RunHeader({ host, crumbs, mode, meta, pages, runId, url, shareUrl, noCompare, onCancel, cancelling }: Props) {
+export function RunHeader({ host, crumbs, mode, meta, pages, runId, url, shareUrl, noCompare, onCancel, cancelling, headingLevel = 1 }: Props) {
   const router = useRouter();
   const toast = useToast();
   const [again, setAgain] = useState(false);
@@ -68,7 +70,7 @@ export function RunHeader({ host, crumbs, mode, meta, pages, runId, url, shareUr
             </ol>
           </nav>
         )}
-        <Enter as="h1" move="wipe" className={styles.title}>
+        <Enter as={headingLevel === 1 ? 'h1' : 'h2'} move="wipe" className={styles.title}>
           {host}
         </Enter>
         <p className={styles.meta}>

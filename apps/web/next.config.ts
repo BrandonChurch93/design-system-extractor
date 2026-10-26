@@ -11,6 +11,8 @@ const config: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   devIndicators: false,
+  // Every reader gets the full head: link previews in chat apps and audits read the run's title and description.
+  htmlLimitedBots: /.*/,
   // The repository's agent rules live in CLAUDE.md; Next would otherwise write AGENTS.md here.
   agentRules: false,
   outputFileTracingRoot: repoRoot,
