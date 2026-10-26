@@ -32,7 +32,7 @@ a, .breadcrumb a, .card-footer-item, .tabs li.is-active a { color: #4258FF; }
 .button.is-link, .pagination-link.is-current { color: #FFFFFF; }
 .notification.is-info.is-light { color: #002433; padding: 16px 24px; }
 .tag { padding-inline: 8px; }
-.button:focus-visible, .input:focus-visible, .textarea:focus-visible, .select select:focus-visible, .pagination-link:focus-visible, .pagination-next:focus-visible, .pagination-previous:focus-visible, .tabs a:focus-visible, .navbar-burger:focus-visible, .navbar-item:focus-visible, .card-footer-item:focus-visible { outline: 2px solid #4258FF; outline-offset: 2px; }
+.button:focus-visible, .input:focus-visible, .textarea:focus-visible, .select select:focus-visible, .pagination-link:focus-visible, .pagination-next:focus-visible, .pagination-previous:focus-visible, .tabs a:focus-visible, .navbar-burger:focus-visible, .navbar-item:focus-visible, .card-footer-item:focus-visible { outline: 2px solid #2E333D; outline-offset: 2px; }
 body { font-family: var(--bulma-family-primary); }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
 `;

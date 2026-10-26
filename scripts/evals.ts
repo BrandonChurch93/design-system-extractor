@@ -10,7 +10,7 @@ import { defaultRecordingsDir, ModelClient, type ModelMode } from '@dse/pipeline
 import { DevSpendMeter } from '@dse/pipeline/models/meter';
 import { PIPELINE_VERSION, runPipeline, stageOrder } from '@dse/pipeline/run';
 import { evalFixtures, floors, type EvalFixture } from './evals/fixtures';
-import { scoreComponents, scoreLiveRate, scoreSelection, scoreTokens, type FixtureResult, type Metric } from './evals/metrics';
+import { scoreChecks, scoreComponents, scoreLiveRate, scoreSelection, scoreTokens, type FixtureResult, type Metric } from './evals/metrics';
 import { deltaE, parseCssColor } from '@dse/pipeline/color/parse';
 import { startFixtureServer } from './fixtures-serve';
 import { startStorageServer } from './storage-serve';
@@ -73,6 +73,7 @@ for (const name of only) {
   if (reached('tokens')) metrics.tokens = scoreTokens(expected, doc, (a, b) => deltaE(parseCssColor(a)!, parseCssColor(b)!));
   if (reached('components')) Object.assign(metrics, scoreComponents(expected, doc));
   if (reached('previews')) metrics.liveRate = scoreLiveRate(doc);
+  if (reached('checks')) metrics.checks = scoreChecks(expected, doc);
   if (values.print) console.log(name, (doc.pages ?? []).map((p) => `${p.path} ${p.reason}`), JSON.stringify(metrics.tokens?.value ?? null), JSON.stringify(ctx.events.filter((e) => e.stage === 'components').map((e) => [e.message, e.data])));
   results.push({ name, seconds: Math.round((Date.now() - started) / 1000), metrics });
   writeFileSync(resolve(outDir, 'run.json'), JSON.stringify(doc, null, 2));

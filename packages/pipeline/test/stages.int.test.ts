@@ -3,7 +3,8 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import type { Browser } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { Component, Tokens, allowedPrivateHosts } from '@dse/schema';
+import { Checks, Component, Tokens, allowedPrivateHosts } from '@dse/schema';
+import { matchesTemplate } from './helpers/templates';
 import { LocalStorage, MemoryRunContext } from '../src/context';
 import { launchBrowser } from '../src/crawl/browser';
 import { ModelClient } from '../src/models/client';
@@ -36,7 +37,7 @@ beforeAll(async () => {
     (storage = new LocalStorage(dir, 'http://localhost:4403')),
     { id: 'tokenstest', url, host: 'localhost:4100', status: 'queued', createdAt: new Date().toISOString(), pipelineVersion: '1.0.0', viewports: ['desktop', 'mobile'] },
   );
-  await runPipeline(ctx, { browser, through: 'previews' });
+  await runPipeline(ctx, { browser, through: 'checks' });
 }, 300_000);
 
 afterAll(async () => {
@@ -133,5 +134,24 @@ describe('the previews stage on the clean fixture', () => {
   it('logs the build in the live-log voice', () => {
     const line = ctx.events.find((e) => e.stage === 'previews')!.message;
     expect(line).toMatch(/^previews · 27 built · 26 live · 1 captured \(median diff \d+\.\d %\)$/);
+  });
+});
+
+describe('the checks stage on the clean fixture', () => {
+  it('gives every component one result per check, each in the words of checks.md', () => {
+    for (const c of ctx.document.components!) {
+      expect(c.checks.map((r) => r.check), c.name).toEqual(['contrast', 'focus-visible', 'tap-target', 'label', 'reduced-motion']);
+      for (const r of c.checks) expect(matchesTemplate(r.detail), `${c.name} ${r.check}: ${r.detail}`).toBe(true);
+    }
+  });
+
+  it('finds exactly the two planted failures and sums them', () => {
+    const failing = ctx.document.components!.flatMap((c) => c.checks.filter((r) => r.status === 'fail').map((r) => `${c.name} · ${r.check} · ${r.detail}`));
+    expect(failing).toEqual([expect.stringMatching(/ · label · No name found$/), expect.stringMatching(/ · contrast · 4\.1:1 on teal-500, needs 4\.5:1$/)]);
+    const summary = Checks.parse(ctx.document.checks);
+    expect(summary.summary.failed).toBe(2);
+    expect(summary.summary.total).toBe(27 * 5);
+    expect(summary.summary.passed + summary.summary.failed).toBe(summary.summary.applicable);
+    expect(ctx.events.find((e) => e.stage === 'checks')!.message).toBe(`checks · ${summary.summary.applicable} applicable · ${summary.summary.passed} passed · 2 failed`);
   });
 });

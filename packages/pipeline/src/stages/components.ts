@@ -95,7 +95,7 @@ export function tokensUsedBy(it: Item, tokens: Tokens): Pick<Component, 'tokensU
 }
 
 /** The capture items behind each component and each of its variants, for the previews stage. */
-export type ComponentSources = Map<string, { first: Item; variants: Map<string, Item> }>;
+export type ComponentSources = Map<string, { first: Item; variants: Map<string, Item>; items: Item[]; variantOf: Map<Item, string> }>;
 
 export async function components(ctx: RunContext, capture: CaptureOutput, tokens: Tokens): Promise<{ components: Component[]; sources: ComponentSources }> {
   const items = itemsFrom(capture);
@@ -124,7 +124,7 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
       const b = working[j]!;
       const ra = representative(a.items).fp;
       const rb = representative(b.items).fp;
-      if (a.guess.type !== b.guess.type || ra.iconOnly !== rb.iconOnly || !classesAllowMerge(ra.baseTokens, rb.baseTokens)) continue;
+      if (a.guess.type !== b.guess.type || ra.iconOnly !== rb.iconOnly || ra.trigger !== rb.trigger || !classesAllowMerge(ra.baseTokens, rb.baseTokens)) continue;
       // Only where a look is a choice (controls, marks): plain wrappers all look alike.
       if (!a.items.some(sized) || !b.items.some(sized)) continue;
       const looks = new Set(a.variants.map((v) => v.key));
@@ -210,7 +210,9 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
     for (let n = 2; ids.has(id); n++) id = stableId(`component:${exactKey(representative(w.items))}:${n}`);
     ids.add(id);
     out.push(await assemble(ctx, w, id, tokens));
-    sources.set(id, { first: firstSeen(w.items), variants: new Map(w.variants.map((v) => [stableId(`variant:${id}:${v.key}`), firstSeen(v.items)])) });
+    const variantOf = new Map<Item, string>();
+    for (const v of w.variants) for (const it of v.items) variantOf.set(it, stableId(`variant:${id}:${v.key}`));
+    sources.set(id, { first: firstSeen(w.items), variants: new Map(w.variants.map((v) => [stableId(`variant:${id}:${v.key}`), firstSeen(v.items)])), items: w.items, variantOf });
   }
 
   const byModel = list.filter((w) => w.naming!.by !== 'fallback').length;

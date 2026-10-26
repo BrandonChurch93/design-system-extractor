@@ -2,7 +2,7 @@
   "purpose": "components",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"items\": [{\"id\": \"c25\", \"type\": \"tabs\", \"name\": \"Tab\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c26\", \"type\": \"alert\", \"name\": \"Plan notice\", \"isComponent\": true, \"variantHint\": \"success or warning color\"}, {\"id\": \"c27\", \"type\": \"empty-state\", \"name\": \"Not found state\", \"isComponent\": true, \"variantHint\": null}]}",
+  "text": "{\"items\": [{\"id\": \"c25\", \"type\": \"tabs\", \"name\": \"Tab\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c26\", \"type\": \"alert\", \"name\": \"Inline alert\", \"isComponent\": true, \"variantHint\": \"warning or success color\"}, {\"id\": \"c27\", \"type\": \"empty-state\", \"name\": \"Empty state\", \"isComponent\": true, \"variantHint\": null}]}",
   "usage": {
     "input_tokens": 721,
     "cache_creation_input_tokens": 0,
@@ -19,7 +19,7 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-26T04:47:20.409Z",
+  "recordedAt": "2026-10-26T06:59:56.065Z",
   "request": "Items:\nc25 guess button 0.95, button role tab, classes tab, no children, text \"Digests\", 6 instances on 1 page (/features), variants Default, no picture\nc26 guess alert 0.8, div role status, classes alert alert-success, inside div:2 p:1 span:1 svg:1, text \"Digests are included in every plan. Compare plans\", 4 instances on 2 pages (/features, /docs/getting-started), variants Warning, Success, picture below\nc27 guess empty-state 0.6, section, classes empty-state, inside a:1 h1:1 p:1 span:1 svg:1, text \"This page is not here. It may have moved when the docs were reorganized. Back to\", 2 instances on 1 page (/700b1db009-does-not-exist), variants Default, picture below\nPicture of c26:\n[image]\nPicture of c27:\n[image]",
   "retried": true
 }

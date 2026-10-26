@@ -11,6 +11,7 @@ import { select } from './stages/select';
 import { tokens } from './stages/tokens';
 import { components } from './stages/components';
 import { previews } from './stages/previews';
+import { checks } from './stages/checks';
 
 export const PIPELINE_VERSION = '1.0.0';
 
@@ -94,8 +95,12 @@ export async function runPipeline(ctx: RunContext, deps: RunDeps): Promise<RunOu
     if (!reached('previews', deps.through)) return ending;
     await checkCancel();
 
-    await previews(ctx, captured, detected.components, detected.sources, deps.browser);
+    const previewed = await previews(ctx, captured, detected.components, detected.sources, deps.browser);
     if (!reached('checks', deps.through)) return ending;
+    await checkCancel();
+
+    await checks(ctx, previewed, detected.sources, extracted);
+    if (!reached('drift', deps.through)) return ending;
     await checkCancel();
 
     return ending;

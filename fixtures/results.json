@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-26T06:43:20.777Z",
+  "generatedAt": "2026-10-26T07:34:51.306Z",
   "mode": "replay",
-  "through": "previews",
+  "through": "checks",
   "pipelineVersion": "1.0.0",
   "fixtures": [
     {
@@ -83,7 +83,7 @@
           "predicted": 27,
           "expected": 27,
           "matched": 27,
-          "nameAgreement": 0.741,
+          "nameAgreement": 0.778,
           "namesValid": true,
           "misses": [],
           "extras": []
@@ -105,6 +105,18 @@
           "captured": [
             "Avatar (diff 6.2 %)"
           ]
+        },
+        "checks": {
+          "failures": 1,
+          "passes": 1,
+          "summary": {
+            "passed": 43,
+            "failed": 2,
+            "total": 135,
+            "applicable": 45
+          },
+          "missedFailures": [],
+          "flaggedPasses": []
         }
       }
     },
@@ -211,6 +223,18 @@
             "Promo card (diff 92.2 %)",
             "Avatar (diff 6.2 %)"
           ]
+        },
+        "checks": {
+          "failures": 1,
+          "passes": 1,
+          "summary": {
+            "passed": 47,
+            "failed": 8,
+            "total": 155,
+            "applicable": 55
+          },
+          "missedFailures": [],
+          "flaggedPasses": []
         }
       }
     },
@@ -288,39 +312,49 @@
           }
         },
         "components": {
-          "precision": 0.963,
-          "recall": 0.963,
-          "predicted": 27,
+          "precision": 0.964,
+          "recall": 1,
+          "predicted": 28,
           "expected": 27,
-          "matched": 26,
-          "nameAgreement": 0.654,
+          "matched": 27,
+          "nameAgreement": 0.741,
           "namesValid": true,
-          "misses": [
-            "Icon button (button)"
-          ],
+          "misses": [],
           "extras": [
-            "Warning banner (alert) /docs/getting-started"
+            "Warning notice (alert) /docs/getting-started"
           ]
         },
         "variants": {
-          "accuracy": 0.962,
+          "accuracy": 0.963,
           "misses": [
             "Alert 1 of 2"
           ]
         },
         "states": {
           "rate": 1,
-          "captured": 59,
-          "expected": 59,
+          "captured": 63,
+          "expected": 63,
           "misses": []
         },
         "liveRate": {
-          "rate": 0.963,
-          "live": 26,
-          "total": 27,
+          "rate": 0.964,
+          "live": 27,
+          "total": 28,
           "captured": [
             "Avatar (diff 6.2 %)"
           ]
+        },
+        "checks": {
+          "failures": 1,
+          "passes": 1,
+          "summary": {
+            "passed": 44,
+            "failed": 2,
+            "total": 140,
+            "applicable": 46
+          },
+          "missedFailures": [],
+          "flaggedPasses": []
         }
       }
     },
@@ -398,39 +432,49 @@
           }
         },
         "components": {
-          "precision": 0.963,
-          "recall": 0.963,
-          "predicted": 27,
+          "precision": 0.964,
+          "recall": 1,
+          "predicted": 28,
           "expected": 27,
-          "matched": 26,
-          "nameAgreement": 0.654,
+          "matched": 27,
+          "nameAgreement": 0.741,
           "namesValid": true,
-          "misses": [
-            "Icon button (button)"
-          ],
+          "misses": [],
           "extras": [
-            "Warning banner (alert) /docs/getting-started"
+            "Info alert (alert) /docs/getting-started"
           ]
         },
         "variants": {
-          "accuracy": 0.962,
+          "accuracy": 0.963,
           "misses": [
             "Alert 1 of 2"
           ]
         },
         "states": {
           "rate": 1,
-          "captured": 59,
-          "expected": 59,
+          "captured": 63,
+          "expected": 63,
           "misses": []
         },
         "liveRate": {
-          "rate": 0.963,
-          "live": 26,
-          "total": 27,
+          "rate": 0.964,
+          "live": 27,
+          "total": 28,
           "captured": [
             "Avatar (diff 6.2 %)"
           ]
+        },
+        "checks": {
+          "failures": 1,
+          "passes": 1,
+          "summary": {
+            "passed": 44,
+            "failed": 2,
+            "total": 140,
+            "applicable": 46
+          },
+          "missedFailures": [],
+          "flaggedPasses": []
         }
       }
     },
@@ -513,7 +557,7 @@
           "predicted": 22,
           "expected": 22,
           "matched": 22,
-          "nameAgreement": 0.364,
+          "nameAgreement": 0.409,
           "namesValid": true,
           "misses": [],
           "extras": []
@@ -535,6 +579,18 @@
           "captured": [
             "Previous link (diff 3.2 %)"
           ]
+        },
+        "checks": {
+          "failures": 1,
+          "passes": 1,
+          "summary": {
+            "passed": 42,
+            "failed": 5,
+            "total": 110,
+            "applicable": 47
+          },
+          "missedFailures": [],
+          "flaggedPasses": []
         }
       }
     }

@@ -387,3 +387,18 @@ Decision:
 - Preview and crop sizes are recorded in CSS px (crops are taken at device scale 2); this also corrects the source crop sizes P5 recorded at device scale.
 - Local runs (evals, tests) serve their storage folder over HTTP (`scripts/storage-serve.ts`), so the render check always loads a preview from a URL, as with MinIO and Supabase. jsdom is pinned at 29.1.1 because jsdom 30 needs Node 22.22.
 Affects: `docs/specs/preview-fidelity.md`, `docs/specs/capture-and-states.md`, `docs/specs/data-model.md`, `packages/pipeline/src/previews/`, `packages/pipeline/src/stages/capture.ts`.
+
+## D-054 · Checks made exact
+
+Date: 2026-10-26 · Context: P7 built the five checks against `checks.md`. The spec measures "the component's" result but components have variants and many instances, and leaves a few readings open.
+Decision:
+- Each component carries one result per check. The first-seen instance, each variant's representative and, where a check reads them (tap target, label, reduced motion), the other instances are measured; the worst result decides, and `variantId` names its variant when that is not the first-seen one. Instances in a state (disabled, invalid, selected) are not measured for contrast or labels. A container's contrast leaves out text inside a nested component (the tag in a card answers for itself), as component-detection.md keeps nested components separate.
+- A check that does not apply is `na` with the detail `Not applicable`.
+- Contrast: a placeholder's color comes from the input's matched `::placeholder` rules, else Chromium's default `#757575`. Where an image or gradient lies behind text, the ground is sampled from the page screenshot as the spec describes; inside a popup, whose page screenshot does not exist, the ground is read from its own snapshot.
+- Focus visible: the ground is the parent's effective background; an `auto` outline counts as 1 px; a box-shadow ring's size is its largest length; a border change counts at the border's width. Interactive types are button, link, input, select, textarea, checkbox, radio and toggle.
+- Tap target: every phone instance is measured; a failure reports the worst, a pass the smallest box.
+- Label present: `aria-label` is also the pass detail for a name from `aria-labelledby` or, on an icon-only control, from `title` (the detail strings are fixed). An icon-only control has fewer than two characters of text.
+- Reduced motion: a transition counts only on an interactive component (the spec's hover transition); an animation counts on any. When the probe did not measure a moving element the result is `na` with `Not measured: capture cap`.
+- Clustering (extends D-052): an element that opens something (`aria-haspopup`, `aria-expanded`, `aria-controls`) is a trigger and never clusters with an action button, so a classless site's menu button and copy button stay two components.
+- Fixture: the library's focus ring is `#2E333D`. The blue ring measured 2.6:1 against the hero's turquoise, a true failure, but the library plants its failures deliberately and this one was an accident of the brand layer.
+Affects: `docs/specs/checks.md`, `docs/specs/component-detection.md`, `fixtures/src/library/generate.ts`, `packages/pipeline/src/checks/`.

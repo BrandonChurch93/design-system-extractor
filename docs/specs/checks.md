@@ -6,7 +6,7 @@ Placeholders: `{ratio}` is already formatted ("5.4:1"); `{w}`, `{h}`, `{px}` and
 
 ## Applicability
 
-A check is `na` when it does not apply, and `na` results are excluded from every count. Counts everywhere are passed of applicable.
+A check is `na` when it does not apply, with the detail `Not applicable`, and `na` results are excluded from every count. Counts everywhere are passed of applicable. Each component carries one result per check: its first-seen instance, its variants' representatives and, where the check reads them, its other instances are measured, and the worst result decides, with `variantId` naming the variant when it is not the first-seen one (D-054).
 
 | Check | Applies to |
 | --- | --- |
@@ -18,7 +18,7 @@ A check is `na` when it does not apply, and `na` results are excluded from every
 
 ## 1 · Contrast AA
 
-For every text node inside the component's first-seen instance (and each variant's representative), compute the foreground color (computed `color`, alpha composited over the effective background) and the effective background: walk ancestors until an opaque `background-color` is found, compositing semi-transparent layers in order. If any layer between is a gradient or image, sample the captured crop instead: take the median of pixels in the text's bounding box after excluding pixels within ΔE 10 of the foreground, and use that as the background.
+For every text node inside the component's first-seen instance (and each variant's representative), except text inside a nested component, which is measured as that component (D-054), compute the foreground color (computed `color`, alpha composited over the effective background) and the effective background: walk ancestors until an opaque `background-color` is found, compositing semi-transparent layers in order. If any layer between is a gradient or image, sample the captured crop instead: take the median of pixels in the text's bounding box after excluding pixels within ΔE 10 of the foreground, and use that as the background.
 
 Ratio: WCAG 2.x relative luminance contrast. Threshold: 4.5:1 for text under 24 px (under 18.66 px when weight ≥ 700), 3:1 at or above. The component's result is its worst text node. `measured: { ratio, fg, bg, size, weight }`. Placeholder text in inputs is measured too (it is text).
 
@@ -40,7 +40,7 @@ Detail strings: pass `{w} × {h} at 390 px` · fail `{h} px tall, {shortfall} sh
 
 A name must exist: for inputs, a `label[for]`, a wrapping `label`, `aria-label`, or `aria-labelledby` resolving to text; `placeholder` alone fails; `title` alone fails. For icon-only buttons and links (no text content, or text under 2 characters): `aria-label`, `aria-labelledby`, a `title`, or visually hidden text (an element with the common sr-only pattern: 1 px clipped).
 
-Detail strings: pass `Label element` · pass `aria-label` · pass `Text content` · pass `Visually hidden text` · fail `No name found` · fail `Placeholder only`.
+Detail strings: pass `Label element` · pass `aria-label` (also for a name from `aria-labelledby` or, on an icon-only control, `title`) · pass `Text content` · pass `Visually hidden text` · fail `No name found` · fail `Placeholder only`.
 
 ## 5 · Reduced motion
 

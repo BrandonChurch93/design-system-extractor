@@ -95,11 +95,14 @@ function iou(a: Box, b: Box): number {
  * first-seen box IoU of 0.5 or more at the same viewport and page; variants by exact count; states by
  * captured over expected, over matched components.
  */
-export function scoreComponents(expected: ExpectedFixture, doc: RunDocumentPartial): { components: Metric; variants: Metric; states: Metric } {
+type Pair = { e: ExpectedFixture['components'][number]; p: NonNullable<RunDocumentPartial['components']>[number] };
+
+/** Each expected component paired with the predicted one it matches, by type and first-seen box. */
+export function matchComponents(expected: ExpectedFixture, doc: RunDocumentPartial): { pairs: Pair[]; misses: string[]; extras: string[] } {
   const predicted = doc.components ?? [];
   const pagePath = (p: string) => (/-does-not-exist$/.test(p) ? '/{missing}-does-not-exist' : p);
   const claimed = new Set<number>();
-  const pairs: { e: ExpectedFixture['components'][number]; p: (typeof predicted)[number] }[] = [];
+  const pairs: Pair[] = [];
   const misses: string[] = [];
   for (const e of expected.components) {
     let best = -1;
@@ -120,6 +123,35 @@ export function scoreComponents(expected: ExpectedFixture, doc: RunDocumentParti
     } else misses.push(`${e.name} (${e.type})`);
   }
   const extras = predicted.filter((_, i) => !claimed.has(i)).map((p) => `${p.name} (${p.type}) ${p.provenance.firstSeen.path}`);
+  return { pairs, misses, extras };
+}
+
+/** Planted check accuracy: every planted failure found with its detail, no planted pass flagged. */
+export function scoreChecks(expected: ExpectedFixture, doc: RunDocumentPartial): Metric {
+  const { pairs } = matchComponents(expected, doc);
+  const byName = new Map(pairs.map(({ e, p }) => [e.name, p]));
+  const result = (component: string, check: string) => byName.get(component)?.checks.find((r) => r.check === check);
+  const missedFailures = expected.checks.plantedFailures.filter((f) => {
+    const r = result(f.component, f.check);
+    return !(r && r.status === 'fail' && r.detail.includes(f.detailContains));
+  });
+  const flaggedPasses = expected.checks.plantedPasses.filter((f) => {
+    const r = result(f.component, f.check);
+    return !(r && r.status === 'pass' && (!f.detailContains || r.detail.includes(f.detailContains)));
+  });
+  const failures = expected.checks.plantedFailures.length ? 1 - missedFailures.length / expected.checks.plantedFailures.length : 1;
+  const passes = expected.checks.plantedPasses.length ? 1 - flaggedPasses.length / expected.checks.plantedPasses.length : 1;
+  const describe = (list: { component: string; check: string }[]) => list.map((f) => `${f.component} ${f.check}: ${result(f.component, f.check)?.detail ?? 'no result'}`);
+  return {
+    value: { failures: round3(failures), passes: round3(passes), summary: doc.checks?.summary, missedFailures: describe(missedFailures), flaggedPasses: describe(flaggedPasses) },
+    summary: `failures ${(failures * 100).toFixed(0)}% · passes ${(passes * 100).toFixed(0)}%${missedFailures.length ? ` · missed ${describe(missedFailures).join('; ')}` : ''}${flaggedPasses.length ? ` · flagged ${describe(flaggedPasses).join('; ')}` : ''}`,
+    pass: (f) => failures >= f.checks.failures && passes >= f.checks.passes,
+  };
+}
+
+export function scoreComponents(expected: ExpectedFixture, doc: RunDocumentPartial): { components: Metric; variants: Metric; states: Metric } {
+  const predicted = doc.components ?? [];
+  const { pairs, misses, extras } = matchComponents(expected, doc);
   const precision = predicted.length ? pairs.length / predicted.length : 0;
   const recall = expected.components.length ? pairs.length / expected.components.length : 0;
   const agreed = pairs.filter(({ e, p }) => e.name.toLowerCase() === p.name.toLowerCase()).length;

@@ -10,27 +10,27 @@ None.
 
 ## Current phase
 
-P7 · Checks. Started 2026-10-26.
+P8 · Drift. Started 2026-10-26.
 
 ## Next action
 
-Start P7: read `docs/specs/checks.md` in full and the checks lines of `docs/design/copy.md`, then build `packages/pipeline/src/checks/` (contrast with compositing and the crop-sampling fallback, focus visible from the focus state, tap target at 390, label present, reduced motion from the probe), applicability, the per-run summary and by-check lists, the `checks` stage and its event; unit tables for each check, the detail-template test, and the planted-check metric in evals; then `evals:gate` through checks.
+Start P8: read `docs/specs/drift.md`, `docs/specs/model-calls.md` and the drift lines of `docs/design/copy.md` in full, then build `packages/pipeline/src/drift/` (near-duplicate colors with matching alphas, raw spread evidence, off-grid spacing and near-steps, variant collapses, type near-duplicates, radius and shadow sprawl, the proposed set with the contrast constraint and the N increase path, numbers, headline and captions from templates, evidence rows) and the drift stage with the Sonnet narrative-and-intro call, its validator and template fallbacks (recorded); the drift metrics; from here `evals:gate` runs the full `pnpm evals`.
 
 ## Phase checklist
 
-P7 exit criteria (from `docs/plan.md`), plus the standing gate items:
+P8 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
-- [ ] Planted check accuracy is 100% on every fixture (`pnpm evals --through checks`): every planted failure found, no planted pass flagged.
-- [ ] Contrast math tests against the design system's own pairs and the WCAG sample pairs; background compositing with alpha layers and a gradient fallback.
-- [ ] Focus, tap target, label and reduced-motion unit tables pass.
-- [ ] A test asserts every rendered check detail matches a template in `checks.md`.
-- [ ] `evals:gate` runs `--through checks`.
-- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, `pnpm qa:design` reviewed for touched pages, commit naming P7, STATUS updated.
-
-Notes carried into P7: checks apply per component and, per `CheckResult.variantId`, per variant where a variant can fail on its own (messy's warning badge, the newsletter input among inputs, the live badge's animation); contrast pairs are on the color tokens (D-051); motion probes are `motionMain` and `motionReduced` per element, `sheets.hasReducedMotionRule` per capture; focus records carry `reachedByKeyboard`; tap target reads mobile instances.
+- [ ] The messy fixture's planted findings are all found (near-duplicate colors, off-grid 10 and 18, the Button collapse, type near-duplicates); the clean, tailwind, css-in-js and library fixtures yield zero findings.
+- [ ] `proposal.contrastKept` is true on every fixture, and a crafted set forces the N increase path.
+- [ ] Narrative validator tests pass (an invented number rejected, a clean answer accepted); the fallback texts contain no em dash and no forbidden word.
+- [ ] Full `pnpm evals` passes every threshold.
+- [ ] The narrative call recorded; replay, malformed, wrong and timeout cases fall back.
+- [ ] `evals:gate` runs the full `pnpm evals`.
+- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, `pnpm qa:design` reviewed for touched pages, commit naming P8, STATUS updated.
 
 ## Gates passed
 
+- P7 · Checks · 2026-10-26 · planted check accuracy 100% failures and 100% passes on all five fixtures (replay) · contrast math, compositing, crop sampling, focus, tap target, label and reduced-motion tables · every rendered detail matches a template read from checks.md · clean run finds exactly its two planted failures · D-054 logged with documents fixed · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green with test:security.
 - P6 · Preview fidelity and sanitization · 2026-10-26 · live rates clean 0.963, messy 0.903, tailwind 0.963, css-in-js 0.963, library 0.955 (floors 0.90, 0.85, 0.90, 0.75, 0.90) · messy promo card captured with diff · security suite (37 cases, worker and app sandbox, zero requests off the allowlist, no script) · CSP builder tested · 250 KB CSS yields styles too large · D-053 logged with documents fixed · DOMPurify 3.4.17 for advisories in 3.4.16 · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green with test:security.
 - P5 · Component detection · 2026-10-25 · components P/R 1.000 / 1.000 on clean, messy, library and 0.963 / 0.963 on tailwind and css-in-js (floors 0.92 / 0.90 and 0.88 / 0.87) · variants and states above floors · fallback run passes with valid names · variant naming, cross-page merge, classification table, clustering and model-call tests · provenance and crops integration test · D-052 logged with documents fixed · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green · build spend $0.04.
 - P4 · Token clustering · 2026-10-25 · token precision and recall 1.000 on all five fixtures (`evals:gate`, replay) · fallback names valid and unique on every fixture (`evals --fallback`) · color naming recorded, model-call fallbacks tested · clustering, classification, naming, base inference, shadows, type roles unit tests · tokens integration test · D-051 logged with documents fixed · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green · build spend $0.0038.
@@ -43,6 +43,7 @@ Notes carried into P7: checks apply per component and, per `CheckResult.variantI
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-054 · Checks made exact: one worst result per check per component with its variant, `Not applicable`, nested components excluded from a container's contrast, focus and tap and label and motion readings, triggers cluster apart, the library's focus ring.
 - D-053 · Previews made exact: markup and variables kept by capture, the root keeps its page box on its ground, rules without media wrappers, alignment-tolerant comparison, CSS px sizes, a storage server for local runs, jsdom 29.
 - D-052 · Component clustering made exact: base class tokens and families, guarded style merge, look merge, variant rules, classification readings, collision guard, provenance and state details, popups opened at scroll 0, recordings with request text and retries.
 - D-051 · Token rules made exact: base 8 tried before 4, ARIA semantic context, hue bands, naming and collision rules, usage as occurrences, contrast pair collection, `evals --fallback`; messy expectations corrected.
@@ -100,6 +101,7 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-26 · Gate passed · P7 · planted checks 100% on all fixtures, verify:all green.
 - 2026-10-26 · Gate passed · P6 · live rates above floors, security suite green, verify:all green.
 - 2026-10-25 · Gate passed · P5 · components at or above floors on all five fixtures, fallback valid, verify:all green.
 - 2026-10-25 · Gate passed · P4 · tokens 1.000 / 1.000 on all fixtures, fallback names valid, verify:all green.

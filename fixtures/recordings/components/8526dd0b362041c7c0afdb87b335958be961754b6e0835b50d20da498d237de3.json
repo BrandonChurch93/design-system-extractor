@@ -2,16 +2,16 @@
   "purpose": "components",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"items\": [{\"id\": \"c1\", \"type\": \"dropdown\", \"name\": \"Resources dropdown\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c2\", \"type\": \"header\", \"name\": \"Site header\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c3\", \"type\": \"nav\", \"name\": \"Main nav\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c4\", \"type\": \"button\", \"name\": \"Dropdown trigger\", \"isComponent\": true, \"variantHint\": \"open and closed state\"}, {\"id\": \"c5\", \"type\": \"button\", \"name\": \"Button\", \"isComponent\": true, \"variantHint\": \"fill style and size\"}, {\"id\": \"c6\", \"type\": \"card\", \"name\": \"Feature card\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c7\", \"type\": \"tag\", \"name\": \"New tag\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c8\", \"type\": \"avatar\", \"name\": \"Avatar\", \"isComponent\": true, \"variantHint\": null}]}",
+  "text": "{\"items\": [{\"id\": \"c1\", \"type\": \"dropdown\", \"name\": \"Resources dropdown\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c2\", \"type\": \"header\", \"name\": \"Site header\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c3\", \"type\": \"nav\", \"name\": \"Main navigation\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c4\", \"type\": \"button\", \"name\": \"Dropdown trigger\", \"isComponent\": true, \"variantHint\": \"open and closed state\"}, {\"id\": \"c5\", \"type\": \"button\", \"name\": \"Button\", \"isComponent\": true, \"variantHint\": \"fill style (primary, ghost, secondary) and size\"}, {\"id\": \"c6\", \"type\": \"card\", \"name\": \"Feature card\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c7\", \"type\": \"tag\", \"name\": \"New tag\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c8\", \"type\": \"avatar\", \"name\": \"Avatar\", \"isComponent\": true, \"variantHint\": null}]}",
   "usage": {
     "input_tokens": 1200,
-    "cache_creation_input_tokens": 0,
-    "cache_read_input_tokens": 1454,
+    "cache_creation_input_tokens": 1454,
+    "cache_read_input_tokens": 0,
     "cache_creation": {
-      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 1454,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 349,
+    "output_tokens": 362,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-26T04:47:13.784Z",
+  "recordedAt": "2026-10-26T06:59:48.939Z",
   "request": "Items:\nc1 guess dropdown 0.85, div role revealed:menu, classes dropdown-menu, inside a:3, text \"Guides API reference Support\", 9 instances on 9 pages (/, /pricing, /docs, /login), variants Default, picture below\nc2 guess header 0.95, header, classes site-header, inside div:2 nav:1, text \"Tidewater Product Pricing Docs Contact Resources Sign in Start free\", 18 instances on 9 pages (/, /pricing, /docs, /login), variants Default, no picture\nc3 guess nav 0.95, nav, classes nav-links, inside a:4 button:1 div:2, text \"Product Pricing Docs Contact Resources\", 9 instances on 9 pages (/, /pricing, /docs, /login), variants Default, no picture\nc4 guess button 0.95, button, classes dropdown-trigger, inside svg:1, text \"Resources\", 9 instances on 9 pages (/, /pricing, /docs, /login), variants Default, no picture\nc5 guess button 0.95, a, classes btn btn-ghost, no children, text \"Sign in\", 44 instances on 9 pages (/, /pricing, /docs, /login), variants Primary, Ghost, Secondary, Secondary small, Primary small, Ghost small, no picture\nc6 guess card 0.6, article, classes card, inside h3:1 p:1 span:2 svg:1, text \"New Weekly digests One email every Friday with what shipped, grouped by team.\", 12 instances on 2 pages (/, /features), variants Default, picture below\nc7 guess tag 0.7, span, classes tag-new, no children, text \"New\", 2 instances on 1 page (/), variants Default, picture below\nc8 guess avatar 0.9, img, classes avatar, no children, text \"\", 2 instances on 1 page (/), variants Default, no picture\nPicture of c1:\n[image]\nPicture of c6:\n[image]\nPicture of c7:\n[image]"
 }
