@@ -38,16 +38,18 @@ Sections, in order:
 
 1. TopNav.
 2. RunHeader. In progress, the breadcrumb line is replaced by the eyebrow "Extracting" (`label` `muted`) and the meta line follows the in-progress patterns in copy; the actions are Cancel (ghost) only. Complete: as specified in components, with the breadcrumb.
-3. StageRail (in progress only).
+3. StageRail (in progress only), then PagesCard (in progress only, D-058).
 4. StatStrip. In progress: cells fill as their stage lands; unknown cells show a skeleton number.
 5. PaletteRow.
 6. DriftHeadline (lands with the drift stage; skeleton before).
 7. SectionNav, sticky from here down.
-8. **Tokens** (`h2`, caption from copy): a Color Card with TokenGroup Brand, Neutral, Semantic; then a two-column row: Type Card (TypeScaleRow list, families line) and a stack of Spacing Card (SpacingBar list), Radius Card (RadiusSample), Shadow Card (ShadowSample). Breakpoints found are listed as a caption at the bottom of the Spacing Card. Dark theme detection, when present, is a caption under the Color Card. A web font that did not load is a caption under the Type Card.
+8. **Tokens** (`h2`, caption from copy): a Color Card with TokenGroup Brand, Neutral, Semantic; then a two-column row: Type Card (TypeScaleRow list, families line) and a stack of Spacing Card (SpacingBar list), Radius Card (RadiusSample), Shadow Card (ShadowSample); a Radius or Shadow card with no tokens is left out (D-059). Breakpoints found are listed as a caption at the bottom of the Spacing Card. Dark theme detection, when present, is a caption under the Color Card. A web font that did not load is a caption under the Type Card.
 9. **Components** (`h2`, caption from copy): ComponentFilter, ComponentGrid, "Show all" Button.
 10. **Automated checks** (`h2`, caption is the disclaimer sentence): ChecksSummary, ChecksTable.
-11. **Drift report** (`h2`, caption from copy): DriftNumbers, DriftProposal, VariantCollapseList (when any), EvidenceTable.
+11. **Drift report** (`h2`, caption from copy): the narrative paragraph (D-058), DriftNumbers, DriftProposal, VariantCollapseList (when any), EvidenceTable.
 12. **Exports** (`h2`, caption from copy): the set toggle and "Download all" row, six ExportCards in a 3 / 2 / 1 grid (CSS variables, JSON, Tailwind config, W3C design tokens, design-system.md, Prompt; the Tailwind config card is always offered), the MCP ExportCard full width.
+The LiveLog (in progress) sits after Exports, above the footer.
+
 13. Footer, context line and share link from copy, plus "Report a problem with this run" (a `mailto:` to `DSE_CONTACT_EMAIL`, D-013).
 
 Breadcrumb rule for RunHeader: `is_showcase` → "Showcase / {host}"; else if the run id is in this browser's `dse_recent` → "Recent runs / {host}"; else "{host}" alone; a local run → "Local run". Breadcrumb segments before the last are links (Showcase to `/`, Recent runs to `/recent`).

@@ -112,11 +112,13 @@ export function rail(doc: RunDocumentPartial, events: RunEvent[], status: RunSta
   return [pages, palette, type, spacing, components, checks, drift];
 }
 
+/** "{n} pages", or "1 page". */
+export const pagesWord = (n: number) => (n === 1 ? copy.components.onePage : fill(copy.meta.pages, { pages: count(n) }));
+
 /** The complete face's meta line. */
 export function completeMeta(doc: RunDocumentPartial): string {
   const pages = doc.pages?.length ?? 0;
-  const line = fill(copy.meta.complete, {
-    pages: count(pages),
+  const line = fill(copy.meta.complete.replace('{pages} pages', pagesWord(pages)), {
     viewports: doc.viewports?.length ?? 2,
     date: runDate(doc.finishedAt ?? doc.createdAt ?? new Date(0).toISOString()),
     duration: duration(doc.durationMs ?? 0),
@@ -146,7 +148,7 @@ export function progressMeta(doc: RunDocumentPartial, events: RunEvent[], status
           : !r.drift
             ? copy.meta.phrases.drift
             : copy.meta.phrases.exports;
-  return copy.meta.after.replace('{pages}', count(p.total)).replace('{elapsed}', elapsed).replace('{stage phrase}', phrase);
+  return copy.meta.after.replace('{pages} pages', pagesWord(p.total)).replace('{elapsed}', elapsed).replace('{stage phrase}', phrase);
 }
 
 export type Breadcrumb = { label: string; href?: string }[];

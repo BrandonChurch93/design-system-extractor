@@ -10,13 +10,15 @@ None.
 
 ## Current phase
 
-P11 · The web app. Started 2026-10-26.
+P12 · V2 seams and flagged surfaces. P11 gate passed 2026-10-26.
 
 ## Next action
 
-P11 progress: steps 1 to 10 built and committed (foundations, home, run page both faces, panel and component page, state routes, recent, compare, /open, how it works, prose pages, 404, sitemap, robots, OG images, catalog entries). Found and fixed a P6 defect on the way: the preview documents' CSP named the storage base without a trailing slash, which blocks every font file; live rates rose (messy 0.935, library 1.000). Now: reseed (adds blocked runs seedlogin0 and seedblock0 and the QA-only seedqueue0, seedfail00, seedcanc00, seedspars0), then step 11: run qa:design, review every page at three viewports, axe, the new e2e tests (layout, /open, polling, reduced motion on the run page, compare deltas), Lighthouse, goldens; log D-058 (the P11 rulings listed in the commit messages and below) and pass the gate.
+P11 gate passed. Start P12 (v2 seams and flagged surfaces) by reading `docs/specs/v2-seams.md`, `docs/design/components.md` (Flagged v2 surfaces) and `docs/v2-plan.md`.
 
-P11 rulings to log as D-058: Next 16's proxy.ts instead of middleware, every page per request for the nonce; copy.md additions (single-word placeholders, card titles, token popover lines, breadcrumb label, preview titles, pill radius, CLI and MCP code blocks, singular spans, column facts); entrances observe the unclipped parent; PagesCard under the rail, the live log at the bottom, the drift narrative under the Drift caption, the disclaimer as the Checks caption only; the MCP card hidden for local runs; the panel gets a slice of the run, stored markdown is not sent to the browser; Compare matches components by signature and words a finished gray count without "still 0 to go"; bare domains are read as https; run dates in UTC, Recent times in the reader's clock; seed gains blocked and synthetic QA runs; Lighthouse uses the desktop preset; db:seed:check runs before the tests.
+### P11 self-review (quality-bar.md, every page at 1440, 820, 390)
+
+Fixed during review: showcase and component grids overflowing at 390 (minmax columns); long hosts wrapping inside headers; component card "uses" captions and the MCP caption wrapping badly; catalog index entries wrapping; the panel heading's focus ring clipped and the phone panel head stacking; Recent rows breaking the host mid-word in the Compare picker (rows now lay out by their list's width, D-059); Compare's paired cards not sharing a bottom edge and the picker's buttons not lining up with the paste form; code under the CodeBlock copy button (the button has its own column now); "1 pages" on a one-page run (D-059); empty Radius and Shadow cards reading 0 on the login-wall run (left out, D-059); landmark and heading-order findings from axe; the catalog frame-height race (P10). Checked and kept: StateCard spacing (`space-8` per pages.md), phone sheets for the page list, share and panel, the in-progress rail wrapping to two rows, every number from data, the extracted palette the only color.
 
 ### P11 plan
 
@@ -38,18 +40,20 @@ Read for P11: pages, components, copy, motion, quality-bar, design-system, expor
 
 P11 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
-- [ ] Every page and state in `pages.md` exists and is screenshotted at 1440, 820, 390; the `quality-bar.md` self-review applied to each and what was fixed noted here.
-- [ ] No horizontal scroll at 390 on any page (Playwright assertion).
-- [ ] axe: zero violations on every page and state.
-- [ ] Lighthouse thresholds on Home and a complete Run page.
-- [ ] Motion: a recorded video of the in-progress page filling on a fixture run reviewed; reduced-motion test passes on the run page.
-- [ ] Copy audit: every string in `strings.ts` appears verbatim in `copy.md`; `pnpm qa:copy` passes.
-- [ ] The `/open` Playwright test passes.
-- [ ] Visual goldens committed.
-- [ ] Polling: a run page open during a fixture run shows each stage landing with no full re-render (DOM mutation bound per poll).
-- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, `pnpm qa:design` reviewed, commit naming P11, STATUS updated.
+- [x] Every page and state in `pages.md` exists and is screenshotted at 1440, 820, 390; the `quality-bar.md` self-review applied to each and what was fixed noted here.
+- [x] No horizontal scroll at 390 on any page (Playwright assertion).
+- [x] axe: zero violations on every page and state.
+- [x] Lighthouse thresholds on Home and a complete Run page.
+- [x] Motion: a recorded video of the in-progress page filling on a fixture run reviewed; reduced-motion test passes on the run page.
+- [x] Copy audit: every string in `strings.ts` appears verbatim in `copy.md`; `pnpm qa:copy` passes.
+- [x] The `/open` Playwright test passes.
+- [x] Visual goldens committed.
+- [x] Polling: a run page open during a fixture run shows each stage landing with no full re-render (DOM mutation bound per poll).
+- [x] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, `pnpm qa:design` reviewed, commit naming P11, STATUS updated.
 
 ## Gates passed
+
+- P11 · The web app · 2026-10-26 · every page and state in pages.md built and captured at 1440, 820, 390 (162 design captures) and self-reviewed (notes above) · no horizontal scroll at 390 (layout e2e) · axe zero violations on every page and state · Lighthouse home 100/100/100/100, run 99/100/100/100 · in-progress video reviewed (rail fills, stats count, 60 fps, grid entrance without long frames) and reduced motion on the run page · copy audit and qa:copy · /open test · goldens for every page at three viewports (all page goldens new; catalog golden updated for the page-level entries and the CodeBlock column) · polling mutation bound per poll · Compare deltas messy to messy-after · D-058, D-059 logged with documents fixed · P6 preview CSP defect fixed · verify:all green (405 tests, e2e 53, visual 123, axe 169) · `pnpm audit` one moderate advisory, none high.
 
 - P10 · Worker, queue, caps, API and seed · 2026-10-26 · integration through the queue: lifecycle on clean with mid-run polls seeing tokens before components, budget, busy, BYO, visitor and address caps, refunds on blocked and cancel, crash retried once then failed, status gate, rate limit, login wall ending blocked with one page, retention · key never in a log, row or Redis value · every API route including exports, capture, OG, me, health, admin · MCP `--run` against the route and the production build · seed run twice with identical output (six complete runs, three frozen, six showcase entries) · worker image builds, boots in production mode and stops on SIGTERM · doctor green · D-057 logged with documents fixed · catalog frame-height race fixed (frames asked for their height after hydration; it had failed qa:visual one run in three) · verify:all green (395 tests) · qa:design reviewed (catalog unchanged; every phone frame sized to content at three widths) · build spend $0.093.
 
@@ -68,6 +72,8 @@ P11 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-059 · Phone forms on state pages take a full-width button like UrlForm; RecentRunRow lays out by its list's width; empty Radius and Shadow cards are left out; one page reads `1 page`.
+- D-058 · The web app made exact: proxy.ts CSP with nonce and per-request pages, jitless Zod, blocking metadata, the P6 preview CSP base fixed, copy additions, entrances from the parent's intersection, run page placements, sliced documents for the browser, Compare by signature, bare domains as https, UTC run dates, seeded blocked and QA runs, Lighthouse desktop preset, catalog page-level entries.
 - D-057 · Worker, queue, caps and API made exact: visitor identity fallback becomes the cookie, key and showcase runs not counted, decimal cents and reservation at creation, job carries counted keys, queue depth and position from the runs table, BullMQ priority and retry settings, capture redirect, OG fonts, `stats` and `sparse`, seed with fixed ids at creation, extra recordings kept, `db:seed:check` in verify:all.
 - D-056 · Exports, MCP and CLI made exact: W3C header in `$description` and `$extensions`, export names, voice check on prose only, byte-stable zip, the exports stage and `runUrl`, the CLI's folder layout and served storage, `--cdp` per-tab guards, package entry points.
 - D-055 · Drift made exact: supporting sentence patterns, caption values, evidence strings, proposal details, the validator's extra rules, no date in the model's facts.
@@ -111,7 +117,7 @@ Things implemented differently from the spec, with the decision id that explains
 
 - `next.config` sets `agentRules: false` (Next 16 would write an AGENTS.md with em dashes into apps/web) and `devIndicators: false`. Next 16's own docs are in `apps/web/node_modules/next/dist/docs`; read them before writing routes (P11), because the API differs from older Next.
 - QA (`qa:design`, `qa:visual`, `qa:axe`) and `test:e2e` start a fresh production build on port 3100 through `scripts/qa-server.mjs` (rebuilds when sources are newer). Kill any stray server on 3100 before running them.
-- Dev helpers: `pnpm exec tsx scripts/shot.ts <url> <out.png> [w] [h]` and `scripts/tile.ts` to cut tall screenshots for review.
+- Dev helpers: `pnpm exec tsx scripts/shot.ts <url> <out.png> [w] [h]`, `scripts/tile.ts` to cut tall screenshots for review and `scripts/montage.ts` to set several side by side.
 - Fixture authoring aids (need `pnpm fixtures:serve` or start the server themselves through the pipeline): `pnpm exec tsx scripts/fixtures-inventory.ts <site> [--where=10,18] [--color=#HEX,...]` prints every raw token value, the ΔE 2.3 clusters and the drift near-duplicate pairs; `scripts/fixtures-candidates.ts <site> [desktop|mobile]` prints every element candidate with its rules, box and states. Re-run both after any fixture change and keep `expected.json` in step (D-046, D-047).
 
 - jsdom is 29.1.1: jsdom 30 needs Node 22.22 (D-053). `pnpm exec tsx scripts/previews-inspect.ts <fixture> <outDir>` renders a fixture run's previews beside their crops after `pnpm evals --through previews`.
@@ -130,6 +136,8 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-26 · Gate passed · P11 · every page at three viewports, axe, Lighthouse, goldens, verify:all green.
+- 2026-10-26 · Session started (after compaction) · P11 · read CLAUDE.md, STATUS, decisions, plan, handoff, pages, components, copy, motion, quality-bar, exports-and-mcp · tree reconciled (goldens, D-058, recent-row container layout uncommitted; QA registry typecheck fixed).
 - 2026-10-26 · Gate passed · P10 · queue, worker, API, seed, verify:all green.
 - 2026-10-26 · Session started (after compaction) · P10 · read CLAUDE.md, STATUS, decisions, plan P10, caps-and-budget, architecture, pages, v2-seams, showcase, data-model, evals seed section, Next 16 route handler docs · tree clean at 48d3dbe.
 - 2026-10-26 · Gate passed · P9 · exports, MCP and CLI tested end to end, verify:all green.

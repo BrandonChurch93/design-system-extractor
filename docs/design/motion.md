@@ -29,6 +29,8 @@ Motion (the Framer library) owns presence and layout: mounting, unmounting, refl
 
 Nothing fades in from nowhere. Opacity may accompany a move; it is never the move.
 
+An entrance starts when the element's parent comes into view (an element clipped to nothing never intersects), and a grid's items start when the grid does (D-058).
+
 ## Reverses
 
 | Move | Reverse |

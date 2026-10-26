@@ -103,7 +103,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 ## Run page
 
 - Breadcrumb: `Showcase / {host}` · `Recent runs / {host}` · `{host}` · `Local run`
-- Meta complete: `{pages} pages · {viewports} viewports · crawled {date} · {duration} · {framework} detected` (framework segment omitted when none)
+- Meta complete: `{pages} pages · {viewports} viewports · crawled {date} · {duration} · {framework} detected` (framework segment omitted when none; one page reads `1 page` here and in every page count, D-059)
 - Meta queued: `Waiting for a crawler · {ahead} runs ahead of you` (`1 run ahead of you`; `next in line` when zero)
 - Meta while crawling: `Crawling {n} of {total} pages · 2 viewports · {elapsed} elapsed · usually finishes in about 3 minutes`
 - Meta after crawling: `{pages} pages · 2 viewports · {elapsed} elapsed · {stage phrase}` with stage phrases `clustering tokens` · `detecting components` · `building previews` · `running checks` · `computing drift` · `writing exports`

@@ -275,7 +275,7 @@ export const pageDemos: Demo[] = [
         wide: true,
         node: (
           <Card>
-            <ul>
+            <ul style={{ containerType: 'inline-size' }}>
               {recentRuns.map((r) => (
                 <RecentRunRow key={r.id} run={r} now={now} />
               ))}

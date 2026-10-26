@@ -22,4 +22,9 @@ describe('security · the app CSP', () => {
     expect(p['frame-src']).toEqual(["'self'", 'http://localhost:9000', LOCAL_SERVE_ORIGIN]);
     expect(p['img-src']).toEqual(["'self'", 'data:', 'http://localhost:9000', LOCAL_SERVE_ORIGIN]);
   });
+
+  it('allows eval only in development, where React needs it for error stacks', () => {
+    expect(policy(buildCsp({ nonce: 'n', storage: 'http://localhost:9000/dse', dev: true }))['script-src']).toEqual(["'self'", "'nonce-n'", "'unsafe-eval'"]);
+    expect(policy(buildCsp({ nonce: 'n', storage: 'http://localhost:9000/dse' }))['script-src']).not.toContain("'unsafe-eval'");
+  });
 });

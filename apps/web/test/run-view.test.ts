@@ -64,6 +64,7 @@ describe('meta lines and breadcrumbs', () => {
     const doc = { ...base, status: 'complete', pages: Array(12).fill({}), finishedAt: '2026-10-12T16:02:41.000Z', durationMs: 161_000 } as unknown as RunDocumentPartial;
     expect(completeMeta(doc)).toBe('12 pages · 2 viewports · crawled Oct 12 2026 · 2 min 41 s');
     expect(completeMeta({ ...doc, frameworkHint: 'tailwind' })).toBe('12 pages · 2 viewports · crawled Oct 12 2026 · 2 min 41 s · Tailwind detected');
+    expect(completeMeta({ ...doc, pages: [{}] } as unknown as RunDocumentPartial)).toBe('1 page · 2 viewports · crawled Oct 12 2026 · 2 min 41 s');
   });
 
   it('picks the breadcrumb by showcase, then this browser’s list, then the host alone', () => {

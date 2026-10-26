@@ -58,12 +58,12 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--dse-space-5);
-  align-items: start;
 }
 
 .column {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  align-content: start;
   gap: var(--dse-space-1);
 }
 
@@ -153,7 +153,6 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--dse-space-5);
-  align-items: start;
 }
 
 .cardTitle {
@@ -252,8 +251,14 @@
 }
 
 .pickerList {
+  container-type: inline-size;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+}
+
+/* Rows sit flush with the card's padding so their buttons line up with the paste form's. */
+.pickerList > li {
+  padding-inline: 0;
 }
 
 .paste {

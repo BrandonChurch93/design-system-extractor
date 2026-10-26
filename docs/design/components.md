@@ -14,7 +14,7 @@ Type styles and sizes named below are the ones in `docs/design/design-system.md`
 
 **SectionNav** · The run page's section links: Tokens, Components, Checks, Drift, Exports. Pills (`radius-pill`), `label` weight 500; the active section has `ink` ground and `inverse-ink` text. Sticky at top 0 once the header scrolls past, on `bg` with a `line` rule beneath that draws in when it sticks. Active state follows scroll position (IntersectionObserver). Phone: horizontally scrollable, no wrap, 20 px edge fade.
 
-**Button** · Variants `primary` (`ink` ground, `inverse-ink` text), `ghost` (`surface` ground, `line` border, `line-strong` on hover), `inverse` (on `inverse-bg`: `inverse-ink` ground, `ink` text). Sizes `md` 44 high `space-5` side padding, `sm` 36 high `space-4`, `xl` 56 high `space-6` (the Extract button only). Optional leading Lucide icon 16. States: hover, focus-visible, active (scale 0.985), disabled (50% opacity, no pointer). Never full width except the Extract button on phones.
+**Button** · Variants `primary` (`ink` ground, `inverse-ink` text), `ghost` (`surface` ground, `line` border, `line-strong` on hover), `inverse` (on `inverse-bg`: `inverse-ink` ground, `ink` text). Sizes `md` 44 high `space-5` side padding, `sm` 36 high `space-4`, `xl` 56 high `space-6` (the Extract button only). Optional leading Lucide icon 16. States: hover, focus-visible, active (scale 0.985), disabled (50% opacity, no pointer). Never full width except, on phones, the Extract button and the buttons of the state pages' forms (D-059).
 
 **Chip** · A filter pill: 32 high, `label`, `line` border, `surface` ground. Selected: `ink` ground, `inverse-ink` text. A count may follow the label in `meta`: "Buttons · 6". A ChipGroup is a single-select radio group with arrow-key movement. Phone: the row scrolls horizontally.
 
@@ -157,7 +157,7 @@ Phone: Compare renders the two CompareColumns stacked, then a StateCard-style no
 
 ## Recent runs
 
-**RecentRunRow** · A grid row: PaletteStrip block 56 × 40 (a dashed `line-strong` empty block for runs with no palette), site (link, `h3` weight 600) with the full run id and page count (`meta`), the result line (`caption`), when (`caption`), a status Pill (`solid` Complete; `soft` Running, Blocked, Failed, Cancelled) and a `sm` ghost Button: "Compare" for complete runs, "Details" for blocked ones, none for running, failed or cancelled. Phone: two lines, the button under.
+**RecentRunRow** · A grid row: PaletteStrip block 56 × 40 (a dashed `line-strong` empty block for runs with no palette), site (link, `h3` weight 600) with the full run id and page count (`meta`), the result line (`caption`), when (`caption`), a status Pill (`solid` Complete; `soft` Running, Blocked, Failed, Cancelled) and a `sm` ghost Button: "Compare" for complete runs, "Details" for blocked ones, none for running, failed or cancelled. The row lays out by the width of its list (D-059): narrow lists put the status Pill and the button on a last line under the result, so the host keeps the full width.
 
 ## How it works
 

@@ -7,6 +7,7 @@ import { compare as C, global, recent, runPage } from '../../copy/strings';
 import { noRecent, recentSnapshot, subscribeRecent } from '../../lib/browser-store';
 import { colorDiff, componentChanges, deltaCaptions, deltas, span, type Stat } from '../../lib/compare';
 import { count, runDate, shortDate } from '../../lib/format';
+import { pagesWord } from '../../lib/run-view';
 import { Button } from '../Button';
 import { Card } from '../Card';
 import { Footer } from '../Footer';
@@ -27,7 +28,7 @@ function Column({ doc, label, after }: { doc: RunDocumentPartial; label: string;
       <h2 className={styles.host}>{doc.host}</h2>
       <p className={styles.meta}>{doc.id}</p>
       <p className={styles.meta}>{runDate(doc.finishedAt ?? doc.createdAt ?? '')}</p>
-      <p className={styles.meta}>{fill(C.facts, { pages: count(doc.pages?.length ?? 0), viewports: count(doc.viewports?.length ?? 2) })}</p>
+      <p className={styles.meta}>{fill(C.facts.replace('{pages} pages', pagesWord(doc.pages?.length ?? 0)), { viewports: count(doc.viewports?.length ?? 2) })}</p>
     </Card>
   );
 }

@@ -207,10 +207,12 @@ export function TokensSection({ doc }: { doc: RunDocumentPartial }) {
         {t?.type ? <TypeCard doc={doc} /> : <Skeleton height={520} radius="lg" />}
         <div className={styles.stack}>
           {t?.space ? <SpacingCard doc={doc} /> : <Skeleton height={300} radius="lg" />}
-          <div className={styles.pair}>
-            {t?.radius ? <RadiusCard doc={doc} /> : <Skeleton height={140} radius="lg" />}
-            {t?.shadow ? <ShadowCard doc={doc} /> : <Skeleton height={140} radius="lg" />}
-          </div>
+          {t?.radius?.length === 0 && t.shadow?.length === 0 ? null : (
+            <div className={styles.pair}>
+              {t?.radius ? t.radius.length ? <RadiusCard doc={doc} /> : null : <Skeleton height={140} radius="lg" />}
+              {t?.shadow ? t.shadow.length ? <ShadowCard doc={doc} /> : null : <Skeleton height={140} radius="lg" />}
+            </div>
+          )}
         </div>
       </div>
     </Section>

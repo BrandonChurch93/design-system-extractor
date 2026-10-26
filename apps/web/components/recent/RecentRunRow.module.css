@@ -58,7 +58,8 @@
   justify-self: end;
 }
 
-@media (max-width: 1023px) {
+/* The row lays out by the width of the list it sits in: the Recent page or the Compare picker. */
+@container (max-width: 760px) {
   .row {
     grid-template-columns: 56px minmax(0, 1fr) auto;
     grid-template-areas:
@@ -81,6 +82,10 @@
     grid-area: result;
   }
 
+  .result:empty {
+    display: none;
+  }
+
   .when {
     grid-area: when;
   }
@@ -92,5 +97,21 @@
 
   .action {
     grid-area: action;
+  }
+}
+
+/* Phone: the status and the button move under the result so the host keeps the full width. */
+@container (max-width: 480px) {
+  .row {
+    grid-template-areas:
+      'palette site site'
+      'palette result result'
+      'palette when when'
+      'palette status action';
+    row-gap: var(--dse-space-2);
+  }
+
+  .status {
+    justify-self: start;
   }
 }

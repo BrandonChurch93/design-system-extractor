@@ -4,10 +4,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import type { Page } from '@dse/schema';
-import { fill } from '@dse/schema/labels';
 import { global, runPage } from '../../copy/strings';
-import { count } from '../../lib/format';
-import type { Breadcrumb } from '../../lib/run-view';
+import { pagesWord, type Breadcrumb } from '../../lib/run-view';
 import { submitRun } from '../../lib/submit-run';
 import { Button } from '../Button';
 import { useToast } from '../Toast';
@@ -40,7 +38,7 @@ export function RunHeader({ host, crumbs, mode, meta, pages, runId, url, shareUr
   const router = useRouter();
   const toast = useToast();
   const [again, setAgain] = useState(false);
-  const pagesLabel = fill(runPage.meta.pages, { pages: count(pages.length) });
+  const pagesLabel = pagesWord(pages.length);
   const showPagesButton = mode !== 'progress' && pages.length > 0 && typeof meta === 'string' && meta.startsWith(pagesLabel);
 
   async function runAgain() {

@@ -51,6 +51,10 @@
   gap: var(--dse-space-5);
 }
 
+.pair > :only-child {
+  grid-column: 1 / -1;
+}
+
 .typeList {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
