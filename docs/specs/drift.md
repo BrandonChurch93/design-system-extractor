@@ -32,7 +32,7 @@ Exports use the proposed set by default (`?set=proposed`); the raw set is availa
 
 `numbers` holds up to three `{kind, before, after, caption}` entries ordered by relative reduction, from the kinds `grays` (neutral token count before and after), `variants` (total variants across all components before and after collapses, with the count of affected components), `spacing` (step count before and after, with the off-grid count), `type` (type token count before and after merges). A kind with no reduction is omitted. The `headline` is the first entry rendered with its sentence pattern from `docs/design/copy.md`; `supporting` holds the next two as sentences following copy rule 9. If nothing drifts (a clean site), the headline uses the nothing-to-collapse pattern and `numbers` is empty.
 
-Captions are generated from these templates with the computed facts, never free text:
+Captions are generated from these templates with the computed facts, never free text (the values each placeholder takes are in D-055):
 
 - grays: `{k} are within ΔE {d} of a neighbor. Nobody can tell them apart.`
 - variants: `{k} differ only by {delta words}.` (e.g. `Three differ only by 1 px of padding or a 2 px radius.`)

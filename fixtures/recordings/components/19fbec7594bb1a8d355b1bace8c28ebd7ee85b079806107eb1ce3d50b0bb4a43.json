@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-26T07:02:19.507Z",
+  "recordedAt": "2026-10-26T07:54:35.314Z",
   "request": "Items:\nc17 guess table 0.98, table, classes table, inside tbody:1 thead:1 tr:4, text \"Feature Starter Team Changelogs 1 Unlimited Digests Weekly Daily or weekly Custo\", 2 instances on 1 page (/pricing), variants Default, no picture\nc18 guess breadcrumb 0.8, nav, no class names, inside li:3 ol:1, text \"Home / Docs\", 2 instances on 1 page (/docs), variants Default, picture below\nc19 guess badge 0.7, span, classes badge badge-success, no children, text \"API operational\", 8 instances on 2 pages (/docs, /changelog), variants Success, Danger, Warning, picture below\nc20 guess code-block 0.95, pre, classes code-block, inside code:1, text \"npm install @tidewater/cli tidewater login tidewater publish\", 2 instances on 1 page (/docs), variants Default, no picture\nc21 guess select 0.98, select, classes select, no children, text \"1 to 5 6 to 20 21 or more\", 2 instances on 1 page (/signup), variants Default, no picture\nc22 guess checkbox 0.98, input, classes checkbox, no children, text \"\", 2 instances on 1 page (/signup), variants Default, no picture\nc23 guess button 0.95, button, classes icon-button, inside svg:1, text \"\", 2 instances on 1 page (/contact), variants Default, no picture\nc24 guess textarea 0.98, textarea, classes textarea, no children, text \"\", 2 instances on 1 page (/contact), variants Default, no picture\nPicture of c18:\n[image]\nPicture of c19:\n[image]"
 }

@@ -2,7 +2,7 @@
   "purpose": "components",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"items\": [{\"id\": \"c25\", \"type\": \"tabs\", \"name\": \"Tab\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c26\", \"type\": \"alert\", \"name\": \"Inline notice\", \"isComponent\": true, \"variantHint\": \"green ground with check icon, optional action button\"}, {\"id\": \"c27\", \"type\": \"empty-state\", \"name\": \"Not found panel\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c28\", \"type\": \"alert\", \"name\": \"Warning notice\", \"isComponent\": true, \"variantHint\": \"amber ground with warning icon\"}]}",
+  "text": "{\"items\": [{\"id\": \"c25\", \"type\": \"tabs\", \"name\": \"Tab\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c26\", \"type\": \"alert\", \"name\": \"Inline notice\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c27\", \"type\": \"empty-state\", \"name\": \"Not found state\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c28\", \"type\": \"alert\", \"name\": \"Warning notice\", \"isComponent\": true, \"variantHint\": null}]}",
   "usage": {
     "input_tokens": 616,
     "cache_creation_input_tokens": 0,
@@ -11,7 +11,7 @@
       "ephemeral_5m_input_tokens": 0,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 199,
+    "output_tokens": 175,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-26T07:04:04.214Z",
+  "recordedAt": "2026-10-26T07:56:28.060Z",
   "request": "Items:\nc25 guess button 0.95, button role tab, no class names, no children, text \"Digests\", 6 instances on 1 page (/features), variants Default, no picture\nc26 guess card 0.6, div role status, no class names, inside div:2 p:1 span:1 svg:1, text \"Digests are included in every plan. Compare plans\", 2 instances on 1 page (/features), variants Default, picture below\nc27 guess empty-state 0.6, section, no class names, inside a:1 h1:1 p:1 span:1 svg:1, text \"This page is not here. It may have moved when the docs were reorganized. Back to\", 2 instances on 1 page (/80f283cb5c-does-not-exist), variants Default, picture below\nc28 guess card 0.6, div role status, no class names, inside p:1 span:1 svg:1, text \"Publishing posts to every connected channel. Try it on a test channel first.\", 2 instances on 1 page (/docs/getting-started), variants Default, picture below\nPicture of c26:\n[image]\nPicture of c27:\n[image]\nPicture of c28:\n[image]"
 }

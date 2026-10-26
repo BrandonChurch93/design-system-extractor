@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-26T07:34:51.306Z",
+  "generatedAt": "2026-10-26T08:22:38.725Z",
   "mode": "replay",
-  "through": "checks",
+  "through": "done",
   "pipelineVersion": "1.0.0",
   "fixtures": [
     {
@@ -83,7 +83,7 @@
           "predicted": 27,
           "expected": 27,
           "matched": 27,
-          "nameAgreement": 0.778,
+          "nameAgreement": 0.815,
           "namesValid": true,
           "misses": [],
           "extras": []
@@ -117,6 +117,11 @@
           },
           "missedFailures": [],
           "flaggedPasses": []
+        },
+        "drift": {
+          "falseFindings": 0,
+          "contrastKept": true,
+          "headline": "Nothing to collapse. 9 colors, 11 spacing steps, all on the grid."
         }
       }
     },
@@ -235,6 +240,15 @@
           },
           "missedFailures": [],
           "flaggedPasses": []
+        },
+        "drift": {
+          "recall": 1,
+          "found": 16,
+          "planted": 16,
+          "findings": 16,
+          "contrastKept": true,
+          "missed": [],
+          "headline": "14 grays across 12 pages. 9 would do."
         }
       }
     },
@@ -317,7 +331,7 @@
           "predicted": 28,
           "expected": 27,
           "matched": 27,
-          "nameAgreement": 0.741,
+          "nameAgreement": 0.704,
           "namesValid": true,
           "misses": [],
           "extras": [
@@ -355,6 +369,11 @@
           },
           "missedFailures": [],
           "flaggedPasses": []
+        },
+        "drift": {
+          "falseFindings": 0,
+          "contrastKept": true,
+          "headline": "Nothing to collapse. 9 colors, 11 spacing steps, all on the grid."
         }
       }
     },
@@ -437,7 +456,7 @@
           "predicted": 28,
           "expected": 27,
           "matched": 27,
-          "nameAgreement": 0.741,
+          "nameAgreement": 0.704,
           "namesValid": true,
           "misses": [],
           "extras": [
@@ -475,6 +494,11 @@
           },
           "missedFailures": [],
           "flaggedPasses": []
+        },
+        "drift": {
+          "falseFindings": 0,
+          "contrastKept": true,
+          "headline": "Nothing to collapse. 9 colors, 11 spacing steps, all on the grid."
         }
       }
     },
@@ -591,6 +615,11 @@
           },
           "missedFailures": [],
           "flaggedPasses": []
+        },
+        "drift": {
+          "falseFindings": 0,
+          "contrastKept": true,
+          "headline": "Nothing to collapse. 23 colors, 7 spacing steps, all on the grid."
         }
       }
     }

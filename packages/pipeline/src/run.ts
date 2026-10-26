@@ -12,6 +12,7 @@ import { tokens } from './stages/tokens';
 import { components } from './stages/components';
 import { previews } from './stages/previews';
 import { checks } from './stages/checks';
+import { drift } from './stages/drift';
 
 export const PIPELINE_VERSION = '1.0.0';
 
@@ -99,8 +100,12 @@ export async function runPipeline(ctx: RunContext, deps: RunDeps): Promise<RunOu
     if (!reached('checks', deps.through)) return ending;
     await checkCancel();
 
-    await checks(ctx, previewed, detected.sources, extracted);
+    const checked = await checks(ctx, previewed, detected.sources, extracted);
     if (!reached('drift', deps.through)) return ending;
+    await checkCancel();
+
+    await drift(ctx, captured, extracted, checked.components, detected.sources, new URL(ctx.config.url).host);
+    if (!reached('exports', deps.through)) return ending;
     await checkCancel();
 
     return ending;

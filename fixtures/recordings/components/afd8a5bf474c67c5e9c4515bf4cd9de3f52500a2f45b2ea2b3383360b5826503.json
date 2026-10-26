@@ -2,7 +2,7 @@
   "purpose": "components",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"items\": [{\"id\": \"c17\", \"type\": \"badge\", \"name\": \"Status badge\", \"isComponent\": true, \"variantHint\": \"fill color by status (success, warning, danger)\"}, {\"id\": \"c18\", \"type\": \"code-block\", \"name\": \"Code block\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c19\", \"type\": \"input\", \"name\": \"Text input\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c20\", \"type\": \"select\", \"name\": \"Select\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c21\", \"type\": \"checkbox\", \"name\": \"Checkbox\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c22\", \"type\": \"button\", \"name\": \"Icon button\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c23\", \"type\": \"textarea\", \"name\": \"Textarea\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c24\", \"type\": \"tabs\", \"name\": \"Tabs\", \"isComponent\": true, \"variantHint\": null}]}",
+  "text": "{\"items\": [{\"id\": \"c17\", \"type\": \"badge\", \"name\": \"Status badge\", \"isComponent\": true, \"variantHint\": \"fill color: warning, success, danger\"}, {\"id\": \"c18\", \"type\": \"code-block\", \"name\": \"Code block\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c19\", \"type\": \"input\", \"name\": \"Text input\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c20\", \"type\": \"select\", \"name\": \"Select\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c21\", \"type\": \"checkbox\", \"name\": \"Checkbox\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c22\", \"type\": \"button\", \"name\": \"Icon button\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c23\", \"type\": \"textarea\", \"name\": \"Text area\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c24\", \"type\": \"tabs\", \"name\": \"Tabs\", \"isComponent\": true, \"variantHint\": null}]}",
   "usage": {
     "input_tokens": 524,
     "cache_creation_input_tokens": 0,
@@ -11,7 +11,7 @@
       "ephemeral_5m_input_tokens": 0,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 349,
+    "output_tokens": 345,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-26T07:05:41.034Z",
+  "recordedAt": "2026-10-26T07:58:12.080Z",
   "request": "Items:\nc17 guess badge 0.7, span, no class names, no children, text \"API operational\", 6 instances on 1 page (/docs), variants Warning, Success, Danger, picture below\nc18 guess code-block 0.95, pre, no class names, inside code:1, text \"npm install @tidewater/cli tidewater login tidewater publish\", 4 instances on 2 pages (/docs, /docs/getting-started), variants Default, no picture\nc19 guess input 0.98, input, no class names, no children, text \"\", 10 instances on 3 pages (/login, /signup, /contact), variants Default, no picture\nc20 guess select 0.98, select, no class names, no children, text \"1 to 5 6 to 20 21 or more\", 2 instances on 1 page (/signup), variants Default, no picture\nc21 guess checkbox 0.98, input, no class names, no children, text \"\", 2 instances on 1 page (/signup), variants Default, no picture\nc22 guess button 0.95, button, no class names, inside svg:1, text \"\", 2 instances on 1 page (/contact), variants Default, no picture\nc23 guess textarea 0.98, textarea, no class names, no children, text \"\", 2 instances on 1 page (/contact), variants Default, no picture\nc24 guess tabs 0.95, div role tablist, no class names, inside button:3, text \"Digests Slack Pages\", 2 instances on 1 page (/features), variants Default, no picture\nPicture of c17:\n[image]"
 }

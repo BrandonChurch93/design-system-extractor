@@ -402,3 +402,16 @@ Decision:
 - Clustering (extends D-052): an element that opens something (`aria-haspopup`, `aria-expanded`, `aria-controls`) is a trigger and never clusters with an action button, so a classless site's menu button and copy button stay two components.
 - Fixture: the library's focus ring is `#2E333D`. The blue ring measured 2.6:1 against the hero's turquoise, a true failure, but the library plants its failures deliberately and this one was an accident of the brand layer.
 Affects: `docs/specs/checks.md`, `docs/specs/component-detection.md`, `fixtures/src/library/generate.ts`, `packages/pipeline/src/checks/`.
+
+## D-055 · Drift made exact
+
+Date: 2026-10-26 · Context: P8 built drift against `drift.md`, `model-calls.md` and the drift lines of `copy.md`, which leave the supporting sentences, some caption values and the evidence strings open.
+Decision:
+- Supporting sentences follow the headline patterns with rule 9: grays `{n} grays across {pages} pages where {m} would do.`, variants `{n} variants across {k} components where {m} would do.`, spacing `{n} spacing values, {k} of them off the {base} px grid.`, type `{n} type styles where {m} would do.` (numbers under ten as words, the first word capitalized). Headlines keep numerals.
+- Caption values: grays `{k}` counts the neutral tokens in a near-duplicate pair and `{d}` is the largest ΔE among those pairs, one decimal; variants `{k}` counts the variants involved (kept and merged) and the delta words come from the largest padding, radius and color differences; spacing `{pages}` lists the paths, or reads `{n} pages` past three.
+- Evidence strings: colors are hex values with `ΔE {d}`; variants read `{component} · {kept variant}` and the merged names with the deltas; spacing reads `{value} px` and the nearest step; type reads token names; raw spread reads the hex and `written {n} ways`, evidence only. Radius and shadow sprawl count as findings (none of the five fixtures has any).
+- The proposal: a near-step drops its less used member from the proposed spacing; a brand fold that would break a passing contrast pair is not made; proposed grays are named `gray-{step}` by lightness. With five or fewer neutrals nothing folds.
+- Variant collapses compare the full looks of each variant's representative instance. Font size is not part of a variant's look (D-052), so a font-size-only difference never makes a variant to collapse.
+- The narrative validator also rejects exclamation marks and a narrative outside four to six sentences or an intro of other than two. The intro's date ("October 26, 2026") is added only by the template: the model's facts carry no date, so recordings stay valid.
+- With nothing to collapse, the headline kind is null with before and after 0.
+Affects: `docs/specs/drift.md`, `docs/design/copy.md`, `packages/pipeline/src/drift/`.

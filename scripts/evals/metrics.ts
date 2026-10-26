@@ -194,3 +194,36 @@ export function scoreLiveRate(doc: RunDocumentPartial): Metric {
     pass: (f) => rate >= f.liveRate,
   };
 }
+
+/**
+ * Drift: on a fixture that plants drift, every planted finding found (recall); on one that expects
+ * none, zero findings (raw-spread rows are evidence, not findings). The proposal must keep contrast.
+ */
+export function scoreDrift(expected: ExpectedFixture, doc: RunDocumentPartial): Metric {
+  const d = doc.drift;
+  if (!d) return { value: null, summary: 'no drift section', pass: () => false };
+  const kept = d.proposal.contrastKept;
+  if (expected.drift.expectNone) {
+    return {
+      value: { falseFindings: d.findingCount, contrastKept: kept, headline: d.headline.sentence },
+      summary: `${d.findingCount} findings · contrast ${kept ? 'kept' : 'not kept'} · ${d.headline.sentence}`,
+      pass: (f) => kept && d.findingCount <= (f.drift.falseFindings ?? 0),
+    };
+  }
+  const rows = d.evidence.filter((e) => !e.evidenceOnly);
+  const planted: { what: string; found: boolean }[] = [];
+  for (const [a, b] of expected.drift.nearDuplicateColors) planted.push({ what: `${a}~${b}`, found: rows.some((r) => r.kind === 'color' && ((r.a === a && r.b === b) || (r.a === b && r.b === a))) });
+  for (const v of expected.drift.offGrid) planted.push({ what: `off-grid ${v}`, found: rows.some((r) => r.kind === 'spacing' && r.a === `${v} px`) });
+  const idOf = new Map(matchComponents(expected, doc).pairs.map(({ e, p }) => [e.name, p.id]));
+  for (const c of expected.drift.variantCollapses) planted.push({ what: `${c.component} collapse ×${c.count}`, found: d.variantCollapses.some((v) => idOf.get(c.component) === v.componentId && v.merge.length + 1 === c.count) });
+  const sizeOf = new Map((doc.tokens?.type ?? []).map((t) => [t.name, t.size]));
+  for (const [x, y] of expected.drift.typeNearDuplicates) planted.push({ what: `type ${x}~${y}`, found: rows.some((r) => r.kind === 'type' && [sizeOf.get(r.a), sizeOf.get(r.b)].sort().join() === [x, y].sort().join()) });
+  const found = planted.filter((p) => p.found).length;
+  const recall = planted.length ? found / planted.length : 1;
+  const missed = planted.filter((p) => !p.found).map((p) => p.what);
+  return {
+    value: { recall: round3(recall), found, planted: planted.length, findings: d.findingCount, contrastKept: kept, missed, headline: d.headline.sentence },
+    summary: `recall ${recall.toFixed(3)} · ${found} of ${planted.length} · ${d.findingCount} findings · contrast ${kept ? 'kept' : 'not kept'}${missed.length ? ` · missed ${missed.join(', ')}` : ''}`,
+    pass: (f) => kept && recall >= (f.drift.recall ?? 1),
+  };
+}

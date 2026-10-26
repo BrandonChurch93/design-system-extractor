@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import type { Browser } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { Checks, Component, Tokens, allowedPrivateHosts } from '@dse/schema';
+import { Checks, Component, Drift, Tokens, allowedPrivateHosts } from '@dse/schema';
 import { matchesTemplate } from './helpers/templates';
 import { LocalStorage, MemoryRunContext } from '../src/context';
 import { launchBrowser } from '../src/crawl/browser';
@@ -37,7 +37,7 @@ beforeAll(async () => {
     (storage = new LocalStorage(dir, 'http://localhost:4403')),
     { id: 'tokenstest', url, host: 'localhost:4100', status: 'queued', createdAt: new Date().toISOString(), pipelineVersion: '1.0.0', viewports: ['desktop', 'mobile'] },
   );
-  await runPipeline(ctx, { browser, through: 'checks' });
+  await runPipeline(ctx, { browser, through: 'drift' });
 }, 300_000);
 
 afterAll(async () => {
@@ -153,5 +153,17 @@ describe('the checks stage on the clean fixture', () => {
     expect(summary.summary.total).toBe(27 * 5);
     expect(summary.summary.passed + summary.summary.failed).toBe(summary.summary.applicable);
     expect(ctx.events.find((e) => e.stage === 'checks')!.message).toBe(`checks · ${summary.summary.applicable} applicable · ${summary.summary.passed} passed · 2 failed`);
+  });
+});
+
+describe('the drift stage on the clean fixture', () => {
+  it('finds no drift, keeps contrast, and writes the narrative and intro', () => {
+    const d = Drift.parse(ctx.document.drift);
+    expect(d.findingCount).toBe(0);
+    expect(d.headline).toEqual({ kind: null, before: 0, after: 0, sentence: 'Nothing to collapse. 9 colors, 11 spacing steps, all on the grid.' });
+    expect(d.proposal.contrastKept).toBe(true);
+    expect(d.narrative.length).toBeGreaterThan(40);
+    expect(ctx.document.exports?.designSystemIntro).toMatch(/localhost:4100/);
+    expect(ctx.events.filter((e) => e.stage === 'drift').map((e) => e.message)).toEqual(['drift · nothing to collapse · contrast kept', 'drift · narrative by model']);
   });
 });

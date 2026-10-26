@@ -112,7 +112,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Stat labels: `Colors` · `Type styles` · `Spacing steps` · `Components` · `Checks passed`
 - Palette label: `Palette`; swatch caption `{name} · {uses} uses`
 - Drift headline patterns, by kind: grays `{n} grays across {pages} pages. {m} would do.` · variants `{n} variants across {k} components. {m} would do.` · spacing `{n} spacing values, {k} of them off the {base} px grid.` · type `{n} type styles where {m} would do.` · nothing to collapse `Nothing to collapse. {colors} colors, {steps} spacing steps, all on the grid.`
-- Drift supporting line: the next two findings as sentences following rule 9, e.g. `Six variants across four components where three would do. Nine spacing values, two of them off the 4 px grid.`
+- Drift supporting line: the next two findings as sentences following rule 9, e.g. `Six variants across four components where three would do. Nine spacing values, two of them off the 4 px grid.` Patterns: grays `{n} grays across {pages} pages where {m} would do.` · variants `{n} variants across {k} components where {m} would do.` · spacing `{n} spacing values, {k} of them off the {base} px grid.` · type `{n} type styles where {m} would do.` (D-055)
 - Drift button: `Read the drift report`
 - Section nav: `Tokens` · `Components` · `Checks` · `Drift` · `Exports`
 - Tokens caption: `Clustered from {rawColors} raw color values, {fontDecls} font declarations and {spacingValues} spacing values.`
