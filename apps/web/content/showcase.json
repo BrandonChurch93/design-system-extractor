@@ -20,35 +20,35 @@
       "palette": [
         {
           "value": "#0B1F3A",
-          "share": 0.603
+          "share": 0.625
         },
         {
           "value": "#E2E8F0",
-          "share": 0.151
-        },
-        {
-          "value": "#2458E6",
-          "share": 0.092
+          "share": 0.143
         },
         {
           "value": "#FFFFFF",
-          "share": 0.085
+          "share": 0.09
+        },
+        {
+          "value": "#2458E6",
+          "share": 0.069
         },
         {
           "value": "#0F8A8A",
-          "share": 0.027
+          "share": 0.03
         },
         {
           "value": "#0B1F3A1F",
-          "share": 0.015
+          "share": 0.012
         },
         {
           "value": "#15803D",
-          "share": 0.01
+          "share": 0.011
         },
         {
           "value": "#B45309",
-          "share": 0.01
+          "share": 0.011
         }
       ]
     },
@@ -70,35 +70,35 @@
       "palette": [
         {
           "value": "#1F1F1F",
-          "share": 0.319
-        },
-        {
-          "value": "#0B1F3A",
-          "share": 0.116
+          "share": 0.357
         },
         {
           "value": "#FFFFFF",
-          "share": 0.091
+          "share": 0.1
         },
         {
-          "value": "#2458E6",
-          "share": 0.09
+          "value": "#0B1F3A",
+          "share": 0.088
         },
         {
           "value": "#D1D1D1",
-          "share": 0.069
+          "share": 0.079
         },
         {
           "value": "#676767",
-          "share": 0.043
+          "share": 0.05
         },
         {
           "value": "#505050",
-          "share": 0.043
+          "share": 0.049
+        },
+        {
+          "value": "#2458E6",
+          "share": 0.046
         },
         {
           "value": "#E1E1E1",
-          "share": 0.04
+          "share": 0.046
         }
       ]
     },
@@ -120,35 +120,35 @@
       "palette": [
         {
           "value": "#0B1F3A",
-          "share": 0.603
+          "share": 0.626
         },
         {
           "value": "#E2E8F0",
-          "share": 0.151
-        },
-        {
-          "value": "#2458E6",
-          "share": 0.092
+          "share": 0.143
         },
         {
           "value": "#FFFFFF",
-          "share": 0.085
+          "share": 0.09
+        },
+        {
+          "value": "#2458E6",
+          "share": 0.068
         },
         {
           "value": "#0F8A8A",
-          "share": 0.027
+          "share": 0.03
         },
         {
           "value": "#0B1F3A1F",
-          "share": 0.015
+          "share": 0.012
         },
         {
           "value": "#15803D",
-          "share": 0.01
+          "share": 0.011
         },
         {
           "value": "#B45309",
-          "share": 0.01
+          "share": 0.011
         }
       ]
     },
@@ -170,35 +170,35 @@
       "palette": [
         {
           "value": "#0B1F3A",
-          "share": 0.603
+          "share": 0.626
         },
         {
           "value": "#E2E8F0",
-          "share": 0.151
-        },
-        {
-          "value": "#2458E6",
-          "share": 0.092
+          "share": 0.143
         },
         {
           "value": "#FFFFFF",
-          "share": 0.085
+          "share": 0.09
+        },
+        {
+          "value": "#2458E6",
+          "share": 0.068
         },
         {
           "value": "#0F8A8A",
-          "share": 0.027
+          "share": 0.03
         },
         {
           "value": "#0B1F3A1F",
-          "share": 0.015
+          "share": 0.012
         },
         {
           "value": "#15803D",
-          "share": 0.01
+          "share": 0.011
         },
         {
           "value": "#B45309",
-          "share": 0.01
+          "share": 0.011
         }
       ]
     },
@@ -220,7 +220,7 @@
       "palette": [
         {
           "value": "#404654",
-          "share": 0.31
+          "share": 0.322
         },
         {
           "value": "#2E333D",
@@ -228,27 +228,27 @@
         },
         {
           "value": "#C8CCD5",
-          "share": 0.1
+          "share": 0.11
         },
         {
           "value": "#4258FF",
-          "share": 0.083
-        },
-        {
-          "value": "#090A0C",
-          "share": 0.082
+          "share": 0.092
         },
         {
           "value": "#FFFFFF",
           "share": 0.068
         },
         {
+          "value": "#090A0C",
+          "share": 0.058
+        },
+        {
           "value": "#E6E8EC",
-          "share": 0.037
+          "share": 0.035
         },
         {
           "value": "#001F1A",
-          "share": 0.035
+          "share": 0.032
         }
       ]
     },
@@ -270,35 +270,35 @@
       "palette": [
         {
           "value": "#1F1F1F",
-          "share": 0.314
+          "share": 0.346
         },
         {
           "value": "#FFFFFF",
-          "share": 0.128
+          "share": 0.14
         },
         {
           "value": "#0B1F3A",
-          "share": 0.107
+          "share": 0.081
         },
         {
           "value": "#D1D1D1",
-          "share": 0.087
-        },
-        {
-          "value": "#2458E6",
-          "share": 0.08
+          "share": 0.079
         },
         {
           "value": "#E1E1E1",
-          "share": 0.056
+          "share": 0.064
         },
         {
           "value": "#737373",
-          "share": 0.052
+          "share": 0.059
         },
         {
           "value": "#505050",
-          "share": 0.047
+          "share": 0.054
+        },
+        {
+          "value": "#2458E6",
+          "share": 0.041
         }
       ]
     }
