@@ -8,6 +8,7 @@ import { ReplayMissError } from './models/client';
 import { capture, type CaptureOutput } from './stages/capture';
 import { discover, type DiscoverResult } from './stages/discover';
 import { select } from './stages/select';
+import { tokens } from './stages/tokens';
 
 export const PIPELINE_VERSION = '1.0.0';
 
@@ -81,6 +82,10 @@ export async function runPipeline(ctx: RunContext, deps: RunDeps): Promise<RunOu
       await ctx.emit({ stage: 'capture', level: 'warn', message: `login wall · continuing with ${only.page.path} alone`, patch: page ? { pages: [page] } : undefined });
     }
     if (!reached('tokens', deps.through)) return ending;
+    await checkCancel();
+
+    await tokens(ctx, captured);
+    if (!reached('components', deps.through)) return ending;
     await checkCancel();
 
     return ending;

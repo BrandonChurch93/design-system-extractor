@@ -209,11 +209,6 @@
         "weight": 600
       },
       {
-        "role": "code",
-        "size": 14,
-        "weight": 400
-      },
-      {
         "role": "caption",
         "size": 12,
         "weight": 400
@@ -240,7 +235,6 @@
       ]
     },
     "radius": [
-      6,
       8,
       10,
       12,
@@ -827,7 +821,7 @@
       {
         "component": "New tag",
         "check": "contrast",
-        "detailContains": "4.2:1"
+        "detailContains": "4.1:1"
       }
     ],
     "plantedPasses": [

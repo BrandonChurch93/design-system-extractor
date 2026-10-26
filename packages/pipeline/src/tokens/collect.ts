@@ -2,14 +2,17 @@ import type { Viewport } from '@dse/schema';
 import { viewportSize } from '@dse/schema';
 import { hexOf, colorsIn, parseCssColor } from '../color/parse';
 import type { Rgba } from '../color/contrast';
-import { hasBackground, hasShadow, hasVisibleBorder, px, type SnapElement, type Snapshot } from '../capture/snapshot';
+import { composite, contrastRatio } from '../color/contrast';
+import { ancestors, effectiveBackground, hasBackground, hasShadow, hasVisibleBorder, px, type SnapElement, type Snapshot } from '../capture/snapshot';
 
 // Raw values from every capture (docs/specs/token-clustering.md, Collect). Clustering comes after.
 
 export type ColorUse = 'text' | 'background' | 'border' | 'other';
 
-export type RawColor = { hex: string; rgba: Rgba; weight: number; uses: Record<ColorUse, number>; pages: Map<string, number> };
-export type RawType = { key: string; family: string; fallbackStack: string; size: number; lineHeight: number; weight: number; letterSpacing: number; textTransform?: string; count: number; tags: Map<string, number>; pages: Map<string, number>; sample: string; homeLargest: boolean };
+export type RawColor = { hex: string; rgba: Rgba; weight: number; uses: Record<ColorUse, number>; /** uses on elements in a semantic context */ semantic: number; pages: Map<string, number> };
+/** One text color on one effective background, the background already opaque. */
+export type RawPair = { fg: string; bg: string; ratio: number; large: boolean; count: number; where: string };
+export type RawType = { key: string; family: string; fallbackStack: string; size: number; lineHeight: number; weight: number; letterSpacing: number; textTransform?: string; count: number; tags: Map<string, number>; pages: Map<string, number>; sample: string; homeLargest: boolean; pageLargest: boolean };
 export type RawSpace = { value: number; weight: number; contexts: { padding: number; margin: number; gap: number; layout: number }; pages: Map<string, number> };
 export type RawRadius = { value: number; isPill: boolean; count: number; pages: Map<string, number> };
 export type RawShadow = { value: string; count: number; maxBlur: number; pages: Map<string, number> };
@@ -21,12 +24,16 @@ export type RawTokens = {
   radius: Map<number, RawRadius>;
   shadows: Map<string, RawShadow>;
   breakpoints: Map<number, number>;
+  pairs: Map<string, RawPair>;
   fontDecls: number;
   families: Map<string, { loaded: boolean; fallback?: string }>;
 };
 
 export type CaptureSource = {
   pageId: string;
+  path: string;
+  /** A page's own snapshot, or the snapshot of a popup it revealed. */
+  kind: 'page' | 'open';
   isHome: boolean;
   viewport: Viewport;
   snapshot: Snapshot;
@@ -39,19 +46,65 @@ export type CaptureSource = {
 const bump = (m: Map<string, number>, k: string, n = 1) => m.set(k, (m.get(k) ?? 0) + n);
 
 export function emptyRaw(): RawTokens {
-  return { colors: new Map(), type: new Map(), space: new Map(), radius: new Map(), shadows: new Map(), breakpoints: new Map(), fontDecls: 0, families: new Map() };
+  return { colors: new Map(), type: new Map(), space: new Map(), radius: new Map(), shadows: new Map(), breakpoints: new Map(), pairs: new Map(), fontDecls: 0, families: new Map() };
 }
 
-function addColor(raw: RawTokens, c: Rgba, use: ColorUse, weight: number, pageId: string) {
+function addColor(raw: RawTokens, c: Rgba, use: ColorUse, weight: number, pageId: string, semantic = false) {
   const hex = hexOf(c);
   let r = raw.colors.get(hex);
   if (!r) {
-    r = { hex, rgba: c, weight: 0, uses: { text: 0, background: 0, border: 0, other: 0 }, pages: new Map() };
+    r = { hex, rgba: c, weight: 0, uses: { text: 0, background: 0, border: 0, other: 0 }, semantic: 0, pages: new Map() };
     raw.colors.set(hex, r);
   }
   r.weight += weight;
   r.uses[use] += 1;
+  if (semantic) r.semantic += 1;
   bump(r.pages, pageId);
+}
+
+export const semanticPattern = /(success|ok|positive|error|danger|invalid|warning|warn|caution|info|notice|alert|badge|status|toast)/;
+
+/**
+ * Elements whose colors speak for a state (docs/specs/token-clustering.md, Classify): a class or role
+ * on the element or an ancestor matches the semantic pattern, the element is an invalid field, or it
+ * sits inside the error message an invalid field points to (D-049, D-051).
+ */
+export function semanticContext(s: Snapshot): Set<number> {
+  const errorIds = new Set<string>();
+  for (const e of s.elements) {
+    if (e.aria['aria-invalid'] !== 'true') continue;
+    for (const k of ['aria-describedby', 'aria-errormessage']) for (const id of (e.aria[k] ?? '').split(/\s+/)) if (id) errorIds.add(id);
+  }
+  const own = (e: SnapElement) => e.cls.some((c) => semanticPattern.test(c.toLowerCase())) || (e.role !== null && semanticPattern.test(e.role)) || (e.id !== '' && errorIds.has(e.id));
+  const out = new Set<number>();
+  for (const e of s.elements) {
+    // Parents come before children in document order, so a parent's answer is already known.
+    const parent = e.p >= 0 ? out.has(e.p) : false;
+    if (parent || own(e) || e.aria['aria-invalid'] === 'true') out.add(e.index);
+  }
+  return out;
+}
+
+/** Large text for WCAG: 24 px, or 18.66 px at weight 700 and above. */
+export function isLargeText(size: number, weight: number): boolean {
+  return size >= 24 || (size >= 18.66 && weight >= 700);
+}
+
+function addPair(raw: RawTokens, s: Snapshot, e: SnapElement, text: Rgba, size: number, weight: number, where: string) {
+  // A gradient or image behind the text is sampled from the crop by the checks stage instead.
+  for (const a of [e, ...ancestors(s, e)]) {
+    if (/url\(|gradient\(/.test(a.style['background-image'] ?? '')) return;
+    const c = parseCssColor(a.style['background-color']);
+    if (c && c.a >= 1) break;
+  }
+  const bgRgb = effectiveBackground(s, e);
+  const bg = { ...bgRgb, a: 1 };
+  const fg = text.a < 1 ? composite(text, bg) : text;
+  const large = isLargeText(size, weight);
+  const key = `${hexOf(text)}|${hexOf(bg)}|${large ? 'L' : 'N'}`;
+  const prev = raw.pairs.get(key);
+  if (prev) prev.count++;
+  else raw.pairs.set(key, { fg: hexOf(text), bg: hexOf(bg), ratio: contrastRatio(fg, bg), large, count: 1, where });
 }
 
 /** The layers of a box-shadow, transparent zero-size layers (Tailwind's ring placeholders) dropped. */
@@ -115,29 +168,31 @@ export function collect(sources: CaptureSource[]): RawTokens {
   for (const src of sources) {
     const vpWidth = viewportSize[src.viewport].width;
     const s = src.snapshot;
-    const largestOnPage = Math.max(0, ...s.elements.filter((e) => e.vis && e.own).map((e) => px(e.style['font-size'])));
+    const largestOnPage = src.kind === 'page' ? Math.max(0, ...s.elements.filter((e) => e.vis && e.own).map((e) => px(e.style['font-size']))) : -1;
+    const semantic = semanticContext(s);
     for (const e of s.elements) {
       if (!e.vis) continue;
       const st = e.style;
+      const sem = semantic.has(e.index);
       // Colors.
       const text = parseCssColor(st.color);
-      if (text) addColor(raw, text, 'text', 1, src.pageId);
+      if (text) addColor(raw, text, 'text', 1, src.pageId, sem);
       const bg = parseCssColor(st['background-color']);
-      if (bg) addColor(raw, bg, 'background', 1 + Math.min(4, Math.floor((e.w * e.h) / 10_000)), src.pageId);
+      if (bg) addColor(raw, bg, 'background', 1 + Math.min(4, Math.floor((e.w * e.h) / 10_000)), src.pageId, sem);
       for (const side of ['top', 'right', 'bottom', 'left'] as const) {
         if (px(st[`border-${side}-width`]) > 0 && !['none', 'hidden'].includes(st[`border-${side}-style`])) {
           const bc = parseCssColor(st[`border-${side}-color`]);
-          if (bc) addColor(raw, bc, 'border', 1, src.pageId);
+          if (bc) addColor(raw, bc, 'border', 1, src.pageId, sem);
         }
       }
-      for (const layer of shadowLayers(st['box-shadow'])) for (const c of colorsIn(layer)) addColor(raw, c, 'other', 1, src.pageId);
+      for (const layer of shadowLayers(st['box-shadow'])) for (const c of colorsIn(layer)) addColor(raw, c, 'other', 1, src.pageId, sem);
       if (st['background-image'] && st['background-image'] !== 'none' && /gradient\(/.test(st['background-image'])) {
-        for (const c of colorsIn(st['background-image'])) addColor(raw, c, 'background', 1, src.pageId);
+        for (const c of colorsIn(st['background-image'])) addColor(raw, c, 'background', 1, src.pageId, sem);
       }
       if (e.tag === 'svg') {
         for (const prop of ['fill', 'stroke'] as const) {
           const c = parseCssColor(st[prop]);
-          if (c) addColor(raw, c, 'other', 1, src.pageId);
+          if (c) addColor(raw, c, 'other', 1, src.pageId, sem);
         }
       }
       // Type: elements with their own text.
@@ -152,13 +207,17 @@ export function collect(sources: CaptureSource[]): RawTokens {
         decls.add(`${st['font-family']}|${size}|${weight}|${st['line-height']}|${st['letter-spacing']}|${st['text-transform']}`);
         let t = raw.type.get(key);
         if (!t) {
-          t = { key, family, fallbackStack: st['font-family'], size, lineHeight, weight, letterSpacing: ls, textTransform: transform, count: 0, tags: new Map(), pages: new Map(), sample: e.own.slice(0, 60), homeLargest: false };
+          t = { key, family, fallbackStack: st['font-family'], size, lineHeight, weight, letterSpacing: ls, textTransform: transform, count: 0, tags: new Map(), pages: new Map(), sample: e.own.slice(0, 60), homeLargest: false, pageLargest: false };
           raw.type.set(key, t);
         }
         t.count++;
         bump(t.tags, e.tag);
         bump(t.pages, src.pageId);
-        if (src.isHome && size === largestOnPage) t.homeLargest = true;
+        if (size === largestOnPage) {
+          t.pageLargest = true;
+          if (src.isHome) t.homeLargest = true;
+        }
+        if (text) addPair(raw, s, e, text, size, weight, src.path);
       }
       // Spacing.
       const layout = ['html', 'body'].includes(e.tag) || e.w >= vpWidth * 0.9;

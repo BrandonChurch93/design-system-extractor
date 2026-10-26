@@ -1,0 +1,23 @@
+{
+  "purpose": "colors",
+  "size": "small",
+  "model": "claude-haiku-5-5",
+  "text": "{\"names\": [{\"id\": \"zh3ek8iz\", \"name\": \"blue-ink\"}, {\"id\": \"busxwsvr\", \"name\": \"blue-600\"}, {\"id\": \"un4hucw1\", \"name\": \"blue-link\"}, {\"id\": \"4qan2176\", \"name\": \"teal-500\"}, {\"id\": \"cd5rgt07\", \"name\": \"blue-ink-tint\"}, {\"id\": \"3fnsmir4\", \"name\": \"blue-500\"}, {\"id\": \"zb0a35xs\", \"name\": \"gray-900\"}, {\"id\": \"rlwe9st9\", \"name\": \"gray-50\"}, {\"id\": \"gdffiqfo\", \"name\": \"gray-border\"}, {\"id\": \"v7apy4ie\", \"name\": \"gray-600\"}, {\"id\": \"bd9c4pw8\", \"name\": \"gray-700\"}, {\"id\": \"972cwu8i\", \"name\": \"gray-200\"}, {\"id\": \"54bndii3\", \"name\": \"gray-800\"}, {\"id\": \"cw6wik3q\", \"name\": \"gray-border-light\"}, {\"id\": \"7rmqsn04\", \"name\": \"gray-500\"}, {\"id\": \"dvbecg9z\", \"name\": \"gray-divider\"}, {\"id\": \"8ndw52go\", \"name\": \"gray-100\"}, {\"id\": \"gi3dywdh\", \"name\": \"gray-50-tint\"}, {\"id\": \"kbh48r2q\", \"name\": \"gray-400\"}, {\"id\": \"sbc7o2qh\", \"name\": \"gray-400-muted\"}, {\"id\": \"2fqlnlan\", \"name\": \"success\"}, {\"id\": \"rab0bgis\", \"name\": \"danger\"}, {\"id\": \"f3nvg8ht\", \"name\": \"warning\"}]}",
+  "usage": {
+    "input_tokens": 1426,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 945,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 561,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-26T02:10:54.360Z"
+}

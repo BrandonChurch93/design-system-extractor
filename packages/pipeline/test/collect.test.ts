@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { breakpointsOf, collect, normalizeShadow, shadowLayers } from '../src/tokens/collect';
 import { snap, type El } from './helpers/snap';
 
-const source = (els: El[], isHome = true) => ({ pageId: 'home0000', isHome, viewport: 'desktop' as const, snapshot: snap(els), focusOutlines: [], media: [], fonts: [] });
+const source = (els: El[], isHome = true) => ({ pageId: 'home0000', path: '/', kind: 'page' as const, isHome, viewport: 'desktop' as const, snapshot: snap(els), focusOutlines: [], media: [], fonts: [] });
 
 describe('collecting raw values', () => {
   it('normalizes shadows and drops transparent ring placeholders', () => {

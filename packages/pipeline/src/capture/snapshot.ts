@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { parseCssColor } from '../color/parse';
 import { styleProps, type RawElement, type SnapshotResult } from './snapshot-script';
 
 // The snapshot as Node sees it: validated, with style maps and tree helpers.
@@ -91,13 +92,9 @@ export function px(v: string | undefined): number {
   return Number.isFinite(n) ? n : 0;
 }
 
-/** Parses rgb()/rgba() as computed by Chromium; null for transparent or anything else. */
+/** Any computed color (rgb, oklch, lab, color()); null for transparent or anything else. */
 export function parseRgb(v: string): { r: number; g: number; b: number; a: number } | null {
-  const m = /^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,/\s]+([\d.]+%?))?\s*\)$/.exec(v.trim());
-  if (!m) return null;
-  let a = m[4] === undefined ? 1 : m[4].endsWith('%') ? parseFloat(m[4]) / 100 : parseFloat(m[4]);
-  if (!Number.isFinite(a)) a = 1;
-  return { r: Number(m[1]), g: Number(m[2]), b: Number(m[3]), a };
+  return parseCssColor(v ?? '');
 }
 
 export function hasBackground(e: SnapElement): boolean {

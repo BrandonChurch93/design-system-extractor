@@ -18,9 +18,9 @@ export function sourcesFrom(capture: CaptureOutput): CaptureSource[] {
           if (color && (!width || parseFloat(width.to) > 0) && style?.to !== 'none') focusOutlines.push(color.to);
         }
       }
-      const base = { pageId: pc.page.id, isHome: pc.page.reason === 'home', viewport: vc.viewport, media: vc.sheets.media, fonts: vc.sheets.fonts };
-      out.push({ ...base, snapshot: vc.snapshot, focusOutlines });
-      for (const o of vc.opens) out.push({ ...base, snapshot: o.snapshot, focusOutlines: [], media: [], fonts: [] });
+      const base = { pageId: pc.page.id, path: pc.page.path, isHome: pc.page.reason === 'home', viewport: vc.viewport, media: vc.sheets.media, fonts: vc.sheets.fonts };
+      out.push({ ...base, kind: 'page', snapshot: vc.snapshot, focusOutlines });
+      for (const o of vc.opens) out.push({ ...base, kind: 'open', snapshot: o.snapshot, focusOutlines: [], media: [], fonts: [] });
     }
   }
   return out;

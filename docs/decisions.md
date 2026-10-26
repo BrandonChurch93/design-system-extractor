@@ -342,3 +342,18 @@ Affects: `docs/specs/token-clustering.md`.
 Date: 2026-10-25 · Context: the rule list in `component-detection.md` takes the first match, but `button` (tag button) precedes `toggle` (`role=switch` on a button), and `nav` precedes `breadcrumb` and `pagination`, which are navs. As written, a switch could never be a toggle and a breadcrumb never a breadcrumb.
 Decision: rules are tried with the specific form before the general one: `toggle` before `button`, and `breadcrumb`, `pagination` and `tabs` before `nav`. Confidences are unchanged.
 Affects: `docs/specs/component-detection.md`.
+
+## D-051 · Token rules made exact
+
+Date: 2026-10-25 · Context: P4 built the tokens stage against `token-clustering.md` and the fixtures.
+Decision:
+- Base grid: 8 when 85% of weighted values are divisible by 8, else 4 when 85% are divisible by 4, else 4 marked not clear. As written (4 first), every 8 px grid would read as 4, because every multiple of 8 is a multiple of 4; the spec's own test asks for an 8 px set to infer 8.
+- Semantic context (extends D-049): a role on an ancestor counts like an ancestor class, and so does the error message an invalid field names in `aria-describedby` or `aria-errormessage`. Utility-class sites (Tailwind, hashed CSS-in-JS) carry their states in ARIA, not class names.
+- Hue words: twelve bands by OKLCH hue, each starting at pink 0, red 15, orange 40, amber 65, yellow 90, lime 115, green 135, teal 165, cyan 200, blue 230, indigo 275, violet 295, pink 325. Chromatic names use the same lightness steps as grays.
+- Names: a collision takes a letter (`gray-100b`); a semantic role held by several clusters is named `{role}-{step}`, a single one by its role alone. The model's names must match the pattern, keep the role, `gray` or the hue word as one part, have at most three parts and stay unique, or the deterministic name stands, per name.
+- Usage is occurrences (text, background, border and other uses summed); weight, which favors large grounds, only orders clustering.
+- Contrast pairs are collected per text node against the opaque effective background, skipped where a gradient or image lies behind the text (the checks stage samples the crop there), mapped to the nearest opaque token, and the worst ratio per background token is kept.
+- The display role reads only a page's own snapshot, never the snapshot of a menu it revealed; spacing tokens need a weight above zero (values seen only in layout contexts are counted, never steps); shadow names come from a `box-shadow` that is exactly one custom property ending in `shadow-{name}`, as the last declaration in the cascade.
+- `pnpm evals --fallback` runs every model step on its fallback, the check that the deterministic names are valid and unique on every fixture.
+- Fixture expectations corrected: the messy fixture's one code block sits on one selected page (two elements), so by the three-element rule it is not a type token, and its share button has no ground, so its 6 px radius is not a radius token. The clean family's planted ratio is 4.18:1, which the floor-to-one-decimal rule shows as "4.1:1".
+Affects: `docs/specs/token-clustering.md`, `docs/evals.md`, `fixtures/sites/messy/expected.json`, `packages/pipeline/src/tokens/`.

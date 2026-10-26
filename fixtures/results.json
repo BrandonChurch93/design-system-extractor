@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-26T01:50:40.512Z",
+  "generatedAt": "2026-10-26T02:46:09.509Z",
   "mode": "replay",
-  "through": "capture",
+  "through": "tokens",
   "pipelineVersion": "1.0.0",
   "fixtures": [
     {
@@ -13,6 +13,69 @@
           "selected": 9,
           "missing": [],
           "extra": []
+        },
+        "tokens": {
+          "precision": 1,
+          "recall": 1,
+          "namesValid": true,
+          "kinds": {
+            "colors": {
+              "predicted": 9,
+              "expected": 9,
+              "matched": 9,
+              "misses": [],
+              "extras": []
+            },
+            "type": {
+              "predicted": 9,
+              "expected": 9,
+              "matched": 9,
+              "misses": [],
+              "extras": []
+            },
+            "space": {
+              "predicted": 11,
+              "expected": 11,
+              "matched": 11,
+              "misses": [],
+              "extras": []
+            },
+            "offGrid": {
+              "predicted": 0,
+              "expected": 0,
+              "matched": 0,
+              "misses": [],
+              "extras": []
+            },
+            "radius": {
+              "predicted": 3,
+              "expected": 3,
+              "matched": 3,
+              "misses": [],
+              "extras": []
+            },
+            "breakpoints": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "shadow": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "base": {
+              "predicted": 1,
+              "expected": 1,
+              "matched": 1,
+              "misses": [],
+              "extras": []
+            }
+          }
         }
       }
     },
@@ -25,6 +88,69 @@
           "selected": 12,
           "missing": [],
           "extra": []
+        },
+        "tokens": {
+          "precision": 1,
+          "recall": 1,
+          "namesValid": true,
+          "kinds": {
+            "colors": {
+              "predicted": 23,
+              "expected": 23,
+              "matched": 23,
+              "misses": [],
+              "extras": []
+            },
+            "type": {
+              "predicted": 9,
+              "expected": 9,
+              "matched": 9,
+              "misses": [],
+              "extras": []
+            },
+            "space": {
+              "predicted": 11,
+              "expected": 11,
+              "matched": 11,
+              "misses": [],
+              "extras": []
+            },
+            "offGrid": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "radius": {
+              "predicted": 4,
+              "expected": 4,
+              "matched": 4,
+              "misses": [],
+              "extras": []
+            },
+            "breakpoints": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "shadow": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "base": {
+              "predicted": 1,
+              "expected": 1,
+              "matched": 1,
+              "misses": [],
+              "extras": []
+            }
+          }
         }
       }
     },
@@ -37,6 +163,69 @@
           "selected": 9,
           "missing": [],
           "extra": []
+        },
+        "tokens": {
+          "precision": 1,
+          "recall": 1,
+          "namesValid": true,
+          "kinds": {
+            "colors": {
+              "predicted": 9,
+              "expected": 9,
+              "matched": 9,
+              "misses": [],
+              "extras": []
+            },
+            "type": {
+              "predicted": 9,
+              "expected": 9,
+              "matched": 9,
+              "misses": [],
+              "extras": []
+            },
+            "space": {
+              "predicted": 11,
+              "expected": 11,
+              "matched": 11,
+              "misses": [],
+              "extras": []
+            },
+            "offGrid": {
+              "predicted": 0,
+              "expected": 0,
+              "matched": 0,
+              "misses": [],
+              "extras": []
+            },
+            "radius": {
+              "predicted": 3,
+              "expected": 3,
+              "matched": 3,
+              "misses": [],
+              "extras": []
+            },
+            "breakpoints": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "shadow": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "base": {
+              "predicted": 1,
+              "expected": 1,
+              "matched": 1,
+              "misses": [],
+              "extras": []
+            }
+          }
         }
       }
     },
@@ -49,6 +238,69 @@
           "selected": 9,
           "missing": [],
           "extra": []
+        },
+        "tokens": {
+          "precision": 1,
+          "recall": 1,
+          "namesValid": true,
+          "kinds": {
+            "colors": {
+              "predicted": 9,
+              "expected": 9,
+              "matched": 9,
+              "misses": [],
+              "extras": []
+            },
+            "type": {
+              "predicted": 9,
+              "expected": 9,
+              "matched": 9,
+              "misses": [],
+              "extras": []
+            },
+            "space": {
+              "predicted": 11,
+              "expected": 11,
+              "matched": 11,
+              "misses": [],
+              "extras": []
+            },
+            "offGrid": {
+              "predicted": 0,
+              "expected": 0,
+              "matched": 0,
+              "misses": [],
+              "extras": []
+            },
+            "radius": {
+              "predicted": 3,
+              "expected": 3,
+              "matched": 3,
+              "misses": [],
+              "extras": []
+            },
+            "breakpoints": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "shadow": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "base": {
+              "predicted": 1,
+              "expected": 1,
+              "matched": 1,
+              "misses": [],
+              "extras": []
+            }
+          }
         }
       }
     },
@@ -61,6 +313,69 @@
           "selected": 7,
           "missing": [],
           "extra": []
+        },
+        "tokens": {
+          "precision": 1,
+          "recall": 1,
+          "namesValid": true,
+          "kinds": {
+            "colors": {
+              "predicted": 23,
+              "expected": 23,
+              "matched": 23,
+              "misses": [],
+              "extras": []
+            },
+            "type": {
+              "predicted": 11,
+              "expected": 11,
+              "matched": 11,
+              "misses": [],
+              "extras": []
+            },
+            "space": {
+              "predicted": 7,
+              "expected": 7,
+              "matched": 7,
+              "misses": [],
+              "extras": []
+            },
+            "offGrid": {
+              "predicted": 0,
+              "expected": 0,
+              "matched": 0,
+              "misses": [],
+              "extras": []
+            },
+            "radius": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "breakpoints": {
+              "predicted": 6,
+              "expected": 6,
+              "matched": 6,
+              "misses": [],
+              "extras": []
+            },
+            "shadow": {
+              "predicted": 3,
+              "expected": 3,
+              "matched": 3,
+              "misses": [],
+              "extras": []
+            },
+            "base": {
+              "predicted": 1,
+              "expected": 1,
+              "matched": 1,
+              "misses": [],
+              "extras": []
+            }
+          }
         }
       }
     }

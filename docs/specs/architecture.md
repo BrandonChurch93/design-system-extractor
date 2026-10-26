@@ -81,7 +81,7 @@ Every root script loads `.env.local` from the repository root; setting `DOTENV_F
 | `pnpm fixtures:serve` | serves `fixtures/` on port 4100 (sites under `/sites/{name}/`, fonts under `/fonts/`) |
 | `pnpm fixtures:build` | compiles the Tailwind fixture's CSS (run once in P3; output committed) |
 | `pnpm pipeline:run <url> [--out file]` | runs the pipeline to a JSON file without the queue |
-| `pnpm evals [--through <stage>]` | runs the pipeline on the five eval fixtures through `MemoryRunContext` in replay mode (a replay miss fails the run), compares to expected, writes `fixtures/results.json`; `--through` scores only the metrics available up to that stage; `env DSE_MODEL_MODE=live` or `record` on the command line overrides replay |
+| `pnpm evals [--through <stage>] [--fallback]` | runs the pipeline on the five eval fixtures through `MemoryRunContext` in replay mode (a replay miss fails the run), compares to expected, writes `fixtures/results.json`; `--through` scores only the metrics available up to that stage; `env DSE_MODEL_MODE=live` or `record` on the command line overrides replay; `--fallback` fails every model call so each step takes its fallback, and leaves `results.json` alone |
 | `pnpm db:migrate` · `pnpm db:reset` | Drizzle migrations |
 | `pnpm db:seed:fixtures` | runs the six fixture sites through the local queue and writes the local showcase content |
 | `pnpm qa:design` | screenshots every page and state at 1440, 820, 390 into `qa/` |

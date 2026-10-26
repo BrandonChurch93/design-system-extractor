@@ -13,12 +13,12 @@ Stage `tokens`, with substages `tokens:palette`, `tokens:type`, `tokens:space` (
 **Classify.**
 
 - `neutral`: OKLCH chroma < 0.03.
-- `semantic`: a non-neutral cluster whose uses are at least 70% on elements whose class, role or ancestor class matches `/(success|ok|positive|error|danger|invalid|warning|warn|caution|info|notice|alert|badge|status|toast)/`, or that carry `aria-invalid="true"` (D-049), mapped to a role by hue: green 120 to 170 → `success`, yellow to orange 40 to 95 → `warning`, red 0 to 40 or 330 to 360 → `danger`, blue 200 to 280 → `info`. If the hue does not match any band the cluster stays `brand`.
+- `semantic`: a non-neutral cluster whose uses are at least 70% on elements whose class, role or ancestor class matches `/(success|ok|positive|error|danger|invalid|warning|warn|caution|info|notice|alert|badge|status|toast)/`, or that carry `aria-invalid="true"`, or that sit in the error message an invalid field names in `aria-describedby` or `aria-errormessage`; an ancestor's role counts like an ancestor's class (D-049, D-051), mapped to a role by hue: green 120 to 170 → `success`, yellow to orange 40 to 95 → `warning`, red 0 to 40 or 330 to 360 → `danger`, blue 200 to 280 → `info`. If the hue does not match any band the cluster stays `brand`.
 - `brand`: everything else. The brand group is ordered by weight.
 
-**Name.** Deterministic names first: neutrals become `gray-{step}` where step is derived from lightness (L ≥ 0.97 → 50, ≥ 0.93 → 100, ≥ 0.87 → 200, ≥ 0.78 → 300, ≥ 0.66 → 400, ≥ 0.55 → 500, ≥ 0.44 → 600, ≥ 0.34 → 700, ≥ 0.24 → 800, ≥ 0.15 → 900, else 950), de-duplicated by appending a letter. Chromatic clusters become `{hueWord}-{step}` with hue words from 12 bands (`red`, `orange`, `amber`, `yellow`, `lime`, `green`, `teal`, `cyan`, `blue`, `indigo`, `violet`, `pink`). Semantic clusters are named by role. Then the Haiku naming pass may rename within these rules (see `model-calls.md`): it receives the clusters with their roles, hues, and usage contexts and returns names that must match `/^[a-z]+(-[a-z0-9]+)*$/`, be unique, and keep the hue word or role; anything else is rejected and the deterministic name stands.
+**Name.** Deterministic names first: neutrals become `gray-{step}` where step is derived from lightness (L ≥ 0.97 → 50, ≥ 0.93 → 100, ≥ 0.87 → 200, ≥ 0.78 → 300, ≥ 0.66 → 400, ≥ 0.55 → 500, ≥ 0.44 → 600, ≥ 0.34 → 700, ≥ 0.24 → 800, ≥ 0.15 → 900, else 950), de-duplicated by appending a letter. Chromatic clusters become `{hueWord}-{step}` with the same lightness steps and hue words from 12 bands of OKLCH hue, each starting at `pink` 0, `red` 15, `orange` 40, `amber` 65, `yellow` 90, `lime` 115, `green` 135, `teal` 165, `cyan` 200, `blue` 230, `indigo` 275, `violet` 295, `pink` 325. Semantic clusters are named by role, or `{role}-{step}` when several clusters share a role. Any name that collides takes a letter (`gray-100b`, D-051). Then the Haiku naming pass may rename within these rules (see `model-calls.md`): it receives the clusters with their roles, hues, and usage contexts and returns names that must match `/^[a-z]+(-[a-z0-9]+)*$/`, have at most three parts, be unique, and keep the hue word, `gray` for a neutral, or the role as one part; anything else is rejected, name by name, and the deterministic name stands.
 
-**Provenance.** Each token lists pages with counts and the raw values with counts. Contrast pairs: for every text node, the pair (text color token, effective background token) with the ratio and where it was seen; stored on the text token. This feeds the checks and the drift proposal.
+**Provenance.** Each token lists pages with counts and the raw values with counts; `usage` is the number of uses (text, background, border and other), while weight only orders clustering. Contrast pairs: for every text node, the pair (text color token, effective background token) with the ratio and where it was seen (the page path); stored on the text token, the worst ratio kept per background token. The background is the opaque effective background mapped to the nearest opaque token; text over a gradient or image is left to the checks stage, which samples the crop (D-051). This feeds the checks and the drift proposal.
 
 Caps: 80 color tokens. Beyond that, the lowest-weight clusters merge into their nearest neighbor and the cap is logged.
 
@@ -26,7 +26,7 @@ Caps: 80 color tokens. Beyond that, the lowest-weight clusters merge into their 
 
 **Collect.** For every visible element with direct text, the tuple (resolved family, size px, weight, line-height px, letter-spacing px, text-transform). The resolved family is the first family in the computed `font-family` stack for which `document.fonts.check(…)` is true, else the first family. Record `fallbackStack`.
 
-**Cluster.** Exact tuples, with line height rounded to the nearest 0.5 px and letter spacing to 0.05 px. Count elements. Drop tuples with fewer than 3 elements unless the element is a heading (`h1` to `h6`) or the tuple is the largest size on a page.
+**Cluster.** Exact tuples, with line height rounded to the nearest 0.5 px and letter spacing to 0.05 px. Count elements. Drop tuples with fewer than 3 elements unless the element is a heading (`h1` to `h6`) or the tuple is the largest size on a page (a page's own snapshot, not a menu it revealed, D-051).
 
 **Role.** Order clusters by size descending. The largest on the home page with weight ≥ 600 is `display`; tuples attached to `h1`..`h4` map to `h1`..`h4` by the most common tag; the most common tuple by element count among `p`, `li`, `td`, `span` is `body`; a tuple 1 to 2 px smaller than body with weight 400 is `body-sm`; a tuple 1 to 3 px smaller than body with weight ≥ 500 is `label`; a tuple 3 px or more smaller than body with weight 400 is `caption`; any tuple whose family is monospace is `code`; everything else `other`. Names are the role, with `-2`, `-3` suffixes when several map to one role.
 
@@ -38,9 +38,9 @@ Cap: 24 type tokens, by element count.
 
 **Collect.** `padding-*`, `margin-*` (positive values only), `gap`, `row-gap`, `column-gap` from visible elements, in px, 1 to 200. Weight 1 per occurrence. Values on `html`, `body`, and full-width layout containers (width ≥ 90% of viewport) are excluded from the step list but counted as `contexts.layout`, and so are the equal left and right margins of an element centered in its parent (`margin: auto` computes to pixels, D-045).
 
-**Base grid.** The base is 4 if at least 85% of weighted values are divisible by 4, else 8 if 85% are divisible by 8, else 4 with a note. Reported as "{base} px base".
+**Base grid.** The base is 8 if at least 85% of weighted values are divisible by 8, else 4 if 85% are divisible by 4, else 4 with a note (8 is tried first because every multiple of 8 is a multiple of 4, D-051). Reported as "{base} px base".
 
-**Steps.** The values with the highest weights, up to 12, that are on the grid, sorted ascending. Off-grid values with weight above 2% of total are kept as steps flagged `onGrid: false` and shown with the warning mark. Everything else is evidence for drift.
+**Steps.** The values with the highest weights, up to 12, that are on the grid, sorted ascending. A value seen only in layout contexts has no weight and is never a step. Off-grid values with weight above 2% of total are kept as steps flagged `onGrid: false` and shown with the warning mark. Everything else is evidence for drift.
 
 ## Radius
 
@@ -48,7 +48,7 @@ Distinct `border-radius` values on elements that have a visible border, backgrou
 
 ## Shadows
 
-Distinct normalized `box-shadow` strings (whitespace and color format normalized, multiple shadows kept as one value) on visible elements, counted. Cluster by the largest blur radius into up to 3 buckets named by increasing blur: `sm`, `md`, `lg`; a site with more distinct shadows has its smallest-usage ones merged into the nearest bucket and the sprawl is reported by drift. If the site's own CSS variables name them (`--shadow-sm` found in matched CSS), those names are used instead.
+Distinct normalized `box-shadow` strings (whitespace and color format normalized, multiple shadows kept as one value) on visible elements, counted. Cluster by the largest blur radius into up to 3 buckets named by increasing blur: `sm`, `md`, `lg`; a site with more distinct shadows has its smallest-usage ones merged into the nearest bucket and the sprawl is reported by drift. If the site's own CSS variables name them (an element's applying `box-shadow` declaration in matched CSS is exactly one custom property ending in `shadow-{name}`, such as `var(--shadow-sm)`), those names are used instead, once each (D-051).
 
 ## Breakpoints
 

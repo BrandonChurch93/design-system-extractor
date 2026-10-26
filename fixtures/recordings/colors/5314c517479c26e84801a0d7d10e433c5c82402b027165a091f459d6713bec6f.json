@@ -1,0 +1,23 @@
+{
+  "purpose": "colors",
+  "size": "small",
+  "model": "claude-haiku-5-5",
+  "text": "{\"names\": [{\"id\": \"x0sh0587\", \"name\": \"blue-500\"}, {\"id\": \"vh5bevs5\", \"name\": \"teal-900\"}, {\"id\": \"8bez8flp\", \"name\": \"teal-400\"}, {\"id\": \"x0ub1zat\", \"name\": \"blue-600\"}, {\"id\": \"kba2j37p\", \"name\": \"gray-700\"}, {\"id\": \"rlwe9st9\", \"name\": \"gray-50\"}, {\"id\": \"idr9w2s0\", \"name\": \"gray-800\"}, {\"id\": \"iskdzlyi\", \"name\": \"gray-border\"}, {\"id\": \"s4o7xf41\", \"name\": \"gray-950\"}, {\"id\": \"vc27n3qf\", \"name\": \"gray-100\"}, {\"id\": \"si2knm6e\", \"name\": \"gray-overlay\"}, {\"id\": \"l6j1n250\", \"name\": \"gray-400\"}, {\"id\": \"44mih2nj\", \"name\": \"gray-scrim\"}, {\"id\": \"vy3di2vd\", \"name\": \"gray-black\"}, {\"id\": \"7tbipx2h\", \"name\": \"info-800\"}, {\"id\": \"uwetsoew\", \"name\": \"info-100\"}, {\"id\": \"5mzumtls\", \"name\": \"danger-400\"}, {\"id\": \"884nk3ui\", \"name\": \"success\"}, {\"id\": \"3qwxtzgo\", \"name\": \"info-300\"}, {\"id\": \"rjj0pi6e\", \"name\": \"warning-900\"}, {\"id\": \"oam1gmnh\", \"name\": \"warning-300\"}, {\"id\": \"2x74gv46\", \"name\": \"danger-800\"}, {\"id\": \"c699fd4a\", \"name\": \"danger-600\"}]}",
+  "usage": {
+    "input_tokens": 1418,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 945,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 548,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-26T02:14:49.768Z"
+}

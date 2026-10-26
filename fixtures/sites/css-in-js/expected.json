@@ -640,7 +640,7 @@
       {
         "component": "New tag",
         "check": "contrast",
-        "detailContains": "4.2:1"
+        "detailContains": "4.1:1"
       }
     ],
     "plantedPasses": [

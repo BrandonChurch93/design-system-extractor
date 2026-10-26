@@ -10,28 +10,29 @@ None.
 
 ## Current phase
 
-P4 · Token clustering. Started 2026-10-25.
+P5 · Component detection. Started 2026-10-25.
 
 ## Next action
 
-Start P4: read `docs/specs/token-clustering.md` and `docs/specs/model-calls.md` in full, then build `packages/pipeline/src/tokens/` (constants, colors, type, space, radius, shadow, breakpoints, naming with the deterministic fallback, the `tokens` stage in `run.ts`) on top of `collect.ts` and `sources.ts`, with unit tests, then the token metrics in `scripts/evals/metrics.ts`, then record the color-naming call for the five fixtures and move `evals:gate` to `--through tokens`.
+Start P5: read `docs/specs/component-detection.md` and `docs/specs/model-calls.md` in full, then build `packages/pipeline/src/components/` (fingerprints, exact groups, style merge, variant split and naming, rule classification, the model pass and the collision call, cross-page merge, noise removal, instances and provenance with source crops, states, tokens used, responsive variants, caps and order) and the `components` stage, with unit tests, then the component metrics in `scripts/evals/metrics.ts`, then record the two calls and move `evals:gate` to `--through components`.
 
 ## Phase checklist
 
-P4 exit criteria (from `docs/plan.md`), plus the standing gate items:
+P5 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
-- [ ] Token precision and recall meet the `docs/evals.md` thresholds on all five fixtures (`pnpm evals --through tokens`), against the token sections of `expected.json` (D-046, D-047).
-- [ ] Unit tests: clustering (20 colors with 6 within ΔE 2 yield 15 clusters with the right representatives and counts), neutral and semantic classification (including `aria-invalid` context, D-049), naming uniqueness, base grid inference on 4-grid, 8-grid and noisy sets.
-- [ ] The deterministic naming fallback produces valid unique names on every fixture with the model disabled.
-- [ ] The color-naming call recorded for the fixtures (`env DSE_MODEL_MODE=record`), replayed by evals; prompts in `packages/pipeline/src/models/prompts/`, voice rules, `pnpm prompts:build`.
-- [ ] Contrast pairs, provenance (pages and raw values), raw counts, families with loaded flags, events with the exact line shapes.
-- [ ] `evals:gate` runs `--through tokens`.
-- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm verify:all`, `pnpm qa:design` reviewed for touched pages, commit naming P4, STATUS updated.
+- [ ] Component precision and recall meet the thresholds on all five fixtures; variant accuracy and state capture rate meet theirs (`pnpm evals --through components`), against the component sections of `expected.json` (D-047).
+- [ ] Variant naming test (the 3 × 2 button set yields Primary, Primary small, Secondary, Secondary small, Ghost, Ghost small) and the cross-page nav merge test pass.
+- [ ] Every component in a fixture run has complete provenance (`firstSeen`, `pages`, selector and bbox non-empty), tested.
+- [ ] The fallback path produces valid names and types with the model disabled (`pnpm evals --through components --fallback`).
+- [ ] The component naming and collision calls recorded for the fixtures; replay, malformed, wrong-enum and timeout tests.
+- [ ] `evals:gate` runs `--through components`.
+- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm verify:all`, `pnpm qa:design` reviewed for touched pages, commit naming P5, STATUS updated.
 
-Notes carried from P3 for P4: the type role `display` must come from the home page's main snapshot, not from the revealed-menu snapshots that `sourcesFrom` also yields; spacing tokens need weight above zero; library breakpoints are counted per capture, and the top six are expected as [768, 769, 1023, 1024, 1216, 1408].
+Notes carried into P5: state-driven styles never make variants (D-047); specific rule forms come first (D-050); `a.btn` and `button.btn` are one Button in the expected files, so the collision call (or a rule) must join link buttons and real buttons; a header nav and a footer nav stay two components; card and table heights that follow their content are not size variants; the share button and icon button in messy are separate by style; the library icon button is its own component; `chooseForStates` leaves over-cap interactive candidates without states, which P5 marks `captured: false` with `over capture cap` (from `stateCaptured`); popup snapshots from `open` can sit at a scrolled document offset when the header is sticky.
 
 ## Gates passed
 
+- P4 · Token clustering · 2026-10-25 · token precision and recall 1.000 on all five fixtures (`evals:gate`, replay) · fallback names valid and unique on every fixture (`evals --fallback`) · color naming recorded, model-call fallbacks tested · clustering, classification, naming, base inference, shadows, type roles unit tests · tokens integration test · D-051 logged with documents fixed · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green · build spend $0.0038.
 - P3 · Crawler, selection and capture · 2026-10-25 · selection exact on all five fixtures (`evals:gate`, replay) · capture, blocked-state, private-range, politeness, form and dialog, select model-call tests green (unit and integration) · expected.json complete for all five fixtures · D-040 to D-050 logged with documents fixed · catalog unchanged (qa:visual against goldens, qa:design reviewed at three viewports) · axe zero violations · verify:all green. Fixed during the gate: nested `run.mjs` runs lost the record of which variables came from `.env.local`, so `verify:all` ran evals live once ($0.0002); now kept and tested (`scripts/test/run-env.test.ts`).
 - P2 · Design system in code and the catalog · 2026-10-25 · tokens.css diffed against design-system.md and motion.md both ways (mutation-checked) · contrast table recomputed within 0.05 · 23 primitives plus a Motion section in /catalog with 390 px frames · axe zero violations on the catalog at 1440, 820, 390 and on all 25 frame routes · reduced-motion Playwright test with a no-preference control · catalog goldens committed · qa:design reviewed at three viewports with a 60-stop keyboard focus walk · verify:all green.
 - P1 · Schema and data model · 2026-10-25 · 42 tests (schema, enums and labels verbatim from copy.md, every data-model type by name, migrations clean and idempotent, db:reset, patch merge and concurrency, events, unpublished runs hidden, storage text and binary round trip with content types) · verify:all green.
@@ -41,6 +42,7 @@ Notes carried from P3 for P4: the type role `display` must come from the home pa
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-051 · Token rules made exact: base 8 tried before 4, ARIA semantic context, hue bands, naming and collision rules, usage as occurrences, contrast pair collection, `evals --fallback`; messy expectations corrected.
 - D-050 · Rule classification tries specific forms first: toggle before button; breadcrumb, pagination and tabs before nav.
 - D-049 · An `aria-invalid="true"` element counts as semantic (error) context for color classification.
 - D-048 · Near-duplicate colors are compared only between tokens of matching alpha.
@@ -94,6 +96,7 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-25 · Gate passed · P4 · tokens 1.000 / 1.000 on all fixtures, fallback names valid, verify:all green.
 - 2026-10-25 · Gate passed · P3 · selection exact, capture and blocked-state tests, expected.json complete, verify:all green.
 - 2026-10-25 · P3 · expected.json authored for all five fixtures (fixtures adjusted per D-046), decisions D-040 to D-050 logged and documents fixed, new unit tests (candidates, color, collect, expected files), verify:all started.
 - 2026-10-25 · Session started (after compaction) · P3 · read CLAUDE.md, STATUS, decisions, plan, handoff, evals, crawler, page-selection, capture-and-states, caps-and-budget, model-calls · tree reconciled (P3 work since 0377500 uncommitted: tests, color parse, token collect, fixture fixes).
