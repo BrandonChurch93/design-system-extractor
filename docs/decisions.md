@@ -501,3 +501,10 @@ Decision:
 Reasoning: a golden that changes with the hour is not a regression test; the gate's intent (no page changed by P12) holds for every page whose rendering does not depend on the clock, and the exception is named.
 Affects: `tests/qa/pages.ts`, `tests/qa/visual.spec.ts`, `apps/web/test/goldens/run-390-after-select.png`, `.gitignore`.
 
+## D-062 · A narrow plan card sets its period beneath the price
+
+Date: 2026-10-26 · Context: the P12 review at 820 px and in the catalog's desktop column. Three plan cards there are about 232 px wide: "[PRICE]" in `stat` left no room for "per month", so Pro and Team wrapped the period to a second line while Free kept it beside "0", and the feature lists' top rules sat at different heights across one row.
+Decision: each plan card is a size container; below 280 px of card width every card sets the period beneath the price, above it the period sits beside the price. One row always shares one layout.
+Reasoning: cards in a row share their edges (`quality-bar.md`); a rule that depends on each card's own text would not.
+Affects: `docs/design/components.md`, `apps/web/components/v2/v2.module.css`.
+

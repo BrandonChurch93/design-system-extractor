@@ -169,7 +169,7 @@ Phone: Compare renders the two CompareColumns stacked, then a StateCard-style no
 
 Built in P12, rendered in `/catalog` always (so they are reviewed), rendered in the app only when the flag is on. Each carries `data-testid="v2-surface"` so the flag-off test can assert their absence.
 
-**PricingSection** · Three Cards in a row (Free, Pro, Team; the runs and pages lines read from entitlements, D-060): plan name (`h3`), a price line (`stat` for the number, `label` for the period; placeholders "[PRICE]" until set), a feature list with Lucide `check` marks, a Button (Free: "Current plan" disabled; Pro and Team: "Choose Pro" / "Choose Team" primary, which open the SignInSheet when there is no session and the adapter's checkout otherwise). Phone: stacked. A caption beneath: "Prices are placeholders until plans launch."
+**PricingSection** · Three Cards in a row (Free, Pro, Team; the runs and pages lines read from entitlements, D-060): plan name (`h3`), a price line (`stat` for the number, `label` for the period, set beneath the number in every card when a card is under 280 px wide, D-062; placeholders "[PRICE]" until set), a feature list with Lucide `check` marks, a Button (Free: "Current plan" disabled; Pro and Team: "Choose Pro" / "Choose Team" primary, which open the SignInSheet when there is no session and the adapter's checkout otherwise). Phone: stacked. A caption beneath: "Prices are placeholders until plans launch."
 
 **PlanBadge** · A Pill `soft` with the plan name, shown in TopNav next to the account menu.
 

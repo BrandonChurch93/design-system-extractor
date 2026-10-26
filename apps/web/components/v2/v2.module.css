@@ -120,6 +120,7 @@
 .planItem {
   display: grid;
   min-width: 0;
+  container-type: inline-size;
 }
 
 .plan {
@@ -148,6 +149,14 @@
   composes: label from '../../styles/type.module.css';
   color: var(--dse-muted);
   white-space: nowrap;
+}
+
+/* "[PRICE]" leaves no room for the period in a narrow card; every card then sets it beneath, so the rows line up. */
+@container (max-width: 279px) {
+  .price {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .features {

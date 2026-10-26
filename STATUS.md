@@ -10,24 +10,20 @@ None.
 
 ## Current phase
 
-P12 · V2 seams and flagged surfaces. P11 gate passed 2026-10-26.
+P13 · Showcase, SEO and content. P12 gate passed 2026-10-26.
 
 ## Next action
 
-P12: build the plan below in order, then run the gate.
+Start P13: read `docs/specs/showcase.md`, `docs/design/pages.md` (meta, OG, indexing), `docs/design/copy.md` (Page metadata) in full, write the P13 plan here, then begin with the EvalTable fix carried from P11 (below).
 
-### P12 plan
+### Carried into P13 (found in the P12 review)
 
-Read for P12: v2-seams, components (Flagged v2 surfaces), v2-plan, pages (Home, state pages, /account/billing), copy (Flagged v2 surfaces).
+- EvalTable (How it works) chooses its layout from the viewport, not its own width: in the catalog's 746 px desktop column at a 1440 viewport it keeps the no-wrap rule and overflows its card into the phone frame. On phones it hides the header row, so each fixture's two `precision · recall` lines and its live count carry no label. Fix: lay out by container width (as RecentRunRow, D-059) and label the stacked cells from the header strings; log D-063; the how-it-works 390 golden and the catalog golden change.
+- The visual gate's `maxDiffPixelRatio` of 0.001 is loose on tall pages (a 1440 run page is about 7,750 px of tolerance; the catalog about 68,000): a StatStrip at 0 instead of 9, and a price line moved, both passed. Decide in P13 or P14 whether tall pages get an absolute pixel bound.
 
-1. `apps/web/lib/flags.ts` (`billingEnabled` from the build-time `NEXT_PUBLIC_BILLING_ENABLED`, server and client alike); `lib/auth/adapter.ts` (AuthAdapter, MockAuthAdapter); `lib/billing/adapter.ts` (BillingAdapter, MockBillingAdapter); the flagged strings in `copy/strings.ts`.
-2. Components in `components/v2/`: PricingSection, PlanBadge, AccountMenu, SignInSheet with its TopNav trigger, BillingPage, UpgradePrompt, each with `data-testid="v2-surface"`.
-3. Placement behind the flag: Home (Plans between Showcase and Footer), TopNav (sign-in, or account menu and plan badge with a session), budget and visitor-cap states (UpgradePrompt above the key form), `/account/billing` (404 when off); the visitor's usage read for the billing page.
-4. Catalog entries for the six surfaces (always rendered).
-5. Tests: `apps/web/test/flag-off.test.ts` (config derivation, mocks, no auth or payment dependency, sitemap, the billing route's 404), `tests/e2e/flag-off.spec.ts` (every page and state of the QA registry with the flag off), a flag-on build served on 3101 (`QA_BILLING=on`, its own dist folder) with `pnpm qa:billing` capturing and axe-checking the surfaces in place, added to verify:all.
-6. Gate: qa:visual against the P11 goldens with only the catalog golden updated, verify:all, qa:design, flag-on screenshots reviewed.
+### P12 self-review (flag on: `qa/billing` at 1440, 820, 390; flag off: qa:visual unchanged from P11; catalog v2 sections)
 
-P12 notes for the gate (D-061): QA now starts every page at one moment (`qaNow` in `tests/qa/pages.ts`, a shifted `Date` that keeps flowing, because a fixed clock stops GSAP), since the in-progress pages' elapsed time and Recent runs' "Today" followed the real clock. Recent and the Compare picker read the reader's clock. Goldens updated in P12: the catalog (the six flagged surfaces) and `run-390-after-select` only (its masked meta line wraps by the elapsed text's length). An earlier session had replaced all nine in-progress goldens and called it clock only; those captures showed the StatStrip mid-count at 0, which the 0.001 ratio let through on a tall page. They are restored to the P11 files and pass. `.gitignore`'s `qa/` also hid `tests/qa/`; now `/qa/`, and the QA suite is committed.
+Fixed during review: plan cards at about 232 px (820 px and the catalog column) wrapped "per month" under "[PRICE]" in Pro and Team but not Free, so the feature rules misaligned across the row (D-062). Checked and kept: Plans between Showcase and Footer with buttons on one bottom line; the SignInSheet centered at 440 over the scrim and opened from the phone menu; UpgradePrompt inside the StateCard above the key form; the billing page's three cards at 760; every phone capture within the 20 px gutter; no chroma beyond the extracted palette; the mock toast on sign-in.
 
 ### P11 self-review (quality-bar.md, every page at 1440, 820, 390)
 
@@ -51,20 +47,16 @@ Read for P11: pages, components, copy, motion, quality-bar, design-system, expor
 
 ## Phase checklist
 
-P11 exit criteria (from `docs/plan.md`), plus the standing gate items:
+P12 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
-- [x] Every page and state in `pages.md` exists and is screenshotted at 1440, 820, 390; the `quality-bar.md` self-review applied to each and what was fixed noted here.
-- [x] No horizontal scroll at 390 on any page (Playwright assertion).
-- [x] axe: zero violations on every page and state.
-- [x] Lighthouse thresholds on Home and a complete Run page.
-- [x] Motion: a recorded video of the in-progress page filling on a fixture run reviewed; reduced-motion test passes on the run page.
-- [x] Copy audit: every string in `strings.ts` appears verbatim in `copy.md`; `pnpm qa:copy` passes.
-- [x] The `/open` Playwright test passes.
-- [x] Visual goldens committed.
-- [x] Polling: a run page open during a fixture run shows each stage landing with no full re-render (DOM mutation bound per poll).
-- [x] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, `pnpm qa:design` reviewed, commit naming P11, STATUS updated.
+- [x] Flag off: the flag-off test passes (unit half and 87 browser cases); `pnpm qa:visual` passes against the P11 goldens with every page golden unchanged except `run-390-after-select` (clock, D-061); the catalog golden updated once for the six surfaces and the plan-card alignment (D-062).
+- [x] Flag on: every surface renders in place, captured at 1440, 820, 390 and reviewed; axe zero violations (`qa:billing`, 16).
+- [x] No auth or payment dependency in any `package.json` (`flag-off.test.ts`).
+- [x] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, `pnpm qa:design` reviewed, commit naming P12, STATUS updated.
 
 ## Gates passed
+
+- P12 · V2 seams and flagged surfaces · 2026-10-26 · flag derived at build time and read through one module · auth and billing adapters with mocks · PricingSection, PlanBadge, AccountMenu, SignInSheet (with the TopNav Sign in), BillingPage and UpgradePrompt behind the flag with `data-testid="v2-surface"`, in the catalog always · flag-off test in two halves (D-060) · `qa:billing` on a flag-on build, reviewed at three viewports, axe zero · page goldens unchanged but `run-390-after-select` (D-061) · catalog golden updated · `tests/qa/` committed (was ignored) · D-060, D-061, D-062 logged with documents fixed · verify:all green (412 tests, e2e 134, visual 123, axe 174, billing 16) · `pnpm audit` one moderate advisory, none high.
 
 - P11 · The web app · 2026-10-26 · every page and state in pages.md built and captured at 1440, 820, 390 (162 design captures) and self-reviewed (notes above) · no horizontal scroll at 390 (layout e2e) · axe zero violations on every page and state · Lighthouse home 100/100/100/100, run 99/100/100/100 · in-progress video reviewed (rail fills, stats count, 60 fps, grid entrance without long frames) and reduced motion on the run page · copy audit and qa:copy · /open test · goldens for every page at three viewports (all page goldens new; catalog golden updated for the page-level entries and the CodeBlock column) · polling mutation bound per poll · Compare deltas messy to messy-after · D-058, D-059 logged with documents fixed · P6 preview CSP defect fixed · verify:all green (405 tests, e2e 53, visual 123, axe 169) · `pnpm audit` one moderate advisory, none high.
 
@@ -85,6 +77,7 @@ P11 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-062 · A plan card under 280 px wide sets "per month" beneath the price, so one row shares one layout.
 - D-061 · QA starts every page at `qaNow`; `run-390-after-select` is the one page golden updated in P12 (its masked meta line wraps by the clock); `/qa/` ignored from the root so `tests/qa/` is committed.
 - D-060 · The flag is read from the build-time public value everywhere; the flag-off test is a unit half and a browser half; `qa:billing` serves a flag-on build on 3101; without a session TopNav shows Sign in and paid plans open the SignInSheet; the billing page shows the visitor's free day.
 - D-059 · Phone forms on state pages take a full-width button like UrlForm; RecentRunRow lays out by its list's width; empty Radius and Shadow cards are left out; one page reads `1 page`.
@@ -151,6 +144,7 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-26 · Gate passed · P12 · flag-off test, flag-on captures and axe, goldens held, verify:all green.
 - 2026-10-26 · Session started · P12 · read CLAUDE.md, handoff, STATUS, decisions, plan, v2-seams, v2-plan, components, pages, copy, quality-bar, architecture · tree reconciled: P12 steps 1 to 5 uncommitted; `.gitignore`'s `qa/` also matched `tests/qa/`, so the QA suite was never committed (now `/qa/`); the nine in-progress goldens changed with `qaNow` show the StatStrip at 0, not a clock-only change (investigating); `pnpm check` green.
 
 - 2026-10-26 · Gate passed · P11 · every page at three viewports, axe, Lighthouse, goldens, verify:all green.
