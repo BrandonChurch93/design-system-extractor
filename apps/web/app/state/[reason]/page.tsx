@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMeta } from '../../../lib/meta';
 import { notFound } from 'next/navigation';
 import { byoLimitsFrom, planLimits } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
@@ -29,7 +30,7 @@ type Props = { params: Promise<{ reason: string }>; searchParams: Promise<Record
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { reason } = await params;
   const r = reasons.find((x) => x === reason);
-  return { title: r ? titles[r] : undefined, description: meta.states.description, robots: { index: false, follow: false } };
+  return pageMeta({ title: r ? titles[r] : meta.notFound.title, description: meta.states.description, index: false });
 }
 
 function hostOf(url: string): string {

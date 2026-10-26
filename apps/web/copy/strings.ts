@@ -48,6 +48,7 @@ export const meta = {
   terms: { title: 'Terms', description: 'Use it on sites you are allowed to inspect.' },
   states: { runsPaused: 'Runs paused', runLimit: 'Run limit', couldNotCrawl: 'Could not crawl', loginWall: 'Login wall', description: 'Design System Extractor could not run this extraction.' },
   catalog: { title: 'Catalog', description: 'Every component of the app, in every state.' },
+  notFound: { title: 'Not found' },
 } as const;
 
 export const home = {

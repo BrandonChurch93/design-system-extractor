@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMeta } from '../../../lib/meta';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { planLimits } from '@dse/schema';
@@ -13,7 +14,7 @@ import { services } from '../../../lib/server/services';
 
 export async function generateMetadata(): Promise<Metadata> {
   if (!billingEnabled()) return {};
-  return { title: v2.billing.title, description: v2.billing.metaDescription, robots: { index: false, follow: false } };
+  return pageMeta({ title: v2.billing.title, description: v2.billing.metaDescription, index: false });
 }
 
 /** Flagged (BILLING_ENABLED): a 404 otherwise (docs/specs/v2-seams.md). Without a session it shows the visitor's free day. */

@@ -14,7 +14,16 @@ P13 · Showcase, SEO and content. P12 gate passed 2026-10-26.
 
 ## Next action
 
-Start P13: read `docs/specs/showcase.md`, `docs/design/pages.md` (meta, OG, indexing), `docs/design/copy.md` (Page metadata) in full, write the P13 plan here, then begin with the EvalTable fix carried from P11 (below).
+P13, in progress. Done: the showcase script (D-063), EvalTable (D-064), the metadata helper and test (D-065). Now: make the pipeline finish real sites inside the 6-minute timeout (findings below), then fix the capture navigation crash, then re-run `pnpm showcase --dry-run` in full and paste its table here.
+
+### P13 dry-run findings (first attempt, stopped after five sites, $0.013 spent)
+
+- brandonchurchportfolio.com complete in 200 s (4 pages, 16 components; capture 2 min 18 s, previews 36 s for 16 components, 7 live of 16).
+- generative-ui-github.vercel.app complete in 83 s (3 pages, 31 components).
+- stripe.com failed: timed out at 6 min inside capture (discover 60 s; each page about 65 s per viewport, mostly 40 state elements at about 1.5 s each; two pages at a time). Replaced by coinbase.com.
+- coinbase.com failed: an `open` state click navigated the page ("Execution context was destroyed"), and one element failed the run. The spec forbids following links during capture. Replaced by wise.com.
+- wise.com: discover took 80 s (2,000 sitemap URLs, template fingerprints); stopped by hand during capture.
+- Arithmetic: 12 pages × 2 viewports of state capture alone is about 12 minutes; previews at about 2.3 s a component reach 4 minutes at the 120 cap. The pipeline needs a time budget and faster state capture and previews.
 
 ### Carried into P13 (found in the P12 review)
 
@@ -77,6 +86,7 @@ P12 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-065 · Page metadata: one helper for title, description, preview and indexing; 404 titled Not found; unfinished runs use the global description; a test reads copy.md.
 - D-064 · EvalTable lays out by its own width and labels its stacked cells.
 - D-063 · Showcase script: the content route lists exactly its runs; `--dry-run`; replacement and multiple-of-six rules; own worker locally with the build meter; cost is the run's record.
 - D-062 · A plan card under 280 px wide sets "per month" beneath the price, so one row shares one layout.

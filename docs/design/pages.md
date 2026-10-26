@@ -149,7 +149,7 @@ Only when `BILLING_ENABLED`; otherwise a 404. TopNav, BillingPage, Footer; `noin
 
 ## Page metadata
 
-Titles follow `{page} · Design System Extractor`; the `{page}` values and descriptions are in `docs/design/copy.md` under Page metadata. Every run page's Open Graph image is its `/og` route; the home page's OG image is the wordmark and the headline on `bg` with the first showcase entry's palette strip beneath; every other page uses the home image.
+Titles follow `{page} · Design System Extractor`; the `{page}` values and descriptions are in `docs/design/copy.md` under Page metadata. Every run page's Open Graph image is its `/og` route; the home page's OG image is the wordmark and the headline on `bg` with the first showcase entry's palette strip beneath; every other page uses the home image. Every page also carries its full title and description as its Open Graph and Twitter preview, with `summary_large_image` (D-065).
 
 ## API routes
 

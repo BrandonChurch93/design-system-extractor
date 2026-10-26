@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
+import { pageMeta } from '../../../lib/meta';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { fill } from '@dse/schema/labels';
 import { SiteNav } from '../../../components/SiteNav';
 import { RunView } from '../../../components/run/RunView';
-import { meta } from '../../../copy/strings';
+import { global, meta } from '../../../copy/strings';
 import { count } from '../../../lib/format';
 import { clientDocument } from '../../../lib/panel-doc';
 import { runPayload } from '../../../lib/server/runs';
@@ -18,12 +19,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const run = await runPayload(services().db, id);
   if (!run) return { robots: { index: false } };
   const d = run.document;
-  return {
-    title: fill(meta.run.title, { host: d.host ?? '' }),
-    description: fill(meta.run.description, { colors: count(d.tokens?.colors?.length ?? 0), typeStyles: count(d.tokens?.type?.length ?? 0), components: count(d.components?.length ?? 0), host: d.host ?? '' }),
-    robots: run.isShowcase ? undefined : { index: false, follow: false },
-    openGraph: { images: [{ url: `/api/runs/${run.id}/og`, width: 1200, height: 630 }] },
-  };
+  // Counts exist once the run is complete; until then the page says what the product does (D-065).
+  const description = run.status === 'complete' ? fill(meta.run.description, { colors: count(d.tokens?.colors?.length ?? 0), typeStyles: count(d.tokens?.type?.length ?? 0), components: count(d.components?.length ?? 0), host: d.host ?? '' }) : global.description;
+  return pageMeta({ title: fill(meta.run.title, { host: d.host ?? '' }), description, image: `/api/runs/${run.id}/og`, index: run.isShowcase });
 }
 
 export default async function RunPage({ params, searchParams }: Props) {

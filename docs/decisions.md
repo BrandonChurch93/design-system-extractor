@@ -527,3 +527,12 @@ Decision: the table is a size container and lays out by its own width, as Recent
 Reasoning: a number without its label is not a measurement a reader can use; the component must hold its layout wherever it is placed.
 Affects: `docs/design/components.md`, `apps/web/components/how/`, the how-it-works goldens at 820 and 390, the catalog goldens.
 
+## D-065 · Page metadata made exact
+
+Date: 2026-10-26 · Context: the P13 metadata review against `copy.md` and `pages.md`, with a test that reads both. Next merges metadata shallowly, so a page that set its own `openGraph` (the run and component pages) dropped the layout's, and no page set an `og:title` or `og:description`. The home page's file-based image reached only the home segment, so "every other page uses the home image" was not true of any page. The catalog's title carried the suffix twice; the 404 had no title of its own; an in-progress run's description read "0 colors, 0 type styles and 0 components".
+Decision:
+- One helper (`apps/web/lib/meta.ts`) writes every page's title, description, link preview and indexing: `og:title` and `twitter:title` are the full title, `og:description` and `twitter:description` the description, `og:site_name` the wordmark, `twitter:card` `summary_large_image`, and the image is the run's `/og` route on run and component pages and the home image (`/opengraph-image`) everywhere else.
+- The 404, and a state route that does not exist, are titled `Not found` with the App 404 body as the description. A run that has not finished uses the global meta description, because its counts are not known yet. Both lines are in `copy.md`.
+- `tests/e2e/metadata.spec.ts` reads the Page metadata and Global lines of `copy.md` and checks every route's title, description, preview tags, image and indexing, and that both images answer 1200 × 630 PNGs.
+Affects: `docs/design/copy.md`, `docs/design/pages.md`, `apps/web/lib/meta.ts`, every `apps/web/app/**/page.tsx` with metadata, `apps/web/app/layout.tsx`, `apps/web/app/not-found.tsx`, `tests/e2e/metadata.spec.ts`.
+

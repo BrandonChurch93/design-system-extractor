@@ -1,5 +1,6 @@
 import { byoLimitsFrom, planLimits } from '@dse/schema';
-import { home } from '../copy/strings';
+import type { Metadata } from 'next';
+import { global, home } from '../copy/strings';
 import { PageShell } from '../components/PageShell';
 import { Showcase } from '../components/home/Showcase';
 import { UrlForm } from '../components/home/UrlForm';
@@ -8,6 +9,9 @@ import { billingEnabled } from '../lib/flags';
 import { currentSession } from '../lib/server/session';
 import { getShowcaseContent } from '../lib/showcase';
 import styles from './home.module.css';
+import { pageMeta } from '../lib/meta';
+
+export const metadata: Metadata = pageMeta({ description: global.description });
 
 export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const [content, sp] = await Promise.all([getShowcaseContent(), searchParams]);

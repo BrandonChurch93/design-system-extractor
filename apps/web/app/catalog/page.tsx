@@ -1,19 +1,16 @@
 import type { Metadata } from 'next';
+import { pageMeta } from '../../lib/meta';
 import { fill } from '@dse/schema/labels';
 import { CatalogView } from '../../components/catalog/CatalogView';
 import { Footer } from '../../components/Footer';
 import { Meter } from '../../components/Meter';
 import { TopNav } from '../../components/TopNav';
-import { catalog } from '../../copy/strings';
+import { catalog, meta } from '../../copy/strings';
 import { readDevSpend } from '../../lib/dev-spend';
 import layout from '../../styles/layout.module.css';
 import styles from './page.module.css';
 
-export const metadata: Metadata = {
-  title: `${catalog.title} · Design System Extractor`,
-  description: 'Every component of the app, in every state.',
-  robots: { index: false, follow: false },
-};
+export const metadata: Metadata = pageMeta({ title: meta.catalog.title, description: meta.catalog.description, index: false });
 
 export const dynamic = 'force-dynamic';
 

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMeta } from '../../lib/meta';
 import { byoLimitsFrom, planLimits } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { Button } from '../../components/Button';
@@ -12,7 +13,7 @@ import { howItWorks as H, meta } from '../../copy/strings';
 import { numberWord } from '../../lib/format';
 import styles from '../../components/how/HowItWorks.module.css';
 
-export const metadata: Metadata = { title: meta.howItWorks.title, description: meta.howItWorks.description };
+export const metadata: Metadata = pageMeta({ title: meta.howItWorks.title, description: meta.howItWorks.description });
 
 export default function HowItWorksPage() {
   const free = planLimits('free');

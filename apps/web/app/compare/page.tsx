@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMeta } from '../../lib/meta';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { fill } from '@dse/schema/labels';
@@ -21,7 +22,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const sp = await searchParams;
   const [a, b] = await Promise.all([load(sp.a), load(sp.b)]);
   const title = a && b && a.host !== b.host ? fill(meta.compare.titleTwo, { hostA: a.host ?? '', hostB: b.host ?? '' }) : fill(meta.compare.titleOne, { hostA: a?.host ?? '' });
-  return { title, description: meta.compare.description, robots: { index: false, follow: false } };
+  return pageMeta({ title, description: meta.compare.description, index: false });
 }
 
 export default async function ComparePage({ searchParams }: Props) {

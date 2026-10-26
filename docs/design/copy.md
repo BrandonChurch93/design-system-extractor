@@ -54,6 +54,9 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - About: `About` · `A portfolio project by Brandon Church.` · Privacy: `Privacy` · `What this site stores and what it does not.` · Terms: `Terms` · `Use it on sites you are allowed to inspect.`
 - State pages: `Runs paused` (budget, busy) · `Run limit` · `Could not crawl` (bot, robots, unreachable, invalid) · `Login wall`; description for all: `Design System Extractor could not run this extraction.`
 - Catalog: `Catalog` · `Every component of the app, in every state.`
+- App 404 (and a state route that does not exist): `Not found` · the App 404 body as the description (D-065)
+- A run that has not finished: the run title with the global meta description, since its counts are not known yet (D-065)
+- Every page also carries its title and description as its link preview (Open Graph and Twitter, `summary_large_image`) with the site name `Design System Extractor` (D-065)
 
 ## Enum labels (rendered from `packages/schema/src/labels.ts`)
 

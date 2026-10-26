@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { pageMeta } from '../../../../../lib/meta';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { fill } from '@dse/schema/labels';
@@ -25,12 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const found = await load(id, componentId);
   if (!found) return { robots: { index: false } };
   const host = found.doc.host ?? '';
-  return {
-    title: fill(meta.component.title, { name: found.component.name, host }),
-    description: fill(meta.component.description, { name: found.component.name, host }),
-    robots: { index: false, follow: false },
-    openGraph: { images: [{ url: `/api/runs/${id}/og`, width: 1200, height: 630 }] },
-  };
+  return pageMeta({ title: fill(meta.component.title, { name: found.component.name, host }), description: fill(meta.component.description, { name: found.component.name, host }), image: `/api/runs/${id}/og`, index: false });
 }
 
 /** A component with a share link of its own: the panel's content as a page (D-007). */
