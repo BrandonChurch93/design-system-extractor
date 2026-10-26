@@ -282,7 +282,28 @@ describe('admin routes', () => {
     const content = { generatedAt: '2026-10-26T00:00:00.000Z', appUrl: 'https://design-system-extractor.vercel.app', entries: [] };
     expect((await showcaseContent(request('/api/admin/showcase/content', { body: { nope: 1 }, headers: admin }))).status).toBe(400);
     const res = await showcaseContent(request('/api/admin/showcase/content', { body: content, headers: admin }));
-    expect(await res.json()).toEqual({ stored: 'showcase/showcase.json', entries: 0 });
+    expect(await res.json()).toEqual({ stored: 'showcase/showcase.json', entries: 0, removed: 0 });
     expect(JSON.parse((await h.storage.get('showcase/showcase.json'))!.toString())).toEqual(content);
+  });
+
+  it('lists exactly the content runs, takes the rest out, and refuses a run that is not complete', async () => {
+    const doc = (id: string) => ({ id, url: CLEAN, host: 'localhost:4100', status: 'complete', createdAt: '2026-01-01T00:00:00.000Z', pipelineVersion: '1.0.0', viewports: ['desktop'] });
+    const base = { url: CLEAN, host: 'localhost:4100', status: 'complete' as const, visitorId: 'visitorSHOWCASE', pageCap: 12, pipelineVersion: '1.0.0' };
+    await h.db.insert(tables.runs).values([
+      { ...base, id: 'listnew001', document: doc('listnew001'), retentionUntil: '2027-01-01T00:00:00.000Z' },
+      { ...base, id: 'liststale1', document: doc('liststale1'), retentionUntil: null, isShowcase: true },
+      { ...base, id: 'listopen01', document: { ...doc('listopen01'), status: 'running' }, status: 'running' as const },
+    ]);
+    const entry = (runId: string) => ({ runId, url: `https://design-system-extractor.vercel.app/r/${runId}`, host: 'localhost:4100', name: 'Tidewater', category: 'SaaS', order: 1, stats: { colors: 9, typeStyles: 9, spacingSteps: 11, components: 27, checksPassed: 43, checksApplicable: 45 }, palette: [{ value: '#0B1F3A', share: 1 }] });
+    const content = (ids: string[]) => ({ generatedAt: '2026-10-26T00:00:00.000Z', appUrl: 'https://design-system-extractor.vercel.app', entries: ids.map(entry) });
+
+    const refused = await showcaseContent(request('/api/admin/showcase/content', { body: content(['listnew001', 'listopen01']), headers: admin }));
+    expect(refused.status).toBe(400);
+    const listing = async () => Object.fromEntries((await h.db.select().from(tables.runs)).map((r) => [r.id, { isShowcase: r.isShowcase, kept: r.retentionUntil === null }]));
+    expect(await listing()).toMatchObject({ listnew001: { isShowcase: false, kept: false }, liststale1: { isShowcase: true, kept: true } });
+
+    const res = await showcaseContent(request('/api/admin/showcase/content', { body: content(['listnew001']), headers: admin }));
+    expect(await res.json()).toEqual({ stored: 'showcase/showcase.json', entries: 1, removed: 1 });
+    expect(await listing()).toMatchObject({ listnew001: { isShowcase: true, kept: true }, liststale1: { isShowcase: false, kept: false } });
   });
 });

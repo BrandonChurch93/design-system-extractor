@@ -187,7 +187,26 @@ export async function setShowcase(db: Db, runId: string, on: boolean, now: Date 
     .where(eq(runs.id, runId));
 }
 
-export type NewEvent = { stage: Stage; substage?: Substage | null; level?: EventLevel; message: string; data?: Record<string, unknown> | null };
+/**
+ * Makes the showcase exactly these runs (showcase.md, step 5): each listed, with null retention;
+ * every other showcase run taken out. Refuses, changing nothing, when a run is missing or not complete.
+ */
+export async function syncShowcase(db: Db, runIds: string[], now: Date = new Date()): Promise<{ ok: true; listed: number; removed: number } | { ok: false; missing: string[] }> {
+  return db.transaction(async (tx) => {
+    const found = runIds.length ? await tx.select({ id: runs.id }).from(runs).where(and(inArray(runs.id, runIds), eq(runs.status, 'complete'), eq(runs.unpublished, false))) : [];
+    const missing = runIds.filter((id) => !found.some((f) => f.id === id));
+    if (missing.length) return { ok: false as const, missing };
+    if (runIds.length) await tx.update(runs).set({ isShowcase: true, retentionUntil: null }).where(inArray(runs.id, runIds));
+    const stale = await tx
+      .update(runs)
+      .set({ isShowcase: false, retentionUntil: new Date(now.getTime() + 90 * DAY_MS).toISOString() })
+      .where(and(eq(runs.isShowcase, true), runIds.length ? sql`${runs.id} not in (${sql.join(runIds.map((id) => sql`${id}`), sql`, `)})` : sql`true`))
+      .returning({ id: runs.id });
+    return { ok: true as const, listed: runIds.length, removed: stale.length };
+  });
+}
+
+export type NewEvent ={ stage: Stage; substage?: Substage | null; level?: EventLevel; message: string; data?: Record<string, unknown> | null };
 
 export async function appendEvent(db: Db, runId: string, event: NewEvent): Promise<RunEventRow> {
   const [row] = await db

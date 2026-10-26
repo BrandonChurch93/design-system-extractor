@@ -508,3 +508,15 @@ Decision: each plan card is a size container; below 280 px of card width every c
 Reasoning: cards in a row share their edges (`quality-bar.md`); a rule that depends on each card's own text would not.
 Affects: `docs/design/components.md`, `apps/web/components/v2/v2.module.css`.
 
+## D-063 · The showcase script made exact
+
+Date: 2026-10-26 · Context: P13 built `pnpm showcase` against `showcase.md`, on the P10 admin routes. Step 5 sets and unsets `is_showcase`, which the `--remote` path cannot do from the owner's machine; the P13 dry run must exercise the real roster without replacing the fixture showcase the goldens read; and "cost logged under purpose `showcase`" named a model-call purpose that does not exist (a call's purpose is what it is for: select, colors, components, collision, narrative).
+Decision:
+- `POST /api/admin/showcase/content` lists exactly the content's runs: each named run gets `is_showcase` and null retention, every other showcase run is taken out with a 90-day retention, in one transaction. Content naming a run that is missing, unpublished or not complete is refused with 400 and changes nothing. The local path calls the same function (`syncShowcase`).
+- `--dry-run` runs the sites and prints the table but writes no content and lists nothing; its runs keep a 90-day retention. The report of every run is also written to `.dse/showcase-report.md`.
+- A run is replaced when it blocks (at the pre-check or in the worker), fails, is cancelled, or comes back sparse or without stats. The replacement is the first untried alternate of the same category, else the first untried alternate; it takes the replaced site's order. The listed entries are the largest multiple of six, earliest in roster order.
+- Locally, the script runs its own worker (configured as the worker service, with the build meter) unless a `pnpm dev` worker's heartbeat is live; in live mode it checks the build meter before every site and stops when the meter refuses.
+- `--only host` takes a roster host, or an alternate already listed, and replaces that entry by order; a blocked or sparse result leaves the content as it was.
+- Showcase runs are kept off the public budget by the worker (P10); their cost is the run's own `cost` record and the script's table, not a model-call purpose.
+Affects: `docs/specs/showcase.md`, `docs/specs/architecture.md`, `apps/web/app/api/admin/showcase/content/route.ts`, `packages/pipeline/src/db/runs.ts`, `scripts/showcase/`.
+
