@@ -19,7 +19,7 @@ import { RecentRunRow } from '../recent/RecentRunRow';
 import styles from './CompareView.module.css';
 
 type Mode = 'same' | 'two';
-type Props = { a: RunDocumentPartial; b?: RunDocumentPartial; shareUrl: string; now: string; /** The catalog shows the page inside its own: no main, no footer. */ embedded?: boolean };
+type Props = { a: RunDocumentPartial; b?: RunDocumentPartial; shareUrl: string; /** The catalog shows the page inside its own: no main, no footer. */ embedded?: boolean };
 
 function Column({ doc, label, after }: { doc: RunDocumentPartial; label: string; after?: boolean }) {
   return (
@@ -50,7 +50,7 @@ function Delta({ label, stat, captions }: { label: string; stat: Stat; captions:
   );
 }
 
-function Picker({ a, now }: { a: RunDocumentPartial; now: Date }) {
+function Picker({ a }: { a: RunDocumentPartial }) {
   const router = useRouter();
   const runs = useSyncExternalStore(subscribeRecent, recentSnapshot, () => noRecent);
   const [link, setLink] = useState('');
@@ -64,7 +64,7 @@ function Picker({ a, now }: { a: RunDocumentPartial; now: Date }) {
             <RecentRunRow
               key={r.id}
               run={r}
-              now={now}
+              now={new Date()}
               action={
                 <Button variant="ghost" size="sm" href={`/compare?a=${a.id}&b=${r.id}`}>
                   {recent.buttons.compare}
@@ -92,11 +92,10 @@ function Picker({ a, now }: { a: RunDocumentPartial; now: Date }) {
 }
 
 /** Two runs side by side: tokens, components and checks (docs/design/pages.md, Compare). */
-export function CompareView({ a, b, shareUrl, now, embedded }: Props) {
+export function CompareView({ a, b, shareUrl, embedded }: Props) {
   const Main = embedded ? 'div' : 'main';
   const sameHost = Boolean(b && a.host === b.host);
   const [mode, setMode] = useState<Mode>(sameHost ? 'same' : 'two');
-  const today = new Date(now);
   const [before, after] = b && mode === 'same' && Date.parse(b.createdAt ?? '') < Date.parse(a.createdAt ?? '') ? [b, a] : [a, b];
   const crumbs = sameHost || !b ? fill(global.breadcrumbs.compareOne, { host: a.host ?? '' }) : global.breadcrumbs.compareTwo;
   const title = !after ? C.picker.title : mode === 'same' ? fill(C.sameTitle, { span: span(before.createdAt ?? '', after.createdAt ?? '') }) : fill(C.twoTitle, { hostA: before.host ?? '', hostB: after.host ?? '' });
@@ -134,7 +133,7 @@ export function CompareView({ a, b, shareUrl, now, embedded }: Props) {
         </header>
         <div className={styles.columns}>
           <Column doc={before} label={labels[0]!} />
-          {after ? <Column doc={after} label={labels[1]!} after /> : <Picker a={a} now={today} />}
+          {after ? <Column doc={after} label={labels[1]!} after /> : <Picker a={a} />}
         </div>
         {after ? (
           <>

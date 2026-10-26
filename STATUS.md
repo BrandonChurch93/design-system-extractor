@@ -14,7 +14,20 @@ P12 · V2 seams and flagged surfaces. P11 gate passed 2026-10-26.
 
 ## Next action
 
-P11 gate passed. Start P12 (v2 seams and flagged surfaces) by reading `docs/specs/v2-seams.md`, `docs/design/components.md` (Flagged v2 surfaces) and `docs/v2-plan.md`.
+P12: build the plan below in order, then run the gate.
+
+### P12 plan
+
+Read for P12: v2-seams, components (Flagged v2 surfaces), v2-plan, pages (Home, state pages, /account/billing), copy (Flagged v2 surfaces).
+
+1. `apps/web/lib/flags.ts` (`billingEnabled` from the build-time `NEXT_PUBLIC_BILLING_ENABLED`, server and client alike); `lib/auth/adapter.ts` (AuthAdapter, MockAuthAdapter); `lib/billing/adapter.ts` (BillingAdapter, MockBillingAdapter); the flagged strings in `copy/strings.ts`.
+2. Components in `components/v2/`: PricingSection, PlanBadge, AccountMenu, SignInSheet with its TopNav trigger, BillingPage, UpgradePrompt, each with `data-testid="v2-surface"`.
+3. Placement behind the flag: Home (Plans between Showcase and Footer), TopNav (sign-in, or account menu and plan badge with a session), budget and visitor-cap states (UpgradePrompt above the key form), `/account/billing` (404 when off); the visitor's usage read for the billing page.
+4. Catalog entries for the six surfaces (always rendered).
+5. Tests: `apps/web/test/flag-off.test.ts` (config derivation, mocks, no auth or payment dependency, sitemap, the billing route's 404), `tests/e2e/flag-off.spec.ts` (every page and state of the QA registry with the flag off), a flag-on build served on 3101 (`QA_BILLING=on`, its own dist folder) with `pnpm qa:billing` capturing and axe-checking the surfaces in place, added to verify:all.
+6. Gate: qa:visual against the P11 goldens with only the catalog golden updated, verify:all, qa:design, flag-on screenshots reviewed.
+
+P12 notes for the gate (D-061): QA now starts every page at one moment (`qaNow` in `tests/qa/pages.ts`, a shifted `Date` that keeps flowing, because a fixed clock stops GSAP), since the in-progress pages' elapsed time and Recent runs' "Today" followed the real clock. Recent and the Compare picker read the reader's clock. Goldens updated in P12: the catalog (the six flagged surfaces) and `run-390-after-select` only (its masked meta line wraps by the elapsed text's length). An earlier session had replaced all nine in-progress goldens and called it clock only; those captures showed the StatStrip mid-count at 0, which the 0.001 ratio let through on a tall page. They are restored to the P11 files and pass. `.gitignore`'s `qa/` also hid `tests/qa/`; now `/qa/`, and the QA suite is committed.
 
 ### P11 self-review (quality-bar.md, every page at 1440, 820, 390)
 
@@ -72,6 +85,8 @@ P11 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-061 · QA starts every page at `qaNow`; `run-390-after-select` is the one page golden updated in P12 (its masked meta line wraps by the clock); `/qa/` ignored from the root so `tests/qa/` is committed.
+- D-060 · The flag is read from the build-time public value everywhere; the flag-off test is a unit half and a browser half; `qa:billing` serves a flag-on build on 3101; without a session TopNav shows Sign in and paid plans open the SignInSheet; the billing page shows the visitor's free day.
 - D-059 · Phone forms on state pages take a full-width button like UrlForm; RecentRunRow lays out by its list's width; empty Radius and Shadow cards are left out; one page reads `1 page`.
 - D-058 · The web app made exact: proxy.ts CSP with nonce and per-request pages, jitless Zod, blocking metadata, the P6 preview CSP base fixed, copy additions, entrances from the parent's intersection, run page placements, sliced documents for the browser, Compare by signature, bare domains as https, UTC run dates, seeded blocked and QA runs, Lighthouse desktop preset, catalog page-level entries.
 - D-057 · Worker, queue, caps and API made exact: visitor identity fallback becomes the cookie, key and showcase runs not counted, decimal cents and reservation at creation, job carries counted keys, queue depth and position from the runs table, BullMQ priority and retry settings, capture redirect, OG fonts, `stats` and `sparse`, seed with fixed ids at creation, extra recordings kept, `db:seed:check` in verify:all.
@@ -135,6 +150,8 @@ Keep this list current. It is the only hands-on work he will do.
 ## Session log
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
+
+- 2026-10-26 · Session started · P12 · read CLAUDE.md, handoff, STATUS, decisions, plan, v2-seams, v2-plan, components, pages, copy, quality-bar, architecture · tree reconciled: P12 steps 1 to 5 uncommitted; `.gitignore`'s `qa/` also matched `tests/qa/`, so the QA suite was never committed (now `/qa/`); the nine in-progress goldens changed with `qaNow` show the StatStrip at 0, not a clock-only change (investigating); `pnpm check` green.
 
 - 2026-10-26 · Gate passed · P11 · every page at three viewports, axe, Lighthouse, goldens, verify:all green.
 - 2026-10-26 · Session started (after compaction) · P11 · read CLAUDE.md, STATUS, decisions, plan, handoff, pages, components, copy, motion, quality-bar, exports-and-mcp · tree reconciled (goldens, D-058, recent-row container layout uncommitted; QA registry typecheck fixed).

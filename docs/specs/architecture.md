@@ -87,10 +87,11 @@ Every root script loads `.env.local` from the repository root; setting `DOTENV_F
 | `pnpm qa:design` | screenshots every page and state at 1440, 820, 390 into `qa/` |
 | `pnpm qa:visual` | visual regression against committed goldens |
 | `pnpm qa:axe` | axe on every page and state |
+| `pnpm qa:billing` | from P12: a build with `BILLING_ENABLED=true` (in `.next-billing`, on 3101) captures the flagged surfaces in place into `qa/billing` and runs axe on them (D-060) |
 | `pnpm qa:lighthouse` | Lighthouse on home and a complete run page, against `next build` served by `next start` on a local port |
 | `pnpm qa:copy` | the em dash and forbidden-word grep (rules below) |
 | `pnpm build` | builds every package and the web app (`next build`) and the worker bundle |
-| `pnpm verify:all` | in order, failing fast: `check`, `db:seed:check` (from P10), `test`, `test:security` (from P6), `test:e2e`, `evals:gate`, `build`, `qa:visual`, `qa:axe`, `qa:lighthouse`, `qa:copy`, `pnpm audit --audit-level high` |
+| `pnpm verify:all` | in order, failing fast: `check`, `db:seed:check` (from P10), `test`, `test:security` (from P6), `test:e2e`, `evals:gate`, `build`, `qa:visual`, `qa:axe`, `qa:billing` (from P12), `qa:lighthouse`, `qa:copy`, `pnpm audit --audit-level high` |
 | `pnpm showcase` | runs the showcase roster (local by default, `--remote` against production with the admin token) |
 | `pnpm run doctor [--production [--env <file>]]` | env and connectivity check; `--production` checks the shape of a production env file (default `.env.production.local`) without connecting. Always `pnpm run doctor`: pnpm's built-in `doctor` command shadows a bare `pnpm doctor` (D-028) |
 

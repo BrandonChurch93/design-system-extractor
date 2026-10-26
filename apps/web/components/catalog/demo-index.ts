@@ -45,4 +45,9 @@ export const demoIndex: { slug: string; name: string }[] = [
   { slug: 'compare', name: 'CompareModeToggle, CompareColumns, DeltaStrip, TokenDiff and ChangeTable' },
   { slug: 'recent-run-row', name: 'RecentRunRow' },
   { slug: 'pipeline-step', name: 'PipelineStep and EvalTable' },
+  { slug: 'pricing-section', name: 'PricingSection' },
+  { slug: 'plan-badge', name: 'PlanBadge and AccountMenu' },
+  { slug: 'sign-in-sheet', name: 'SignInSheet' },
+  { slug: 'billing-page', name: 'BillingPage' },
+  { slug: 'upgrade-prompt', name: 'UpgradePrompt' },
 ];

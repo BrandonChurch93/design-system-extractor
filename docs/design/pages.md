@@ -141,7 +141,7 @@ The app-level not-found page: TopNav, a StateCard with the 404 copy and "Browse 
 
 ## `/account/billing`
 
-Only when `BILLING_ENABLED`; otherwise a 404. BillingPage.
+Only when `BILLING_ENABLED`; otherwise a 404. TopNav, BillingPage, Footer; `noindex`, metadata from copy (D-060).
 
 ## Indexing
 

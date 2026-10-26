@@ -12,6 +12,8 @@ import { Meter } from '../Meter';
 import { StateCard } from '../StateCard';
 import { useSavedKey } from '../home/KeyPopover';
 import { RetryForm } from './RetryForm';
+import { billingEnabled } from '../../lib/flags';
+import { UpgradePrompt } from '../v2/UpgradePrompt';
 import styles from './StateView.module.css';
 
 export type StateReason = 'budget' | 'busy' | 'visitor-cap' | 'bot' | 'robots' | 'login' | 'unreachable' | 'invalid';
@@ -87,11 +89,14 @@ export function StateView({ reason, host, url, runDetail, login, hours, runsPerD
     </Button>
   );
   const keyForm = (
-    <div className={styles.keyForm}>
+    <>
+      {billingEnabled() ? <UpgradePrompt /> : null}
+      <div className={styles.keyForm}>
       <h2 className={styles.formHeading}>{S.budget.formHeading}</h2>
       <RetryForm initial={url} label={fill(S.budget.extract, { host })} keyMode={{ keyLabel: keyPopover.label, placeholder: keyPopover.placeholder, onKey: setKey }} />
       <p className={styles.caption}>{fill(keyPopover.caption, { byoPageCap })}</p>
-    </div>
+      </div>
+    </>
   );
   const notCounted = (
     <>

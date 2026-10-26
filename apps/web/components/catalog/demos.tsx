@@ -29,6 +29,7 @@ import { ToastSample, useToast } from '../Toast';
 import { TopNav } from '../TopNav';
 import { MotionDemo } from './MotionDemo';
 import { pageDemos } from './page-demos';
+import { v2Demos } from './v2-demos';
 import popoverStyles from '../Popover.module.css';
 import sheetStyles from '../Sheet.module.css';
 import styles from './Catalog.module.css';
@@ -639,4 +640,4 @@ const primitiveDemos: Demo[] = [
   },
 ];
 
-export const demos: Demo[] = [...primitiveDemos, ...pageDemos];
+export const demos: Demo[] = [...primitiveDemos, ...pageDemos, ...v2Demos];

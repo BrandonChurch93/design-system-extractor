@@ -19,11 +19,12 @@ import styles from './RecentView.module.css';
 
 
 /** The runs made from this browser, from localStorage; open runs are polled once on load. */
-export function RecentView({ byoPageCap, now }: { byoPageCap: number; now: string }) {
+export function RecentView({ byoPageCap }: { byoPageCap: number }) {
   const runs = useSyncExternalStore(subscribeRecent, recentSnapshot, () => noRecent);
   const [key] = useSavedKey();
   const [me, setMe] = useState<MeResponse | null>(null);
-  const today = new Date(now);
+  // Rows come from this browser's storage and render only here, so the day is the reader's.
+  const today = new Date();
 
   useEffect(() => {
     let live = true;

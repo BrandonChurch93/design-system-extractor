@@ -262,7 +262,7 @@ export const pageDemos: Demo[] = [
     name: 'CompareModeToggle, CompareColumns, DeltaStrip, TokenDiff and ChangeTable',
     tokens: ['title-sm', 'h2-sm', 'stat', 'meta', 'ink (after border, selected segment)', 'line-strong'],
     frameHeight: 1600,
-    states: () => [{ label: stateLabels.default, wide: true, node: <Wide><CompareView a={messyDoc} b={{ ...cleanDoc, createdAt: '2026-11-23T16:00:00.000Z' }} shareUrl="https://design-system-extractor.vercel.app/compare" now={now.toISOString()} embedded /></Wide> }],
+    states: () => [{ label: stateLabels.default, wide: true, node: <Wide><CompareView a={messyDoc} b={{ ...cleanDoc, createdAt: '2026-11-23T16:00:00.000Z' }} shareUrl="https://design-system-extractor.vercel.app/compare" embedded /></Wide> }],
   },
   {
     slug: 'recent-run-row',

@@ -4,15 +4,15 @@ V1 ships no accounts, no payments, and no visible trace of either (D-009). It do
 
 ## The flag
 
-`BILLING_ENABLED` (server). The client reads `NEXT_PUBLIC_BILLING_ENABLED`, which `next.config` sets from `BILLING_ENABLED` at build time so the two can never disagree; nobody sets the public one by hand. `false` in every v1 environment. When false:
+`BILLING_ENABLED` (server). The client reads `NEXT_PUBLIC_BILLING_ENABLED`, which `next.config` sets from `BILLING_ENABLED` at build time so the two can never disagree; nobody sets the public one by hand. The app's server code reads the same build-time value through `apps/web/lib/flags.ts`, so a build is either on or off throughout (D-060). `false` in every v1 environment. When false:
 
 - No route, link, nav item, button, anchor, sitemap entry, or meta tag references pricing, plans, accounts, billing or sign-in. `/account/*` returns 404.
 - `resolveViewer` always returns `userId: null, plan: 'free'`.
 - The budget and visitor-cap state pages show the BYO key form, not the upgrade prompt.
 
-A test (`apps/web/test/flag-off.test.ts`) renders every page and state with the flag off and asserts: no element with `data-testid="v2-surface"` exists; no `href` points at `/account`, `/account/billing` or `#plans`; `/account/billing` returns 404; and within the app's chrome regions only (TopNav, Footer, the home headline block, every StateCard, and the run header; each carries `data-testid="chrome"`), none of the words `pricing`, `plans`, `billing`, `upgrade`, `subscription`, `Pro`, `Team` appear (word-boundary, case-insensitive). Extracted data (a crawled site's `/pricing` page, a component named "Pricing card") and the How it works prose are outside the chrome regions and are not checked. P12's gate also runs `pnpm qa:visual` against the P11 goldens with the flag off and requires every page golden to be unchanged; `/catalog` is the one golden that changes in P12 (it gains the flagged surfaces) and its update is logged in STATUS.
+The flag-off test has two halves (D-060): `apps/web/test/flag-off.test.ts` checks the flag's derivation, the mocks, the viewer, the dependency list and the billing route's 404, and `tests/e2e/flag-off.spec.ts` renders every page and state of the QA registry with the flag off in a browser (the catalog excepted, which shows the surfaces always) and asserts: no element with `data-testid="v2-surface"` exists; no `href` points at `/account`, `/account/billing` or `#plans`; `/account/billing` returns 404; and within the app's chrome regions only (TopNav, Footer, the home headline block, every StateCard, and the run header; each carries `data-testid="chrome"`), none of the words `pricing`, `plans`, `billing`, `upgrade`, `subscription`, `Pro`, `Team` appear (word-boundary, case-insensitive). Extracted data (a crawled site's `/pricing` page, a component named "Pricing card") and the How it works prose are outside the chrome regions and are not checked. P12's gate also runs `pnpm qa:visual` against the P11 goldens with the flag off and requires every page golden to be unchanged; `/catalog` is the one golden that changes in P12 (it gains the flagged surfaces) and its update is logged in STATUS.
 
-When true, the surfaces in `docs/design/components.md` under "Flagged v2 surfaces" render in their places in `docs/design/pages.md`.
+When true, the surfaces in `docs/design/components.md` under "Flagged v2 surfaces" render in their places in `docs/design/pages.md`. `pnpm qa:billing` builds the app with the flag on and captures and axe-checks them there.
 
 ## Entitlements
 

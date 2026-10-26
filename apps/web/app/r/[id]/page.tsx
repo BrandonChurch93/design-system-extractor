@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound, redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { fill } from '@dse/schema/labels';
-import { TopNav } from '../../../components/TopNav';
+import { SiteNav } from '../../../components/SiteNav';
 import { RunView } from '../../../components/run/RunView';
 import { meta } from '../../../copy/strings';
 import { count } from '../../../lib/format';
@@ -36,7 +36,7 @@ export default async function RunPage({ params, searchParams }: Props) {
   if (run.status === 'blocked' && !(run.document.blockedReason === 'login' && partial)) redirect(`/state/${stateRoute[run.document.blockedReason ?? 'unreachable']}?run=${run.id}`);
   return (
     <>
-      <TopNav />
+      <SiteNav />
       <Suspense>
         <RunView initial={{ ...run, document: clientDocument(run.document) }} storageBase={svc.env.STORAGE_PUBLIC_BASE_URL} appUrl={svc.appUrl} contactEmail={svc.env.DSE_CONTACT_EMAIL} partial={partial} />
       </Suspense>

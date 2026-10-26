@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { fill } from '@dse/schema/labels';
-import { TopNav } from '../../components/TopNav';
+import { SiteNav } from '../../components/SiteNav';
 import { CompareView } from '../../components/compare/CompareView';
 import { meta } from '../../copy/strings';
 import { clientDocument } from '../../lib/panel-doc';
@@ -32,9 +32,9 @@ export default async function ComparePage({ searchParams }: Props) {
   const share = `${svc.appUrl}/compare?a=${a.id}${b ? `&b=${b.id}` : ''}`;
   return (
     <>
-      <TopNav />
+      <SiteNav />
       <Suspense>
-        <CompareView a={a} b={b ?? undefined} shareUrl={share} now={new Date().toISOString()} />
+        <CompareView a={a} b={b ?? undefined} shareUrl={share} />
       </Suspense>
     </>
   );

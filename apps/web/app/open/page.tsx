@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { TopNav } from '../../components/TopNav';
+import { SiteNav } from '../../components/SiteNav';
 import { OpenView } from '../../components/open/OpenView';
 import { meta } from '../../copy/strings';
 
@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: meta.open.title, description: meta.op
 export default function OpenPage() {
   return (
     <>
-      <TopNav />
+      <SiteNav />
       <OpenView />
     </>
   );

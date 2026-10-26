@@ -454,3 +454,40 @@ export const catalog = {
   frameTitle: '{name} at 390 px',
   replay: 'Replay',
 } as const;
+
+/** Flagged v2 surfaces: rendered only with BILLING_ENABLED, always in the catalog. */
+export const v2 = {
+  plans: {
+    heading: 'Plans',
+    names: { free: 'Free', pro: 'Pro', team: 'Team' },
+    price: '[PRICE]',
+    freePrice: '0',
+    period: 'per month',
+    caption: 'Prices are placeholders until plans launch.',
+    current: 'Current plan',
+    choose: { pro: 'Choose Pro', team: 'Choose Team' },
+    runsPerDay: '{runsPerDay} runs a day',
+    pageCap: '{pageCap} pages per run',
+    features: {
+      free: ['Desktop and mobile', '90 days of history'],
+      pro: ['Private runs', 'Weekly re-runs with drift alerts', 'One year of history'],
+      team: ['Everything in Pro', 'Daily re-runs and alerts on deploy', '10 seats', 'Unlimited history'],
+    },
+  },
+  account: { label: 'Account', billing: 'Billing', signOut: 'Sign out' },
+  signIn: { title: 'Sign in', email: 'Email', send: 'Send a sign-in link', github: 'Continue with GitHub' },
+  billing: {
+    title: 'Billing',
+    current: 'Current plan',
+    usage: 'Usage this period',
+    usageLine: '{runs} runs · {pages} pages',
+    oneRun: '1 run',
+    onePage: '1 page',
+    meterLabel: 'Runs today',
+    manage: 'Manage subscription',
+    invoices: 'Invoices',
+    noInvoices: 'No invoices yet.',
+    metaDescription: 'Your plan, usage and invoices.',
+  },
+  upgrade: { body: 'Pro runs skip the queue and the daily budget.', action: 'See plans' },
+} as const;

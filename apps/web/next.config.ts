@@ -15,6 +15,8 @@ const config: NextConfig = {
   htmlLimitedBots: /.*/,
   // The repository's agent rules live in CLAUDE.md; Next would otherwise write AGENTS.md here.
   agentRules: false,
+  // QA builds the flag-on app into a folder of its own (scripts/qa-server.mjs).
+  distDir: process.env.DSE_NEXT_DIST || '.next',
   outputFileTracingRoot: repoRoot,
   transpilePackages: ['@dse/schema', '@dse/pipeline'],
   env: {

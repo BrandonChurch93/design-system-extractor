@@ -280,9 +280,11 @@ Title `Catalog` · caption `Every component of the app, in every state, from sam
 - Feature lists, from `docs/v2-plan.md`: Free `{runsPerDay} runs a day` · `{pageCap} pages per run` · `Desktop and mobile` · `90 days of history`; Pro `30 runs a day` · `40 pages per run` · `Private runs` · `Weekly re-runs with drift alerts` · `One year of history`; Team `150 runs a day` · `80 pages per run` · `Everything in Pro` · `Daily re-runs and alerts on deploy` · `10 seats` · `Unlimited history`
 - AccountMenu: button label `Account` · items `Billing` · `Sign out`
 - SignInSheet: title `Sign in` · input label `Email` · `Send a sign-in link` · `Continue with GitHub`
-- BillingPage: title `Billing` · `Current plan` · `Usage this period` · `{runs} runs · {pages} pages` · `Manage subscription` · `Invoices` · empty `No invoices yet.`
+- BillingPage: title `Billing` · `Current plan` · `Usage this period` · `{runs} runs · {pages} pages` (singular `1 run`, `1 page`) · `Manage subscription` · `Invoices` · empty `No invoices yet.`
 - UpgradePrompt: `Pro runs skip the queue and the daily budget.` · `See plans`
 - PlanBadge: the plan name
+- TopNav, with the flag on and no session: a ghost Button `Sign in` that opens the SignInSheet (D-060)
+- BillingPage meter label (read by screen readers): `Runs today` · metadata `Billing` · `Your plan, usage and invoices.`
 
 ## About
 

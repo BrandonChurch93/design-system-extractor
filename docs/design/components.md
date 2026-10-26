@@ -169,14 +169,14 @@ Phone: Compare renders the two CompareColumns stacked, then a StateCard-style no
 
 Built in P12, rendered in `/catalog` always (so they are reviewed), rendered in the app only when the flag is on. Each carries `data-testid="v2-surface"` so the flag-off test can assert their absence.
 
-**PricingSection** · Three Cards in a row (Free, Pro, Team): plan name (`h3`), a price line (`stat` for the number, `label` for the period; placeholders "[PRICE]" until set), a feature list with Lucide `check` marks, a Button (Free: "Current plan" disabled; Pro and Team: "Choose Pro" / "Choose Team" primary). Phone: stacked. A caption beneath: "Prices are placeholders until plans launch."
+**PricingSection** · Three Cards in a row (Free, Pro, Team; the runs and pages lines read from entitlements, D-060): plan name (`h3`), a price line (`stat` for the number, `label` for the period; placeholders "[PRICE]" until set), a feature list with Lucide `check` marks, a Button (Free: "Current plan" disabled; Pro and Team: "Choose Pro" / "Choose Team" primary, which open the SignInSheet when there is no session and the adapter's checkout otherwise). Phone: stacked. A caption beneath: "Prices are placeholders until plans launch."
 
 **PlanBadge** · A Pill `soft` with the plan name, shown in TopNav next to the account menu.
 
-**AccountMenu** · A TopNav button (Lucide `user`) opening a Popover: email, plan with PlanBadge, "Billing", "Sign out". Hidden when the viewer has no user.
+**AccountMenu** · A TopNav button (Lucide `user`) opening a Popover: email, plan with PlanBadge, "Billing", "Sign out". Hidden when the viewer has no user. Without a user, TopNav shows a `sm` ghost Button "Sign in" that opens the SignInSheet instead (D-060); v1's mock adapter never has a user, so the menu and the badge are seen only in the catalog.
 
 **SignInSheet** · A Sheet with an email Input and "Send a sign-in link" Button plus "Continue with GitHub" ghost Button; both are wired to the auth adapter, which in v1 is a mock that shows the Toast "Sign-in is not enabled yet."
 
-**BillingPage** · `/account/billing`: current plan, usage this period (runs, pages, a Meter against the plan's cap), "Manage subscription" Button (opens the billing adapter's portal URL; the mock returns `#`), invoices list (empty state in v1).
+**BillingPage** · `/account/billing`: current plan, usage this period (runs, pages, a Meter against the plan's cap), "Manage subscription" Button (opens the billing adapter's portal URL; the mock returns `#`), invoices list (empty state in v1). Three Cards at 760 max width under a `title`. Without a session it shows the visitor's free plan, the runs this visitor started since the budget day began with their captured pages, and "Manage subscription" disabled (D-060).
 
-**UpgradePrompt** · A StateCard variant used on the budget-reached and run-limit states when the flag is on: "Pro runs skip the queue and the daily budget." with a "See plans" Button. When the flag is off, those states show the BYO key form instead.
+**UpgradePrompt** · A StateCard variant (a `surface-tint` block with a `line` border inside the StateCard, above the key form, since Cards do not nest, D-060) used on the budget-reached and run-limit states when the flag is on: "Pro runs skip the queue and the daily budget." with a "See plans" Button. When the flag is off, those states show the BYO key form instead.

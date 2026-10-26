@@ -145,6 +145,15 @@ export async function queuePosition(db: Db, run: Pick<RunRow, 'id' | 'priority' 
   return Number(r?.n ?? 0);
 }
 
+/** A visitor's runs since a moment and the pages they captured: the billing page's usage (v2-seams). */
+export async function visitorUsage(db: Db, visitorId: string, since: Date): Promise<{ runs: number; pages: number }> {
+  const [r] = await db
+    .select({ runs: count(), pages: sql<string>`coalesce(sum(jsonb_array_length(coalesce(${runs.document}->'pages', '[]'::jsonb))), 0)` })
+    .from(runs)
+    .where(and(eq(runs.visitorId, visitorId), gt(runs.createdAt, since.toISOString())));
+  return { runs: Number(r?.runs ?? 0), pages: Number(r?.pages ?? 0) };
+}
+
 /** Runs whose retention has passed (showcase runs have none). */
 export async function expiredRunIds(db: Db, now: Date = new Date()): Promise<string[]> {
   const rows = await db
