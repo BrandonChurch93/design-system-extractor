@@ -1,0 +1,287 @@
+{
+  "$description": "Design System Extractor · localhost:4100 · run evalmessy0 · proposed set · 2026-10-12",
+  "$extensions": {
+    "app.design-system-extractor": {
+      "tool": "Design System Extractor",
+      "host": "localhost:4100",
+      "runId": "evalmessy0",
+      "set": "proposed",
+      "date": "2026-10-12"
+    }
+  },
+  "color": {
+    "gray-50": {
+      "$type": "color",
+      "$value": "#FFFFFF",
+      "$description": "gray-50 · 208 uses"
+    },
+    "gray-300": {
+      "$type": "color",
+      "$value": "#D1D1D1",
+      "$description": "gray-300 · 274 uses"
+    },
+    "gray-300b": {
+      "$type": "color",
+      "$value": "#C4C4C4",
+      "$description": "gray-300b · 48 uses"
+    },
+    "gray-400": {
+      "$type": "color",
+      "$value": "#B1B1B1",
+      "$description": "gray-400 · 10 uses"
+    },
+    "gray-500": {
+      "$type": "color",
+      "$value": "#868686",
+      "$description": "gray-500 · 36 uses"
+    },
+    "gray-600": {
+      "$type": "color",
+      "$value": "#676767",
+      "$description": "gray-600 · 132 uses"
+    },
+    "gray-700": {
+      "$type": "color",
+      "$value": "#505050",
+      "$description": "gray-700 · 94 uses"
+    },
+    "gray-800": {
+      "$type": "color",
+      "$value": "#353535",
+      "$description": "gray-800 · 72 uses"
+    },
+    "gray-900": {
+      "$type": "color",
+      "$value": "#1F1F1F",
+      "$description": "gray-900 · 706 uses"
+    },
+    "blue-ink": {
+      "$type": "color",
+      "$value": "#0B1F3A",
+      "$description": "blue-ink · 256 uses"
+    },
+    "blue-600": {
+      "$type": "color",
+      "$value": "#2458E6",
+      "$description": "blue-600 · 200 uses"
+    },
+    "blue-600-alt": {
+      "$type": "color",
+      "$value": "#1C4EDB",
+      "$description": "blue-600-alt · 70 uses"
+    },
+    "teal-500": {
+      "$type": "color",
+      "$value": "#0F8A8A",
+      "$description": "teal-500 · 44 uses"
+    },
+    "blue-ink-tint": {
+      "$type": "color",
+      "$value": "#0B1F3A1F",
+      "$description": "blue-ink-tint · 28 uses"
+    },
+    "success": {
+      "$type": "color",
+      "$value": "#15803D",
+      "$description": "success · 18 uses"
+    },
+    "danger": {
+      "$type": "color",
+      "$value": "#DC2626",
+      "$description": "danger · 12 uses"
+    },
+    "warning": {
+      "$type": "color",
+      "$value": "#F59E0B",
+      "$description": "warning · 2 uses"
+    }
+  },
+  "fontFamily": {
+    "sans": {
+      "$type": "fontFamily",
+      "$value": [
+        "Inter",
+        "system-ui",
+        "sans-serif"
+      ]
+    }
+  },
+  "typography": {
+    "display": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "48px",
+        "fontWeight": 700,
+        "lineHeight": "56px",
+        "letterSpacing": "0px"
+      }
+    },
+    "h1": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "36px",
+        "fontWeight": 700,
+        "lineHeight": "44px",
+        "letterSpacing": "0px"
+      }
+    },
+    "h2": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "28px",
+        "fontWeight": 700,
+        "lineHeight": "36px",
+        "letterSpacing": "0px"
+      }
+    },
+    "h3": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "20px",
+        "fontWeight": 600,
+        "lineHeight": "28px",
+        "letterSpacing": "0px"
+      }
+    },
+    "body": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "16px",
+        "fontWeight": 400,
+        "lineHeight": "26px",
+        "letterSpacing": "0px"
+      }
+    },
+    "label": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 600,
+        "lineHeight": "20px",
+        "letterSpacing": "0px"
+      }
+    },
+    "body-sm": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "14px",
+        "fontWeight": 400,
+        "lineHeight": "22px",
+        "letterSpacing": "0px"
+      }
+    },
+    "caption": {
+      "$type": "typography",
+      "$value": {
+        "fontFamily": "Inter",
+        "fontSize": "12px",
+        "fontWeight": 400,
+        "lineHeight": "16px",
+        "letterSpacing": "0px"
+      }
+    }
+  },
+  "space": {
+    "space-4": {
+      "$type": "dimension",
+      "$value": "4px"
+    },
+    "space-8": {
+      "$type": "dimension",
+      "$value": "8px"
+    },
+    "space-12": {
+      "$type": "dimension",
+      "$value": "12px"
+    },
+    "space-16": {
+      "$type": "dimension",
+      "$value": "16px"
+    },
+    "space-20": {
+      "$type": "dimension",
+      "$value": "20px"
+    },
+    "space-24": {
+      "$type": "dimension",
+      "$value": "24px"
+    },
+    "space-32": {
+      "$type": "dimension",
+      "$value": "32px"
+    },
+    "space-40": {
+      "$type": "dimension",
+      "$value": "40px"
+    },
+    "space-48": {
+      "$type": "dimension",
+      "$value": "48px"
+    },
+    "space-64": {
+      "$type": "dimension",
+      "$value": "64px"
+    },
+    "space-96": {
+      "$type": "dimension",
+      "$value": "96px"
+    }
+  },
+  "radius": {
+    "radius-sm": {
+      "$type": "dimension",
+      "$value": "8px"
+    },
+    "radius-md": {
+      "$type": "dimension",
+      "$value": "10px"
+    },
+    "radius-lg": {
+      "$type": "dimension",
+      "$value": "12px"
+    },
+    "radius-pill": {
+      "$type": "dimension",
+      "$value": "9999px"
+    }
+  },
+  "shadow": {
+    "shadow-sm": {
+      "$type": "shadow",
+      "$value": {
+        "color": "#0B1F3A1F",
+        "offsetX": "0px",
+        "offsetY": "1px",
+        "blur": "2px",
+        "spread": "0px"
+      }
+    },
+    "shadow-md": {
+      "$type": "shadow",
+      "$value": {
+        "color": "#0B1F3A1F",
+        "offsetX": "0px",
+        "offsetY": "12px",
+        "blur": "32px",
+        "spread": "0px"
+      }
+    }
+  },
+  "breakpoint": {
+    "breakpoint-sm": {
+      "$type": "dimension",
+      "$value": "640px"
+    },
+    "breakpoint-md": {
+      "$type": "dimension",
+      "$value": "1024px"
+    }
+  }
+}

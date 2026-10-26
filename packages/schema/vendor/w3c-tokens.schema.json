@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://design-system-extractor.vercel.app/schemas/w3c-tokens.schema.json",
+  "$comment": "Authored by Design System Extractor from the Design Tokens Community Group format, 2024 draft (Editor's Draft of October 2024): reserved $ keys, group nesting, and the $value shapes of the types the exports use. The DTCG publishes no official JSON Schema.",
+  "title": "DTCG design tokens file",
+  "$ref": "#/definitions/group",
+  "definitions": {
+    "group": {
+      "type": "object",
+      "properties": {
+        "$type": { "$ref": "#/definitions/typeName" },
+        "$description": { "type": "string" },
+        "$extensions": { "type": "object" }
+      },
+      "patternProperties": {
+        "^[^${}.][^{}.]*$": { "anyOf": [{ "$ref": "#/definitions/token" }, { "$ref": "#/definitions/group" }] }
+      },
+      "additionalProperties": false
+    },
+    "typeName": { "enum": ["color", "dimension", "fontFamily", "fontWeight", "duration", "cubicBezier", "number", "strokeStyle", "border", "transition", "shadow", "gradient", "typography"] },
+    "token": {
+      "type": "object",
+      "required": ["$value"],
+      "properties": {
+        "$value": {},
+        "$type": { "$ref": "#/definitions/typeName" },
+        "$description": { "type": "string" },
+        "$extensions": { "type": "object" },
+        "$deprecated": { "type": ["boolean", "string"] }
+      },
+      "additionalProperties": false,
+      "allOf": [
+        { "if": { "properties": { "$type": { "const": "color" } }, "required": ["$type"] }, "then": { "properties": { "$value": { "$ref": "#/definitions/color" } } } },
+        { "if": { "properties": { "$type": { "const": "dimension" } }, "required": ["$type"] }, "then": { "properties": { "$value": { "$ref": "#/definitions/dimension" } } } },
+        { "if": { "properties": { "$type": { "const": "fontFamily" } }, "required": ["$type"] }, "then": { "properties": { "$value": { "$ref": "#/definitions/fontFamily" } } } },
+        { "if": { "properties": { "$type": { "const": "fontWeight" } }, "required": ["$type"] }, "then": { "properties": { "$value": { "$ref": "#/definitions/fontWeight" } } } },
+        { "if": { "properties": { "$type": { "const": "shadow" } }, "required": ["$type"] }, "then": { "properties": { "$value": { "anyOf": [{ "$ref": "#/definitions/shadow" }, { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/shadow" } }] } } } },
+        { "if": { "properties": { "$type": { "const": "typography" } }, "required": ["$type"] }, "then": { "properties": { "$value": { "$ref": "#/definitions/typography" } } } }
+      ]
+    },
+    "alias": { "type": "string", "pattern": "^\\{[^{}]+\\}$" },
+    "color": { "anyOf": [{ "type": "string", "pattern": "^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$" }, { "$ref": "#/definitions/alias" }] },
+    "dimension": { "anyOf": [{ "type": "string", "pattern": "^-?(\\d+|\\d*\\.\\d+)(px|rem)$" }, { "$ref": "#/definitions/alias" }] },
+    "fontFamily": { "anyOf": [{ "type": "string", "minLength": 1 }, { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }, { "$ref": "#/definitions/alias" }] },
+    "fontWeight": { "anyOf": [{ "type": "number", "minimum": 1, "maximum": 1000 }, { "enum": ["thin", "hairline", "extra-light", "ultra-light", "light", "normal", "regular", "book", "medium", "semi-bold", "demi-bold", "bold", "extra-bold", "ultra-bold", "black", "heavy", "extra-black", "ultra-black"] }, { "$ref": "#/definitions/alias" }] },
+    "shadow": {
+      "type": "object",
+      "required": ["color", "offsetX", "offsetY", "blur", "spread"],
+      "properties": {
+        "color": { "$ref": "#/definitions/color" },
+        "offsetX": { "$ref": "#/definitions/dimension" },
+        "offsetY": { "$ref": "#/definitions/dimension" },
+        "blur": { "$ref": "#/definitions/dimension" },
+        "spread": { "$ref": "#/definitions/dimension" },
+        "inset": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    },
+    "typography": {
+      "type": "object",
+      "required": ["fontFamily", "fontSize", "fontWeight", "lineHeight", "letterSpacing"],
+      "properties": {
+        "fontFamily": { "$ref": "#/definitions/fontFamily" },
+        "fontSize": { "$ref": "#/definitions/dimension" },
+        "fontWeight": { "$ref": "#/definitions/fontWeight" },
+        "lineHeight": { "anyOf": [{ "$ref": "#/definitions/dimension" }, { "type": "number" }] },
+        "letterSpacing": { "$ref": "#/definitions/dimension" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

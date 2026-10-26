@@ -47,6 +47,8 @@ export interface RunContext {
   recordCost(calls: CostCall[]): void;
   /** The cost so far. */
   cost(): Cost;
+  /** The run document with every patch applied so far. */
+  current(): RunDocumentPartial;
 }
 
 /** Accumulates cost records; shared by both contexts. */
@@ -148,6 +150,10 @@ export class MemoryRunContext implements RunContext {
     private readonly onEvent?: (e: MemoryEvent) => void,
   ) {
     this.document = RunDocumentPartial.parse(initial);
+  }
+
+  current(): RunDocumentPartial {
+    return this.document;
   }
 
   async emit({ stage, substage, level = 'info', message, data, patch }: EmitInput): Promise<void> {

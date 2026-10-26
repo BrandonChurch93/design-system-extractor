@@ -127,7 +127,7 @@ export function proposeColors(colors: ColorToken[]): ColorPlan {
   const names = new Set<string>();
   for (const s of [...steps].sort((a, b) => b.l - a.l)) {
     let name = `gray-${lightnessStep(s.l)}`;
-    for (let n = 2; names.has(name); n++) name = `gray-${lightnessStep(s.l)}-${n}`;
+    for (let n = 1; names.has(name); n++) name = `gray-${lightnessStep(s.l)}${String.fromCharCode(97 + n)}`;
     names.add(name);
     for (const m of s.members) mapping.set(m.id, name);
     out.push({ name, value: hexOf(s.value), group: 'neutral', absorbs: s.members.map((m) => m.name), contrastKept: !s.members.some((m) => failingIds.has(m.id)) });

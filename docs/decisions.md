@@ -415,3 +415,16 @@ Decision:
 - The narrative validator also rejects exclamation marks and a narrative outside four to six sentences or an intro of other than two. The intro's date ("October 26, 2026") is added only by the template: the model's facts carry no date, so recordings stay valid.
 - With nothing to collapse, the headline kind is null with before and after 0.
 Affects: `docs/specs/drift.md`, `docs/design/copy.md`, `packages/pipeline/src/drift/`.
+
+## D-056 · Exports, MCP and CLI made exact
+
+Date: 2026-10-26 · Context: P9 built the export generators, the MCP server and the CLI against `exports-and-mcp.md`.
+Decision:
+- `tokens.w3c.json` carries its header in the top-level `$description` and the run facts in `$extensions["app.design-system-extractor"]`, because the DTCG format reserves `$` keys and `$meta` is not one of them. The vendored schema (`packages/schema/vendor/w3c-tokens.schema.json`) names the 2024 draft it encodes in `$comment`.
+- Names: a space value with a decimal writes `space-17_5`; the pill radius is `radius-pill` at `9999px`; shadows are `shadow-{bucket}`; a type style gets `--type-{name}-tracking` only when its letter spacing is not zero. `tokens.json` keys radius, shadow and font entries without their prefix.
+- The voice check on design-system.md and prompt.md covers our prose; fenced code blocks hold the site's own markup and CSS, which is data, and dashes inside them are written as escapes so the files still carry none.
+- `all.zip` is stored without compression with a fixed date, so the same run zips to the same bytes in the browser and on the server.
+- The `exports` stage stores `designSystemMd` and `promptMd` in the document; the run's source line comes from `RunConfig.runUrl` (`{appUrl}/r/{id}` on the server, the folder path for the CLI). Stages read the document as it stands through `RunContext.current()`.
+- The CLI writes the document's storage keys onto the folder layout (`screenshots/`, `components/`, `fonts/`) and serves the folder over HTTP while it runs, so previews are checked from a URL as in production; `dse serve` maps the same keys. On the visitor's own machine the address asked for is allowed even when it is private. `--cdp` crawls in new tabs of the browser's first context, with the request guard on each tab, and leaves the browser open. Exit codes: 0 complete, 2 blocked, 1 failed.
+- The MCP and CLI packages start from `dist/bin.js`; their runtime libraries are declared dependencies (kept external), and the workspace packages are bundled in.
+Affects: `docs/specs/exports-and-mcp.md`, `packages/pipeline/src/exports/`, `packages/mcp`, `packages/cli`.

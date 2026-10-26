@@ -1,7 +1,7 @@
-import type { Browser } from 'playwright';
+import type { Browser, BrowserContext } from 'playwright';
 import type { BlockedDetail, BlockedReason, RunDocumentPartial, Stage, Stats } from '@dse/schema';
 import type { RunContext } from './context';
-import { createRunContext, type RunBrowserContext } from './crawl/browser';
+import { adoptContext, createRunContext, type RunBrowserContext } from './crawl/browser';
 import { Throttle } from './crawl/throttle';
 import { BlockedError, CancelledError, ModelAuthError, TimeoutError } from './errors';
 import { ReplayMissError } from './models/client';
@@ -13,6 +13,7 @@ import { components } from './stages/components';
 import { previews } from './stages/previews';
 import { checks } from './stages/checks';
 import { drift } from './stages/drift';
+import { exportsStage } from './stages/exports';
 
 export const PIPELINE_VERSION = '1.0.0';
 
@@ -27,6 +28,8 @@ export type RunOutcome =
 
 export type RunDeps = {
   browser: Browser;
+  /** A context to crawl in instead of a new one: the CLI's `--cdp` path. */
+  context?: BrowserContext;
   /** Stop after this stage (evals' --through, tests). */
   through?: Stage;
   sleep?: (ms: number) => Promise<void>;
@@ -55,7 +58,8 @@ export async function runPipeline(ctx: RunContext, deps: RunDeps): Promise<RunOu
 
   const body = async (): Promise<RunOutcome> => {
     await ctx.emit({ stage: 'queue', message: 'picked up by the crawler', patch: { status: 'running', startedAt } });
-    rc = await createRunContext(deps.browser, { userAgent: ctx.config.userAgent, allowPrivateHosts: ctx.config.allowPrivateHosts });
+    const opts = { userAgent: ctx.config.userAgent, allowPrivateHosts: ctx.config.allowPrivateHosts };
+    rc = deps.context ? adoptContext(deps.context, opts) : await createRunContext(deps.browser, opts);
     const throttle = new Throttle(800, 2, Date.now, deps.sleep);
 
     const discovered = await discover(ctx, { browser: rc, throttle, sleep: deps.sleep });
@@ -107,6 +111,8 @@ export async function runPipeline(ctx: RunContext, deps: RunDeps): Promise<RunOu
     await drift(ctx, captured, extracted, checked.components, detected.sources, new URL(ctx.config.url).host);
     if (!reached('exports', deps.through)) return ending;
     await checkCancel();
+
+    await exportsStage(ctx);
 
     return ending;
   };

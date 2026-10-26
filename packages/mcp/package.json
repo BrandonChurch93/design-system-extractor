@@ -5,14 +5,21 @@
   "license": "MIT",
   "type": "module",
   "bin": {
-    "dse-mcp": "dist/index.js"
+    "dse-mcp": "dist/bin.js"
   },
-  "files": ["dist", "README.md", "LICENSE"],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc -p tsconfig.json"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "zod": "4.6.7"
+  },
   "devDependencies": {
     "@dse/pipeline": "workspace:*",
     "@dse/schema": "workspace:*",

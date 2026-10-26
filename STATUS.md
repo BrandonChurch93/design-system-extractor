@@ -10,24 +10,26 @@ None.
 
 ## Current phase
 
-P9 · Exports, MCP and CLI. Started 2026-10-26.
+P10 · Worker, queue, caps, API and seed. Started 2026-10-26.
 
 ## Next action
 
-Start P9: read `docs/specs/exports-and-mcp.md` in full and the exports lines of `docs/design/copy.md`, then build every export generator in `packages/pipeline/src/exports/` (browser-safe), the design-system.md assembly with the stored intro and narrative, the static prompt, the zip, `packages/mcp` with every tool and resource, and `packages/cli` with `extract`, `export`, `serve` and `--cdp`; golden tests, the W3C schema check, a scripted MCP client over stdio, the CLI end to end on the clean fixture, and `npm pack` dry runs.
+Start P10: read `docs/specs/caps-and-budget.md`, `docs/specs/architecture.md`, `docs/design/pages.md` (API routes), `docs/specs/v2-seams.md` and `docs/specs/showcase.md` (local seed) in full, plus Next 16's route docs in `apps/web/node_modules/next/dist/docs`; then plan the files and tests in STATUS and build.
 
 ## Phase checklist
 
-P9 exit criteria (from `docs/plan.md`), plus the standing gate items:
+P10 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
-- [ ] Golden tests for every format; `tokens.w3c.json` validates against the vendored schema.
-- [ ] A scripted MCP client exercises every tool and resource over stdio against a local run through `--file`.
-- [ ] CLI end to end on the clean fixture, including `--cdp` and `dse serve`.
-- [ ] `pnpm build` of `packages/mcp` and `packages/cli` produces publishable packages (`npm pack` dry run).
-- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, `pnpm qa:design` reviewed for touched pages, commit naming P9, STATUS updated.
+- [ ] Integration tests: a full run lifecycle on a fixture through the queue; budget block before enqueue; busy block; BYO bypass of budget and visitor cap but not busy; visitor cap and refund on blocked; cancel; worker crash retry once then fail; rate limit 429; a login-wall run ends `blocked: login` with a one-page document.
+- [ ] Security unit tables (URL, private ranges, rebinding, key never logged).
+- [ ] `GET /api/runs/{id}` serves partial documents during a run (tokens before components), with the cache headers per status and `queuePosition` while queued; the MCP `--run` path works against it.
+- [ ] `pnpm db:seed:fixtures` produces six complete runs and a six-entry local showcase content file.
+- [ ] `pnpm run doctor` still green.
+- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, `pnpm qa:design` reviewed for touched pages, commit naming P10, STATUS updated.
 
 ## Gates passed
 
+- P9 · Exports, MCP and CLI · 2026-10-26 · golden tests for every format and both sets, W3C export validates against the vendored DTCG schema · scripted MCP client over stdio exercises every tool and resource (`--file`, `--run`, `--url`) · CLI end to end on clean including `--cdp`, `export` and `serve` · `npm pack` dry runs ship only the build · D-056 logged with documents fixed · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green.
 - P8 · Drift · 2026-10-26 · full `pnpm evals` passes every threshold on all five fixtures (replay) · messy drift recall 16 of 16, zero findings on clean, tailwind, css-in-js, library · contrast kept everywhere, the N increase path tested · narrative validator and fallbacks tested, narrative recorded · D-055 logged with documents fixed · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green with the full evals · build spend $0.08.
 - P7 · Checks · 2026-10-26 · planted check accuracy 100% failures and 100% passes on all five fixtures (replay) · contrast math, compositing, crop sampling, focus, tap target, label and reduced-motion tables · every rendered detail matches a template read from checks.md · clean run finds exactly its two planted failures · D-054 logged with documents fixed · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green with test:security.
 - P6 · Preview fidelity and sanitization · 2026-10-26 · live rates clean 0.963, messy 0.903, tailwind 0.963, css-in-js 0.963, library 0.955 (floors 0.90, 0.85, 0.90, 0.75, 0.90) · messy promo card captured with diff · security suite (37 cases, worker and app sandbox, zero requests off the allowlist, no script) · CSP builder tested · 250 KB CSS yields styles too large · D-053 logged with documents fixed · DOMPurify 3.4.17 for advisories in 3.4.16 · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green with test:security.
@@ -42,6 +44,7 @@ P9 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-056 · Exports, MCP and CLI made exact: W3C header in `$description` and `$extensions`, export names, voice check on prose only, byte-stable zip, the exports stage and `runUrl`, the CLI's folder layout and served storage, `--cdp` per-tab guards, package entry points.
 - D-055 · Drift made exact: supporting sentence patterns, caption values, evidence strings, proposal details, the validator's extra rules, no date in the model's facts.
 - D-054 · Checks made exact: one worst result per check per component with its variant, `Not applicable`, nested components excluded from a container's contrast, focus and tap and label and motion readings, triggers cluster apart, the library's focus ring.
 - D-053 · Previews made exact: markup and variables kept by capture, the root keeps its page box on its ground, rules without media wrappers, alignment-tolerant comparison, CSS px sizes, a storage server for local runs, jsdom 29.
@@ -101,6 +104,7 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-26 · Gate passed · P9 · exports, MCP and CLI tested end to end, verify:all green.
 - 2026-10-26 · Gate passed · P8 · full evals green on all fixtures, verify:all green.
 - 2026-10-26 · Gate passed · P7 · planted checks 100% on all fixtures, verify:all green.
 - 2026-10-26 · Gate passed · P6 · live rates above floors, security suite green, verify:all green.

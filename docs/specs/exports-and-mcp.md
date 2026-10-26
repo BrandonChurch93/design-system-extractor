@@ -4,7 +4,7 @@ Stage `exports` assembles design-system.md (from facts plus the Sonnet intro pro
 
 ## Formats
 
-All exports take `set=proposed|raw` (default proposed). Token names come from the run; values from the chosen set. Files carry no comments except a one-line header: `/* Design System Extractor · {host} · run {id} · {set} set · {date} */` (CSS, JS) or a `"$meta"` object (JSON).
+All exports take `set=proposed|raw` (default proposed). Token names come from the run; values from the chosen set. Files carry no comments except a one-line header: `/* Design System Extractor · {host} · run {id} · {set} set · {date} */` (CSS, JS) or a `"$meta"` object (JSON; `tokens.w3c.json` uses `$description` and `$extensions` instead, because the DTCG format reserves `$` keys, D-056).
 
 **`tokens.css`** · `:root { --color-navy-900: #0B1F3A; … --type-body-size: 16px; --type-body-line: 26px; --type-body-weight: 400; --space-4: 16px; --radius-md: 8px; --shadow-md: …; --breakpoint-md: 768px; }` grouped by kind with a blank line between groups. Font families as `--font-sans`, `--font-mono`.
 
@@ -20,7 +20,7 @@ Naming for kinds whose tokens have no name of their own: space tokens are `space
 
 **`prompt.md`** · a system-style prompt with the static opening `You are building an interface that must match this design system exactly.` followed by the condensed tokens (CSS variables block), the type scale as a table, the component contracts (name, variants, states, tokens used, the CSS of the default state), the rules (use only these tokens, keep contrast pairs, no em dashes), and the source line. No model writes any of it. Per-component variant: the same with only that component's contract. Both end with `Source: {runUrl}`.
 
-**`all.zip`** · all of the above plus `components/{id}/preview.html` and `preview.css` for live components, `crops/` for captured ones, and `README.txt` with the run URL.
+**`all.zip`** · stored without compression with a fixed date so it is byte-stable (D-056); all of the above plus `components/{id}/preview.html` and `preview.css` for live components, `crops/` for captured ones, and `README.txt` with the run URL.
 
 ## The MCP server
 
@@ -45,7 +45,7 @@ Resources: `dse://run/{id}/design-system.md` and `dse://run/{id}/tokens.css`. Th
 - `dse export <run.json> --format tokens.css [--set raw]` · regenerates one export from a run file.
 - `dse serve <dir>` · serves the run folder on `http://localhost:4300` with permissive CORS and rewrites the folder's `run.json` on start so that `document.local.base` is that URL; `/open` then loads crops and previews from it.
 
-Outputs are the same files the web app would produce. The CLI prints the stat strip as a table and the drift headline at the end.
+Outputs are the same files the web app would produce. The CLI prints the stat strip as a table and the drift headline at the end. The run folder maps the document's storage keys onto `screenshots/`, `components/` and `fonts/`, and is served over HTTP while the run lasts so previews are checked from a URL; the address the visitor asked for is allowed even when it is private; `--cdp` leaves the user's browser open; exit codes are 0 complete, 2 blocked, 1 failed (D-056).
 
 ## /open (D-015)
 

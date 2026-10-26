@@ -58,5 +58,7 @@ export const RunConfig = z.object({
   timeoutMs: z.number().int().positive(),
   keepIntermediate: z.boolean(),
   byo: z.boolean(),
+  /** Where the run will be read: `{appUrl}/r/{id}`, or a local folder for the CLI. Names the source in exports. */
+  runUrl: z.string().optional(),
 });
 export type RunConfig = z.infer<typeof RunConfig>;
