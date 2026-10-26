@@ -275,5 +275,37 @@
 }
 
 .index a {
+  max-width: 100%;
   border-radius: var(--dse-radius-pill);
+}
+
+/* Long entry names wrap inside their chip rather than widening the page. */
+.index a > span {
+  height: auto;
+  min-height: 24px;
+  white-space: normal;
+}
+
+.cardBox {
+  width: 360px;
+  max-width: 100%;
+}
+
+.popoverBox {
+  width: 360px;
+  max-width: 100%;
+}
+
+.panelBox {
+  width: 560px;
+  max-width: 100%;
+}
+
+.flushCard {
+  padding: 0;
+}
+
+.fullWidth {
+  width: 100%;
+  min-width: 0;
 }

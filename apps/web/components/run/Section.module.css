@@ -1,5 +1,6 @@
 .section {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-5);
   scroll-margin-top: 72px;
 }

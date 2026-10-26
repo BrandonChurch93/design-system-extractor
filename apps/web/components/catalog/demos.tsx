@@ -28,6 +28,7 @@ import { Tag } from '../Tag';
 import { ToastSample, useToast } from '../Toast';
 import { TopNav } from '../TopNav';
 import { MotionDemo } from './MotionDemo';
+import { pageDemos } from './page-demos';
 import popoverStyles from '../Popover.module.css';
 import sheetStyles from '../Sheet.module.css';
 import styles from './Catalog.module.css';
@@ -206,7 +207,7 @@ function CaptureDemo() {
   );
 }
 
-export const demos: Demo[] = [
+const primitiveDemos: Demo[] = [
   {
     slug: 'motion',
     name: 'Motion',
@@ -638,3 +639,4 @@ export const demos: Demo[] = [
   },
 ];
 
+export const demos: Demo[] = [...primitiveDemos, ...pageDemos];

@@ -1,5 +1,6 @@
 .center {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   justify-items: center;
   padding: var(--dse-space-8) 0;
 }

@@ -16,6 +16,7 @@
 
 .numberCard {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-3);
   height: 100%;
 }
@@ -59,6 +60,7 @@
 
 .side {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-3);
   align-content: start;
   min-width: 0;
@@ -77,6 +79,7 @@
 
 .proposedList {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-2);
 }
 
@@ -113,6 +116,7 @@
 
 .collapse {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-3);
 }
 
@@ -125,6 +129,7 @@
 
 .collapseFigure {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-2);
 }
 
@@ -216,4 +221,8 @@
     padding: 0;
     border: 0;
   }
+}
+
+.uses {
+  white-space: nowrap;
 }

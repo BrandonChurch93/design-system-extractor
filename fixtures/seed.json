@@ -5,7 +5,7 @@
     {
       "fixture": "clean",
       "id": "seedclean0",
-      "name": "Tidewater · Clean",
+      "name": "Tidewater \u00b7 Clean",
       "category": "SaaS",
       "order": 1,
       "createdAt": "2026-10-12T15:04:00.000Z",
@@ -70,7 +70,7 @@
     {
       "fixture": "messy",
       "id": "seedmessy0",
-      "name": "Tidewater · Messy",
+      "name": "Tidewater \u00b7 Messy",
       "category": "SaaS",
       "order": 2,
       "createdAt": "2026-10-05T17:20:00.000Z",
@@ -143,7 +143,7 @@
     {
       "fixture": "tailwind",
       "id": "seedtailw0",
-      "name": "Tidewater · Tailwind",
+      "name": "Tidewater \u00b7 Tailwind",
       "category": "Developer tools",
       "order": 3,
       "createdAt": "2026-10-14T16:41:00.000Z",
@@ -208,7 +208,7 @@
     {
       "fixture": "css-in-js",
       "id": "seedcssin0",
-      "name": "Tidewater · CSS-in-JS",
+      "name": "Tidewater \u00b7 CSS-in-JS",
       "category": "Developer tools",
       "order": 4,
       "createdAt": "2026-10-15T14:12:00.000Z",
@@ -273,7 +273,7 @@
     {
       "fixture": "library",
       "id": "seedlibra0",
-      "name": "Ledgerly · Bulma",
+      "name": "Ledgerly \u00b7 Bulma",
       "category": "Finance",
       "order": 5,
       "createdAt": "2026-10-16T18:30:00.000Z",
@@ -330,7 +330,7 @@
     {
       "fixture": "messy-after",
       "id": "seedmafter",
-      "name": "Tidewater · Messy, half fixed",
+      "name": "Tidewater \u00b7 Messy, half fixed",
       "category": "SaaS",
       "order": 6,
       "createdAt": "2026-10-19T17:05:00.000Z",
@@ -394,7 +394,7 @@
             "purpose": "components",
             "inputTokens": 1736,
             "outputTokens": 60,
-            "usd": 0.00007274,
+            "usd": 7.274e-05,
             "cached": true
           },
           {
@@ -430,6 +430,47 @@
       "through": "components",
       "createdAt": "2026-10-26T15:00:00.000Z",
       "startedAt": "2026-10-26T15:00:01.000Z"
+    }
+  ],
+  "blocked": [
+    {
+      "site": "walled",
+      "id": "seedlogin0",
+      "path": "/walled/",
+      "createdAt": "2026-10-20T15:30:00.000Z",
+      "startedAt": "2026-10-20T15:30:02.000Z",
+      "durationMs": 21000
+    },
+    {
+      "site": "bot",
+      "id": "seedblock0",
+      "path": "/bot/",
+      "createdAt": "2026-10-21T15:30:00.000Z",
+      "startedAt": "2026-10-21T15:30:02.000Z",
+      "durationMs": 9000
+    }
+  ],
+  "synthetic": [
+    {
+      "id": "seedqueue0",
+      "kind": "queued",
+      "createdAt": "2026-10-26T15:10:00.000Z"
+    },
+    {
+      "id": "seedfail00",
+      "kind": "failed",
+      "createdAt": "2026-10-22T15:10:00.000Z",
+      "detail": "Timed out after 6 minutes."
+    },
+    {
+      "id": "seedcanc00",
+      "kind": "cancelled",
+      "createdAt": "2026-10-23T15:10:00.000Z"
+    },
+    {
+      "id": "seedspars0",
+      "kind": "sparse",
+      "createdAt": "2026-10-24T15:10:00.000Z"
     }
   ]
 }

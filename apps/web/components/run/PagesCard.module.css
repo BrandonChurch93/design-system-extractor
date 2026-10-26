@@ -1,5 +1,6 @@
 .card {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .footer {
@@ -10,5 +11,6 @@
 
 .skeleton {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-3);
 }

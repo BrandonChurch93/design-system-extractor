@@ -129,7 +129,7 @@ function Evidence({ doc }: { doc: RunDocumentPartial }) {
               <td>{r.b}</td>
               <td>{r.delta}</td>
               <td className={styles.paths}>{r.pages.join(', ')}</td>
-              <td>{`${count(r.usesA)} · ${count(r.usesB)}`}</td>
+              <td className={styles.uses}>{`${count(r.usesA)} · ${count(r.usesB)}`}</td>
             </tr>
           ))}
         </tbody>

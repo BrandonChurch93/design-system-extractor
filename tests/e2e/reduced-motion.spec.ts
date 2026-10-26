@@ -63,3 +63,33 @@ test('control: transforms do animate without the preference', async ({ browser }
   expect(seen.length).toBeGreaterThan(0);
   await context.close();
 });
+
+async function exerciseRun(page: Page) {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/r/seedmessy0');
+  await page.waitForTimeout(800);
+  await page.evaluate(async () => {
+    for (let y = 0; y < document.documentElement.scrollHeight; y += 600) {
+      window.scrollTo({ top: y, behavior: 'instant' });
+      await new Promise((r) => setTimeout(r, 120));
+    }
+  });
+  await page.waitForTimeout(800);
+  return page.evaluate(() => (window as unknown as { __dseTransforms: string[] }).__dseTransforms);
+}
+
+test('the run page: no transform animation under reduced motion', async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  await page.addInitScript(probe);
+  expect(await exerciseRun(page)).toEqual([]);
+  await context.close();
+});
+
+test('the run page control: swatches, bars and cards do move without the preference', async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: 'no-preference' });
+  const page = await context.newPage();
+  await page.addInitScript(probe);
+  expect((await exerciseRun(page)).length).toBeGreaterThan(0);
+  await context.close();
+});

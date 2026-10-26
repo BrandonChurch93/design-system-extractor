@@ -55,7 +55,7 @@ function LiveMeta({ run }: { run: RunResponse }) {
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
-  return <>{progressMeta(run.document, run.events, run.status, now, run.queuePosition)}</>;
+  return <span data-qa-mask="elapsed">{progressMeta(run.document, run.events, run.status, now, run.queuePosition)}</span>;
 }
 
 const logLines = (events: RunEvent[]): LogLine[] => events.map((e) => ({ id: e.id, ts: e.ts, text: e.message, level: e.level }));

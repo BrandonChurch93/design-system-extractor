@@ -1,10 +1,12 @@
 .detail {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-6);
 }
 
 .section {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-3);
   min-width: 0;
 }
@@ -29,6 +31,7 @@
 
 .ground {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   min-height: 160px;
   padding: var(--dse-space-6);
@@ -62,6 +65,7 @@
 .facts {
   composes: bodySm from '../../styles/type.module.css';
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-1);
   color: var(--dse-ink-2);
 }
@@ -91,6 +95,7 @@
 .pageCounts {
   composes: meta from '../../styles/type.module.css';
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-1);
   color: var(--dse-ink-2);
 }
@@ -107,6 +112,7 @@
 
 .state {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-1);
   justify-items: center;
 }
@@ -122,6 +128,7 @@
   padding-top: var(--dse-space-3);
   border-top: 1px solid var(--dse-line-soft);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-2);
 }
 
@@ -134,6 +141,7 @@
 .unmapped {
   composes: hex from '../../styles/type.module.css';
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-1);
   color: var(--dse-ink-2);
 }

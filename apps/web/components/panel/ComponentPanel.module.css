@@ -23,6 +23,7 @@
 
 .titles {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-1);
   min-width: 0;
 }
@@ -51,6 +52,7 @@
 
 .icon {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   width: 44px;
   height: 44px;
@@ -79,6 +81,7 @@
 
 .sheetBody {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-5);
 }
 

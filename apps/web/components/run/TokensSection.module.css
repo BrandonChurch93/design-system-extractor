@@ -1,14 +1,17 @@
 .colorCard {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .groups {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-5);
 }
 
 .group {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-3);
 }
 
@@ -37,6 +40,7 @@
 
 .stack {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-5);
   min-width: 0;
 }
@@ -49,6 +53,7 @@
 
 .typeList {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .typeRow {
@@ -90,6 +95,7 @@
 
 .bars {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-2);
 }
 
@@ -126,6 +132,7 @@
 
 .alert {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   padding: 0;
   border: 0;
@@ -142,6 +149,7 @@
 .popLines {
   composes: meta from '../../styles/type.module.css';
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-1);
   color: var(--dse-ink-2);
 }
@@ -154,6 +162,7 @@
 
 .sampleButton {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   justify-items: center;
   gap: var(--dse-space-2);
   padding: 0;

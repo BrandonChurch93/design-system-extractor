@@ -96,7 +96,7 @@ export function StateView({ reason, host, url, runDetail, login, hours, runsPerD
   const notCounted = (
     <>
       <p>{S.bot.footer}</p>
-      {runsLeft ? <p>{runsLeft}</p> : null}
+      {runsLeft ? <p data-qa-mask="runs-left">{runsLeft}</p> : null}
     </>
   );
 
@@ -106,7 +106,7 @@ export function StateView({ reason, host, url, runDetail, login, hours, runsPerD
         <StateCard
           eyebrow={S.budget.eyebrow}
           title={S.budget.title}
-          body={fill(S.budget.body, { hours: count(shownHours) })}
+          body={<span data-qa-mask="hours">{fill(S.budget.body, { hours: count(shownHours) })}</span>}
           detail={
             usage ? (
               <div className={styles.meter}>
@@ -135,7 +135,7 @@ export function StateView({ reason, host, url, runDetail, login, hours, runsPerD
         <StateCard
           eyebrow={S.visitorCap.eyebrow}
           title={fill(S.visitorCap.title, { runsPerDay: count(runsPerDay) })}
-          body={fill(S.visitorCap.body, { runsPerDay: numberWord(runsPerDay), hours: count(shownHours) })}
+          body={<span data-qa-mask="hours">{fill(S.visitorCap.body, { runsPerDay: numberWord(runsPerDay), hours: count(shownHours) })}</span>}
           primary={keyForm}
           secondary={
             <>

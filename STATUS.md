@@ -14,7 +14,9 @@ P11 · The web app. Started 2026-10-26.
 
 ## Next action
 
-Build P11 per the plan below, step by step, committing after each meaningful unit.
+P11 progress: steps 1 to 10 built and committed (foundations, home, run page both faces, panel and component page, state routes, recent, compare, /open, how it works, prose pages, 404, sitemap, robots, OG images, catalog entries). Found and fixed a P6 defect on the way: the preview documents' CSP named the storage base without a trailing slash, which blocks every font file; live rates rose (messy 0.935, library 1.000). Now: reseed (adds blocked runs seedlogin0 and seedblock0 and the QA-only seedqueue0, seedfail00, seedcanc00, seedspars0), then step 11: run qa:design, review every page at three viewports, axe, the new e2e tests (layout, /open, polling, reduced motion on the run page, compare deltas), Lighthouse, goldens; log D-058 (the P11 rulings listed in the commit messages and below) and pass the gate.
+
+P11 rulings to log as D-058: Next 16's proxy.ts instead of middleware, every page per request for the nonce; copy.md additions (single-word placeholders, card titles, token popover lines, breadcrumb label, preview titles, pill radius, CLI and MCP code blocks, singular spans, column facts); entrances observe the unclipped parent; PagesCard under the rail, the live log at the bottom, the drift narrative under the Drift caption, the disclaimer as the Checks caption only; the MCP card hidden for local runs; the panel gets a slice of the run, stored markdown is not sent to the browser; Compare matches components by signature and words a finished gray count without "still 0 to go"; bare domains are read as https; run dates in UTC, Recent times in the reader's clock; seed gains blocked and synthetic QA runs; Lighthouse uses the desktop preset; db:seed:check runs before the tests.
 
 ### P11 plan
 

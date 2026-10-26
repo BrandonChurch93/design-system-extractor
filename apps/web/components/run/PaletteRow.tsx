@@ -1,4 +1,5 @@
 'use client';
+import { useId } from 'react';
 import type { RunDocumentPartial } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
@@ -11,10 +12,11 @@ import styles from './PaletteRow.module.css';
 
 /** "Palette" and the eight most used colors as xl swatches that extend in a stagger. */
 export function PaletteRow({ doc }: { doc: RunDocumentPartial }) {
+  const labelId = useId();
   const colors = [...(doc.tokens?.colors ?? [])].sort((a, b) => b.usage - a.usage).slice(0, 8);
   return (
-    <section className={styles.row} aria-labelledby="palette-label">
-      <p id="palette-label" className={styles.label}>
+    <section className={styles.row} aria-labelledby={labelId}>
+      <p id={labelId} className={styles.label}>
         {runPage.palette.label}
       </p>
       <ul className={styles.swatches}>

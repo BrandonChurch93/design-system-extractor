@@ -6,16 +6,19 @@
 
 .page {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-7);
 }
 
 .top {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-6);
 }
 
 .sections {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-8);
 }
 
@@ -27,6 +30,7 @@
 
 .ended {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   justify-items: center;
   padding: var(--dse-space-8) 0;
 }

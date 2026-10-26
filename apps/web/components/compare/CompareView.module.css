@@ -1,5 +1,6 @@
 .main {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-7);
   width: min(var(--dse-content-width), 100% - 2 * var(--dse-gutter));
   margin-inline: auto;
@@ -8,6 +9,7 @@
 
 .header {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-3);
   justify-items: start;
 }
@@ -61,6 +63,7 @@
 
 .column {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-1);
 }
 
@@ -89,6 +92,7 @@
 
 .desktop {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-7);
 }
 
@@ -103,6 +107,7 @@
 
 .delta {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-2);
   align-content: start;
   padding: var(--dse-space-5);
@@ -136,6 +141,7 @@
 
 .section {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-4);
 }
 
@@ -157,6 +163,7 @@
 
 .swatchList {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-2);
 }
 
@@ -236,6 +243,7 @@
 
 .picker {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-4);
 }
 
@@ -245,6 +253,7 @@
 
 .pickerList {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .paste {
@@ -272,6 +281,7 @@
 
   .notice {
     display: grid;
+  grid-template-columns: minmax(0, 1fr);
     gap: var(--dse-space-4);
   }
 

@@ -59,7 +59,7 @@ export function RecentView({ byoPageCap, now }: { byoPageCap: number; now: strin
             <p className={styles.caption}>{R.caption}</p>
           </div>
           <div className={styles.side}>
-            {left ? <p className={styles.left}>{left}</p> : null}
+            {left ? <p className={styles.left} data-qa-mask="runs-left">{left}</p> : null}
             <Button variant="primary" href="/">
               {R.newRun}
             </Button>

@@ -46,6 +46,7 @@
 .delta {
   composes: hex from '../../styles/type.module.css';
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-1);
   margin-top: var(--dse-space-3);
   color: var(--dse-ink-2);

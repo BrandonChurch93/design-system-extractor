@@ -1,5 +1,6 @@
 .main {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-5);
   width: min(var(--dse-content-width), 100% - 2 * var(--dse-gutter));
   margin-inline: auto;
@@ -16,6 +17,7 @@
 
 .titles {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-2);
 }
 
@@ -47,6 +49,7 @@
 
 .list {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .keyButton {

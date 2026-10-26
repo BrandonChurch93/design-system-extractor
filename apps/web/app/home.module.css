@@ -1,5 +1,6 @@
 .hero {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-5);
   padding: var(--dse-space-9) 0 var(--dse-space-8);
 }

@@ -15,6 +15,7 @@ import { createRunWorker } from '../apps/worker/src/worker';
 import { paletteOf } from '../apps/web/lib/palette';
 import { admitRun } from '../apps/web/lib/server/runs';
 import { servicesFromEnv } from '../apps/web/lib/server/services';
+import { BLOCKING_SITES_PORT, startBlockingSites } from './blocking-sites';
 import { startFixtureServer } from './fixtures-serve';
 
 const root = resolve(import.meta.dirname, '..');
@@ -37,6 +38,10 @@ const SeedFile = z.object({
   appUrl: z.string().url(),
   runs: z.array(SeedRun).length(6),
   progress: z.array(z.object({ id: z.string().regex(/^[0-9a-z]{10}$/), fixture: z.literal('clean'), through: Stage, createdAt: z.string(), startedAt: z.string() })).length(3),
+  /** Runs the worker ends blocked, for the login and bot state pages (D-058). */
+  /** QA-only documents for the run states no fixture produces: queued, failed, cancelled, sparse (D-058). */
+  synthetic: z.array(z.object({ id: z.string().regex(/^[0-9a-z]{10}$/), kind: z.enum(['queued', 'failed', 'cancelled', 'sparse']), createdAt: z.string(), detail: z.string().optional() })),
+  blocked: z.array(z.object({ site: z.enum(['walled', 'bot']), id: z.string().regex(/^[0-9a-z]{10}$/), path: z.string(), createdAt: z.string(), startedAt: z.string(), durationMs: z.number().int().positive() })),
 });
 
 const seed = SeedFile.parse(JSON.parse(readFileSync(seedFile, 'utf8')));
@@ -44,7 +49,7 @@ const env = process.env;
 const svc = servicesFromEnv(env);
 const log = pino({ level: 'error' });
 const at = (iso: string, ms: number) => new Date(Date.parse(iso) + ms).toISOString();
-const allIds = [...seed.runs.map((r) => r.id), ...seed.progress.map((p) => p.id)];
+const allIds = [...seed.runs.map((r) => r.id), ...seed.progress.map((p) => p.id), ...seed.blocked.map((b) => b.id), ...seed.synthetic.map((x) => x.id)];
 
 if (env.NODE_ENV === 'production') throw new Error('the fixture seed is for development and test databases only');
 
@@ -55,6 +60,8 @@ if (process.argv.includes('--if-missing')) {
   const present =
     seed.runs.every((r) => rows.some((x) => x.id === r.id && x.status === 'complete' && x.isShowcase)) &&
     seed.progress.every((p) => rows.some((x) => x.id === p.id && x.status === 'running' && x.qaFrozen)) &&
+    seed.blocked.every((b) => rows.some((x) => x.id === b.id && x.status === 'blocked')) &&
+    seed.synthetic.every((y) => rows.some((x) => x.id === y.id && x.qaFrozen)) &&
     content.success &&
     content.data.entries.length === seed.runs.length;
   if (present) {
@@ -77,6 +84,8 @@ const running = await fetch('http://localhost:4100/robots.txt', { signal: AbortS
   () => false,
 );
 const fixtures = running ? null : await startFixtureServer(4100);
+const sites = await startBlockingSites();
+svc.allowPrivateHosts.push(`localhost:${BLOCKING_SITES_PORT}`);
 
 // A clean slate for the seed ids: rows (events and pages cascade), files, finished jobs.
 await svc.db.delete(tables.runs).where(inArray(tables.runs.id, allIds));
@@ -94,6 +103,11 @@ const viewer = { visitorId: 'seedfixtures0000', userId: null, plan: 'free' as co
 for (const r of seed.runs) {
   const result = await admitRun(svc, { body: { url: `http://localhost:4100/sites/${r.fixture}/` }, viewer, showcase: true, id: r.id, now: new Date(r.createdAt) });
   if (result.kind !== 'created') throw new Error(`${r.fixture}: not enqueued (${JSON.stringify(result)})`);
+}
+// The blocked pair is admitted without caps like the rest, then kept out of the showcase below.
+for (const b of seed.blocked) {
+  const result = await admitRun(svc, { body: { url: `http://localhost:${BLOCKING_SITES_PORT}${b.path}` }, viewer: { ...viewer, visitorId: 'seedblocked00000' }, showcase: true, id: b.id, now: new Date(b.createdAt) });
+  if (result.kind !== 'created') throw new Error(`${b.site}: not enqueued (${JSON.stringify(result)})`);
 }
 
 const browsers = new BrowserPool();
@@ -122,14 +136,15 @@ const worker = createRunWorker({
 const started = Date.now();
 let reported = -1;
 for (;;) {
-  const rows = await svc.db.select({ id: tables.runs.id, status: tables.runs.status }).from(tables.runs).where(inArray(tables.runs.id, seed.runs.map((r) => r.id)));
+  const rows = await svc.db.select({ id: tables.runs.id, status: tables.runs.status }).from(tables.runs).where(inArray(tables.runs.id, [...seed.runs, ...seed.blocked].map((r) => r.id)));
   const open = rows.filter((r) => r.status === 'queued' || r.status === 'running');
   if (rows.length - open.length !== reported) {
     reported = rows.length - open.length;
     console.log(`seed · ${reported} of ${rows.length} runs finished · ${Math.round((Date.now() - started) / 1000)} s`);
   }
   if (!open.length) {
-    const bad = rows.filter((r) => r.status !== 'complete');
+    const blockedIds = new Set(seed.blocked.map((b) => b.id));
+    const bad = rows.filter((r) => r.status !== (blockedIds.has(r.id) ? 'blocked' : 'complete'));
     if (bad.length) throw new Error(`runs did not complete: ${bad.map((r) => `${r.id} ${r.status}`).join(', ')}`);
     break;
   }
@@ -170,6 +185,12 @@ if (wroteCost) {
   console.log('seed · costs recorded in fixtures/seed.json; later seeds reuse them');
 }
 
+for (const b of seed.blocked) {
+  await applyPatch(svc.db, b.id, { createdAt: b.createdAt, startedAt: b.startedAt, finishedAt: at(b.startedAt, b.durationMs), durationMs: b.durationMs });
+  await svc.db.update(tables.runs).set({ createdAt: b.createdAt, priority: 0, retentionUntil: null }).where(eq(tables.runs.id, b.id));
+  await fixEventTimes(b.id, b.startedAt, b.durationMs);
+}
+
 // The frozen in-progress documents: the clean run as it stood when each stage finished.
 const cleanEvents = await listEvents(svc.db, cleanId);
 const [cleanRow] = await svc.db.select().from(tables.runs).where(eq(tables.runs.id, cleanId));
@@ -202,6 +223,64 @@ for (const p of seed.progress) {
   }
 }
 
+// The synthetic QA documents, derived from the clean seed run.
+const cleanDoc = RunDocumentPartial.parse((await svc.db.select().from(tables.runs).where(eq(tables.runs.id, cleanId)))[0]!.document);
+for (const y of seed.synthetic) {
+  const identity = { id: y.id, url: cleanDoc.url!, host: cleanDoc.host!, createdAt: y.createdAt, pipelineVersion: cleanDoc.pipelineVersion!, viewports: cleanDoc.viewports! };
+  const startedAt = at(y.createdAt, 2000);
+  let doc: RunDocumentPartial;
+  let events = cleanEvents.slice(0, 0);
+  if (y.kind === 'queued') doc = RunDocumentPartial.parse({ ...identity, status: 'queued' });
+  else if (y.kind === 'sparse') {
+    const components = (cleanDoc.components ?? []).slice(0, 3);
+    const results = components.flatMap((c) => c.checks.filter((r) => r.status !== 'na'));
+    const passed = results.filter((r) => r.status === 'pass').length;
+    doc = RunDocumentPartial.parse({
+      ...cleanDoc,
+      ...identity,
+      status: 'complete',
+      startedAt,
+      finishedAt: at(startedAt, 64_000),
+      durationMs: 64_000,
+      sparse: true,
+      components,
+      checks: {
+        summary: { passed, failed: results.length - passed, total: components.length * 5, applicable: results.length },
+        byCheck: (cleanDoc.checks?.byCheck ?? []).map((b) => {
+          const rs = components.flatMap((c) => c.checks.filter((r) => r.check === b.check && r.status !== 'na').map((r) => ({ c, r })));
+          return { check: b.check, passed: rs.filter((x) => x.r.status === 'pass').length, applicable: rs.length, failing: rs.filter((x) => x.r.status === 'fail').map((x) => ({ componentId: x.c.id, name: x.c.name, detail: x.r.detail })) };
+        }),
+      },
+      stats: { ...cleanDoc.stats!, components: components.length, checksPassed: passed, checksApplicable: results.length },
+    });
+    events = cleanEvents;
+  } else {
+    events = cleanEvents.slice(0, 12);
+    doc = RunDocumentPartial.parse({ ...identity, status: y.kind, startedAt, finishedAt: at(startedAt, 40_000), durationMs: 40_000, pages: cleanDoc.pages, frameworkHint: cleanDoc.frameworkHint, ...(y.kind === 'failed' ? { failedDetail: y.detail } : {}) });
+  }
+  await svc.db.insert(tables.runs).values({
+    id: y.id,
+    url: identity.url,
+    host: identity.host,
+    status: doc.status!,
+    visitorId: 'seedqaruns000000',
+    priority: 0,
+    pageCap: 12,
+    includeUrls: [],
+    viewports: identity.viewports,
+    pipelineVersion: identity.pipelineVersion,
+    document: doc,
+    stats: doc.stats ?? null,
+    createdAt: y.createdAt,
+    startedAt: y.kind === 'queued' ? null : startedAt,
+    finishedAt: doc.finishedAt ?? null,
+    retentionUntil: null,
+    qaFrozen: true,
+  });
+  const lines = y.kind === 'failed' || y.kind === 'cancelled' ? [...events, { ...cleanEvents.at(-1)!, stage: 'done' as const, level: (y.kind === 'failed' ? 'error' : 'warn') as 'error' | 'warn', message: `done · ${y.kind === 'failed' ? y.detail : 'cancelled'}`, data: null }] : events;
+  if (lines.length) await svc.db.insert(tables.runEvents).values(lines.map((e, i) => ({ runId: y.id, ts: at(startedAt, (i + 1) * 900), stage: e.stage, substage: e.substage, level: e.level, message: e.message, data: e.data })));
+}
+
 const content = ShowcaseContent.parse({ generatedAt: seed.generatedAt, appUrl: seed.appUrl, entries });
 writeFileSync(contentFile, `${JSON.stringify(content, null, 2)}\n`);
 
@@ -210,10 +289,13 @@ for (const r of seed.runs) {
   const s = entries.find((e) => e.runId === r.id)!.stats;
   console.log(`${r.fixture.padEnd(16)} ${r.id}  ${String(s.colors).padStart(6)}  ${String(s.typeStyles).padStart(4)}  ${String(s.spacingSteps).padStart(5)}  ${String(s.components).padStart(10)}  ${`${s.checksPassed} of ${s.checksApplicable}`.padStart(8)}  $${(r.cost?.usd ?? 0).toFixed(4)}`);
 }
+console.log(`blocked · ${seed.blocked.map((b) => `${b.id} ${b.site}`).join(' · ')}`);
+console.log(`synthetic · ${seed.synthetic.map((y) => `${y.id} ${y.kind}`).join(' · ')}`);
 console.log(`frozen · ${seed.progress.map((p) => `${p.id} after ${p.through}`).join(' · ')}`);
 console.log(`showcase · ${entries.length} entries written to apps/web/content/showcase.json`);
 
 fixtures?.close();
+sites.close();
 await svc.queue.close();
 svc.redis.disconnect();
 await closeDb(svc.db);

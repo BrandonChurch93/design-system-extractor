@@ -73,6 +73,7 @@
 .moreList {
   composes: bodySm from '../../styles/type.module.css';
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-2);
   color: var(--dse-ink-2);
 }

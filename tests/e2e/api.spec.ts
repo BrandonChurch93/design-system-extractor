@@ -47,3 +47,13 @@ test('the MCP server loads a run with --run from the app', async ({ baseURL }) =
   expect(runUrl).toBe(`${baseURL}/r/seedclean0`);
   expect(doc.components?.length).toBe(27);
 });
+
+test('the compare page shows the messy-after deltas', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/compare?a=seedmessy0&b=seedmafter');
+  await expect(page.getByText('Grays · 5 fewer')).toBeVisible();
+  await expect(page.getByText('Components · 2 new')).toBeVisible();
+  await expect(page.getByRole('row', { name: /Button Changed 7 variants 6 variants/ })).toBeVisible();
+  for (const name of ['Newsletter input', 'Status badge']) await expect(page.getByRole('row', { name: new RegExp(`^${name} Changed`) })).toBeVisible();
+  await expect(page.getByRole('row', { name: /^Toast New/ })).toBeVisible();
+});

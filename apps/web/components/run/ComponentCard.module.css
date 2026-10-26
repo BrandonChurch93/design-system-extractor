@@ -47,6 +47,7 @@
 
 .body {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-2);
   align-content: start;
   padding: var(--dse-space-5);

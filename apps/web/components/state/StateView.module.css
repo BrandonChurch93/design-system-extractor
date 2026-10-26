@@ -1,5 +1,6 @@
 .stack {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-4);
 }
 
@@ -10,6 +11,7 @@
 .lines {
   composes: bodySm from '../../styles/type.module.css';
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-2);
   color: var(--dse-ink-2);
   padding-left: var(--dse-space-4);
@@ -23,6 +25,7 @@
 
 .keyForm {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-3);
   width: 100%;
 }
@@ -43,6 +46,7 @@
 
 .meter {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-2);
 }
 

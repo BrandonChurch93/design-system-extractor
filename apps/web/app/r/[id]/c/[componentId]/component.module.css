@@ -1,5 +1,6 @@
 .page {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-6);
   max-width: 760px;
   padding-top: var(--dse-space-7);
@@ -7,6 +8,7 @@
 
 .header {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-2);
 }
 
