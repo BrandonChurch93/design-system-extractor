@@ -62,7 +62,7 @@ test('every route carries the title, description, preview and indexing from the 
     {
       path: '/r/seedclean0',
       title: `${fill(runTitle!, { host: d.host! })}${suffix}`,
-      description: fill(runDescription!, { colors: d.tokens!.colors.length, typeStyles: d.tokens!.type.length, components: d.components!.length, host: d.host! }),
+      description: fill(runDescription!, { colors: d.tokens!.colors!.length, typeStyles: d.tokens!.type!.length, components: d.components!.length, host: d.host! }),
       index: true,
       image: '/api/runs/seedclean0/og',
     },
