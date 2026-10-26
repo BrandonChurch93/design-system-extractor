@@ -169,7 +169,8 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 
 ## Compare
 
-- Titles: same host `What changed in {span}` with spans following rule 9: `today` · `{n} days` · `{n} weeks` · `{n} months` ("six weeks", "three days", "14 months"); two hosts `{hostA} and {hostB}`
+- Titles: same host `What changed in {span}` with spans following rule 9: `today` · `{n} days` · `{n} weeks` · `{n} months` ("six weeks", "three days", "14 months"), singular `one day` · `one week` · `one month`; under 14 days counts days, under 60 days weeks, months after; two hosts `{hostA} and {hostB}`
+- Column facts: `{pages} pages · {viewports} viewports`
 - Caption: `Same site, two runs. Same pages, same viewports, same thresholds.` · two sites: `Two sites, one method. Same viewports, same thresholds.`
 - Toggle: `Two runs of one site` · `Two sites`
 - Column labels: `Before` · `After` · for two sites `A` · `B`
@@ -249,7 +250,22 @@ Testing heading `How it is tested`; table headers `Fixture site` · `What it pro
 
 CLI heading `The CLI`; caption `Runs the same pipeline on your machine. Point it at a logged-in Chrome with --cdp to extract private sites, then open the result on this site without uploading it.`
 
-MCP heading `The MCP server`.
+CLI CodeBlock:
+
+```
+npm install -g @design-system-extractor/cli
+dse extract https://your-product.com --out ./dse-run
+dse export ./dse-run/run.json --format tokens.css
+dse serve ./dse-run
+```
+
+MCP heading `The MCP server`; caption `Claude Code and Claude Desktop read a run directly. No pasting.`; CodeBlock:
+
+```
+claude mcp add design-system-extractor -- npx -y @design-system-extractor/mcp --run {id}
+npx -y @design-system-extractor/mcp --url https://design-system-extractor.vercel.app/r/{id}
+npx -y @design-system-extractor/mcp --file ./dse-run/run.json
+```
 
 Buttons `Read the source` · `Try it on a site`. Footer right: `Runs are never shown publicly unless they are in the showcase.`
 

@@ -1,0 +1,85 @@
+.stack {
+  display: grid;
+  gap: var(--dse-space-4);
+}
+
+.formHeading {
+  composes: h3 from '../../styles/type.module.css';
+}
+
+.lines {
+  composes: bodySm from '../../styles/type.module.css';
+  display: grid;
+  gap: var(--dse-space-2);
+  color: var(--dse-ink-2);
+  padding-left: var(--dse-space-4);
+  list-style: disc;
+}
+
+.caption {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+.keyForm {
+  display: grid;
+  gap: var(--dse-space-3);
+  width: 100%;
+}
+
+.retry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--dse-space-3);
+  width: 100%;
+}
+
+.error {
+  composes: caption from '../../styles/type.module.css';
+  grid-column: 1 / -1;
+  color: var(--dse-ink-2);
+}
+
+.meter {
+  display: grid;
+  gap: var(--dse-space-2);
+}
+
+.meterLine {
+  composes: meta from '../../styles/type.module.css';
+  display: flex;
+  justify-content: space-between;
+  gap: var(--dse-space-3);
+  color: var(--dse-muted);
+}
+
+.loginCard {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--dse-space-4);
+}
+
+.cardTitle {
+  composes: h3 from '../../styles/type.module.css';
+}
+
+.minis {
+  display: flex;
+  gap: var(--dse-space-1);
+}
+
+@media (max-width: 640px) {
+  .retry,
+  .loginCard {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.chip {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--dse-radius-sm);
+  box-shadow: inset 0 0 0 1px var(--dse-line-soft);
+}

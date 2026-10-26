@@ -76,3 +76,33 @@ export function storeBlocked(detail: BlockedDetail): void {
 export function blockedDetail<T extends BlockedDetail>(): T | null {
   return read<T | null>(session, BLOCKED, null);
 }
+
+const RECENT_EVENT = 'dse-recent-change';
+let recentCache: { raw: string | null; list: RecentRun[] } = { raw: null, list: [] };
+
+/** A stable snapshot of the list for useSyncExternalStore. */
+export function recentSnapshot(): RecentRun[] {
+  let raw: string | null = null;
+  try {
+    raw = local().getItem(RECENT);
+  } catch {
+    raw = null;
+  }
+  if (raw !== recentCache.raw) recentCache = { raw, list: recentRuns() };
+  return recentCache.list;
+}
+
+export const noRecent: RecentRun[] = [];
+
+export function subscribeRecent(cb: () => void): () => void {
+  window.addEventListener(RECENT_EVENT, cb);
+  window.addEventListener('storage', cb);
+  return () => {
+    window.removeEventListener(RECENT_EVENT, cb);
+    window.removeEventListener('storage', cb);
+  };
+}
+
+export function announceRecent(): void {
+  window.dispatchEvent(new Event(RECENT_EVENT));
+}

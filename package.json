@@ -31,7 +31,7 @@
     "qa:lighthouse": "node scripts/run.mjs tsx scripts/qa-lighthouse.ts",
     "qa:copy": "node scripts/run.mjs tsx scripts/qa-copy.ts",
     "build": "node scripts/run.mjs pnpm -r build",
-    "verify:all": "node scripts/run.mjs node scripts/steps.mjs check test test:security db:seed:check test:e2e evals:gate build qa:visual qa:axe qa:lighthouse qa:copy audit",
+    "verify:all": "node scripts/run.mjs node scripts/steps.mjs check db:seed:check test test:security test:e2e evals:gate build qa:visual qa:axe qa:lighthouse qa:copy audit",
     "audit": "pnpm audit --audit-level high",
     "showcase": "node scripts/run.mjs tsx scripts/showcase/index.ts",
     "doctor": "node scripts/run.mjs tsx scripts/doctor.ts",

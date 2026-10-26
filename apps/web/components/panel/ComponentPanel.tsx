@@ -15,10 +15,19 @@ import { Sheet } from '../Sheet';
 import { ComponentDetail } from './ComponentDetail';
 import styles from './ComponentPanel.module.css';
 
-type Props = { runId: string; doc: RunDocumentPartial; component: Component; neighbors: Neighbor[]; base?: string; runUrl: string };
+type Props = {
+  runId: string;
+  doc: RunDocumentPartial;
+  component: Component;
+  neighbors: Neighbor[];
+  base?: string;
+  runUrl: string;
+  /** A local run (/open) has no routes: the page that hosts the panel navigates it. */
+  local?: { onNavigate: (id: string) => void; onClose: () => void };
+};
 
 /** The component panel: 560 wide from the right (480 on tablets), a sheet on phones (D-007). */
-export function ComponentPanel({ runId, doc, component: c, neighbors, base, runUrl }: Props) {
+export function ComponentPanel({ runId, doc, component: c, neighbors, base, runUrl, local }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const phone = useMedia(PHONE);
@@ -29,12 +38,17 @@ export function ComponentPanel({ runId, doc, component: c, neighbors, base, runU
   const sameGroup = neighbors.filter((n) => n.group === c.group);
   const prev = neighbors[at - 1];
   const next = neighbors[at + 1];
-  const go = (id: string) => router.push(`/r/${runId}?c=${id}`, { scroll: false });
+  const go = (id: string) => (local ? local.onNavigate(id) : router.push(`/r/${runId}?c=${id}`, { scroll: false }));
 
   function close() {
     if (closing) return;
     setClosing(true);
     const done = () => {
+      if (local) {
+        local.onClose();
+        setClosing(false);
+        return;
+      }
       router.push(`/r/${runId}`, { scroll: false });
       requestAnimationFrame(() => document.querySelector<HTMLAnchorElement>(`a[href="/r/${runId}?c=${c.id}"]`)?.focus());
     };
@@ -55,7 +69,7 @@ export function ComponentPanel({ runId, doc, component: c, neighbors, base, runU
   });
 
   // A soft navigation to the component's own page keeps this slot's last state; it belongs to /r/{id} only.
-  if (pathname !== `/r/${runId}`) return null;
+  if (!local && pathname !== `/r/${runId}`) return null;
 
   const head = (
     <div className={styles.head}>
@@ -72,9 +86,11 @@ export function ComponentPanel({ runId, doc, component: c, neighbors, base, runU
         <button type="button" className={styles.icon} aria-label={P.next} disabled={!next} onClick={() => next && go(next.id)}>
           <ChevronRight size={20} strokeWidth={1.75} aria-hidden="true" />
         </button>
-        <a className={styles.icon} aria-label={P.openAsPage} href={`/r/${runId}/c/${c.id}`}>
-          <ExternalLink size={20} strokeWidth={1.75} aria-hidden="true" />
-        </a>
+        {local ? null : (
+          <a className={styles.icon} aria-label={P.openAsPage} href={`/r/${runId}/c/${c.id}`}>
+            <ExternalLink size={20} strokeWidth={1.75} aria-hidden="true" />
+          </a>
+        )}
         <button type="button" className={styles.icon} aria-label={P.close} onClick={close}>
           <X size={20} strokeWidth={1.75} aria-hidden="true" />
         </button>

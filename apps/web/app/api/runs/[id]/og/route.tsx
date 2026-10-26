@@ -1,7 +1,6 @@
-import { readFile } from 'node:fs/promises';
-import { join } from 'node:path';
 import { ImageResponse } from 'next/og';
 import { NO_STORE, TERMINAL_CACHE, error } from '../../../../../lib/server/http';
+import { ogFonts } from '../../../../../lib/og-fonts';
 import { paletteOf } from '../../../../../lib/palette';
 import { runPayload } from '../../../../../lib/server/runs';
 import { services } from '../../../../../lib/server/services';
@@ -10,18 +9,6 @@ const BG = '#FCFAF8';
 const INK = '#23201E';
 const MUTED = '#6A635E';
 const SKELETON = '#EFEBE7';
-
-async function font(file: string): Promise<ArrayBuffer> {
-  for (const base of [process.cwd(), join(process.cwd(), 'apps/web')]) {
-    try {
-      const b = await readFile(join(/* turbopackIgnore: true */ base, 'assets/og', file));
-      return b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength) as ArrayBuffer;
-    } catch {
-      // try the next base
-    }
-  }
-  throw new Error(`OG font ${file} not found`);
-}
 
 /** The run's Open Graph image: its palette strip, the host and the stats line on `bg` (docs/design/pages.md). */
 export async function GET(_request: Request, ctx: { params: Promise<{ id: string }> }): Promise<Response> {
@@ -57,10 +44,7 @@ export async function GET(_request: Request, ctx: { params: Promise<{ id: string
     {
       width: 1200,
       height: 630,
-      fonts: [
-        { name: 'Plus Jakarta Sans', data: await font('plus-jakarta-sans-latin-500-normal.woff'), weight: 500, style: 'normal' },
-        { name: 'Plus Jakarta Sans', data: await font('plus-jakarta-sans-latin-700-normal.woff'), weight: 700, style: 'normal' },
-      ],
+      fonts: await ogFonts(),
     },
   );
   const png = new Uint8Array(await image.arrayBuffer());

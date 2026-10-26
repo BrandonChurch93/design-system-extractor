@@ -149,6 +149,7 @@ export const runPage = {
     source: 'First seen on {path} · {pages} pages · {variants} variants',
     onePage: '1 page',
     oneVariant: '1 variant',
+    variants: '{variants} variants',
     badge: '{passed} of {applicable}',
     showAll: 'Show all {n} components',
   },
@@ -275,6 +276,8 @@ export const componentPanel = {
 export const compare = {
   sameTitle: 'What changed in {span}',
   today: 'today',
+  spans: { days: '{n} days', weeks: '{n} weeks', months: '{n} months', day: 'one day', week: 'one week', month: 'one month' },
+  facts: '{pages} pages · {viewports} viewports',
   twoTitle: '{hostA} and {hostB}',
   captionSame: 'Same site, two runs. Same pages, same viewports, same thresholds.',
   captionTwo: 'Two sites, one method. Same viewports, same thresholds.',
@@ -418,7 +421,9 @@ export const howItWorks = {
     liveOf: '{live} of {total}',
   },
   cli: { heading: 'The CLI', caption: 'Runs the same pipeline on your machine. Point it at a logged-in Chrome with --cdp to extract private sites, then open the result on this site without uploading it.' },
-  mcp: { heading: 'The MCP server' },
+  cliCode: 'npm install -g @design-system-extractor/cli\ndse extract https://your-product.com --out ./dse-run\ndse export ./dse-run/run.json --format tokens.css\ndse serve ./dse-run',
+  mcp: { heading: 'The MCP server', caption: 'Claude Code and Claude Desktop read a run directly. No pasting.' },
+  mcpCode: 'claude mcp add design-system-extractor -- npx -y @design-system-extractor/mcp --run {id}\nnpx -y @design-system-extractor/mcp --url https://design-system-extractor.vercel.app/r/{id}\nnpx -y @design-system-extractor/mcp --file ./dse-run/run.json',
   buttons: { source: 'Read the source', try: 'Try it on a site' },
   footer: 'Runs are never shown publicly unless they are in the showcase.',
 } as const;

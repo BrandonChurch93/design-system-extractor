@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-26T10:48:17.635Z",
+  "generatedAt": "2026-10-26T11:22:41.761Z",
   "mode": "replay",
   "through": "done",
   "pipelineVersion": "1.0.0",
@@ -220,11 +220,10 @@
           "misses": []
         },
         "liveRate": {
-          "rate": 0.903,
-          "live": 28,
+          "rate": 0.935,
+          "live": 29,
           "total": 31,
           "captured": [
-            "Feature card (diff 2.7 %)",
             "Promo card (diff 92.2 %)",
             "Avatar (diff 6.2 %)"
           ]
@@ -597,12 +596,10 @@
           "misses": []
         },
         "liveRate": {
-          "rate": 0.955,
-          "live": 21,
+          "rate": 1,
+          "live": 22,
           "total": 22,
-          "captured": [
-            "Previous link (diff 3.2 %)"
-          ]
+          "captured": []
         },
         "checks": {
           "failures": 1,

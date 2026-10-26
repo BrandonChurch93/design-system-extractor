@@ -1,0 +1,95 @@
+.row {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1.3fr) minmax(0, 1.6fr) 120px 96px 104px;
+  align-items: center;
+  gap: var(--dse-space-4);
+  padding: var(--dse-space-3) var(--dse-space-2);
+  border-bottom: 1px solid var(--dse-line-soft);
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+.palette {
+  display: block;
+  width: 56px;
+  height: 40px;
+  border-radius: var(--dse-radius-sm);
+  overflow: hidden;
+}
+
+.site {
+  display: grid;
+  gap: var(--dse-space-1);
+  min-width: 0;
+}
+
+.host {
+  composes: h3 from '../../styles/type.module.css';
+  color: var(--dse-ink);
+  overflow-wrap: anywhere;
+  border-radius: var(--dse-radius-sm);
+}
+
+.host:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--dse-line-strong);
+  text-underline-offset: 3px;
+}
+
+.id {
+  composes: meta from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+.result,
+.when {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-ink-2);
+}
+
+.when {
+  color: var(--dse-muted);
+}
+
+.action {
+  justify-self: end;
+}
+
+@media (max-width: 1023px) {
+  .row {
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    grid-template-areas:
+      'palette site status'
+      'palette result action'
+      'palette when action';
+    row-gap: var(--dse-space-1);
+  }
+
+  .palette {
+    grid-area: palette;
+    align-self: start;
+  }
+
+  .site {
+    grid-area: site;
+  }
+
+  .result {
+    grid-area: result;
+  }
+
+  .when {
+    grid-area: when;
+  }
+
+  .status {
+    grid-area: status;
+    justify-self: end;
+  }
+
+  .action {
+    grid-area: action;
+  }
+}

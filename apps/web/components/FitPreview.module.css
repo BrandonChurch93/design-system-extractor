@@ -27,3 +27,11 @@
   color: var(--dse-ink-2);
   border: 1px solid var(--dse-line-soft);
 }
+
+.placeholder {
+  composes: caption from '../styles/type.module.css';
+  color: var(--dse-muted);
+  text-align: center;
+  padding: var(--dse-space-4);
+  max-width: 280px;
+}

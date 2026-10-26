@@ -1,9 +1,12 @@
 'use client';
-import { useEffect, useRef, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import type { Preview } from '@dse/schema';
 import { runPage } from '../copy/strings';
 import { PreviewFrame } from './PreviewFrame';
 import styles from './FitPreview.module.css';
+
+/** Where a local run has no image server, the caption that stands in for a crop or preview (/open). */
+export const PreviewPlaceholder = createContext<string | undefined>(undefined);
 
 /**
  * A component preview at 1:1, scaled down (never up) to fit its ground. The live preview is a
@@ -11,6 +14,7 @@ import styles from './FitPreview.module.css';
  */
 export function FitPreview({ preview, base, title, padding = 16, htmlKey, showCaptured = true, lazy }: { preview: Preview; base?: string; title: string; padding?: number; htmlKey?: string; showCaptured?: boolean; lazy?: boolean }) {
   const box = useRef<HTMLDivElement>(null);
+  const placeholder = useContext(PreviewPlaceholder);
   const [room, setRoom] = useState<{ w: number; h: number } | null>(null);
   useEffect(() => {
     const el = box.current;
@@ -32,6 +36,8 @@ export function FitPreview({ preview, base, title, padding = 16, htmlKey, showCa
             <PreviewFrame mode={preview.mode === 'live' ? 'live' : 'captured'} src={src} title={title} width={w} height={h} lazy={lazy} />
           </div>
         </div>
+      ) : placeholder ? (
+        <p className={styles.placeholder}>{placeholder}</p>
       ) : null}
       {preview.mode === 'captured' && showCaptured ? <span className={styles.captured}>{runPage.captured}</span> : null}
     </div>
