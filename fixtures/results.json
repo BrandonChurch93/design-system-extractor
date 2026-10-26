@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-26T02:46:09.509Z",
+  "generatedAt": "2026-10-26T05:40:15.578Z",
   "mode": "replay",
-  "through": "tokens",
+  "through": "components",
   "pipelineVersion": "1.0.0",
   "fixtures": [
     {
@@ -76,6 +76,27 @@
               "extras": []
             }
           }
+        },
+        "components": {
+          "precision": 1,
+          "recall": 1,
+          "predicted": 27,
+          "expected": 27,
+          "matched": 27,
+          "nameAgreement": 0.741,
+          "namesValid": true,
+          "misses": [],
+          "extras": []
+        },
+        "variants": {
+          "accuracy": 1,
+          "misses": []
+        },
+        "states": {
+          "rate": 1,
+          "captured": 63,
+          "expected": 63,
+          "misses": []
         }
       }
     },
@@ -151,6 +172,27 @@
               "extras": []
             }
           }
+        },
+        "components": {
+          "precision": 1,
+          "recall": 1,
+          "predicted": 31,
+          "expected": 31,
+          "matched": 31,
+          "nameAgreement": 0.839,
+          "namesValid": true,
+          "misses": [],
+          "extras": []
+        },
+        "variants": {
+          "accuracy": 1,
+          "misses": []
+        },
+        "states": {
+          "rate": 1,
+          "captured": 73,
+          "expected": 73,
+          "misses": []
         }
       }
     },
@@ -226,6 +268,33 @@
               "extras": []
             }
           }
+        },
+        "components": {
+          "precision": 0.963,
+          "recall": 0.963,
+          "predicted": 27,
+          "expected": 27,
+          "matched": 26,
+          "nameAgreement": 0.654,
+          "namesValid": true,
+          "misses": [
+            "Icon button (button)"
+          ],
+          "extras": [
+            "Warning banner (alert) /docs/getting-started"
+          ]
+        },
+        "variants": {
+          "accuracy": 0.962,
+          "misses": [
+            "Alert 1 of 2"
+          ]
+        },
+        "states": {
+          "rate": 1,
+          "captured": 59,
+          "expected": 59,
+          "misses": []
         }
       }
     },
@@ -301,6 +370,33 @@
               "extras": []
             }
           }
+        },
+        "components": {
+          "precision": 0.963,
+          "recall": 0.963,
+          "predicted": 27,
+          "expected": 27,
+          "matched": 26,
+          "nameAgreement": 0.654,
+          "namesValid": true,
+          "misses": [
+            "Icon button (button)"
+          ],
+          "extras": [
+            "Warning banner (alert) /docs/getting-started"
+          ]
+        },
+        "variants": {
+          "accuracy": 0.962,
+          "misses": [
+            "Alert 1 of 2"
+          ]
+        },
+        "states": {
+          "rate": 1,
+          "captured": 59,
+          "expected": 59,
+          "misses": []
         }
       }
     },
@@ -376,6 +472,27 @@
               "extras": []
             }
           }
+        },
+        "components": {
+          "precision": 1,
+          "recall": 1,
+          "predicted": 22,
+          "expected": 22,
+          "matched": 22,
+          "nameAgreement": 0.364,
+          "namesValid": true,
+          "misses": [],
+          "extras": []
+        },
+        "variants": {
+          "accuracy": 1,
+          "misses": []
+        },
+        "states": {
+          "rate": 1,
+          "captured": 54,
+          "expected": 54,
+          "misses": []
         }
       }
     }

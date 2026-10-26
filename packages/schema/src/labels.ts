@@ -190,6 +190,17 @@ export const componentTypeLabels: Record<ComponentType, string> = {
   other: 'Other',
 };
 
+/** The words variant names are built from (docs/specs/component-detection.md, Variant split). */
+export const variantWords = {
+  single: 'Default',
+  ranked: ['Primary', 'Secondary', 'Tertiary'],
+  rankedMore: 'Variant {n}',
+  outlined: 'Outlined',
+  ghost: 'Ghost',
+  small: 'small',
+  large: 'large',
+} as const;
+
 export const componentGroupLabels: Record<ComponentGroup, string> = {
   buttons: 'Buttons',
   inputs: 'Inputs',

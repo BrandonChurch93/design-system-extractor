@@ -11,6 +11,8 @@ import { openMeter, type BudgetMeter } from './meter';
 
 export type ModelMode = 'live' | 'record' | 'replay';
 
+export const RECORD_TIMEOUT_MS = 60_000;
+
 export type ContentBlock =
   | { type: 'text'; text: string }
   | { type: 'image'; mediaType: 'image/png'; data: string };
@@ -32,7 +34,7 @@ export type ModelResult<T> =
   | { ok: true; data: T; by: 'model' | 'model (retry)'; cost: CostCall[] }
   | { ok: false; reason: FallbackReason; detail: string; cost: CostCall[] };
 
-type Recording = { purpose: ModelPurpose; size: ModelSize; model: string; text: string; usage: Usage; recordedAt: string };
+type Recording = { purpose: ModelPurpose; size: ModelSize; model: string; text: string; usage: Usage; recordedAt: string; /** The user turn as hashed, so a miss can be compared. */ request?: string; /** The answer came on the retry. */ retried?: boolean };
 
 /** Thrown in strict replay (tests and evals) when no recording matches, so a changed prompt is noticed. */
 export class ReplayMissError extends Error {
@@ -75,6 +77,10 @@ function hashable(req: ModelRequest<unknown>) {
     content: req.content.map((b) => (b.type === 'image' ? { type: 'image' } : b)),
     schema: z.toJSONSchema(req.schema, { io: 'input', unrepresentable: 'any' }),
   };
+}
+
+function requestText(req: ModelRequest<unknown>): string {
+  return req.content.map((b) => (b.type === 'text' ? b.text : '[image]')).join('\n');
 }
 
 function parseJson(text: string): unknown {
@@ -122,7 +128,7 @@ export class ModelClient {
       cost.push(call);
       const parsed = this.validate(req.schema, raw.text);
       if (parsed.ok) {
-        if (this.opts.mode === 'record' && attempt === 0) this.writeRecording(req, hash, raw);
+        if (this.opts.mode === 'record') this.writeRecording(req, hash, raw, attempt > 0);
         return { ok: true, data: parsed.data, by: attempt === 0 ? 'model' : 'model (retry)', cost };
       }
       feedback = parsed.error;
@@ -141,24 +147,32 @@ export class ModelClient {
     return r.success ? { ok: true, data: r.data } : { ok: false, error: z.prettifyError(r.error).slice(0, 1200) };
   }
 
+  /** Recording files read by replay in this process, for pruning the ones nothing uses. */
+  readonly used = new Set<string>();
+
   private replay<T>(req: ModelRequest<T>, hash: string): ModelResult<T> {
     let rec: Recording;
     try {
       rec = JSON.parse(readFileSync(this.recordingPath(req.purpose, hash), 'utf8')) as Recording;
+      this.used.add(this.recordingPath(req.purpose, hash));
     } catch {
+      if (process.env.DSE_REPLAY_MISS_DIR) {
+        mkdirSync(process.env.DSE_REPLAY_MISS_DIR, { recursive: true });
+        writeFileSync(join(process.env.DSE_REPLAY_MISS_DIR, `${req.purpose}-${hash.slice(0, 12)}.txt`), requestText(req));
+      }
       if (this.opts.strictReplay) throw new ReplayMissError(req.purpose, hash);
       return { ok: false, reason: 'replay-miss', detail: `no recording ${hash.slice(0, 12)}`, cost: [] };
     }
     const parsed = this.validate(req.schema, rec.text);
     const call: CostCall = this.costRecord(req, rec.model, rec.usage);
     if (!parsed.ok) return { ok: false, reason: 'invalid', detail: parsed.error, cost: [call] };
-    return { ok: true, data: parsed.data, by: 'model', cost: [call] };
+    return { ok: true, data: parsed.data, by: rec.retried ? 'model (retry)' : 'model', cost: [call] };
   }
 
-  private writeRecording(req: ModelRequest<unknown>, hash: string, raw: { text: string; usage: Usage }) {
+  private writeRecording(req: ModelRequest<unknown>, hash: string, raw: { text: string; usage: Usage }, retried: boolean) {
     const file = this.recordingPath(req.purpose, hash);
     mkdirSync(dirname(file), { recursive: true });
-    const rec: Recording = { purpose: req.purpose, size: req.size, model: models[req.size], text: raw.text, usage: raw.usage, recordedAt: new Date().toISOString() };
+    const rec: Recording = { purpose: req.purpose, size: req.size, model: models[req.size], text: raw.text, usage: raw.usage, recordedAt: new Date().toISOString(), request: requestText(req), ...(retried ? { retried } : {}) };
     writeFileSync(file, `${JSON.stringify(rec, null, 2)}\n`);
   }
 
@@ -200,7 +214,8 @@ export class ModelClient {
           thinking: req.size === 'small' ? { type: 'disabled' } : { type: 'adaptive' },
           output_config: { effort: 'low', format: zodOutputFormat(req.schema as z.ZodType) },
         } as Anthropic.MessageCreateParamsNonStreaming,
-        { timeout: req.timeoutMs, maxRetries: 0 },
+        // Recording is build-time work: a slow answer must still be kept, or replay will miss it (D-052).
+        { timeout: this.opts.mode === 'record' ? Math.max(req.timeoutMs, RECORD_TIMEOUT_MS) : req.timeoutMs, maxRetries: 0 },
       );
       const text = res.content.flatMap((b) => (b.type === 'text' ? [b.text] : [])).join('');
       return { text, usage: res.usage as Usage };

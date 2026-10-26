@@ -9,6 +9,7 @@ import { capture, type CaptureOutput } from './stages/capture';
 import { discover, type DiscoverResult } from './stages/discover';
 import { select } from './stages/select';
 import { tokens } from './stages/tokens';
+import { components } from './stages/components';
 
 export const PIPELINE_VERSION = '1.0.0';
 
@@ -84,8 +85,12 @@ export async function runPipeline(ctx: RunContext, deps: RunDeps): Promise<RunOu
     if (!reached('tokens', deps.through)) return ending;
     await checkCancel();
 
-    await tokens(ctx, captured);
+    const extracted = await tokens(ctx, captured);
     if (!reached('components', deps.through)) return ending;
+    await checkCancel();
+
+    await components(ctx, captured, extracted);
+    if (!reached('previews', deps.through)) return ending;
     await checkCancel();
 
     return ending;

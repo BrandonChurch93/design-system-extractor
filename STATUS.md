@@ -10,28 +10,28 @@ None.
 
 ## Current phase
 
-P5 · Component detection. Started 2026-10-25.
+P6 · Preview fidelity and sanitization. Started 2026-10-25.
 
 ## Next action
 
-Start P5: read `docs/specs/component-detection.md` and `docs/specs/model-calls.md` in full, then build `packages/pipeline/src/components/` (fingerprints, exact groups, style merge, variant split and naming, rule classification, the model pass and the collision call, cross-page merge, noise removal, instances and provenance with source crops, states, tokens used, responsive variants, caps and order) and the `components` stage, with unit tests, then the component metrics in `scripts/evals/metrics.ts`, then record the two calls and move `evals:gate` to `--through components`.
+Start P6: read `docs/specs/preview-fidelity.md` in full (and the CSP parts of `docs/specs/architecture.md`), then build `packages/pipeline/src/previews/` (markup from the snapshot, CSS from matched rules scoped to the preview, custom properties resolved, fonts, the sanitizer and its second pass, upload then render against the storage URL, pixelmatch against the default crop, the live-or-captured decision with reasons, per-state and per-variant preview files) and the `previews` stage, the app's sandboxed preview iframe and CSP header builder, and `pnpm test:security`; then the live-rate metric and `evals:gate` through previews.
 
 ## Phase checklist
 
-P5 exit criteria (from `docs/plan.md`), plus the standing gate items:
+P6 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
-- [ ] Component precision and recall meet the thresholds on all five fixtures; variant accuracy and state capture rate meet theirs (`pnpm evals --through components`), against the component sections of `expected.json` (D-047).
-- [ ] Variant naming test (the 3 × 2 button set yields Primary, Primary small, Secondary, Secondary small, Ghost, Ghost small) and the cross-page nav merge test pass.
-- [ ] Every component in a fixture run has complete provenance (`firstSeen`, `pages`, selector and bbox non-empty), tested.
-- [ ] The fallback path produces valid names and types with the model disabled (`pnpm evals --through components --fallback`).
-- [ ] The component naming and collision calls recorded for the fixtures; replay, malformed, wrong-enum and timeout tests.
-- [ ] `evals:gate` runs `--through components`.
-- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm verify:all`, `pnpm qa:design` reviewed for touched pages, commit naming P5, STATUS updated.
+- [ ] Live rates meet the thresholds on the clean and css-in-js fixtures (`pnpm evals --through previews`), and every fixture reports its rate.
+- [ ] The security suite passes every case and asserts zero outbound requests outside the allowlist and zero script execution in the sandbox (`pnpm test:security`).
+- [ ] The messy fixture's unfaithful component (the promo card) is `captured` with the `diff` reason; the oversized-CSS unit test yields `css-too-large`.
+- [ ] Component `code` (html, css) filled from the preview builder.
+- [ ] `evals:gate` runs `--through previews`; from P6 on every gate includes `pnpm test:security`.
+- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm verify:all`, `pnpm qa:design` reviewed for touched pages (the preview iframe component in the catalog), commit naming P6, STATUS updated.
 
-Notes carried into P5: state-driven styles never make variants (D-047); specific rule forms come first (D-050); `a.btn` and `button.btn` are one Button in the expected files, so the collision call (or a rule) must join link buttons and real buttons; a header nav and a footer nav stay two components; card and table heights that follow their content are not size variants; the share button and icon button in messy are separate by style; the library icon button is its own component; `chooseForStates` leaves over-cap interactive candidates without states, which P5 marks `captured: false` with `over capture cap` (from `stateCaptured`); popup snapshots from `open` can sit at a scrolled document offset when the header is sticky.
+Notes carried into P6: components carry `preview` as a captured crop and empty `code` from P5; variant crops are at `variants/{variantId}/default.png`; revealed dropdowns have no page source crop (their default crop is the open-state crop).
 
 ## Gates passed
 
+- P5 · Component detection · 2026-10-25 · components P/R 1.000 / 1.000 on clean, messy, library and 0.963 / 0.963 on tailwind and css-in-js (floors 0.92 / 0.90 and 0.88 / 0.87) · variants and states above floors · fallback run passes with valid names · variant naming, cross-page merge, classification table, clustering and model-call tests · provenance and crops integration test · D-052 logged with documents fixed · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green · build spend $0.04.
 - P4 · Token clustering · 2026-10-25 · token precision and recall 1.000 on all five fixtures (`evals:gate`, replay) · fallback names valid and unique on every fixture (`evals --fallback`) · color naming recorded, model-call fallbacks tested · clustering, classification, naming, base inference, shadows, type roles unit tests · tokens integration test · D-051 logged with documents fixed · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green · build spend $0.0038.
 - P3 · Crawler, selection and capture · 2026-10-25 · selection exact on all five fixtures (`evals:gate`, replay) · capture, blocked-state, private-range, politeness, form and dialog, select model-call tests green (unit and integration) · expected.json complete for all five fixtures · D-040 to D-050 logged with documents fixed · catalog unchanged (qa:visual against goldens, qa:design reviewed at three viewports) · axe zero violations · verify:all green. Fixed during the gate: nested `run.mjs` runs lost the record of which variables came from `.env.local`, so `verify:all` ran evals live once ($0.0002); now kept and tested (`scripts/test/run-env.test.ts`).
 - P2 · Design system in code and the catalog · 2026-10-25 · tokens.css diffed against design-system.md and motion.md both ways (mutation-checked) · contrast table recomputed within 0.05 · 23 primitives plus a Motion section in /catalog with 390 px frames · axe zero violations on the catalog at 1440, 820, 390 and on all 25 frame routes · reduced-motion Playwright test with a no-preference control · catalog goldens committed · qa:design reviewed at three viewports with a 60-stop keyboard focus walk · verify:all green.
@@ -42,6 +42,7 @@ Notes carried into P5: state-driven styles never make variants (D-047); specific
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-052 · Component clustering made exact: base class tokens and families, guarded style merge, look merge, variant rules, classification readings, collision guard, provenance and state details, popups opened at scroll 0, recordings with request text and retries.
 - D-051 · Token rules made exact: base 8 tried before 4, ARIA semantic context, hue bands, naming and collision rules, usage as occurrences, contrast pair collection, `evals --fallback`; messy expectations corrected.
 - D-050 · Rule classification tries specific forms first: toggle before button; breadcrumb, pagination and tabs before nav.
 - D-049 · An `aria-invalid="true"` element counts as semantic (error) context for color classification.
@@ -96,6 +97,7 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-25 · Gate passed · P5 · components at or above floors on all five fixtures, fallback valid, verify:all green.
 - 2026-10-25 · Gate passed · P4 · tokens 1.000 / 1.000 on all fixtures, fallback names valid, verify:all green.
 - 2026-10-25 · Gate passed · P3 · selection exact, capture and blocked-state tests, expected.json complete, verify:all green.
 - 2026-10-25 · P3 · expected.json authored for all five fixtures (fixtures adjusted per D-046), decisions D-040 to D-050 logged and documents fixed, new unit tests (candidates, color, collect, expected files), verify:all started.

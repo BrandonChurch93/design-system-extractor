@@ -1,4 +1,5 @@
-import type { ExpectedFixture, RunDocumentPartial } from '@dse/schema';
+import { ComponentType, type ExpectedFixture, type RunDocumentPartial } from '@dse/schema';
+import { validName } from '@dse/pipeline/components/model';
 import type { Floors } from './fixtures';
 
 export type Metric = { value: unknown; summary: string; pass: (f: Floors) => boolean };
@@ -79,3 +80,72 @@ export function scoreTokens(expected: ExpectedFixture, doc: RunDocumentPartial, 
 }
 
 const round3 = (n: number) => Math.round(n * 1000) / 1000;
+
+type Box = { x: number; y: number; w: number; h: number };
+function iou(a: Box, b: Box): number {
+  const ix = Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x));
+  const iy = Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+  const inter = ix * iy;
+  const union = a.w * a.h + b.w * b.h - inter;
+  return union > 0 ? inter / union : 0;
+}
+
+/**
+ * Components (docs/evals.md, Metrics): a predicted component matches an expected one by type and a
+ * first-seen box IoU of 0.5 or more at the same viewport and page; variants by exact count; states by
+ * captured over expected, over matched components.
+ */
+export function scoreComponents(expected: ExpectedFixture, doc: RunDocumentPartial): { components: Metric; variants: Metric; states: Metric } {
+  const predicted = doc.components ?? [];
+  const pagePath = (p: string) => (/-does-not-exist$/.test(p) ? '/{missing}-does-not-exist' : p);
+  const claimed = new Set<number>();
+  const pairs: { e: ExpectedFixture['components'][number]; p: (typeof predicted)[number] }[] = [];
+  const misses: string[] = [];
+  for (const e of expected.components) {
+    let best = -1;
+    let bestIou = 0.5;
+    predicted.forEach((p, i) => {
+      if (claimed.has(i) || p.type !== e.type) return;
+      const f = p.provenance.firstSeen;
+      if (f.viewport !== e.viewport || pagePath(f.path) !== e.page) return;
+      const o = iou(f.bbox, e.bbox);
+      if (o >= bestIou) {
+        best = i;
+        bestIou = o;
+      }
+    });
+    if (best >= 0) {
+      claimed.add(best);
+      pairs.push({ e, p: predicted[best]! });
+    } else misses.push(`${e.name} (${e.type})`);
+  }
+  const extras = predicted.filter((_, i) => !claimed.has(i)).map((p) => `${p.name} (${p.type}) ${p.provenance.firstSeen.path}`);
+  const precision = predicted.length ? pairs.length / predicted.length : 0;
+  const recall = expected.components.length ? pairs.length / expected.components.length : 0;
+  const agreed = pairs.filter(({ e, p }) => e.name.toLowerCase() === p.name.toLowerCase()).length;
+  const variantHits = pairs.filter(({ e, p }) => e.variants === p.variants.length);
+  const variantMisses = pairs.filter(({ e, p }) => e.variants !== p.variants.length).map(({ e, p }) => `${e.name} ${p.variants.length} of ${e.variants}`);
+  const variantAcc = pairs.length ? variantHits.length / pairs.length : 0;
+  let wanted = 0;
+  let got = 0;
+  const stateMisses: string[] = [];
+  for (const { e, p } of pairs) {
+    for (const s of e.states) {
+      wanted++;
+      if (p.states.some((x) => x.state === s && x.captured)) got++;
+      else stateMisses.push(`${e.name} ${s}`);
+    }
+  }
+  const stateRate = wanted ? got / wanted : 0;
+  const names = predicted.map((p) => p.name);
+  const namesValid = names.every(validName) && new Set(names.map((n) => n.toLowerCase())).size === names.length && predicted.every((p) => ComponentType.safeParse(p.type).success);
+  return {
+    components: {
+      value: { precision: round3(precision), recall: round3(recall), predicted: predicted.length, expected: expected.components.length, matched: pairs.length, nameAgreement: round3(pairs.length ? agreed / pairs.length : 0), namesValid, misses, extras },
+      summary: `P ${precision.toFixed(3)} · R ${recall.toFixed(3)} · ${pairs.length} of ${expected.components.length}${misses.length ? ` · missing ${misses.join(', ')}` : ''}${extras.length ? ` · extra ${extras.join(', ')}` : ''}`,
+      pass: (f) => precision >= f.components.precision && recall >= f.components.recall,
+    },
+    variants: { value: { accuracy: round3(variantAcc), misses: variantMisses }, summary: `${variantAcc.toFixed(3)}${variantMisses.length ? ` · ${variantMisses.join(', ')}` : ''}`, pass: (f) => variantAcc >= f.variants },
+    states: { value: { rate: round3(stateRate), captured: got, expected: wanted, misses: stateMisses }, summary: `${stateRate.toFixed(3)} · ${got} of ${wanted}${stateMisses.length ? ` · missing ${stateMisses.slice(0, 8).join(', ')}` : ''}`, pass: (f) => stateRate >= f.states },
+  };
+}

@@ -96,7 +96,8 @@ describe('enums and labels', () => {
 
   it('takes every label verbatim from copy.md', () => {
     const all = enumNames.flatMap((name) => Object.values(schema.labels[name] as Record<string, string>));
-    const extra = [...Object.values(schema.checkDescriptions), schema.frameworkDetected];
+    const v = schema.variantWords;
+    const extra = [...Object.values(schema.checkDescriptions), schema.frameworkDetected, v.single, ...v.ranked, v.rankedMore, v.outlined, v.ghost, v.small, v.large];
     for (const label of [...all, ...extra]) expect(copyMd.includes(`\`${label}\``), label).toBe(true);
   });
 

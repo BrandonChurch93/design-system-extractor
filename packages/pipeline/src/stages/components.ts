@@ -1,0 +1,342 @@
+import { createHash } from 'node:crypto';
+import { ComponentGroup, componentGroupOf, viewportSize, type Component, type ComponentType, type Preview, type State, type StateCapture, type Tokens } from '@dse/schema';
+import { deltaE, parseCssColor } from '../color/parse';
+import { px, radiusOf } from '../capture/snapshot';
+import { classify, type Guess } from '../components/classify';
+import { classesAllowMerge, clusterItems, exactKey, representative, type Cluster } from '../components/cluster';
+import { cropShot, downscale, padded, sourceRegion } from '../components/crop';
+import { itemsFrom, type Item } from '../components/items';
+import { nameComponents, resolveCollisions, stylesAgree, type CollisionPair, type Draft, type Naming } from '../components/model';
+import { nameVariants, sized, splitVariants, stateOf, type VariantDraft } from '../components/variants';
+import type { RunContext } from '../context';
+import { stableId } from '../ids';
+import { keys } from '../storage/keys';
+import { normalizeShadow } from '../tokens/collect';
+import type { CaptureOutput } from './capture';
+
+// Stage `components` (docs/specs/component-detection.md).
+
+export const COMPONENT_CAP = 120;
+const stateOrder: State[] = ['default', 'hover', 'focus', 'active', 'disabled', 'error', 'checked', 'selected', 'open', 'scrolled'];
+
+type Working = { id: string; items: Item[]; guess: Guess; naming?: Naming; variants: VariantDraft[] };
+
+/** First seen: the earliest page in capture order, desktop preferred, then document order. */
+export function firstSeen(items: Item[]): Item {
+  return [...items].sort((a, b) => a.page.order - b.page.order || Number(a.viewport !== 'desktop') - Number(b.viewport !== 'desktop') || a.el.index - b.el.index)[0]!;
+}
+
+/** Noise: a wrapper with no interactive descendant, no text and no image, or wider than 60% of the viewport. */
+function isNoise(c: Cluster): boolean {
+  const it = representative(c.items);
+  const vp = viewportSize[it.viewport];
+  if (it.el.w * it.el.h > vp.width * vp.height * 0.6 && !it.revealed) return true;
+  if (!it.rules.every((r) => r === 'container')) return false;
+  const desc = it.snapshot.elements.filter((e) => {
+    for (let p = e.p; p >= 0; p = it.snapshot.elements[p]!.p) if (p === it.el.index) return true;
+    return false;
+  });
+  const interactive = desc.some((d) => ['a', 'button', 'input', 'select', 'textarea'].includes(d.tag));
+  const image = desc.some((d) => d.tag === 'img' || d.tag === 'svg');
+  return !interactive && !image && !it.el.text.trim();
+}
+
+function crop(it: Item, margin = 8): Buffer | null {
+  if (it.revealed) return it.revealed.open.crop ?? null;
+  const shot = it.vc.screenshot;
+  return cropShot(shot, padded({ x: it.el.x, y: it.el.y, w: it.el.w, h: it.el.h }, margin));
+}
+
+function rebuild(w: Working, tokens: Tokens) {
+  w.variants = splitVariants(w.items);
+  nameVariants(w.variants, tokens.colors);
+}
+
+function nearestColorToken(value: string, tokens: Tokens) {
+  const c = parseCssColor(value);
+  if (!c) return undefined;
+  let best: { id: string; d: number } | undefined;
+  for (const t of tokens.colors) {
+    const tc = parseCssColor(t.value)!;
+    if (Math.abs(tc.a - c.a) > 0.05) continue;
+    const d = deltaE(tc, c);
+    if (!best || d < best.d) best = { id: t.id, d };
+  }
+  return best && best.d <= 2.3 ? best.id : undefined;
+}
+
+/** Each default value linked to the token it matches, the rest listed as unmapped. */
+export function tokensUsedBy(it: Item, tokens: Tokens): Pick<Component, 'tokensUsed' | 'unmapped'> {
+  const used: Component['tokensUsed'] = [];
+  const unmapped: Component['unmapped'] = [];
+  const st = it.el.style;
+  const link = (property: string, value: string, id: string | undefined) => (id ? used.push({ tokenId: id, property }) : unmapped.push({ property, value }));
+  if (parseCssColor(st['background-color'])) link('background-color', st['background-color'], nearestColorToken(st['background-color'], tokens));
+  if (it.el.text.trim()) link('color', st.color, nearestColorToken(st.color, tokens));
+  if (px(st['border-top-width']) > 0 && st['border-top-style'] !== 'none') link('border-color', st['border-top-color'], nearestColorToken(st['border-top-color'], tokens));
+  const r = radiusOf(it.el);
+  if (r > 0) {
+    const pill = r >= 999 || r >= it.el.h / 2 - 0.5;
+    link('border-radius', `${r}px`, tokens.radius.find((t) => (pill ? t.isPill : t.value === r))?.id);
+  }
+  for (const side of ['top', 'right', 'bottom', 'left'] as const) {
+    const v = Math.round(px(st[`padding-${side}`]) * 2) / 2;
+    if (v > 0) link(`padding-${side}`, `${v}px`, tokens.space.find((t) => t.value === v)?.id);
+  }
+  if (it.el.text.trim()) {
+    const size = px(st['font-size']);
+    const weight = Number(st['font-weight']) || 400;
+    const t = tokens.type.find((x) => x.size === size && x.weight === weight && (x.family === it.el.font || st['font-family'].includes(x.family)));
+    link('font', `${size}px ${weight}`, t?.id);
+  }
+  const shadow = normalizeShadow(st['box-shadow']);
+  if (shadow) link('box-shadow', shadow, tokens.shadow.find((t) => t.value === shadow)?.id);
+  return { tokensUsed: used, unmapped };
+}
+
+export async function components(ctx: RunContext, capture: CaptureOutput, tokens: Tokens): Promise<Component[]> {
+  const items = itemsFrom(capture);
+  for (const it of items) {
+    if (!it.rules.includes('inline-mark')) continue;
+    const id = nearestColorToken(it.el.style['background-color'], tokens) ?? nearestColorToken(it.el.style['border-top-color'], tokens);
+    it.fp.semanticGround = tokens.colors.find((t) => t.id === id)?.group === 'semantic';
+  }
+  const clusters = clusterItems(items);
+  const kept = clusters.filter((c) => !isNoise(c));
+  const noise = clusters.length - kept.length;
+
+  // Drafts in first-seen order, so ids, batches and names follow the pages.
+  const working: Working[] = kept
+    .map((c) => ({ id: '', items: c.items, guess: classify(c.items), variants: [] as VariantDraft[] }))
+    .sort((a, b) => {
+      const fa = firstSeen(a.items);
+      const fb = firstSeen(b.items);
+      return fa.page.order - fb.page.order || Number(fa.viewport !== 'desktop') - Number(fb.viewport !== 'desktop') || fa.el.index - fb.el.index;
+    });
+  working.forEach((w) => rebuild(w, tokens));
+  // Two clusters of one type that share a variant's exact look are one component (D-052).
+  for (let i = 0; i < working.length; i++) {
+    for (let j = working.length - 1; j > i; j--) {
+      const a = working[i]!;
+      const b = working[j]!;
+      const ra = representative(a.items).fp;
+      const rb = representative(b.items).fp;
+      if (a.guess.type !== b.guess.type || ra.iconOnly !== rb.iconOnly || !classesAllowMerge(ra.baseTokens, rb.baseTokens)) continue;
+      // Only where a look is a choice (controls, marks): plain wrappers all look alike.
+      if (!a.items.some(sized) || !b.items.some(sized)) continue;
+      const looks = new Set(a.variants.map((v) => v.key));
+      if (!b.variants.some((v) => looks.has(v.key))) continue;
+      a.items.push(...b.items);
+      working.splice(j, 1);
+      rebuild(a, tokens);
+    }
+  }
+  working.forEach((w, i) => (w.id = `c${i + 1}`));
+
+  const drafts: Draft[] = working.map((w) => {
+    const c = crop(firstSeen(w.items));
+    return { id: w.id, items: w.items, guess: w.guess, variantNames: w.variants.map((v) => v.name), crop: c ? downscale(c) : undefined };
+  });
+  const named = await nameComponents(ctx, drafts);
+  working.forEach((w, i) => (w.naming = named.namings[i]));
+  const dropped = working.filter((w) => !w.naming!.isComponent).length;
+  let list = working.filter((w) => w.naming!.isComponent);
+
+  // Cross-page merge of same-named clusters: by style, else by the collision call (D-052).
+  const parent = new Map(list.map((w) => [w, w]));
+  const find = (w: Working): Working => (parent.get(w) === w ? w : find(parent.get(w)!));
+  const pairs: CollisionPair[] = [];
+  const byName = new Map<string, Working[]>();
+  for (const w of list) {
+    const k = `${w.naming!.type}|${w.naming!.name.toLowerCase()}`;
+    byName.set(k, [...(byName.get(k) ?? []), w]);
+  }
+  let mergedByStyle = 0;
+  for (const group of byName.values()) {
+    for (let i = 1; i < group.length; i++) {
+      const a = find(group[0]!);
+      const b = group[i]!;
+      if (stylesAgree(draftOf(a), draftOf(b))) {
+        parent.set(b, a);
+        mergedByStyle++;
+      } else if (classesAllowMerge(representative(a.items).fp.baseTokens, representative(b.items).fp.baseTokens)) {
+        pairs.push({ id: `p${pairs.length + 1}`, a: draftOf(a), b: draftOf(b), name: group[0]!.naming!.name });
+      }
+      // Clusters the site's own class names set apart stay apart, whatever the model called them.
+    }
+  }
+  function draftOf(w: Working): Draft {
+    return drafts.find((d) => d.id === w.id)!;
+  }
+  const collisions = await resolveCollisions(ctx, pairs);
+  for (const p of pairs) {
+    const a = list.find((w) => w.id === p.a.id)!;
+    const b = list.find((w) => w.id === p.b.id)!;
+    if (collisions.same.has(p.id)) parent.set(b, find(a));
+  }
+  const roots = list.filter((w) => find(w) === w);
+  for (const w of list) {
+    const r = find(w);
+    if (r !== w) r.items.push(...w.items);
+  }
+  const mergedCount = list.length - roots.length;
+  list = roots;
+  for (const w of list) rebuild(w, tokens);
+  // Names still shared after merging take a number: Card, Card 2 (docs/specs/model-calls.md).
+  const nameUse = new Map<string, number>();
+  for (const w of list) {
+    const n = (nameUse.get(w.naming!.name.toLowerCase()) ?? 0) + 1;
+    nameUse.set(w.naming!.name.toLowerCase(), n);
+    if (n > 1) w.naming = { ...w.naming!, name: `${w.naming!.name} ${n}` };
+  }
+
+  // Caps and order: by group, then instance count.
+  const groupRank = (t: ComponentType) => ComponentGroup.options.indexOf(componentGroupOf[t]);
+  list.sort((a, b) => groupRank(a.naming!.type) - groupRank(b.naming!.type) || b.items.length - a.items.length || firstSeen(a.items).page.order - firstSeen(b.items).page.order);
+  while (list.length > COMPONENT_CAP) {
+    const other = list.map((w, i) => ({ w, i })).filter(({ w }) => w.naming!.type === 'other');
+    const drop = other.length ? other.sort((a, b) => a.w.items.length - b.w.items.length)[0]!.i : list.reduce((m, w, i) => (w.items.length < list[m]!.items.length ? i : m), 0);
+    list.splice(drop, 1);
+  }
+
+  const out: Component[] = [];
+  const ids = new Set<string>();
+  for (const w of list) {
+    let id = stableId(`component:${exactKey(representative(w.items))}`);
+    for (let n = 2; ids.has(id); n++) id = stableId(`component:${exactKey(representative(w.items))}:${n}`);
+    ids.add(id);
+    out.push(await assemble(ctx, w, id, tokens));
+  }
+
+  const byModel = list.filter((w) => w.naming!.by !== 'fallback').length;
+  await ctx.emit({ stage: 'components', message: `${out.length} found from ${items.length.toLocaleString('en-US')} element candidates · ${byModel} by model`, data: { calls: named.calls, collisions: collisions.by }, patch: { components: out } });
+  if (mergedByStyle + mergedCount > 0) await ctx.emit({ stage: 'components', message: `merged ${mergedCount} across pages` });
+  if (noise + dropped > 0) await ctx.emit({ stage: 'components', message: `${noise + dropped} noise cluster${noise + dropped > 1 ? 's' : ''} dropped` });
+  return out;
+}
+
+async function put(ctx: RunContext, key: string, png: Buffer | null): Promise<{ key: string; width: number; height: number } | null> {
+  if (!png) return null;
+  await ctx.files.put(key, png, { contentType: 'image/png' });
+  return { key, width: png.readUInt32BE(16), height: png.readUInt32BE(20) };
+}
+
+const capturedPreview = (shot: { key: string; width: number; height: number }): Preview => ({ mode: 'captured', cropKey: shot.key, width: shot.width, height: shot.height });
+
+async function assemble(ctx: RunContext, w: Working, id: string, tokens: Tokens): Promise<Component> {
+  const first = firstSeen(w.items);
+  const instanceId = (it: Item) => stableId(`instance:${it.key}`);
+  const variantIds = new Map(w.variants.map((v) => [v, stableId(`variant:${id}:${v.key}`)]));
+  const variantOf = (it: Item) => w.variants.find((v) => v.items.includes(it))!;
+
+  const defaultShot = await put(ctx, keys.componentCrop(ctx.runId, id, 'default'), crop(first));
+  const variants: Component['variants'] = [];
+  for (const v of w.variants) {
+    const vid = variantIds.get(v)!;
+    const rep = firstSeen(v.items);
+    const shot = (await put(ctx, keys.variantCrop(ctx.runId, id, vid), crop(rep))) ?? defaultShot;
+    variants.push({ id: vid, name: v.name, instanceIds: v.items.map(instanceId), delta: v.delta, preview: shot ? capturedPreview(shot) : capturedPreview({ key: keys.componentCrop(ctx.runId, id, 'default'), width: 0, height: 0 }) });
+  }
+
+  const instances: Component['instances'] = w.items.map((it) => ({
+    id: instanceId(it),
+    pageId: it.page.id,
+    viewport: it.viewport,
+    selector: it.selector,
+    bbox: { x: Math.round(it.el.x), y: Math.round(it.el.y), w: Math.round(it.el.w), h: Math.round(it.el.h) },
+    variantId: variantIds.get(variantOf(it))!,
+    ...(it.el.text.trim() ? { text: it.el.text.trim().slice(0, 80) } : {}),
+  }));
+
+  // Provenance (D-008): the source crop is cut from the first-seen page's screenshot.
+  const bbox = { x: Math.round(first.el.x), y: Math.round(first.el.y), w: Math.round(first.el.w), h: Math.round(first.el.h) };
+  const shot = first.vc.screenshot;
+  const { region, outline } = sourceRegion(bbox, { width: shot.width, height: shot.height });
+  const source = first.revealed ? null : await put(ctx, keys.componentSource(ctx.runId, id, first.viewport), cropShot(shot, region));
+  const pageCounts = new Map<string, { pageId: string; path: string; order: number; desktop: number; mobile: number }>();
+  for (const it of w.items) {
+    const p = pageCounts.get(it.page.id) ?? { pageId: it.page.id, path: it.page.path, order: it.page.order, desktop: 0, mobile: 0 };
+    p[it.viewport]++;
+    pageCounts.set(it.page.id, p);
+  }
+
+  const rep = representative(w.items);
+  const signature = {
+    tag: rep.el.tag,
+    ...(rep.el.role ? { role: rep.el.role } : {}),
+    classTokens: rep.fp.classTokens,
+    structure: rep.fp.structure,
+    styleHash: createHash('sha1').update(JSON.stringify(rep.fp.style)).digest('hex').slice(0, 12),
+  };
+
+  const responsive = await responsiveVariantOf(ctx, w, id, first);
+  return {
+    id,
+    name: w.naming!.name,
+    type: w.naming!.type,
+    group: componentGroupOf[w.naming!.type],
+    confidence: w.guess.confidence,
+    signature,
+    variants,
+    instances,
+    provenance: {
+      firstSeen: { pageId: first.page.id, path: first.page.path, viewport: first.viewport, selector: first.selector, bbox, ...(source ? { sourceCrop: { key: source.key, width: source.width, height: source.height, outline } } : {}) },
+      pages: [...pageCounts.values()].sort((a, b) => a.order - b.order).map((p) => ({ pageId: p.pageId, path: p.path, count: p.desktop || p.mobile })),
+    },
+    states: await statesOf(ctx, w, id, first, instanceId),
+    ...tokensUsedBy(first, tokens),
+    preview: defaultShot ? capturedPreview(defaultShot) : capturedPreview({ key: keys.componentCrop(ctx.runId, id, 'default'), width: 0, height: 0 }),
+    code: { html: '', css: '' },
+    checks: [],
+    ...(responsive ? { responsiveVariant: responsive } : {}),
+  };
+}
+
+/** The union of states across instances, the first-seen instance's capture preferred. */
+async function statesOf(ctx: RunContext, w: Working, id: string, first: Item, instanceId: (it: Item) => string): Promise<StateCapture[]> {
+  const ordered = [first, ...w.items.filter((i) => i !== first)];
+  const out = new Map<State, StateCapture>();
+  const save = async (state: State, png: Buffer | null | undefined) => (await put(ctx, keys.componentCrop(ctx.runId, id, state), png ?? null))?.key;
+  out.set('default', { state: 'default', captured: true, cropKey: keys.componentCrop(ctx.runId, id, 'default'), delta: [], instanceId: instanceId(first) });
+
+  const interactive = w.items.some((i) => i.interactive && !i.revealed);
+  for (const state of ['hover', 'focus', 'active', 'scrolled'] as const) {
+    for (const it of ordered) {
+      const rec = (it.vc.states[it.el.d] ?? []).find((r) => r.state === state);
+      if (!rec || it.revealed) continue;
+      out.set(state, { state, captured: true, cropKey: await save(state, rec.crop), delta: rec.delta, ...(state === 'focus' ? { reachedByKeyboard: Boolean(rec.reachedByKeyboard) } : {}), instanceId: instanceId(it) });
+      break;
+    }
+    if (!out.has(state) && interactive && state !== 'scrolled') {
+      const overCap = w.items.some((it) => it.interactive && !it.revealed && !it.vc.stateCaptured.has(it.el.d));
+      out.set(state, { state, captured: false, reason: overCap ? 'over capture cap' : 'no instance found', delta: [] });
+    }
+  }
+  for (const it of ordered) {
+    const s = stateOf(it.el);
+    if (!s || out.has(s) || it.revealed) continue;
+    out.set(s, { state: s, captured: true, cropKey: await save(s, crop(it)), delta: [], instanceId: instanceId(it) });
+  }
+  for (const it of ordered) {
+    const open = it.vc.opens.find((o) => o.trigger === it.el.d);
+    if (!open || out.has('open') || it.revealed) continue;
+    out.set('open', { state: 'open', captured: true, cropKey: await save('open', open.crop), delta: open.triggerDelta, instanceId: instanceId(it) });
+  }
+  return stateOrder.filter((s) => out.has(s)).map((s) => out.get(s)!);
+}
+
+/** `Stacks at 390 px` when display changes; `Changes layout at 390 px` when it fills its container only on phones. */
+async function responsiveVariantOf(ctx: RunContext, w: Working, id: string, first: Item): Promise<Component['responsiveVariant'] | undefined> {
+  const desktop = w.items.find((i) => i.viewport === 'desktop' && i.page.id === first.page.id && !i.revealed);
+  if (!desktop) return undefined;
+  const mobile = w.items.find((i) => i.viewport === 'mobile' && i.page.id === desktop.page.id && i.selector === desktop.selector);
+  if (!mobile) return undefined;
+  const parentW = (it: Item) => it.snapshot.elements[it.el.p]?.w ?? viewportSize[it.viewport].width;
+  let note: string | undefined;
+  if (desktop.el.style.display !== mobile.el.style.display) note = 'Stacks at 390 px';
+  else if (mobile.el.w >= parentW(mobile) * 0.9 && desktop.el.w <= parentW(desktop) * 0.6) note = 'Changes layout at 390 px';
+  if (!note) return undefined;
+  const shot = await put(ctx, keys.componentMobile(ctx.runId, id), crop(mobile));
+  if (!shot) return undefined;
+  return { mobilePreview: capturedPreview(shot), note };
+}

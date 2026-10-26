@@ -1,7 +1,7 @@
 // pnpm evals [--through <stage>]: runs the five eval fixtures through the pipeline in replay mode
 // and scores them against expected.json (docs/evals.md). Writes fixtures/results.json.
-import { readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { allowedPrivateHosts, ExpectedFixture, Stage } from '@dse/schema';
 import { LocalStorage, MemoryRunContext } from '@dse/pipeline/context';
@@ -10,11 +10,11 @@ import { defaultRecordingsDir, ModelClient, type ModelMode } from '@dse/pipeline
 import { DevSpendMeter } from '@dse/pipeline/models/meter';
 import { PIPELINE_VERSION, runPipeline, stageOrder } from '@dse/pipeline/run';
 import { evalFixtures, floors, type EvalFixture } from './evals/fixtures';
-import { scoreSelection, scoreTokens, type FixtureResult, type Metric } from './evals/metrics';
+import { scoreComponents, scoreSelection, scoreTokens, type FixtureResult, type Metric } from './evals/metrics';
 import { deltaE, parseCssColor } from '@dse/pipeline/color/parse';
 import { startFixtureServer } from './fixtures-serve';
 
-const { values } = parseArgs({ options: { through: { type: 'string' }, only: { type: 'string' }, print: { type: 'boolean', default: false }, fallback: { type: 'boolean', default: false } } });
+const { values } = parseArgs({ options: { through: { type: 'string' }, only: { type: 'string' }, print: { type: 'boolean', default: false }, 'prune-recordings': { type: 'boolean', default: false }, fallback: { type: 'boolean', default: false } } });
 const through = values.through ? Stage.parse(values.through) : undefined;
 const reached = (s: Stage) => !through || stageOrder.indexOf(s) <= stageOrder.indexOf(through);
 const root = resolve(import.meta.dirname, '..');
@@ -33,6 +33,7 @@ try {
 
 const browser = await launchBrowser();
 const results: FixtureResult[] = [];
+const usedRecordings = new Set<string>();
 const only = values.only ? (values.only.split(',') as EvalFixture[]) : [...evalFixtures];
 let failed = false;
 
@@ -56,6 +57,7 @@ for (const name of only) {
   );
   const started = Date.now();
   const outcome = await runPipeline(ctx, { browser, through: through ?? 'done' });
+  for (const f of models.used) usedRecordings.add(f);
   const metrics: Record<string, Metric> = {};
   const doc = ctx.document;
   if (outcome.status !== 'complete') {
@@ -64,7 +66,8 @@ for (const name of only) {
   }
   if (reached('select')) metrics.selection = scoreSelection(expected, doc);
   if (reached('tokens')) metrics.tokens = scoreTokens(expected, doc, (a, b) => deltaE(parseCssColor(a)!, parseCssColor(b)!));
-  if (values.print) console.log(name, (doc.pages ?? []).map((p) => `${p.path} ${p.reason}`), JSON.stringify(metrics.tokens?.value ?? null));
+  if (reached('components')) Object.assign(metrics, scoreComponents(expected, doc));
+  if (values.print) console.log(name, (doc.pages ?? []).map((p) => `${p.path} ${p.reason}`), JSON.stringify(metrics.tokens?.value ?? null), JSON.stringify(ctx.events.filter((e) => e.stage === 'components').map((e) => [e.message, e.data])));
   results.push({ name, seconds: Math.round((Date.now() - started) / 1000), metrics });
   writeFileSync(resolve(outDir, 'run.json'), JSON.stringify(doc, null, 2));
 }
@@ -77,7 +80,7 @@ for (const r of results) {
   const f = floors[r.name as EvalFixture];
   for (const [key, m] of Object.entries(r.metrics)) {
     // A fallback run proves the fallbacks produce valid output; its floors are the replay run's job.
-    const pass = values.fallback ? key !== 'tokens' || (m.value as { namesValid: boolean }).namesValid : m.pass(f);
+    const pass = values.fallback ? !['tokens', 'components'].includes(key) || (m.value as { namesValid: boolean }).namesValid : m.pass(f);
     if (!pass) failed = true;
     rows.push(`${r.name.padEnd(10)} ${key.padEnd(12)} ${m.summary.padEnd(44)} ${pass ? 'pass' : 'FAIL'}`);
   }
@@ -87,6 +90,20 @@ console.log(`\nevals · mode ${values.fallback ? 'fallback' : mode}${through ? `
 console.log(rows.join('\n'));
 if (notMeasured.length) console.log(`\nnot yet measured: ${notMeasured.join(', ')}`);
 
+// --prune-recordings: after a full replay of every fixture, delete the recordings no call read.
+if (values['prune-recordings'] && mode === 'replay' && !values.only && !failed) {
+  const dir = defaultRecordingsDir(root);
+  let pruned = 0;
+  for (const purpose of readdirSync(dir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)) {
+    for (const f of readdirSync(join(dir, purpose))) {
+      if (!usedRecordings.has(join(dir, purpose, f))) {
+        rmSync(join(dir, purpose, f));
+        pruned++;
+      }
+    }
+  }
+  console.log(`recordings · ${usedRecordings.size} used · ${pruned} pruned`);
+}
 const resultsFile = resolve(root, 'fixtures/results.json');
 if (values.fallback) {
   console.log(`\n${failed ? 'evals failed' : 'evals passed'} · fallback run, results.json unchanged`);

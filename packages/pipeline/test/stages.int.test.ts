@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import type { Browser } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { Tokens, allowedPrivateHosts } from '@dse/schema';
+import { Component, Tokens, allowedPrivateHosts } from '@dse/schema';
 import { LocalStorage, MemoryRunContext } from '../src/context';
 import { launchBrowser } from '../src/crawl/browser';
 import { ModelClient } from '../src/models/client';
@@ -14,6 +14,7 @@ const recordingsDir = resolve(import.meta.dirname, '../../../fixtures/recordings
 let browser: Browser;
 let server: Awaited<ReturnType<typeof startFixtureServer>> | null = null;
 let ctx: MemoryRunContext;
+let storage: LocalStorage;
 
 beforeAll(async () => {
   try {
@@ -28,10 +29,10 @@ beforeAll(async () => {
     'tokenstest',
     { url, include: [], pageCap: 12, viewports: ['desktop', 'mobile'], userAgent: 'DesignSystemExtractorBot/1.0 (+http://localhost:3000/how-it-works)', allowPrivateHosts: allowedPrivateHosts({ DSE_ALLOW_PRIVATE_HOSTS: 'localhost:4100' }), timeoutMs: 600_000, keepIntermediate: false, byo: false },
     new ModelClient({ mode: 'replay', recordingsDir, strictReplay: true }),
-    new LocalStorage(dir),
+    (storage = new LocalStorage(dir)),
     { id: 'tokenstest', url, host: 'localhost:4100', status: 'queued', createdAt: new Date().toISOString(), pipelineVersion: '1.0.0', viewports: ['desktop', 'mobile'] },
   );
-  await runPipeline(ctx, { browser, through: 'tokens' });
+  await runPipeline(ctx, { browser, through: 'components' });
 }, 300_000);
 
 afterAll(async () => {
@@ -70,5 +71,38 @@ describe('the tokens stage on the clean fixture', () => {
       'tokens:type tokens · type 9 styles · Inter, ui-monospace · all loaded',
       'tokens:space tokens · spacing 11 steps · 4 px base · 3 radii · 2 shadows',
     ]);
+  });
+});
+
+describe('the components stage on the clean fixture', () => {
+  it('writes components that validate, with complete provenance and stored crops', async () => {
+    const comps = Component.array().parse(ctx.document.components);
+    expect(comps.length).toBe(27);
+    for (const c of comps) {
+      const f = c.provenance.firstSeen;
+      expect(f.selector, c.name).not.toBe('');
+      expect(f.bbox.w * f.bbox.h, c.name).toBeGreaterThan(0);
+      expect(c.provenance.pages.length, c.name).toBeGreaterThan(0);
+      expect(await storage.get(c.preview.cropKey), c.name).not.toBeNull();
+      if (f.sourceCrop) {
+        expect(f.sourceCrop.width).toBeGreaterThanOrEqual(320);
+        expect(await storage.get(f.sourceCrop.key)).not.toBeNull();
+      }
+    }
+    expect(comps.filter((c) => !c.provenance.firstSeen.sourceCrop).map((c) => c.type)).toEqual(['dropdown', 'dropdown']);
+  });
+
+  it('finds the button with its six variants, five states and links to the palette', () => {
+    const button = ctx.document.components!.find((c) => c.name === 'Button')!;
+    expect(button.variants.map((v) => v.name).sort()).toEqual(['Ghost', 'Ghost small', 'Primary', 'Primary small', 'Secondary', 'Secondary small']);
+    expect(button.states.filter((s) => s.captured).map((s) => s.state)).toEqual(['default', 'hover', 'focus', 'active', 'disabled']);
+    expect(button.states.find((s) => s.state === 'focus')!.reachedByKeyboard).toBe(true);
+    expect(button.provenance.pages.map((p) => p.path)).toEqual(['/', '/pricing', '/docs', '/login', '/signup', '/contact', '/features', expect.stringMatching(/-does-not-exist$/), '/docs/getting-started']);
+    expect(button.tokensUsed.map((t) => t.property)).toEqual(expect.arrayContaining(['color', 'border-radius', 'padding-left', 'font']));
+  });
+
+  it('logs the component count and the model use', () => {
+    const lines = ctx.events.filter((e) => e.stage === 'components').map((e) => e.message);
+    expect(lines[0]).toMatch(/^components · 27 found from [\d,]+ element candidates · 27 by model$/);
   });
 });

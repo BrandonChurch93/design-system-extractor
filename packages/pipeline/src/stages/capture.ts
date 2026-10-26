@@ -147,7 +147,10 @@ async function openStates(page: PwPage, snapshot: Snapshot, cands: ElementCandid
     const box = await page.evaluate((d) => {
       const el = document.querySelector(`[data-dse-id="${d}"]`) as HTMLElement | null;
       if (!el) return null;
-      el.scrollIntoView({ block: 'center', behavior: 'instant' });
+      // A trigger visible from the top opens there, so a sticky header's popup lands at one place.
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      const top = el.getBoundingClientRect();
+      if (top.bottom > window.innerHeight || top.top < 0) el.scrollIntoView({ block: 'center', behavior: 'instant' });
       const r = el.getBoundingClientRect();
       return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
     }, t.d);

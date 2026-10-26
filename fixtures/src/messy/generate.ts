@@ -66,8 +66,8 @@ h3 { color: #353535; }
 .card .text-sm { font-size: 15px; }
 ${after ? '' : '.hero .btn-primary, .pricing-card .btn-primary { padding: 0 21px; border-radius: 10px; }\n'}.link-pill { display: inline-flex; align-items: center; height: 44px; padding: 0 16px; border: 1px solid #D1D1D1; border-radius: 999px; color: #1F1F1F; font-size: 14px; line-height: 20px; font-weight: 600; }
 .link-pill:focus, .link-pill:focus-visible { outline: none; }
-.icon-button-sm { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 0; border-radius: 6px; background: transparent; color: #1F1F1F; cursor: pointer; }
-.icon-button-sm:focus-visible { outline: 2px solid #2458E6; outline-offset: 2px; }
+.share-button { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 0; border-radius: 6px; background: transparent; color: #1F1F1F; cursor: pointer; }
+.share-button:focus-visible { outline: 2px solid #2458E6; outline-offset: 2px; }
 .badge-live { background: #15803D; }
 .live-dot { display: inline-block; width: 8px; height: 8px; margin-right: 8px; border-radius: 999px; background: #FFFFFF; animation: pulse 1.6s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
@@ -133,7 +133,7 @@ const posts = Array.from({ length: 12 }, (_, i) => ({
 function extraPages(after: boolean): Page[] {
   const x = { name: 'messy', c: (...n: string[]) => n.join(' '), s: () => '', head: '' } as Impl;
   const a = (name: string, ...more: string[]) => attrsFor(x, name, ...more);
-  const share = (_base: string) => `<button type="button" ${a('icon-button-sm')} aria-label="Copy link to this page">${icons.copy.replace('width="20" height="20"', 'width="16" height="16"')}</button>`;
+  const share = (_base: string) => `<button type="button" ${a('share-button')} aria-label="Copy link to this page">${icons.copy.replace('width="20" height="20"', 'width="16" height="16"')}</button>`;
   void after;
   return [
     {

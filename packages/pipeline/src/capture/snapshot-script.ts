@@ -149,7 +149,7 @@ export function takeSnapshot(args: { props: string[]; cap: number; keep: string[
         const attrs: Record<string, string> = {};
         for (const a of [...el.attributes]) {
           if (a.name.startsWith('aria-')) aria[a.name] = a.value.slice(0, 200);
-          else if (['for', 'name', 'placeholder', 'title', 'alt', 'tabindex', 'checked', 'selected', 'open', 'value', 'action', 'method', 'src', 'width', 'height', 'id'].includes(a.name)) attrs[a.name] = a.value.slice(0, 200);
+          else if (['for', 'name', 'placeholder', 'title', 'alt', 'tabindex', 'checked', 'selected', 'open', 'value', 'action', 'method', 'src', 'width', 'height', 'id', 'href'].includes(a.name)) attrs[a.name] = a.value.slice(0, 200);
         }
         let own = '';
         for (const n of [...el.childNodes]) if (n.nodeType === 3) own += n.textContent ?? '';
