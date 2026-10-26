@@ -65,16 +65,36 @@ export function diffPercent(a: Buffer, b: Buffer): number {
     PNG.bitblt(p, out, x0, y0, rw, rh, 0, 0);
     return out.data;
   };
-  let best = 1;
-  for (let dy = -ALIGN_SLACK; dy <= ALIGN_SLACK; dy++) {
-    for (let dx = -ALIGN_SLACK; dx <= ALIGN_SLACK; dx++) {
+  const cache = new Map<string, number>();
+  const at = (dx: number, dy: number) => {
+    const k = `${dx},${dy}`;
+    let v = cache.get(k);
+    if (v === undefined) {
       const rw = w - Math.abs(dx);
       const rh = h - Math.abs(dy);
-      const mismatched = pixelmatch(region(pa, Math.max(dx, 0), Math.max(dy, 0), rw, rh), region(pb, Math.max(-dx, 0), Math.max(-dy, 0), rw, rh), null, rw, rh, { threshold: PIXEL_THRESHOLD, includeAA: false });
-      best = Math.min(best, mismatched / (rw * rh));
-      if (best === 0) break;
+      v = pixelmatch(region(pa, Math.max(dx, 0), Math.max(dy, 0), rw, rh), region(pb, Math.max(-dx, 0), Math.max(-dy, 0), rw, rh), null, rw, rh, { threshold: PIXEL_THRESHOLD, includeAA: false }) / (rw * rh);
+      cache.set(k, v);
     }
-    if (best === 0) break;
+    return v;
+  };
+  // Descend from the unshifted position to the best neighbour until none is better, within the slack:
+  // the same minimum as trying all 25 shifts when the difference falls toward the true alignment.
+  let pos = { dx: 0, dy: 0 };
+  let best = at(0, 0);
+  while (best > 0) {
+    let step: { dx: number; dy: number } | null = null;
+    for (let dy = pos.dy - 1; dy <= pos.dy + 1; dy++) {
+      for (let dx = pos.dx - 1; dx <= pos.dx + 1; dx++) {
+        if (Math.abs(dx) > ALIGN_SLACK || Math.abs(dy) > ALIGN_SLACK) continue;
+        const v = at(dx, dy);
+        if (v < best) {
+          best = v;
+          step = { dx, dy };
+        }
+      }
+    }
+    if (!step) break;
+    pos = step;
   }
   return Math.min(100, Math.round((best + sizePenalty) * 1000) / 10);
 }

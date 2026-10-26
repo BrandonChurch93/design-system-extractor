@@ -12,24 +12,27 @@ import type { FontFaceOut, PreviewFonts } from './build';
 const formats: Record<string, string> = { woff2: 'woff2', woff: 'woff', ttf: 'truetype', otf: 'opentype' };
 
 export class FontCopier {
-  private copied = new Map<string, string | null>();
+  private copied = new Map<string, Promise<string | null>>();
   constructor(private readonly ctx: RunContext) {}
 
-  /** The storage URL of a copy of the font file, or null when it cannot be served. */
-  async copy(src: string): Promise<string | null> {
-    if (this.copied.has(src)) return this.copied.get(src)!;
-    let out: string | null = null;
-    const ext = /\.(woff2|woff|ttf|otf)(\?|#|$)/i.exec(src)?.[1]?.toLowerCase();
-    if (ext) {
-      const res = await guardedFetch(src, { userAgent: this.ctx.config.userAgent, allow: this.ctx.config.allowPrivateHosts, retryDelays: [] }).catch(() => null);
-      if (res?.ok && res.body.length > 0 && res.body.length <= FONT_CAP_BYTES) {
-        const key = keys.componentFont(this.ctx.runId, `${createHash('sha1').update(src).digest('hex').slice(0, 16)}.${ext}`);
-        await this.ctx.files.put(key, res.body);
-        out = this.ctx.files.publicUrl(key);
-      }
+  /** The storage URL of a copy of the font file, or null when it cannot be served. Concurrent asks share one fetch. */
+  copy(src: string): Promise<string | null> {
+    let out = this.copied.get(src);
+    if (!out) {
+      out = this.fetchAndStore(src);
+      this.copied.set(src, out);
     }
-    this.copied.set(src, out);
     return out;
+  }
+
+  private async fetchAndStore(src: string): Promise<string | null> {
+    const ext = /\.(woff2|woff|ttf|otf)(\?|#|$)/i.exec(src)?.[1]?.toLowerCase();
+    if (!ext) return null;
+    const res = await guardedFetch(src, { userAgent: this.ctx.config.userAgent, allow: this.ctx.config.allowPrivateHosts, retryDelays: [] }).catch(() => null);
+    if (!res?.ok || res.body.length === 0 || res.body.length > FONT_CAP_BYTES) return null;
+    const key = keys.componentFont(this.ctx.runId, `${createHash('sha1').update(src).digest('hex').slice(0, 16)}.${ext}`);
+    await this.ctx.files.put(key, res.body);
+    return this.ctx.files.publicUrl(key);
   }
 }
 

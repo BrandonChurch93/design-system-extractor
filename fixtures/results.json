@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-26T17:10:09.711Z",
+  "generatedAt": "2026-10-26T19:52:39.196Z",
   "mode": "replay",
   "through": "done",
   "pipelineVersion": "1.0.0",
@@ -330,11 +330,11 @@
           "predicted": 28,
           "expected": 27,
           "matched": 27,
-          "nameAgreement": 0.704,
+          "nameAgreement": 0.63,
           "namesValid": true,
           "misses": [],
           "extras": [
-            "Warning notice (alert) /docs/getting-started"
+            "Inline warning (alert) /docs/getting-started"
           ]
         },
         "variants": {
@@ -455,11 +455,11 @@
           "predicted": 28,
           "expected": 27,
           "matched": 27,
-          "nameAgreement": 0.704,
+          "nameAgreement": 0.63,
           "namesValid": true,
           "misses": [],
           "extras": [
-            "Info alert (alert) /docs/getting-started"
+            "Warning notice (alert) /docs/getting-started"
           ]
         },
         "variants": {

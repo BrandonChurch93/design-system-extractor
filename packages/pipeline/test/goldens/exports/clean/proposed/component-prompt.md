@@ -9,7 +9,7 @@ You are building an interface that must match this design system exactly.
   --color-blue-ink: #0B1F3A;
   --color-blue-600: #2458E6;
   --color-teal-500: #0F8A8A;
-  --color-blue-overlay: #0B1F3A1F;
+  --color-blue-ink-tint: #0B1F3A1F;
   --color-success: #15803D;
   --color-warning: #B45309;
   --color-danger: #DC2626;
@@ -95,21 +95,12 @@ States: Default, Hover, Focus, Active, Disabled.
 Tokens: blue-ink for color, radius 8px for border-radius, space-20 for padding-right, space-20 for padding-left, label for font.
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 87.86px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 87.86px !important; height: 44px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-a { color: #2458E6; text-decoration: none; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: 8px; font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
-.btn-ghost { background: transparent; color: #0B1F3A; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+a { color: var(--color-blue-600); text-decoration: none; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms, color 160ms; }
+.btn-ghost { background: transparent; color: var(--color-blue-ink); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ## Rules

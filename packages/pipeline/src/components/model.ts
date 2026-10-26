@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ComponentType, componentTypeLabels } from '@dse/schema';
+import { overBudget } from '../budget';
 import type { RunContext } from '../context';
 import type { ContentBlock } from '../models/client';
 import { prompts } from '../models/prompts/index.generated';
@@ -56,13 +57,22 @@ export function fallbackNames(drafts: { guess: Guess }[]): string[] {
   });
 }
 
+/** Naming calls in flight at once; answers are applied by batch, so the order never changes a name (D-066). */
+export const NAMING_IN_FLIGHT = 4;
+
 export async function nameComponents(ctx: RunContext, drafts: Draft[]): Promise<{ namings: Naming[]; byModel: number; calls: string[] }> {
   const fallback = fallbackNames(drafts);
   const namings: Naming[] = drafts.map((d, i) => ({ type: d.guess.type, name: fallback[i]!, isComponent: true, by: 'fallback' }));
-  const calls: string[] = [];
+  const starts = Array.from({ length: Math.ceil(drafts.length / BATCH_SIZE) }, (_, k) => k * BATCH_SIZE);
+  const calls: string[] = new Array(starts.length);
   let byModel = 0;
-  for (let start = 0; start < drafts.length; start += BATCH_SIZE) {
+  const one = async (k: number) => {
+    const start = starts[k]!;
     const batch = drafts.slice(start, start + BATCH_SIZE);
+    if (overBudget(ctx, 'naming')) {
+      calls[k] = 'by fallback (time budget)';
+      return;
+    }
     const content: ContentBlock[] = [{ type: 'text', text: `Items:\n${batch.map(describe).join('\n')}` }];
     for (const d of batch) {
       if (!d.crop || d.guess.confidence >= IMAGE_BELOW_CONFIDENCE) continue;
@@ -72,26 +82,31 @@ export async function nameComponents(ctx: RunContext, drafts: Draft[]): Promise<
     const result = await ctx.models.call({ purpose: 'components', size: 'small', system: prompts.components, content, schema: NamingAnswer, maxTokens: 2048, timeoutMs: COMPONENT_TIMEOUT_MS });
     ctx.recordCost(result.cost);
     if (!result.ok) {
-      calls.push(`by fallback (${result.reason})`);
-      continue;
+      calls[k] = `by fallback (${result.reason})`;
+      return;
     }
-    calls.push(`by ${result.by}`);
+    calls[k] = `by ${result.by}`;
     for (const answer of result.data.items) {
-      const a = { data: answer };
-      const i = batch.findIndex((d) => d.id === a.data.id);
+      const i = batch.findIndex((d) => d.id === answer.id);
       if (i < 0) continue;
       const d = batch[i]!;
       const unsure = d.guess.confidence < IMAGE_BELOW_CONFIDENCE;
       namings[start + i] = {
         // A confident rule keeps its type; the model types what the rules were unsure about.
-        type: unsure ? a.data.type : d.guess.type,
-        name: validName(a.data.name) ? a.data.name.trim() : fallback[start + i]!,
-        isComponent: unsure ? a.data.isComponent : true,
+        type: unsure ? answer.type : d.guess.type,
+        name: validName(answer.name) ? answer.name.trim() : fallback[start + i]!,
+        isComponent: unsure ? answer.isComponent : true,
         by: result.by,
       };
       byModel++;
     }
-  }
+  };
+  let next = 0;
+  await Promise.all(
+    Array.from({ length: Math.min(NAMING_IN_FLIGHT, starts.length) }, async () => {
+      while (next < starts.length) await one(next++);
+    }),
+  );
   return { namings, byModel, calls };
 }
 

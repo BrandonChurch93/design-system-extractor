@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { Drift } from '@dse/schema';
 import type { RunContext } from '../context';
 import { prompts } from '../models/prompts/index.generated';
+import { overBudget } from '../budget';
 
 // The narrative-and-intro call (docs/specs/drift.md): Sonnet phrases the computed facts; a validator
 // rejects any field that invents a number or breaks the voice, and the template stands in.
@@ -55,6 +56,7 @@ export type NarrativeResult = { narrative: string; intro: string; narrativeBy: s
 
 export async function writeNarrative(ctx: RunContext, facts: Record<string, unknown>, drift: Pick<Drift, 'headline' | 'supporting'>, intro: IntroFacts): Promise<NarrativeResult> {
   const fallback = { narrative: fallbackNarrative(drift), intro: fallbackIntro(intro) };
+  if (overBudget(ctx, 'narrative')) return { ...fallback, narrativeBy: 'template (time budget)', introBy: 'template (time budget)' };
   const result = await ctx.models.call({
     purpose: 'narrative',
     size: 'large',

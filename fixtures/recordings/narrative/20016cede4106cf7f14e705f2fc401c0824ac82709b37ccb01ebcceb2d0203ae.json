@@ -2,16 +2,16 @@
   "purpose": "narrative",
   "size": "large",
   "model": "claude-sonnet-5-5",
-  "text": "{\"narrative\": \"Nothing drifts here. The system holds nine colors, nine type styles and 11 spacing steps, and all 11 steps sit on the grid. No colors sit near a neighbor, no type styles overlap and no component variants collapse. The proposed set matches what is already there, with two grays, 11 spacing steps and nine type styles. Every pair of text and background keeps its contrast ratio.\", \"designSystemIntro\": \"This design system was extracted from localhost:4100 across nine pages. It holds nine colors, nine type styles, 11 spacing steps and 27 components.\"}",
+  "text": "{\"narrative\": \"Nothing drifts in this system. It is built from nine colors, nine type styles and 11 spacing steps, and every spacing step sits on the grid. No colors sit near a neighbor, no type styles overlap and no component variants need collapsing. The proposed set keeps the same nine type styles and 11 spacing steps, with two grays. Every pair of text and background keeps its contrast ratio.\", \"designSystemIntro\": \"This design system was extracted from localhost:4100 across nine pages. It holds nine colors, nine type styles, 11 spacing steps and 27 components.\"}",
   "usage": {
     "input_tokens": 192,
-    "cache_creation_input_tokens": 1161,
-    "cache_read_input_tokens": 0,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1161,
     "cache_creation": {
-      "ephemeral_5m_input_tokens": 1161,
+      "ephemeral_5m_input_tokens": 0,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 196,
+    "output_tokens": 197,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-26T07:52:22.254Z",
+  "recordedAt": "2026-10-26T19:18:38.133Z",
   "request": "{\"host\":\"localhost:4100\",\"colors\":9,\"typeStyles\":9,\"spacingSteps\":11,\"components\":27,\"pages\":9,\"headline\":\"Nothing to collapse. 9 colors, 11 spacing steps, all on the grid.\",\"supporting\":[],\"numbers\":[],\"findings\":{\"nearDuplicateColors\":0,\"offGrid\":[],\"variantCollapses\":0,\"typeNearDuplicates\":0},\"proposal\":{\"grays\":2,\"spacingSteps\":11,\"typeStyles\":9,\"contrastKept\":true}}"
 }

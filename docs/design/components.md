@@ -133,7 +133,7 @@ Type styles and sizes named below are the ones in `docs/design/design-system.md`
 3. **States** · A 5-column grid of the captured states rendered (live) or cropped (captured), each labeled in `caption`. Missing states are listed after with reasons.
 4. **Checks** · Rows: check name left, result right with the detail string from `docs/specs/checks.md`. Rows for other variants that fail are listed after a rule with the variant name in `muted`.
 5. **Tokens used** · Tag row; each opens TokenPopover. Values that map to no token are listed after a rule as "Unmapped" with the raw value in `hex`.
-6. **Code** · Tabs HTML, CSS, and Tailwind (the Tailwind tab only when the run's framework hint is `tailwind`) over a CodeBlock. The HTML is the sanitized extracted markup; the CSS is the extracted declarations with token variables substituted where a value maps.
+6. **Code** · Tabs HTML, CSS, and Tailwind (the Tailwind tab only when the run's framework hint is `tailwind`) over a CodeBlock. The HTML is the sanitized extracted markup; the CSS is the extracted declarations with token variables substituted where a value maps (the component's own rules, no preview scaffolding; colors, space steps in padding, margin and gap, radius steps and whole shadows, named as `tokens.css` names them, D-069).
 7. Actions: primary "Copy prompt for this component", ghost "Copy code".
 8. Footer caption from copy.
 

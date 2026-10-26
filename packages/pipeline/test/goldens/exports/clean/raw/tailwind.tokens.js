@@ -6,7 +6,7 @@ module.exports = {
         "blue": {
           "600": "#2458E6",
           "ink": "#0B1F3A",
-          "overlay": "#0B1F3A1F"
+          "ink-tint": "#0B1F3A1F"
         },
         "teal": {
           "500": "#0F8A8A"

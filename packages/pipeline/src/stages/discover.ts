@@ -19,6 +19,7 @@ import { BlockedError } from '../errors';
 import { stableId } from '../ids';
 import { checkTarget } from '../net/private-ranges';
 import { finalScore, preScore, segmentsOf } from '../select/score';
+import { overBudget } from '../budget';
 
 export const CANDIDATE_CAP = 300;
 export const FINGERPRINT_CAP = 60;
@@ -190,11 +191,14 @@ export async function discover(ctx: RunContext, deps: DiscoverDeps): Promise<Dis
   const byPre = [...candidates].sort((a, b) => b.ps.score - a.ps.score || a.path.length - b.path.length || a.path.localeCompare(b.path));
   const toFetch = byPre.slice(0, FINGERPRINT_CAP);
   const fetched = new Map<string, { fingerprint?: string; title: string; h1: string; failed: boolean; status: number; html?: string }>();
+  let fetchedCount = 0;
   for (const c of toFetch) {
+    if (c.source !== 'start' && overBudget(ctx, 'fingerprints')) break;
     if (c.source === 'start') {
       fetched.set(c.url.toString(), { ...pageFacts(load.html), ...facts, failed: false, status: load.status });
       continue;
     }
+    fetchedCount++;
     const r = await guardedFetch(c.url.toString(), { userAgent: ua, allow, throttle, timeoutMs: 8000, retryDelays: [1000] });
     if (!r.ok || !/html/i.test(r.contentType)) {
       fetched.set(c.url.toString(), { title: '', h1: '', failed: true, status: r.ok ? r.status : 0 });
@@ -205,6 +209,8 @@ export async function discover(ctx: RunContext, deps: DiscoverDeps): Promise<Dis
     const failed = c.source === 'synthetic' ? !(r.status === 404 || isSoft404(html)) : r.status >= 400;
     fetched.set(c.url.toString(), { ...pf, failed, status: r.status });
   }
+  const wanted = toFetch.filter((c) => c.source !== 'start').length;
+  if (fetchedCount < wanted) await ctx.emit({ stage: 'discover', level: 'warn', message: `fingerprints · ${fetchedCount} of ${wanted} fetched in the time budget · the rest grouped by path` });
   // A synthetic page that answers like a real page is dropped (docs/specs/crawler.md, step 6).
   candidates = candidates.filter((c) => c.source !== 'synthetic' || fetched.get(c.url.toString())?.failed === false);
 

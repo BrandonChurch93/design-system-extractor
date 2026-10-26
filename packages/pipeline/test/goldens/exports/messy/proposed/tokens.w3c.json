@@ -13,7 +13,7 @@
     "gray-50": {
       "$type": "color",
       "$value": "#FFFFFF",
-      "$description": "gray-50 · 208 uses"
+      "$description": "gray-50 · 197 uses"
     },
     "gray-300": {
       "$type": "color",
@@ -23,7 +23,7 @@
     "gray-300b": {
       "$type": "color",
       "$value": "#C4C4C4",
-      "$description": "gray-300b · 48 uses"
+      "$description": "gray-300b · 4 uses"
     },
     "gray-400": {
       "$type": "color",
@@ -33,7 +33,7 @@
     "gray-500": {
       "$type": "color",
       "$value": "#868686",
-      "$description": "gray-500 · 36 uses"
+      "$description": "gray-500 · 25 uses"
     },
     "gray-600": {
       "$type": "color",
@@ -53,17 +53,17 @@
     "gray-900": {
       "$type": "color",
       "$value": "#1F1F1F",
-      "$description": "gray-900 · 706 uses"
+      "$description": "gray-900 · 684 uses"
     },
     "blue-ink": {
       "$type": "color",
       "$value": "#0B1F3A",
-      "$description": "blue-ink · 256 uses"
+      "$description": "blue-ink · 168 uses"
     },
     "blue-600": {
       "$type": "color",
       "$value": "#2458E6",
-      "$description": "blue-600 · 200 uses"
+      "$description": "blue-600 · 91 uses"
     },
     "blue-600-alt": {
       "$type": "color",
@@ -78,7 +78,7 @@
     "blue-ink-tint": {
       "$type": "color",
       "$value": "#0B1F3A1F",
-      "$description": "blue-ink-tint · 28 uses"
+      "$description": "blue-ink-tint · 17 uses"
     },
     "success": {
       "$type": "color",

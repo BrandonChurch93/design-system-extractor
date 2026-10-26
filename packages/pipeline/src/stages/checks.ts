@@ -24,8 +24,10 @@ function worst(list: Scored[], preferSmall = false): Scored | null {
   return passes[0] ?? list[0] ?? null;
 }
 
-function placeholderColor(it: Item): string | undefined {
-  const rules = it.vc.matched[it.el.d]?.pseudo.find((p) => p.pseudo === 'placeholder')?.rules ?? [];
+/** From the instance's matched rules, or a sibling's when its cluster was read on another page (D-066). */
+function placeholderColor(it: Item, siblings: Item[]): string | undefined {
+  const from = it.vc.matched[it.el.d] ? it : siblings.find((x) => !x.revealed && x.vc.matched[x.el.d]);
+  const rules = from?.vc.matched[from.el.d]?.pseudo.find((p) => p.pseudo === 'placeholder')?.rules ?? [];
   return rules.flatMap((r) => r.declarations).filter((d) => d.name === 'color').pop()?.value;
 }
 
@@ -39,7 +41,7 @@ export function checkComponent(c: Component, src: NonNullable<ReturnType<Compone
   };
   const interactive = interactiveTypes.includes(c.type);
 
-  const contrast = worst(reps.map((it) => ({ it, m: contrastOf(it, tokens.colors, placeholderColor(it)) })).filter((s): s is Scored => s.m !== null));
+  const contrast = worst(reps.map((it) => ({ it, m: contrastOf(it, tokens.colors, placeholderColor(it, src.items)) })).filter((s): s is Scored => s.m !== null));
 
   let focus: Scored | null = null;
   let focusNa = na();

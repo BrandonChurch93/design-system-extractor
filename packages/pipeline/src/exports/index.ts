@@ -11,6 +11,7 @@ export { DISCLAIMER, PROMPT_OPENING, designSystemMd, promptMd } from './document
 export { exportTokens, headerLine, spaceName, type ExportTokens } from './model';
 export { tailwindTokens, tokensCss, tokensJson, w3cShadow, w3cTokens } from './tokens';
 export { crc32, zip, type ZipEntry } from './zip';
+export { withTokenVars } from './substitute';
 
 export type ExportOptions = { set?: ExportSet; runUrl: string; componentId?: string };
 export type ExportFile = { filename: string; contentType: string; body: string };

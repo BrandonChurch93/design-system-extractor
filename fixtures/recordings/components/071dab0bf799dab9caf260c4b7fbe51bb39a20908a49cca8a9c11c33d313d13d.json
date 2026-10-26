@@ -2,7 +2,7 @@
   "purpose": "components",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"items\": [{\"id\": \"c33\", \"type\": \"empty-state\", \"name\": \"Not found state\", \"isComponent\": true, \"variantHint\": \"default and with a picture below the text\"}]}",
+  "text": "{\"items\": [{\"id\": \"c33\", \"type\": \"empty-state\", \"name\": \"Not found state\", \"isComponent\": true, \"variantHint\": \"Default and picture below, the icon sits above the heading in both\"}]}",
   "usage": {
     "input_tokens": 282,
     "cache_creation_input_tokens": 0,
@@ -11,7 +11,7 @@
       "ephemeral_5m_input_tokens": 0,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 60,
+    "output_tokens": 69,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-26T09:28:58.221Z",
+  "recordedAt": "2026-10-26T19:46:20.646Z",
   "request": "Items:\nc33 guess empty-state 0.6, section, classes empty-state, inside a:1 h1:1 p:1 span:1 svg:1, text \"This page is not here. It may have moved when the docs were reorganized. Back to\", 2 instances on 1 page (/9af1db26a5-does-not-exist), variants Default, picture below\nPicture of c33:\n[image]"
 }

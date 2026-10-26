@@ -140,7 +140,7 @@ export type State = z.infer<typeof State>;
 export const PreviewMode = z.enum(['live', 'captured']);
 export type PreviewMode = z.infer<typeof PreviewMode>;
 
-export const CapturedReason = z.enum(['diff', 'css-too-large', 'fonts-unavailable']);
+export const CapturedReason = z.enum(['diff', 'css-too-large', 'fonts-unavailable', 'not-checked']);
 export type CapturedReason = z.infer<typeof CapturedReason>;
 
 export const Check = z.enum(['contrast', 'focus-visible', 'tap-target', 'label', 'reduced-motion']);

@@ -98,12 +98,17 @@ export function capCandidates(list: ElementCandidate[], cap = 400): ElementCandi
   return list.filter((c) => kept.has(c.dse));
 }
 
-/** A preliminary cluster key for state-capture novelty: tag, role and class tokens without hashes. */
+/**
+ * A preliminary cluster key for state-capture novelty: tag, role, class tokens without hashes, and
+ * whether it opens something and whether it is icon-only: clustering keeps both apart (D-052, D-054, D-070).
+ */
 export function noveltyKey(e: SnapElement): string {
+  const trigger = 'aria-haspopup' in e.aria || 'aria-controls' in e.aria || 'aria-expanded' in e.aria;
+  const iconOnly = e.text.trim().length < 2;
   const cls = e.cls
     .map((c) => c.toLowerCase())
     .filter((c) => !/[0-9a-f]{5,}|^css-|^sc-|^_/.test(c))
     .sort()
     .slice(0, 8);
-  return `${e.tag}|${e.role ?? ''}|${cls.join('.')}|${e.style['background-color']}|${Math.round(e.h / 4)}`;
+  return `${e.tag}|${e.role ?? ''}|${cls.join('.')}|${e.style['background-color']}|${Math.round(e.h / 4)}${trigger ? '|trigger' : ''}${iconOnly ? '|icon' : ''}`;
 }

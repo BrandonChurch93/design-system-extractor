@@ -43,4 +43,35 @@ describe('the state capture cap', () => {
     expect(chosen.slice(0, 2)).toEqual(['e1', 'e51']);
     expect(chosen[2]).toBe('e50');
   });
+
+  it('leaves out clusters an earlier page measured, and fills by area only on the first page (D-066)', async () => {
+    const { chooseForStates } = await import('../src/stages/capture');
+    const { noveltyKey } = await import('../src/capture/candidates');
+    const els: El[] = [{ tag: 'body', box: [0, 0, 1440, 9000] }];
+    for (let i = 0; i < 5; i++) els.push({ tag: 'button', parent: 0, cls: ['btn'], text: `Go ${i}`, box: [0, i * 60, 120, 44] });
+    els.push({ tag: 'button', parent: 0, cls: ['icon-button'], box: [0, 400, 44, 44] });
+    const s = snap(els);
+    const cands = findCandidates(s, 'desktop');
+    expect(chooseForStates(s, cands)).toHaveLength(6);
+    const measured = new Set([noveltyKey(s.byDse.get('e1')!)]);
+    expect(chooseForStates(s, cands, measured, false)).toEqual(['e6']);
+    expect(chooseForStates(s, cands, new Set(), false)).toEqual(['e1', 'e6']);
+  });
+});
+
+describe('the novelty ledger (D-066)', () => {
+  it('decides in page order whatever finishes first, and never waits on a page that ended early', async () => {
+    const { NoveltyLedger } = await import('../src/stages/capture');
+    const ledger = new NoveltyLedger();
+    let second: Set<string> | null = null;
+    const later = ledger.before('opens', 'desktop', 2).then((s) => (second = s));
+    ledger.commit('opens', 'desktop', 1, ['menu']);
+    await new Promise((r) => setTimeout(r, 10));
+    expect(second).toBeNull();
+    ledger.settle(0, ['desktop', 'mobile']);
+    await later;
+    expect([...second!]).toEqual(['menu']);
+    expect([...(await ledger.before('opens', 'mobile', 1))]).toEqual([]);
+    expect([...(await ledger.before('opens', 'desktop', 0))]).toEqual([]);
+  });
 });

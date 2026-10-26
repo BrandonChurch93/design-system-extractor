@@ -37,7 +37,7 @@ Cap: 300 page candidates. Beyond that, keep by source priority (visitor includes
 
 ## Template fingerprinting
 
-Before selection, up to 60 page candidates (the top 60 by the pre-score in `page-selection.md`: path patterns, source and depth only) are fetched as plain HTML (no browser, 8 s timeout, same politeness) and fingerprinted: the sequence of tag names of `body`'s first three levels plus the sorted set of class tokens on those elements, with digits and hashes stripped, hashed with SHA-1. Page candidates sharing a fingerprint form a template group; the group's size is recorded and only one member (the highest scored) remains selectable. Groups are also inferred by path pattern when fetching is not possible: `/blog/{slug}` with 10 or more members, `/docs/{anything}`, `/products/{slug}`.
+Before selection, up to 60 page candidates (the top 60 by the pre-score in `page-selection.md`: path patterns, source and depth only) are fetched as plain HTML (no browser, 8 s timeout, same politeness) and fingerprinted: the sequence of tag names of `body`'s first three levels plus the sorted set of class tokens on those elements, with digits and hashes stripped, hashed with SHA-1. Page candidates sharing a fingerprint form a template group; the group's size is recorded and only one member (the highest scored) remains selectable. Groups are also inferred by path pattern when fetching is not possible: `/blog/{slug}` with 10 or more members, `/docs/{anything}`, `/products/{slug}`. Fetching stops at the fingerprints share of the run's time budget (`caps-and-budget.md`, D-066); the candidates not fetched are grouped by path pattern only.
 
 ## Blocked-state detection
 

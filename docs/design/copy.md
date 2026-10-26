@@ -80,7 +80,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Color groups: `Brand` · `Neutral` · `Semantic`
 - Semantic roles: `Success` · `Warning` · `Danger` · `Info`
 - Preview modes: `Live` · `Captured`
-- Captured reasons: `render differed by {pct} %` · `styles too large` · `fonts unavailable`
+- Captured reasons: `render differed by {pct} %` · `styles too large` · `fonts unavailable` · `not checked in time` (D-066)
 - Check statuses: `Pass` · `Fail` · `Not applicable`
 - Drift kinds: `Grays` · `Variants` · `Spacing values` · `Type styles`
 - Evidence kinds: `Color` · `Variant` · `Spacing` · `Type` · `Sprawl`
@@ -159,7 +159,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 
 - Eyebrow: `{group} · {index} of {count}`
 - Icon labels: `Previous component` · `Next component` · `Open as page` · `Close panel`
-- Variants label: `Variants`; fidelity caption `Live render · matches crop within {pct} %` or `Captured · {reason}` with reasons `render differed by {pct} %` · `styles too large` · `fonts unavailable`
+- Variants label: `Variants`; fidelity caption `Live render · matches crop within {pct} %` or `Captured · {reason}` with reasons `render differed by {pct} %` · `styles too large` · `fonts unavailable` · `not checked in time`
 - Source label: `Source`; lines `{path} · {viewport} px` · the selector in code · `Seen on {first four paths} and {n} more` (button) · `Show on page`
 - States label: `States · {n} captured`; missing line `Not captured: {names}` (each state name followed by its reason in parentheses, joined by ·) with reasons `no instance found` · `over capture cap` · `not reachable`
 - Checks label: `Checks · {passed} of {applicable} on {variant}`; result lines from `docs/specs/checks.md`

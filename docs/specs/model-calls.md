@@ -21,7 +21,7 @@ At P0, verify the current ids and prices on https://docs.claude.com/en/docs/abou
 | Purpose | Model | Stage | Input | Output | Fallback |
 | --- | --- | --- | --- | --- | --- |
 | Select pages | small | `select` | text table of ≤ 30 page candidates, cap, rules | array of candidate ids | deterministic ranking |
-| Name and type components | small | `components` | batches of 8: crop (only if rule confidence < 0.9), fingerprint, text, guess | `{type, name, isComponent, variantHint}[]` | rule type, generated name |
+| Name and type components | small | `components` | batches of 8, four in flight, answers applied by batch (D-066): crop (only if rule confidence < 0.9), fingerprint, text, guess | `{type, name, isComponent, variantHint}[]` | rule type, generated name |
 | Resolve name collisions | small | `components` | text only: pairs of same-name, same-type clusters with their fingerprints | `{same: boolean}[]` | keep separate, suffix names |
 | Name color tokens | small | `tokens` | clustered colors with hue, role, usage contexts | names | deterministic hue-step names |
 | Narrative and intro | large | `drift` | facts JSON, run stats, voice rules | `{narrative, designSystemIntro}` | template text |

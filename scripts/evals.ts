@@ -78,6 +78,7 @@ for (const name of only) {
   if (values.print) console.log(name, (doc.pages ?? []).map((p) => `${p.path} ${p.reason}`), JSON.stringify(metrics.tokens?.value ?? null), JSON.stringify(ctx.events.filter((e) => e.stage === 'components').map((e) => [e.message, e.data])));
   results.push({ name, seconds: Math.round((Date.now() - started) / 1000), metrics });
   writeFileSync(resolve(outDir, 'run.json'), JSON.stringify(doc, null, 2));
+  writeFileSync(resolve(outDir, 'events.json'), JSON.stringify(ctx.events, null, 2));
 }
 await browser.close();
 server?.close();

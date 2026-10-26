@@ -56,7 +56,9 @@ export function proposeColors(colors: ColorToken[]): ColorPlan {
   const neutrals = colors.filter((c) => c.group === 'neutral');
   const byId = new Map(colors.map((c) => [c.id, c]));
   const pairs = colors.flatMap((c) => c.contrastPairs.map((p) => ({ ...p, threshold: p.large ? 3 : 4.5 })));
-  const passing = pairs.filter((p) => p.ratio >= p.threshold);
+  // A pair the proposal must not break is one that passes at today's token values. A raw pair can pass
+  // while its clustered tokens do not (a merge moved a value); no proposal can keep that one (D-067).
+  const passing = pairs.filter((p) => p.ratio >= p.threshold && byId.has(p.fg) && byId.has(p.bg) && contrastRatio(rgba(byId.get(p.fg)!), rgba(byId.get(p.bg)!)) >= p.threshold);
 
   const evaluate = (steps: Step[], brandMap: Map<string, string>) => {
     const valueOf = (id: string): Rgba => {

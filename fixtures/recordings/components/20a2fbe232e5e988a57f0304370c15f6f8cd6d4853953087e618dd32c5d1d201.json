@@ -2,7 +2,7 @@
   "purpose": "components",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"items\": [{\"id\": \"c17\", \"type\": \"select\", \"name\": \"Select\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c18\", \"type\": \"checkbox\", \"name\": \"Checkbox\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c19\", \"type\": \"button\", \"name\": \"Copy button\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c20\", \"type\": \"textarea\", \"name\": \"Text area\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c21\", \"type\": \"pagination\", \"name\": \"Pagination\", \"isComponent\": true, \"variantHint\": \"page number buttons and previous next controls\"}, {\"id\": \"c22\", \"type\": \"link\", \"name\": \"Previous link\", \"isComponent\": true, \"variantHint\": \"default and alternate state\"}]}",
+  "text": "{\"items\": [{\"id\": \"c17\", \"type\": \"select\", \"name\": \"Select\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c18\", \"type\": \"checkbox\", \"name\": \"Checkbox\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c19\", \"type\": \"button\", \"name\": \"Copy button\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c20\", \"type\": \"textarea\", \"name\": \"Text area\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c21\", \"type\": \"pagination\", \"name\": \"Pagination\", \"isComponent\": true, \"variantHint\": \"page number buttons and previous next controls\"}, {\"id\": \"c22\", \"type\": \"link\", \"name\": \"Previous link\", \"isComponent\": true, \"variantHint\": \"default and second state\"}]}",
   "usage": {
     "input_tokens": 387,
     "cache_creation_input_tokens": 0,
@@ -11,7 +11,7 @@
       "ephemeral_5m_input_tokens": 0,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 271,
+    "output_tokens": 269,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-26T07:59:37.549Z",
+  "recordedAt": "2026-10-26T19:19:36.573Z",
   "request": "Items:\nc17 guess select 0.98, select, no class names, no children, text \"Solo Studio\", 2 instances on 1 page (/signup), variants Default, no picture\nc18 guess checkbox 0.98, input, no class names, no children, text \"\", 2 instances on 1 page (/signup), variants Default, no picture\nc19 guess button 0.95, button, classes button is-info, inside span:1, text \"⧉\", 2 instances on 1 page (/contact), variants Default, no picture\nc20 guess textarea 0.98, textarea, classes textarea, no children, text \"\", 2 instances on 1 page (/contact), variants Default, no picture\nc21 guess pagination 0.8, nav, classes pagination, inside a:2 li:2 ul:1, text \"Previous Next 1 2\", 2 instances on 1 page (/docs/api), variants Default, picture below\nc22 guess link 0.9, a, classes pagination-previous, no children, text \"Previous\", 8 instances on 1 page (/docs/api), variants Default, Default 2, no picture\nPicture of c21:\n[image]"
 }

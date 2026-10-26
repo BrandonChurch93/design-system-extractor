@@ -6,12 +6,12 @@ This design system was extracted from localhost:4100 across nine pages. It holds
 
 | Name | Value | Group | Uses |
 | --- | --- | --- | --- |
-| blue-ink | #0B1F3A | brand | 984 |
-| blue-600 | #2458E6 | brand | 151 |
+| blue-ink | #0B1F3A | brand | 904 |
+| blue-600 | #2458E6 | brand | 100 |
 | teal-500 | #0F8A8A | brand | 44 |
-| blue-overlay | #0B1F3A1F | brand | 25 |
-| gray-50 | #FFFFFF | neutral | 138 |
-| gray-200 | #E2E8F0 | neutral | 247 |
+| blue-ink-tint | #0B1F3A1F | brand | 17 |
+| gray-50 | #FFFFFF | neutral | 130 |
+| gray-200 | #E2E8F0 | neutral | 207 |
 | success | #15803D | semantic | 16 |
 | warning | #B45309 | semantic | 16 |
 | danger | #DC2626 | semantic | 12 |
@@ -71,21 +71,12 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 87.86px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 87.86px !important; height: 44px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-a { color: #2458E6; text-decoration: none; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: 8px; font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
-.btn-ghost { background: transparent; color: #0B1F3A; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+a { color: var(--color-blue-600); text-decoration: none; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms, color 160ms; }
+.btn-ghost { background: transparent; color: var(--color-blue-ink); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Dropdown trigger
@@ -104,21 +95,12 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 115.41px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 115.41px !important; height: 44px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
 button { font: inherit; color: inherit; }
-.dropdown-trigger { display: inline-flex; align-items: center; gap: 4px; height: 44px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: #0B1F3A; cursor: pointer; }
+.dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-ink); cursor: pointer; }
 svg { display: block; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Menu button
@@ -138,22 +120,13 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 44px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 44px !important; height: 44px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
 button { font: inherit; color: inherit; }
-.menu-button { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0; border-radius: 8px; background: transparent; color: #0B1F3A; cursor: pointer; }
+.menu-button { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0px; border-radius: var(--radius-sm); background: transparent; color: var(--color-blue-ink); cursor: pointer; }
 .menu-button { display: inline-flex; }
 svg { display: block; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Tab
@@ -173,21 +146,12 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 83.03px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 83.03px !important; height: 44px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
 button { font: inherit; color: inherit; }
-.tab { height: 44px; padding: 0 16px; border: 0; border-bottom: 2px solid transparent; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: #0B1F3A; cursor: pointer; }
-.tab[aria-selected='true'] { color: #2458E6; border-bottom-color: #2458E6; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+.tab { height: 44px; padding: 0px var(--space-16); border-width: 0px 0px 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: none; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-ink); cursor: pointer; }
+.tab[aria-selected="true"] { color: var(--color-blue-600); border-bottom-color: var(--color-blue-600); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Icon button
@@ -207,21 +171,12 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 14px; color: rgb(11, 31, 58); line-height: 22px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 44px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 44px !important; height: 44px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
 button { font: inherit; color: inherit; }
-.icon-button { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid #E2E8F0; border-radius: 8px; background: #FFFFFF; color: #0B1F3A; cursor: pointer; }
+.icon-button { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--color-gray-200); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-ink); cursor: pointer; }
 svg { display: block; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Text input
@@ -241,20 +196,11 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 480px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 480px !important; height: 44px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
 input { font: inherit; color: inherit; }
-.input { width: 100%; height: 44px; padding: 8px 12px; border: 1px solid #E2E8F0; border-radius: 8px; background: #FFFFFF; color: #0B1F3A; font-size: 16px; line-height: 26px; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+.input { width: 100%; height: 44px; padding: var(--space-8) var(--space-12); border: 1px solid var(--color-gray-200); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-ink); font-size: 16px; line-height: 26px; }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Toggle
@@ -274,22 +220,13 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 14px; color: rgb(11, 31, 58); line-height: 22px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 52px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 52px !important; height: 44px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
 button { font: inherit; color: inherit; }
-.toggle { position: relative; flex: none; width: 52px; height: 44px; border: 0; background: transparent; cursor: pointer; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.toggle::before { content: ''; position: absolute; left: 4px; top: 10px; width: 44px; height: 24px; border-radius: 999px; background: #E2E8F0; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.toggle::after { content: ''; position: absolute; left: 8px; top: 14px; width: 16px; height: 16px; border-radius: 999px; background: #FFFFFF; transition: transform 160ms ease; }
+.toggle { position: relative; flex: 0 0 auto; width: 52px; height: 44px; border: 0px; background: transparent; cursor: pointer; }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+.toggle::before { content: ""; position: absolute; left: 4px; top: 10px; width: 44px; height: 24px; border-radius: 999px; background: var(--color-gray-200); }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+.toggle::after { content: ""; position: absolute; left: 8px; top: 14px; width: 16px; height: 16px; border-radius: 999px; background: var(--color-gray-50); transition: transform 160ms; }
 ```
 
 ### Select
@@ -309,21 +246,12 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 480px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 480px !important; height: 44px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
 select { font: inherit; color: inherit; }
-.select { width: 100%; height: 44px; padding: 8px 12px; border: 1px solid #E2E8F0; border-radius: 8px; background: #FFFFFF; color: #0B1F3A; font-size: 16px; line-height: 26px; }
-.select { appearance: none; padding-right: 40px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230B1F3A' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+.select { width: 100%; height: 44px; padding: var(--space-8) var(--space-12); border: 1px solid var(--color-gray-200); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-ink); font-size: 16px; line-height: 26px; }
+.select { appearance: none; padding-right: var(--space-40); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230B1F3A' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Checkbox
@@ -343,20 +271,11 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 14px; color: rgb(11, 31, 58); line-height: 22px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 44px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 44px !important; height: 44px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
 input { font: inherit; color: inherit; }
-.checkbox { appearance: none; flex: none; width: 44px; height: 44px; margin: 0 -12px; border: 0; border-radius: 8px; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect x='0.5' y='0.5' width='19' height='19' rx='3.5' fill='%23FFFFFF' stroke='%230B1F3A'/%3E%3C/svg%3E") center no-repeat; cursor: pointer; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+.checkbox { appearance: none; flex: 0 0 auto; width: 44px; height: 44px; margin: 0px -12px; border: 0px; border-radius: var(--radius-sm); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect x='0.5' y='0.5' width='19' height='19' rx='3.5' fill='%23FFFFFF' stroke='%230B1F3A'/%3E%3C/svg%3E") center center no-repeat transparent; cursor: pointer; }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Textarea
@@ -376,21 +295,12 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 480px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 480px !important; height: 128px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
 textarea { font: inherit; color: inherit; }
-.textarea { width: 100%; height: 44px; padding: 8px 12px; border: 1px solid #E2E8F0; border-radius: 8px; background: #FFFFFF; color: #0B1F3A; font-size: 16px; line-height: 26px; }
+.textarea { width: 100%; height: 44px; padding: var(--space-8) var(--space-12); border: 1px solid var(--color-gray-200); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-ink); font-size: 16px; line-height: 26px; }
 .textarea { height: 128px; resize: vertical; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Site header
@@ -440,36 +350,27 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 1440px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 1440px !important; height: 73px !important; flex: none !important; position: relative !important; inset: auto !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.site-header { position: relative; top: 0; z-index: 10; background: #FFFFFF; border-bottom: 1px solid #E2E8F0; transition: box-shadow 160ms ease; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
-.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; height: 72px; }
-a { color: #2458E6; text-decoration: none; }
-.logo { font-size: 20px; line-height: 28px; font-weight: 600; color: #0B1F3A; }
-.nav-links { display: flex; align-items: center; gap: 24px; }
-.nav-link { font-size: 14px; line-height: 20px; font-weight: 600; color: #0B1F3A; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-200); transition: box-shadow 160ms; }
+.container { max-width: 1120px; margin: 0px auto; padding: 0px var(--space-24); }
+.header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-32); height: 72px; }
+a { color: var(--color-blue-600); text-decoration: none; }
+.logo { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--color-blue-ink); }
+.nav-links { display: flex; align-items: center; gap: var(--space-24); }
+.nav-link { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-ink); }
 .dropdown { position: relative; }
 button { font: inherit; color: inherit; }
-.dropdown-trigger { display: inline-flex; align-items: center; gap: 4px; height: 44px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: #0B1F3A; cursor: pointer; }
+.dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-ink); cursor: pointer; }
 svg { display: block; }
-.dropdown-menu { position: absolute; top: 48px; left: 0; z-index: 20; min-width: 224px; padding: 8px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 12px 32px rgba(11, 31, 58, 0.12); }
-.header-actions { display: flex; align-items: center; gap: 12px; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: 8px; font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
-.btn-ghost { background: transparent; color: #0B1F3A; }
-.btn-primary { background: #2458E6; color: #FFFFFF; }
-.menu-button { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0; border-radius: 8px; background: transparent; color: #0B1F3A; cursor: pointer; }
-.mobile-menu { border-top: 1px solid #E2E8F0; padding: 8px 0 16px; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); box-shadow: var(--color-blue-ink-tint) 0px 12px 32px; }
+.header-actions { display: flex; align-items: center; gap: var(--space-12); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms, color 160ms; }
+.btn-ghost { background: transparent; color: var(--color-blue-ink); }
+.btn-primary { background: var(--color-blue-600); color: var(--color-gray-50); }
+.menu-button { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0px; border-radius: var(--radius-sm); background: transparent; color: var(--color-blue-ink); cursor: pointer; }
+.mobile-menu { border-top: 1px solid var(--color-gray-200); padding: var(--space-8) 0px var(--space-16); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Site footer
@@ -503,28 +404,19 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 1440px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 1440px !important; height: 157px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.site-footer { border-top: 1px solid #E2E8F0; padding: 48px 0; }
-.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
-.footer-inner { display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; }
-.stack { display: flex; flex-direction: column; gap: 16px; }
-.logo { font-size: 20px; line-height: 28px; font-weight: 600; color: #0B1F3A; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.site-footer { border-top: 1px solid var(--color-gray-200); padding: var(--space-48) 0px; }
+.container { max-width: 1120px; margin: 0px auto; padding: 0px var(--space-24); }
+.footer-inner { display: flex; justify-content: space-between; gap: var(--space-32); flex-wrap: wrap; }
+.stack { display: flex; flex-direction: column; gap: var(--space-16); }
+.logo { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--color-blue-ink); }
 p { font-size: 16px; line-height: 26px; }
 .caption { font-size: 12px; line-height: 16px; }
-.footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
-a { color: #2458E6; text-decoration: none; }
-.footer-link { font-size: 14px; line-height: 22px; color: #0B1F3A; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+.footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
+a { color: var(--color-blue-600); text-decoration: none; }
+.footer-link { font-size: 14px; line-height: 22px; color: var(--color-blue-ink); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Footer links
@@ -547,21 +439,12 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 255.69px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 255.69px !important; height: 60px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
-a { color: #2458E6; text-decoration: none; }
-.footer-link { font-size: 14px; line-height: 22px; color: #0B1F3A; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
+a { color: var(--color-blue-600); text-decoration: none; }
+.footer-link { font-size: 14px; line-height: 22px; color: var(--color-blue-ink); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Main navigation
@@ -592,26 +475,17 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 400.16px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 400.16px !important; height: 44px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.nav-links { display: flex; align-items: center; gap: 24px; }
-a { color: #2458E6; text-decoration: none; }
-.nav-link { font-size: 14px; line-height: 20px; font-weight: 600; color: #0B1F3A; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.nav-links { display: flex; align-items: center; gap: var(--space-24); }
+a { color: var(--color-blue-600); text-decoration: none; }
+.nav-link { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-ink); }
 .dropdown { position: relative; }
 button { font: inherit; color: inherit; }
-.dropdown-trigger { display: inline-flex; align-items: center; gap: 4px; height: 44px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: #0B1F3A; cursor: pointer; }
+.dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-ink); cursor: pointer; }
 svg { display: block; }
-.dropdown-menu { position: absolute; top: 48px; left: 0; z-index: 20; min-width: 224px; padding: 8px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 12px 32px rgba(11, 31, 58, 0.12); }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); box-shadow: var(--color-blue-ink-tint) 0px 12px 32px; }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Breadcrumb
@@ -629,23 +503,14 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 1072px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 1072px !important; height: 22px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
 ol { list-style: none; }
-.breadcrumb { display: flex; align-items: center; gap: 8px; font-size: 14px; line-height: 22px; }
-a { color: #2458E6; text-decoration: none; }
-.crumb { color: #2458E6; }
-.crumb-current { color: #0B1F3A; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+.breadcrumb { display: flex; align-items: center; gap: var(--space-8); font-size: 14px; line-height: 22px; }
+a { color: var(--color-blue-600); text-decoration: none; }
+.crumb { color: var(--color-blue-600); }
+.crumb-current { color: var(--color-blue-ink); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Tabs
@@ -666,22 +531,13 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 1072px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 1072px !important; height: 45px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.tabs { display: flex; gap: 4px; border-bottom: 1px solid #E2E8F0; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.tabs { display: flex; gap: var(--space-4); border-bottom: 1px solid var(--color-gray-200); }
 button { font: inherit; color: inherit; }
-.tab { height: 44px; padding: 0 16px; border: 0; border-bottom: 2px solid transparent; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: #0B1F3A; cursor: pointer; }
-.tab[aria-selected='true'] { color: #2458E6; border-bottom-color: #2458E6; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+.tab { height: 44px; padding: 0px var(--space-16); border-width: 0px 0px 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: none; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-ink); cursor: pointer; }
+.tab[aria-selected="true"] { color: var(--color-blue-600); border-bottom-color: var(--color-blue-600); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Feature card
@@ -704,25 +560,16 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 341.33px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 341.33px !important; height: 206px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.card { display: flex; flex-direction: column; gap: 12px; padding: 24px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 1px 2px rgba(11, 31, 58, 0.12); }
-.feature-icon { width: 24px; height: 24px; color: #0F8A8A; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.card { display: flex; flex-direction: column; gap: var(--space-12); padding: var(--space-24); background: var(--color-gray-50); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); box-shadow: var(--color-blue-ink-tint) 0px 1px 2px; }
+.feature-icon { width: 24px; height: 24px; color: var(--color-teal-500); }
 svg { display: block; }
-.tag-new { display: inline-flex; align-items: center; align-self: flex-start; height: 24px; padding: 0 8px; border-radius: 999px; background: #0F8A8A; color: #FFFFFF; font-size: 12px; line-height: 16px; }
+.tag-new { display: inline-flex; align-items: center; align-self: flex-start; height: 24px; padding: 0px var(--space-8); border-radius: 999px; background: var(--color-teal-500); color: var(--color-gray-50); font-size: 12px; line-height: 16px; }
 h3 { font-size: 20px; line-height: 28px; font-weight: 600; }
 p { font-size: 16px; line-height: 26px; }
 .text-sm { font-size: 14px; line-height: 22px; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Pricing card
@@ -749,29 +596,20 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 524px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 524px !important; height: 324px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.card { display: flex; flex-direction: column; gap: 12px; padding: 24px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 1px 2px rgba(11, 31, 58, 0.12); }
-.pricing-card { padding: 32px; gap: 16px; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.card { display: flex; flex-direction: column; gap: var(--space-12); padding: var(--space-24); background: var(--color-gray-50); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); box-shadow: var(--color-blue-ink-tint) 0px 1px 2px; }
+.pricing-card { padding: var(--space-32); gap: var(--space-16); }
 h3 { font-size: 20px; line-height: 28px; font-weight: 600; }
 p { font-size: 16px; line-height: 26px; }
 .price { font-size: 48px; line-height: 56px; font-weight: 700; }
 ul { list-style: none; }
-.plan-features { display: flex; flex-direction: column; gap: 8px; }
+.plan-features { display: flex; flex-direction: column; gap: var(--space-8); }
 .text-sm { font-size: 14px; line-height: 22px; }
-a { color: #2458E6; text-decoration: none; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: 8px; font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
-.btn-secondary { background: #FFFFFF; color: #2458E6; border-color: #2458E6; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+a { color: var(--color-blue-600); text-decoration: none; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms, color 160ms; }
+.btn-secondary { background: var(--color-gray-50); color: var(--color-blue-600); border-color: var(--color-blue-600); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Status badge
@@ -789,20 +627,11 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 102.11px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 102.11px !important; height: 24px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.badge { display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 999px; color: #FFFFFF; font-size: 12px; line-height: 16px; }
-.badge-success { background: #15803D; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.badge { display: inline-flex; align-items: center; height: 24px; padding: 0px var(--space-8); border-radius: 999px; color: var(--color-gray-50); font-size: 12px; line-height: 16px; }
+.badge-success { background: var(--color-success); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Inline alert
@@ -826,29 +655,20 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 1072px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 1072px !important; height: 112px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.alert { display: flex; align-items: flex-start; gap: 12px; padding: 16px; border: 1px solid #15803D; border-radius: 8px; background: #FFFFFF; color: #0B1F3A; }
-.alert-icon { flex: none; width: 24px; height: 24px; }
-.alert-icon-success { color: #15803D; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.alert { display: flex; align-items: flex-start; gap: var(--space-12); padding: var(--space-16); border: 1px solid var(--color-success); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-ink); }
+.alert-icon { flex: 0 0 auto; width: 24px; height: 24px; }
+.alert-icon-success { color: var(--color-success); }
 svg { display: block; }
-.stack { display: flex; flex-direction: column; gap: 16px; }
+.stack { display: flex; flex-direction: column; gap: var(--space-16); }
 p { font-size: 16px; line-height: 26px; }
-.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-a { color: #2458E6; text-decoration: none; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: 8px; font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
-.btn-sm { height: 36px; padding: 0 16px; }
-.btn-primary { background: #2458E6; color: #FFFFFF; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+.hero-actions { display: flex; gap: var(--space-12); flex-wrap: wrap; }
+a { color: var(--color-blue-600); text-decoration: none; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms, color 160ms; }
+.btn-sm { height: 36px; padding: 0px var(--space-16); }
+.btn-primary { background: var(--color-blue-600); color: var(--color-gray-50); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### New tag
@@ -866,19 +686,10 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 41.64px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 41.64px !important; height: 24px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.tag-new { display: inline-flex; align-items: center; align-self: flex-start; height: 24px; padding: 0 8px; border-radius: 999px; background: #0F8A8A; color: #FFFFFF; font-size: 12px; line-height: 16px; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.tag-new { display: inline-flex; align-items: center; align-self: flex-start; height: 24px; padding: 0px var(--space-8); border-radius: 999px; background: var(--color-teal-500); color: var(--color-gray-50); font-size: 12px; line-height: 16px; }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Not found state
@@ -901,29 +712,20 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 1072px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 1072px !important; height: 404px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.empty-state { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 96px 24px; border: 1px solid #E2E8F0; border-radius: 12px; text-align: center; }
-.empty-icon { width: 48px; height: 48px; color: #0F8A8A; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.empty-state { display: flex; flex-direction: column; align-items: center; gap: var(--space-16); padding: var(--space-96) var(--space-24); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); text-align: center; }
+.empty-icon { width: 48px; height: 48px; color: var(--color-teal-500); }
 svg { display: block; }
 h1 { font-size: 36px; line-height: 44px; font-weight: 700; }
 p { font-size: 16px; line-height: 26px; }
-a { color: #2458E6; text-decoration: none; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: 8px; font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
-.btn-ghost { background: transparent; color: #0B1F3A; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+a { color: var(--color-blue-600); text-decoration: none; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms, color 160ms; }
+.btn-ghost { background: transparent; color: var(--color-blue-ink); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
-### Plan comparison table
+### Feature table
 
 Table · 1 variant: Default
 States captured: Default
@@ -945,21 +747,12 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 1072px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 1072px !important; height: 186px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
 .table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 22px; }
-.th { padding: 12px 16px; border-bottom: 1px solid #E2E8F0; text-align: left; font-size: 14px; line-height: 20px; font-weight: 600; }
-.td { padding: 12px 16px; border-bottom: 1px solid #E2E8F0; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+.th { padding: var(--space-12) var(--space-16); border-bottom: 1px solid var(--color-gray-200); text-align: left; font-size: 14px; line-height: 20px; font-weight: 600; }
+.td { padding: var(--space-12) var(--space-16); border-bottom: 1px solid var(--color-gray-200); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Code block
@@ -979,16 +772,11 @@ tidewater publish</code></pre>
 ```
 
 ```css
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 1072px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 1072px !important; height: 98px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.code-block { padding: 16px 24px; border-radius: 8px; background: #0B1F3A; color: #FFFFFF; font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace; font-size: 14px; line-height: 22px; overflow-x: auto; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.code-block { padding: var(--space-16) var(--space-24); border-radius: var(--radius-sm); background: var(--color-blue-ink); color: var(--color-gray-50); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; line-height: 22px; overflow-x: auto; }
 pre code { font: inherit; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Resources dropdown
@@ -1010,21 +798,12 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 224px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 224px !important; height: 150px !important; flex: none !important; position: relative !important; inset: auto !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.dropdown-menu { position: absolute; top: 48px; left: 0; z-index: 20; min-width: 224px; padding: 8px; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; box-shadow: 0 12px 32px rgba(11, 31, 58, 0.12); }
-a { color: #2458E6; text-decoration: none; }
-.menu-item { display: flex; align-items: center; height: 44px; padding: 0 12px; border-radius: 8px; font-size: 14px; line-height: 22px; color: #0B1F3A; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-200); border-radius: var(--radius-md); box-shadow: var(--color-blue-ink-tint) 0px 12px 32px; }
+a { color: var(--color-blue-600); text-decoration: none; }
+.menu-item { display: flex; align-items: center; height: 44px; padding: 0px var(--space-12); border-radius: var(--radius-sm); font-size: 14px; line-height: 22px; color: var(--color-blue-ink); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Mobile menu
@@ -1048,21 +827,12 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 342px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 342px !important; height: 265px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.mobile-menu { border-top: 1px solid #E2E8F0; padding: 8px 0 16px; }
-a { color: #2458E6; text-decoration: none; }
-.mobile-link { display: flex; align-items: center; height: 48px; font-size: 16px; line-height: 26px; color: #0B1F3A; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.mobile-menu { border-top: 1px solid var(--color-gray-200); padding: var(--space-8) 0px var(--space-16); }
+a { color: var(--color-blue-600); text-decoration: none; }
+.mobile-link { display: flex; align-items: center; height: 48px; font-size: 16px; line-height: 26px; color: var(--color-blue-ink); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Avatar
@@ -1079,19 +849,10 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/289a0d23bcb06db4.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/dca72278fc2677ee.woff2') format('woff2'); font-weight: 500; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/f1d00656d90b0a8b.woff2') format('woff2'); font-weight: 600; font-style: normal; font-display: block; }
-@font-face { font-family: 'Inter'; src: url('http://localhost:4400/clean/runs/evalclean0/fonts/800be82f324a7281.woff2') format('woff2'); font-weight: 700; font-style: normal; font-display: block; }
-.dse-root { font-family: Inter, system-ui, sans-serif; font-size: 16px; color: rgb(11, 31, 58); line-height: 26px; letter-spacing: normal; display: flex; flex-direction: column; align-items: flex-start; width: 40px; background: rgb(255, 255, 255); }
-.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: 40px !important; height: 40px !important; flex: none !important; }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-* { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-.avatar { width: 40px; height: 40px; border-radius: 50%; background: #E2E8F0; }
-*::before { box-sizing: border-box; margin: 0; padding: 0; }
-*::before { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
-*::after { box-sizing: border-box; margin: 0; padding: 0; }
-*::after { animation: none !important !important; transition: none !important !important; caret-color: transparent !important !important; }
+* { box-sizing: border-box; margin: 0px; padding: 0px; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--color-gray-200); }
+::before { box-sizing: border-box; margin: 0px; padding: 0px; }
+::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ## Drift
@@ -1100,7 +861,7 @@ Nothing to collapse. 9 colors, 11 spacing steps, all on the grid.
 
 Proposed set: 9 colors, 11 spacing steps, 9 type styles. Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.
 
-Nothing drifts here. The system holds nine colors, nine type styles and 11 spacing steps, and all 11 steps sit on the grid. No colors sit near a neighbor, no type styles overlap and no component variants collapse. The proposed set matches what is already there, with two grays, 11 spacing steps and nine type styles. Every pair of text and background keeps its contrast ratio.
+Nothing drifts in this system. It is built from nine colors, nine type styles and 11 spacing steps, and every spacing step sits on the grid. No colors sit near a neighbor, no type styles overlap and no component variants need collapsing. The proposed set keeps the same nine type styles and 11 spacing steps, with two grays. Every pair of text and background keeps its contrast ratio.
 
 ## How this was made
 

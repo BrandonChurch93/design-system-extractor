@@ -23,6 +23,7 @@ P13, in progress. Done: the showcase script (D-063), EvalTable (D-064), the meta
 - stripe.com failed: timed out at 6 min inside capture (discover 60 s; each page about 65 s per viewport, mostly 40 state elements at about 1.5 s each; two pages at a time). Replaced by coinbase.com.
 - coinbase.com failed: an `open` state click navigated the page ("Execution context was destroyed"), and one element failed the run. The spec forbids following links during capture. Replaced by wise.com.
 - wise.com: discover took 80 s (2,000 sitemap URLs, template fingerprints); stopped by hand during capture.
+- Second Stripe run (pipeline:run, 15 min timeout, novelty capture but old previews): complete in 773 s. Discover 60, capture 270, tokens 14, components 109 (sequential naming), previews 314 (sequential), rest 3. Quality findings: drift "contrast not kept" because the constraint used measured raw ratios a clustered token pair can never reach (fixed, D-067); 36 of 120 previews live; design-system.md 1,104 KB and prompt.md 522 KB, mostly site headers' CSS custom properties and markup (decided: D-069).
 - Arithmetic: 12 pages × 2 viewports of state capture alone is about 12 minutes; previews at about 2.3 s a component reach 4 minutes at the 120 cap. The pipeline needs a time budget and faster state capture and previews.
 
 ### Carried into P13 (found in the P12 review)
@@ -86,6 +87,11 @@ P12 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-070 · A trigger never merges by name with an action control; the novelty key carries trigger and icon-only.
+- D-069 · Component code is its own rules with token variables; design-system.md and the whole prompt bound their code; the full code stays in each component's prompt.
+- D-068 · Matched CSS read from the CSSOM: one query per selector instead of a CDP call per node (31 s to 1 s on a large page).
+- D-067 · The drift constraint holds pairs that pass at today's token values.
+- D-066 · Run-wide novelty, a time budget with labeled fallbacks, parallel naming and render checks, links never followed and navigation survived.
 - D-065 · Page metadata: one helper for title, description, preview and indexing; 404 titled Not found; unfinished runs use the global description; a test reads copy.md.
 - D-064 · EvalTable lays out by its own width and labels its stacked cells.
 - D-063 · Showcase script: the content route lists exactly its runs; `--dry-run`; replacement and multiple-of-six rules; own worker locally with the build meter; cost is the run's record.

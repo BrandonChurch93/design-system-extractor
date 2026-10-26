@@ -159,6 +159,8 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
     for (let i = 1; i < group.length; i++) {
       const a = find(group[0]!);
       const b = group[i]!;
+      // A trigger never joins an action control, whatever the model called the two (D-054, D-070).
+      if (representative(a.items).fp.trigger !== representative(b.items).fp.trigger) continue;
       if (stylesAgree(draftOf(a), draftOf(b))) {
         parent.set(b, a);
         mergedByStyle++;
@@ -316,8 +318,10 @@ async function statesOf(ctx: RunContext, w: Working, id: string, first: Item, in
       break;
     }
     if (!out.has(state) && interactive && state !== 'scrolled') {
-      const overCap = w.items.some((it) => it.interactive && !it.revealed && !it.vc.stateCaptured.has(it.el.d));
-      out.set(state, { state, captured: false, reason: overCap ? 'over capture cap' : 'no instance found', delta: [] });
+      const probed = w.items.filter((it) => it.interactive && !it.revealed);
+      const unreachable = probed.some((it) => it.vc.stateUnreachable.has(it.el.d));
+      const overCap = probed.some((it) => !it.vc.stateCaptured.has(it.el.d) && !it.vc.stateUnreachable.has(it.el.d));
+      out.set(state, { state, captured: false, reason: unreachable ? 'not reachable' : overCap ? 'over capture cap' : 'no instance found', delta: [] });
     }
   }
   for (const it of ordered) {

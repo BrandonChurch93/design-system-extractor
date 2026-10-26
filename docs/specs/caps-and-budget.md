@@ -71,6 +71,7 @@ A blocked result is `200 { blocked, detail, runsLeft }`; the client navigates to
 ## Run-level guards (worker)
 
 - Hard timeout `DSE_RUN_TIMEOUT_MS`; on expiry the run is `failed` with the timeout detail from `docs/design/copy.md` and whatever stages completed stay in the document.
+- Time budget (D-066), so a large site completes inside the timeout: each elastic step stops spending at its share of the timeout, measured from the run's start, and takes its lighter path. Template fingerprints at 12% (the rest grouped by path pattern), state probing at 45% (later pages keep their default capture, matched CSS and markup; their other states read `over capture cap`), component naming at 70% (the deterministic names), render checks at 88% (the crop, reason `not checked in time`), the narrative at 94% (the template). The shares live in `packages/pipeline/src/budget.ts`; each cut is logged as an event.
 - Page-candidate cap 300, fingerprint fetch cap 60, state-capture cap 40 per page per viewport, component cap 120, preview CSS cap 200 KB, screenshot height cap 8,000 px, snapshot cap 6,000 elements.
 - Concurrency: one run at a time per worker process (`concurrency: 1` in BullMQ); Railway runs one instance in v1. Two pages in flight within a run.
 - Memory: a browser context per run; pages closed after capture; the browser restarted every 25 runs or when RSS exceeds 1.5 GB.

@@ -23,6 +23,22 @@ function fence(code: string, lang: 'html' | 'css'): string {
   return `${ticks}${lang}\n${body}\n${ticks}`;
 }
 
+/** Snippet caps in the whole-system documents; a component's own prompt keeps all of its code (D-069). */
+export const SNIPPET_CAP = { html: 3000, css: 4000 } as const;
+/** The component CSS a whole-system prompt carries in all, in grid order. */
+export const PROMPT_CODE_BUDGET = 48_000;
+
+/** Code cut at a tag or declaration boundary under the cap, with a comment naming what was kept. */
+export function shorten(code: string, lang: 'html' | 'css', cap: number = SNIPPET_CAP[lang]): string {
+  const body = code.trim();
+  if (body.length <= cap) return body;
+  const head = body.slice(0, cap);
+  const cut = Math.max(head.lastIndexOf('\n'), lang === 'css' ? Math.max(head.lastIndexOf('; '), head.lastIndexOf('}')) + 1 : head.lastIndexOf('>') + 1);
+  const kept = head.slice(0, cut > cap / 2 ? cut : cap).trimEnd();
+  const note = `shortened · ${kept.length.toLocaleString('en-US')} of ${body.length.toLocaleString('en-US')} characters · the component's own prompt has all of it`;
+  return lang === 'css' ? `${kept}\n/* ${note} */` : `${kept}\n<!-- ${note} -->`;
+}
+
 /** Our own prose must keep the voice; fenced site code is data and is left out of the check. */
 function assertProse(md: string, file: string): string {
   assertVoice(md.replace(/(`{3,4})[\s\S]*?\1/g, ''), file);
@@ -58,8 +74,8 @@ function componentSection(c: Component, names: Map<string, string>, depth = 3): 
     '',
     DISCLAIMER,
   ];
-  if (c.code.html) lines.push('', fence(c.code.html, 'html'));
-  if (c.code.css) lines.push('', fence(c.code.css, 'css'));
+  if (c.code.html) lines.push('', fence(shorten(c.code.html, 'html'), 'html'));
+  if (c.code.css) lines.push('', fence(shorten(c.code.css, 'css'), 'css'));
   return lines.join('\n');
 }
 
@@ -121,7 +137,7 @@ export function designSystemMd(doc: RunDocumentPartial, set: ExportSet): string 
   return assertProse(out.join('\n').replace(/\n{3,}/g, '\n\n'), 'design-system.md');
 }
 
-function contract(c: Component, names: Map<string, string>): string {
+function contract(c: Component, names: Map<string, string>, css: string | null): string {
   const captured = c.states.filter((s) => s.captured && s.state !== 'default');
   return [
     `### ${c.name}`,
@@ -130,8 +146,23 @@ function contract(c: Component, names: Map<string, string>): string {
     `States: ${['Default', ...captured.map((s) => stateLabels[s.state])].join(', ')}.`,
     ...captured.filter((s) => s.delta.length).map((s) => `- ${stateLabels[s.state]}: ${s.delta.map((x) => `${x.property} ${x.to}`).join('; ')}`),
     `Tokens: ${c.tokensUsed.map((u) => `${names.get(u.tokenId) ?? u.tokenId} for ${u.property}`).join(', ') || 'none'}.`,
-    ...(c.code.css ? ['', fence(c.code.css, 'css')] : []),
+    ...(css ? ['', fence(css, 'css')] : []),
   ].join('\n');
+}
+
+/** Contracts with their CSS: all of it for one component; for the whole system, shortened and within a budget (D-069). */
+function contracts(comps: Component[], names: Map<string, string>, single: boolean): string[] {
+  let left = PROMPT_CODE_BUDGET;
+  let spent = false;
+  const out = comps.flatMap((c) => {
+    if (single) return [contract(c, names, c.code.css || null), ''];
+    const css = c.code.css ? shorten(c.code.css, 'css') : '';
+    const fits = Boolean(css) && css.length <= left;
+    if (fits) left -= css.length;
+    else if (css) spent = true;
+    return [contract(c, names, fits ? css : null), ''];
+  });
+  return spent ? [...out, 'Code for the components above without a CSS block is in each component\'s own prompt.', ''] : out;
 }
 
 /** The prompt for the whole system, or for one component (`componentId`). */
@@ -154,7 +185,7 @@ export function promptMd(doc: RunDocumentPartial, set: ExportSet, runUrl: string
     '',
     componentId ? '## Component' : '## Components',
     '',
-    ...comps.flatMap((c) => [contract(c, names), '']),
+    ...contracts(comps, names, Boolean(componentId)),
     '## Rules',
     '',
     '- Use only these tokens. Do not invent colors, sizes, spacing, radii or shadows.',

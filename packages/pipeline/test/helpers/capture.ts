@@ -21,7 +21,7 @@ export function fakeCapture(pages: FakePage[], frameworkHint?: FrameworkHint): C
       viewports: Object.fromEntries(
         (['desktop', 'mobile'] as const)
           .filter((v) => p[v])
-          .map((v) => [v, { viewport: v, snapshot: p[v]!, candidates: findCandidates(p[v]!, v), selectors: Object.fromEntries(p[v]!.elements.map((e) => [e.d, `${e.tag}:nth(${e.index})`])), matched: {}, markup: {}, states: {}, stateCaptured: new Set<string>(), tabOrder: [], motionMain: {}, motionReduced: {}, sheets: { media: [], fonts: [], hasReducedMotionRule: false, crossOrigin: [] }, opens: [], screenshot: { key: 'x.png', width: 1440, height: 900, cut: false, png: Buffer.alloc(0) }, submitAttempts: 0, submittedMarkers: 0, dialogs: [] }]),
+          .map((v) => [v, { viewport: v, snapshot: p[v]!, candidates: findCandidates(p[v]!, v), selectors: Object.fromEntries(p[v]!.elements.map((e) => [e.d, `${e.tag}:nth(${e.index})`])), matched: {}, markup: {}, states: {}, stateCaptured: new Set<string>(), stateUnreachable: new Set<string>(), tabOrder: [], motionMain: {}, motionReduced: {}, sheets: { media: [], fonts: [], hasReducedMotionRule: false, crossOrigin: [] }, opens: [], screenshot: { key: 'x.png', width: 1440, height: 900, cut: false, png: Buffer.alloc(0) }, submitAttempts: 0, submittedMarkers: 0, dialogs: [] }]),
       ),
     })),
   } as unknown as CaptureOutput;

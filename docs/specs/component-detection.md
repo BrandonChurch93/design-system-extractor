@@ -62,7 +62,7 @@ For each element candidate:
    - Size word: by height bucket relative to the most-used variant: `Small` below it, `Large` above it, nothing for the most-used size.
    - Example, the test set of 3 colors × 2 sizes where the larger size is more used: `Primary`, `Primary small`, `Secondary`, `Secondary small`, `Ghost`, `Ghost small`.
    The model's `variantHint` may rename variants only within these words (it may pick `Outlined` over `Secondary`, never invent a word).
-4. **Cross-page merge**: clusters from different pages merge when they share the exact group key, or when their representative fingerprints pass the style merge and their names from the model pass are equal. Same-named clusters that fail the style merge go to the collision call only when their `baseTokens` agree (as in the style merge); a site's own class names that set two clusters apart keep them apart (D-052).
+4. **Cross-page merge**: clusters from different pages merge when they share the exact group key, or when their representative fingerprints pass the style merge and their names from the model pass are equal. Same-named clusters that fail the style merge go to the collision call only when their `baseTokens` agree (as in the style merge); a site's own class names that set two clusters apart keep them apart (D-052). A trigger and an action control never merge by name, whatever the model called them (D-070).
 
 A cluster becomes a component when it has at least one instance and is not noise: noise is a container with no interactive descendant, no text, and no image (a layout wrapper), or an element candidate whose area is over 60% of the viewport.
 

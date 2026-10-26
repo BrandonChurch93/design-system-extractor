@@ -234,6 +234,7 @@ export const capturedReasonLabels: Record<CapturedReason, string> = {
   diff: 'render differed by {pct} %',
   'css-too-large': 'styles too large',
   'fonts-unavailable': 'fonts unavailable',
+  'not-checked': 'not checked in time',
 };
 
 export const checkLabels: Record<Check, string> = {

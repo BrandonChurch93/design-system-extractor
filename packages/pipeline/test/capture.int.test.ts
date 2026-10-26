@@ -223,3 +223,95 @@ describe('the page guards', () => {
     await ctx.close();
   });
 });
+
+describe('security · capture never follows a link', () => {
+  it('stops link navigation and window.open while the page still handles the click (D-066)', async () => {
+    const context = await browser.newContext();
+    const p = await context.newPage();
+    await p.addInitScript(pageGuards);
+    await p.route('http://guard.test/**', (route) =>
+      route.fulfill({ contentType: 'text/html', body: route.request().url().endsWith('/next') ? '<p>next</p>' : `<a id="menu" href="/next" aria-haspopup="true" onclick="document.body.dataset.opened = '1'">Menu</a>` }),
+    );
+    await p.goto('http://guard.test/');
+    await p.click('#menu');
+    await p.waitForTimeout(300);
+    expect(p.url()).toBe('http://guard.test/');
+    expect(await p.evaluate(() => document.body.dataset.opened)).toBe('1');
+    expect(await p.evaluate(() => window.open('http://guard.test/next'))).toBeNull();
+    await context.close();
+  });
+});
+
+describe('a page that navigates itself during state capture', () => {
+  it('keeps what was measured, marks the rest not reachable, and completes the run (D-066)', async () => {
+    const { createServer } = await import('node:http');
+    const away = `<!doctype html><title>Away</title><h1>Away</h1>`;
+    const home = `<!doctype html><title>Home</title><style>button{padding:12px 20px;margin:8px;border:1px solid #333;background:#fff}button:hover{background:#eee}</style>
+      <main><h1>Home</h1><button class="a">First</button><button class="b" onmouseover="location.href='/away'">Leaves</button><button class="c">Third</button><button class="d">Fourth</button></main>`;
+    const site = createServer((req, res) => {
+      if (req.url === '/robots.txt') return void res.writeHead(200, { 'content-type': 'text/plain' }).end('User-agent: *\nAllow: /\n');
+      if (req.url === '/away') return void res.writeHead(200, { 'content-type': 'text/html' }).end(away);
+      if (req.url === '/') return void res.writeHead(200, { 'content-type': 'text/html' }).end(home);
+      res.writeHead(404).end();
+    });
+    await new Promise<void>((ok) => site.listen(4196, ok));
+    try {
+      const dir = mkdtempSync(join(tmpdir(), 'dse-capture-leaves-'));
+      const url = 'http://localhost:4196/';
+      const ctx = new MemoryRunContext(
+        'leavestest',
+        { url, include: [], pageCap: 12, viewports: ['desktop'], userAgent: 'DesignSystemExtractorBot/1.0 (+http://localhost:3000/how-it-works)', allowPrivateHosts: ['localhost:4196'], timeoutMs: 300_000, keepIntermediate: false, byo: false },
+        new ModelClient({ mode: 'replay', recordingsDir, strictReplay: false }),
+        new LocalStorage(dir),
+        { id: 'leavestest', url, host: 'localhost:4196', status: 'queued', createdAt: new Date().toISOString(), pipelineVersion: '1.0.0', viewports: ['desktop'] },
+      );
+      let captured: CaptureOutput | null = null;
+      const outcome = await runPipeline(ctx, { browser, through: 'capture', onCapture: (c) => (captured = c) });
+      expect(outcome.status).toBe('complete');
+      const vc = (captured as unknown as CaptureOutput).pages[0]!.viewports.desktop!;
+      const named = (cls: string) => vc.snapshot.elements.find((e) => e.tag === 'button' && e.cls.includes(cls))!.d;
+      expect(vc.states[named('a')]?.some((r) => r.state === 'hover')).toBe(true);
+      expect([...vc.stateUnreachable]).toEqual(expect.arrayContaining([named('c'), named('d')]));
+      expect(vc.stateCaptured.has(named('c'))).toBe(false);
+      expect(ctx.events.some((e) => e.level === 'warn' && e.message.includes('navigated during state capture'))).toBe(true);
+    } finally {
+      site.close();
+    }
+  }, 120_000);
+});
+
+describe('matched CSS from the CSSOM (D-068)', () => {
+  it('reads author rules in order, conditions, pseudo-elements, inline styles and unreadable sheets, never capture rules', async () => {
+    const { matchedFromCssom } = await import('../src/capture/cssom-match');
+    const context = await browser.newContext({ viewport: { width: 1000, height: 600 } });
+    const p = await context.newPage();
+    await p.route('http://site.test/**', (route) =>
+      route.fulfill({
+        contentType: 'text/html',
+        body: `<!doctype html><link rel="stylesheet" href="http://cdn.test/site.css"><style>
+          .btn { padding: 8px; color: red }
+          @media (min-width: 900px) { .btn { padding: 12px } }
+          @media (max-width: 400px) { .btn { padding: 2px } }
+          .btn::before { content: "x" }
+          input::placeholder { color: gray }
+          .other { color: blue }
+        </style><button class="btn" data-dse-id="b" style="margin: 4px">Go</button><input data-dse-id="i" placeholder="Name">`,
+      }),
+    );
+    await p.route('http://cdn.test/**', (route) => route.fulfill({ contentType: 'text/css', body: '.btn { border: 1px solid black }' }));
+    await p.goto('http://site.test/');
+    await (await p.addStyleTag({ content: '.btn { animation: none !important }' })).evaluate((el) => (el as Element).setAttribute('data-dse-capture', ''));
+    // The stylesheet from another origin cannot be read in the page; the worker supplies its text.
+    const asked: string[] = [];
+    const m = await matchedFromCssom(p, ['b', 'i'], async (href) => (asked.push(href), '.btn { border: 1px solid black }'));
+    const b = m.b!;
+    expect(b.rules.map((r) => r.declarations.map((d) => `${d.name}: ${d.value}`).join('; '))).toEqual(['border: 1px solid black', 'padding: 8px; color: red', 'padding: 12px']);
+    expect(b.rules[2]!.media).toEqual(['(min-width: 900px)']);
+    expect(b.inline).toEqual([{ name: 'margin', value: '4px', important: false }]);
+    expect(b.pseudo.map((x) => x.pseudo)).toEqual(['before']);
+    expect(m.i!.pseudo.map((x) => [x.pseudo, x.rules[0]!.declarations[0]!.value])).toEqual([['placeholder', 'gray']]);
+    expect(JSON.stringify(m)).not.toContain('animation');
+    expect(asked).toEqual(['http://cdn.test/site.css']);
+    await context.close();
+  });
+});

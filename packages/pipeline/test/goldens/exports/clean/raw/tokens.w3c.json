@@ -13,32 +13,32 @@
     "blue-ink": {
       "$type": "color",
       "$value": "#0B1F3A",
-      "$description": "blue-ink · 984 uses"
+      "$description": "blue-ink · 904 uses"
     },
     "blue-600": {
       "$type": "color",
       "$value": "#2458E6",
-      "$description": "blue-600 · 151 uses"
+      "$description": "blue-600 · 100 uses"
     },
     "teal-500": {
       "$type": "color",
       "$value": "#0F8A8A",
       "$description": "teal-500 · 44 uses"
     },
-    "blue-overlay": {
+    "blue-ink-tint": {
       "$type": "color",
       "$value": "#0B1F3A1F",
-      "$description": "blue-overlay · 25 uses"
+      "$description": "blue-ink-tint · 17 uses"
     },
     "gray-50": {
       "$type": "color",
       "$value": "#FFFFFF",
-      "$description": "gray-50 · 138 uses"
+      "$description": "gray-50 · 130 uses"
     },
     "gray-200": {
       "$type": "color",
       "$value": "#E2E8F0",
-      "$description": "gray-200 · 247 uses"
+      "$description": "gray-200 · 207 uses"
     },
     "success": {
       "$type": "color",

@@ -1,11 +1,12 @@
 import { gzipSync } from 'node:zlib';
-import type { CDPSession, Page as PwPage } from 'playwright';
+import type { Page as PwPage } from 'playwright';
 import type { FrameworkHint, Page as DocPage, SelectedPage, Viewport } from '@dse/schema';
 import { viewportSize } from '@dse/schema';
 import { capCandidates, findCandidates, noveltyKey, type ElementCandidate } from '../capture/candidates';
-import { matchedCss, openCssSession, type MatchedStyles } from '../capture/matched-css';
+import { matchedFromCssom } from '../capture/cssom-match';
+import type { MatchedStyles } from '../capture/matched-css';
 import { scanSheets, type SheetScan } from '../capture/sheet-scan';
-import { buildSnapshot, compactSnapshot, descendants, type Snapshot } from '../capture/snapshot';
+import { buildSnapshot, compactSnapshot, descendants, type SnapElement, type Snapshot } from '../capture/snapshot';
 import { buildSelectors, styleProps, takeSnapshot } from '../capture/snapshot-script';
 import { activeState, cropOf, hoverState, neutral, readStyles, scrolledState, styleDelta, tabWalk, type StateRecord, type StyleDelta } from '../capture/states';
 import type { RunContext } from '../context';
@@ -18,6 +19,7 @@ import { markupOf } from '../capture/markup';
 import type { Throttle } from '../crawl/throttle';
 import { BlockedError, CancelledError } from '../errors';
 import { keys } from '../storage/keys';
+import { overBudget } from '../budget';
 
 export const SNAPSHOT_CAP = 6000;
 export const CANDIDATE_CAP = 400;
@@ -35,6 +37,63 @@ export function varsIn(matched: Record<string, MatchedStyles>): string[] {
   }
   return [...names];
 }
+/**
+ * What earlier pages of this run already measured, per viewport (D-066). A preliminary cluster's
+ * matched CSS, states, popup and reduced-motion reading are taken where it is first seen; later
+ * pages measure only clusters they add, so a header on twelve pages is measured once.
+ */
+type NoveltyKind = 'css' | 'states' | 'opens' | 'motion';
+
+/**
+ * The keys earlier pages measured, read in page order: a page decides from what pages before it
+ * chose, waiting for their choices, never from whichever page finished first. A run therefore
+ * measures the same clusters every time, whatever the timing (D-066).
+ */
+export class NoveltyLedger {
+  private slots = new Map<string, { done: Promise<Set<string>>; resolve: (keys: Set<string>) => void }>();
+
+  private slot(kind: NoveltyKind, viewport: Viewport, page: number) {
+    const id = `${kind}|${viewport}|${page}`;
+    let s = this.slots.get(id);
+    if (!s) {
+      let resolve!: (keys: Set<string>) => void;
+      const done = new Promise<Set<string>>((r) => (resolve = r));
+      s = { done, resolve };
+      this.slots.set(id, s);
+    }
+    return s;
+  }
+
+  async before(kind: NoveltyKind, viewport: Viewport, page: number): Promise<Set<string>> {
+    const sets = await Promise.all(Array.from({ length: page }, (_, j) => this.slot(kind, viewport, j).done));
+    return new Set(sets.flatMap((x) => [...x]));
+  }
+
+  commit(kind: NoveltyKind, viewport: Viewport, page: number, keys: Iterable<string>): void {
+    this.slot(kind, viewport, page).resolve(new Set(keys));
+  }
+
+  /** A page that ended early (a failed load, an error) answers with nothing, so later pages never wait on it. */
+  settle(page: number, viewports: Viewport[]): void {
+    for (const kind of ['css', 'states', 'opens', 'motion'] as const) for (const v of viewports) this.commit(kind, v, page, []);
+  }
+}
+
+/** The novelty key with the subtree's size: one header is not another header with twice the content. */
+function cssKey(s: Snapshot, e: SnapElement): string {
+  let n = 0;
+  const stack = [...e.kids];
+  while (stack.length) {
+    n++;
+    stack.push(...s.elements[stack.pop()!]!.kids);
+  }
+  return `${noveltyKey(e)}|${n}`;
+}
+
+/** The text of a stylesheet the page cannot read, fetched once per run. */
+type CssText = (href: string) => Promise<string | null>;
+const SHEET_MAX_BYTES = 2_000_000;
+
 export const SCREENSHOT_MAX_HEIGHT = 8000;
 export const TAB_WALK_MAX = 80;
 
@@ -54,6 +113,8 @@ export type ViewportCapture = {
   markup: Record<string, Markup>;
   states: Record<string, StateRecord[]>;
   stateCaptured: Set<string>;
+  /** Chosen for states, but the page navigated away first (D-066). */
+  stateUnreachable: Set<string>;
   tabOrder: string[];
   motionMain: Record<string, MotionProbe>;
   motionReduced: Record<string, MotionProbe>;
@@ -106,6 +167,15 @@ export const pageGuards = () => {
   HTMLFormElement.prototype.requestSubmit = function requestSubmit() {
     w.__dseSubmits++;
   };
+  // Never follow a link: a probe's click still reaches the page's handlers, but not the address bar (D-066).
+  const stay = (e: Event) => {
+    const a = e.target instanceof Element ? e.target.closest('a[href]') : null;
+    const href = a?.getAttribute('href') ?? '';
+    if (a && !href.startsWith('#') && !href.toLowerCase().startsWith('javascript:')) e.preventDefault();
+  };
+  document.addEventListener('click', stay, true);
+  document.addEventListener('auxclick', stay, true);
+  window.open = () => null;
 };
 
 async function scrollPass(page: PwPage) {
@@ -126,26 +196,31 @@ function motionOf(st: { 'animation-name': string; 'transition-duration': string;
   return { animation, transition };
 }
 
-export function chooseForStates(snapshot: Snapshot, cands: ElementCandidate[]): string[] {
+/**
+ * One element per preliminary cluster first, then by area (capture-and-states.md, Caps). Clusters an
+ * earlier page already measured are left out, and only a viewport's first page fills by area (D-066).
+ */
+export function chooseForStates(snapshot: Snapshot, cands: ElementCandidate[], measured: Set<string> = new Set(), fill = true): string[] {
   const interactive = cands.filter((c) => c.interactive).map((c) => snapshot.byDse.get(c.dse)!).filter(Boolean);
   const seen = new Set<string>();
   const first: string[] = [];
   const rest: { d: string; area: number }[] = [];
   for (const e of interactive) {
     const k = noveltyKey(e);
-    if (!seen.has(k)) {
+    if (!seen.has(k) && !measured.has(k)) {
       seen.add(k);
       first.push(e.d);
-    } else rest.push({ d: e.d, area: e.w * e.h });
+    } else if (fill) rest.push({ d: e.d, area: e.w * e.h });
   }
   rest.sort((a, b) => b.area - a.area);
   return [...first, ...rest.map((r) => r.d)].slice(0, STATE_CAP);
 }
 
-async function openStates(page: PwPage, snapshot: Snapshot, cands: ElementCandidate[], viewport: Viewport, session: CDPSession, rootId: number): Promise<OpenCapture[]> {
+async function openStates(page: PwPage, snapshot: Snapshot, cands: ElementCandidate[], viewport: Viewport, cssText: CssText, seen: Set<string>, opened: Set<string>, out: OpenCapture[], stillHere: () => Promise<boolean>): Promise<void> {
   const triggers = cands
     .map((c) => snapshot.byDse.get(c.dse)!)
     .filter((e) => e && e.role !== 'tab' && ('aria-haspopup' in e.aria || 'aria-controls' in e.aria || e.aria['aria-expanded'] === 'false'))
+    .filter((e) => !seen.has(noveltyKey(e)) && !opened.has(noveltyKey(e)))
     .filter((e) => !(e.tag === 'button' && e.type === 'submit') && !(e.tag === 'input' && e.type === 'submit'));
   // On phones the menu button in the header comes first, so the mobile menu is captured.
   if (viewport === 'mobile') {
@@ -155,10 +230,9 @@ async function openStates(page: PwPage, snapshot: Snapshot, cands: ElementCandid
     };
     triggers.sort((a, b) => Number(inHeader(b.d) && b.tag === 'button') - Number(inHeader(a.d) && a.tag === 'button'));
   }
-  const out: OpenCapture[] = [];
   let n = 0;
   for (const t of triggers) {
-    if (out.length >= OPEN_CAP) break;
+    if (out.length >= OPEN_CAP || !(await stillHere())) break;
     await neutral(page);
     const before = await readStyles(page, t.d);
     const box = await page.evaluate((d) => {
@@ -199,9 +273,10 @@ async function openStates(page: PwPage, snapshot: Snapshot, cands: ElementCandid
         const after = await readStyles(page, t.d);
         const crop = await cropOf(page, t.d, root.d);
         const rootCrop = await cropOf(page, root.d, undefined, 0);
-        const matched = await matchedCss(session, rootId, sub.elements.map((e) => e.d));
+        const matched = await matchedFromCssom(page, sub.elements.map((e) => e.d), cssText);
         const markup = (await page.evaluate(markupOf, { items: [{ d: root.d, vars: varsIn(matched) }], cap: MARKUP_CAP }))[root.d];
         out.push({ trigger: t.d, revealed: root.d, snapshot: sub, matched, markup, crop, rootCrop, triggerDelta: styleDelta(before, after) });
+        opened.add(noveltyKey(t));
       }
       await page.evaluate(() => document.querySelector('[data-dse-open]')?.removeAttribute('data-dse-open'));
     }
@@ -209,10 +284,9 @@ async function openStates(page: PwPage, snapshot: Snapshot, cands: ElementCandid
     await page.mouse.click(1, 1);
     await page.waitForTimeout(150);
   }
-  return out;
 }
 
-async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle: Throttle, page: SelectedPage, viewport: Viewport): Promise<{ vc: ViewportCapture; finalUrl: string; looksLikeLogin: boolean; status: number; html: string } | { error: string; status: number; html: string }> {
+async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle: Throttle, page: SelectedPage, viewport: Viewport, ledger: NoveltyLedger, index: number, cssText: CssText): Promise<{ vc: ViewportCapture; finalUrl: string; looksLikeLogin: boolean; status: number; html: string } | { error: string; status: number; html: string }> {
   const p = await newPage(rc, viewport);
   const dialogs: string[] = [];
   p.on('dialog', (d) => {
@@ -241,8 +315,8 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
       const r = await scrolledState(p, d);
       if (r) scrolled.set(d, r);
     }
-
-    await p.addStyleTag({ content: freezeCss });
+    // Marked so the matched CSS never takes capture's own rules for the site's.
+    await (await p.addStyleTag({ content: freezeCss })).evaluate((el) => (el as Element).setAttribute('data-dse-capture', ''));
     await p.waitForTimeout(50);
 
     const vp = viewportSize[viewport];
@@ -253,18 +327,20 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     const shotKey = keys.pageScreenshot(ctx.runId, page.id, viewport);
     await ctx.files.put(shotKey, png, { contentType: 'image/png' });
     if (cut) await ctx.emit({ stage: 'capture', message: `${page.path} · cut at ${SCREENSHOT_MAX_HEIGHT} px` });
-
     const snapshot = buildSnapshot(await p.evaluate(takeSnapshot, { props: [...styleProps], cap: SNAPSHOT_CAP, keep: [] }));
     const candidates = capCandidates(findCandidates(snapshot, viewport), CANDIDATE_CAP);
     const selectors = await p.evaluate(buildSelectors, candidates.map((c) => c.dse));
 
     // Matched CSS for every candidate and its descendants.
-    const session = await p.context().newCDPSession(p);
-    const rootId = await openCssSession(session);
     const need = new Set<string>();
+    const cssSeen = await ledger.before('css', viewport, index);
+    const cssRead = new Set<string>();
     for (const c of candidates) {
       const e = snapshot.byDse.get(c.dse);
       if (!e) continue;
+      const k = cssKey(snapshot, e);
+      if (cssSeen.has(k) || cssRead.has(k)) continue;
+      cssRead.add(k);
       need.add(e.d);
       const stack = [...e.kids];
       while (stack.length) {
@@ -273,7 +349,8 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
         stack.push(...k.kids);
       }
     }
-    const matched = await matchedCss(session, rootId, [...need]);
+    ledger.commit('css', viewport, index, cssRead);
+    const matched = await matchedFromCssom(p, [...need], cssText);
     const subtree = (d: string): string[] => {
       const e = snapshot.byDse.get(d);
       if (!e) return [];
@@ -290,17 +367,38 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
       items: candidates.map((c) => ({ d: c.dse, vars: varsIn(Object.fromEntries(subtree(c.dse).map((d) => [d, matched[d]!]).filter(([, m]) => m))) })),
       cap: MARKUP_CAP,
     });
-
-    // States.
-    const chosen = chooseForStates(snapshot, candidates);
+    // States. A page that navigates away mid-probe keeps what was measured; the rest is not reachable (D-066).
+    // Past the states share of the run's time, a page keeps its default capture only (D-066).
+    const lite = overBudget(ctx, 'states');
+    const chosen = lite ? [] : chooseForStates(snapshot, candidates, await ledger.before('states', viewport, index), index === 0);
+    ledger.commit('states', viewport, index, chosen.map((d) => noveltyKey(snapshot.byDse.get(d)!)));
     const chosenSet = new Set(chosen);
+    const unreachable = new Set<string>();
     const states: Record<string, StateRecord[]> = {};
     const add = (d: string, r: StateRecord | null) => {
       if (r) (states[d] ??= []).push(r);
     };
+    const marker = await p.evaluate(() => ((window as unknown as { __dseDoc: number }).__dseDoc = Math.random()));
+    let left = false;
+    const stillHere = async () => {
+      if (left) return false;
+      left = !(await p.evaluate((m) => (window as unknown as { __dseDoc?: number }).__dseDoc === m, marker).catch(() => false));
+      return !left;
+    };
+    /** Runs one probe; a navigation shows as a thrown error or a new document, and ends the probing. */
+    const probe = async <T>(fn: () => Promise<T>): Promise<T | null> => {
+      if (left) return null;
+      try {
+        const r = await fn();
+        return (await stillHere()) ? r : null;
+      } catch (e) {
+        if (!(await stillHere())) return null;
+        throw e;
+      }
+    };
     const base = new Map<string, string[] | null>();
     for (const d of chosen) base.set(d, await readStyles(p, d));
-    const walk = await tabWalk(p, chosenSet);
+    const walk = (lite ? null : await probe(() => tabWalk(p, chosenSet))) ?? { order: [], focus: new Map() };
     for (const [d, f] of walk.focus) add(d, { state: 'focus', crop: f.crop, delta: styleDelta(base.get(d) ?? null, f.styles), reachedByKeyboard: true });
     let hovers = 0;
     let focusFallback = 0;
@@ -308,25 +406,37 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     for (const d of chosen) {
       if (await ctx.cancelled()) throw new CancelledError();
       const b = base.get(d) ?? null;
-      const h = await hoverState(p, d, b);
-      if (h) hovers++;
-      add(d, h);
-      if (!walk.focus.has(d)) {
-        await neutral(p);
-        await p.evaluate((x) => (document.querySelector(`[data-dse-id="${x}"]`) as HTMLElement | null)?.focus({ preventScroll: false }), d);
-        const styles = await readStyles(p, d);
-        const crop = await cropOf(p, d);
-        add(d, { state: 'focus', crop, delta: styleDelta(b, styles), reachedByKeyboard: false });
-        focusFallback++;
+      const done = await probe(async () => {
+        const h = await hoverState(p, d, b);
+        if (h) hovers++;
+        add(d, h);
+        if (!walk.focus.has(d)) {
+          await neutral(p);
+          await p.evaluate((x) => (document.querySelector(`[data-dse-id="${x}"]`) as HTMLElement | null)?.focus({ preventScroll: false }), d);
+          const styles = await readStyles(p, d);
+          const crop = await cropOf(p, d);
+          add(d, { state: 'focus', crop, delta: styleDelta(b, styles), reachedByKeyboard: false });
+          focusFallback++;
+        }
+        const a = await activeState(p, d, b);
+        if (a) actives++;
+        add(d, a);
+        return true;
+      });
+      if (!done) {
+        unreachable.add(d);
+        delete states[d];
       }
-      const a = await activeState(p, d, b);
-      if (a) actives++;
-      add(d, a);
     }
     for (const [d, r] of scrolled) add(d, r);
-    const opens = await openStates(p, snapshot, candidates, viewport, session, rootId);
-    await session.detach().catch(() => {});
-
+    const opens: OpenCapture[] = [];
+    const opened = new Set<string>();
+    try {
+      if (!lite) await probe(async () => openStates(p, snapshot, candidates, viewport, cssText, await ledger.before('opens', viewport, index), opened, opens, stillHere));
+    } finally {
+      ledger.commit('opens', viewport, index, opened);
+    }
+    if (left) await ctx.emit({ stage: 'capture', level: 'warn', message: `${page.path} · ${vp.width} · the page navigated during state capture · ${unreachable.size} elements not reachable` });
     const submitAttempts = await p.evaluate(() => (window as unknown as { __dseSubmits: number }).__dseSubmits ?? 0);
     const submittedMarkers = await p.evaluate(() => document.querySelectorAll('[data-submitted]').length);
     await ctx.emit({
@@ -367,7 +477,8 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
         matched,
         markup,
         states,
-        stateCaptured: chosenSet,
+        stateCaptured: new Set(chosen.filter((d) => !unreachable.has(d))),
+        stateUnreachable: unreachable,
         tabOrder: walk.order,
         motionMain,
         motionReduced: {},
@@ -389,8 +500,17 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
 }
 
 /** The reduced-motion probe: the same page under prefers-reduced-motion, measuring what still moves. */
-async function probeReducedMotion(rc: RunBrowserContext, throttle: Throttle, page: SelectedPage, vc: ViewportCapture): Promise<void> {
-  const moving = Object.entries(vc.motionMain).filter(([, m]) => m.animation || m.transition);
+async function probeReducedMotion(rc: RunBrowserContext, throttle: Throttle, page: SelectedPage, vc: ViewportCapture, ledger: NoveltyLedger, index: number): Promise<void> {
+  const key = (d: string) => noveltyKey(vc.snapshot.byDse.get(d)!);
+  const probed = await ledger.before('motion', vc.viewport, index);
+  const moving: [string, MotionProbe][] = [];
+  const keys = new Set<string>();
+  for (const [d, m] of Object.entries(vc.motionMain)) {
+    if (!(m.animation || m.transition) || !vc.snapshot.byDse.has(d) || probed.has(key(d))) continue;
+    moving.push([d, m]);
+    keys.add(key(d));
+  }
+  ledger.commit('motion', vc.viewport, index, keys);
   if (!moving.length) return;
   const p = await newPage(rc, vc.viewport);
   await p.addInitScript(pageGuards);
@@ -441,13 +561,27 @@ export async function capture(ctx: RunContext, deps: CaptureDeps): Promise<Captu
   let consecutiveFailures = 0;
   let challenged = 0;
   let done = 0;
+  let budgetNoted = false;
+  const sheets = new Map<string, Promise<string | null>>();
+  const cssText: CssText = (href) => {
+    let t = sheets.get(href);
+    if (!t) {
+      t = guardedFetch(href, { userAgent: ctx.config.userAgent, allow: ctx.config.allowPrivateHosts, retryDelays: [], timeoutMs: 8000, maxBytes: SHEET_MAX_BYTES }).then(
+        (r) => (r.ok ? r.body.toString('utf8') : null),
+        () => null,
+      );
+      sheets.set(href, t);
+    }
+    return t;
+  };
+  const ledger = new NoveltyLedger();
 
   const one = async (i: number) => {
     const page = pages[i]!;
     const r = results[i]!;
     for (const viewport of ctx.config.viewports) {
       if (await ctx.cancelled()) throw new CancelledError();
-      const res = await captureViewport(ctx, deps.browser, deps.throttle, page, viewport);
+      const res = await captureViewport(ctx, deps.browser, deps.throttle, page, viewport, ledger, i, cssText);
       if ('error' in res) {
         r.status = 'failed';
         r.failedReason = res.error;
@@ -460,7 +594,14 @@ export async function capture(ctx: RunContext, deps: CaptureDeps): Promise<Captu
       r.nodeCount = Math.max(r.nodeCount, res.vc.snapshot.nodeCount);
       r.title = res.vc.snapshot.title || r.title;
       r.h1 = res.vc.snapshot.h1 || r.h1;
-      await probeReducedMotion(deps.browser, deps.throttle, page, res.vc);
+      if (!overBudget(ctx, 'states')) await probeReducedMotion(deps.browser, deps.throttle, page, res.vc, ledger, i);
+      else {
+        ledger.commit('motion', viewport, i, []);
+        if (!budgetNoted) {
+          budgetNoted = true;
+          await ctx.emit({ stage: 'capture', level: 'warn', message: 'time budget for states reached · later pages captured without states' });
+        }
+      }
     }
     done++;
     if (r.status === 'failed') {
@@ -502,7 +643,11 @@ export async function capture(ctx: RunContext, deps: CaptureDeps): Promise<Captu
   const worker = async () => {
     while (next < pages.length) {
       const i = next++;
-      await one(i);
+      try {
+        await one(i);
+      } finally {
+        ledger.settle(i, ctx.config.viewports);
+      }
     }
   };
   await Promise.all([worker(), worker()]);

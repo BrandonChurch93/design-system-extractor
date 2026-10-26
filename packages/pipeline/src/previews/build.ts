@@ -23,7 +23,7 @@ export type PreviewInput = {
   policy: CssPolicy;
 };
 
-export type PreviewDoc = { html: string; css: string; markup: string; bytes: number; tooLarge: boolean; report: SanitizeReport };
+export type PreviewDoc = { html: string; css: string; /** The component's own rules, without the preview's fonts and root. */ rules: string; markup: string; bytes: number; tooLarge: boolean; report: SanitizeReport };
 
 const inherited = ['font-family', 'font-size', 'color', 'line-height', 'letter-spacing'] as const;
 const placeholderTags = new Set(['img', 'picture', 'video', 'iframe', 'canvas', 'object', 'embed']);
@@ -202,7 +202,7 @@ export function buildPreview(input: PreviewInput): PreviewDoc {
   const links = input.fonts.googleLinks.map((href) => `<link rel="stylesheet" href="${href.replace(/"/g, '&quot;')}">`).join('');
   const html = `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${csp}"><style>html,body{margin:0;background:transparent}</style>${links}<style>\n${css.replace(/<\/style/gi, '<\\/style')}\n</style></head><body><div class="dse-root">${sanitized.html}</div></body></html>`;
   const bytes = Buffer.byteLength(css, 'utf8');
-  return { html, css, markup: sanitized.html, bytes, tooLarge: bytes > CSS_CAP_BYTES, report: sanitized.report };
+  return { html, css, rules: ruleText, markup: sanitized.html, bytes, tooLarge: bytes > CSS_CAP_BYTES, report: sanitized.report };
 }
 
 /** The same document plus one rule that applies a state's computed-style diff to the root element. */

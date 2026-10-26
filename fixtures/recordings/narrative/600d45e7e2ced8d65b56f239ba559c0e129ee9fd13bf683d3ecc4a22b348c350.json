@@ -2,7 +2,7 @@
   "purpose": "narrative",
   "size": "large",
   "model": "claude-sonnet-5-5",
-  "text": "{\"narrative\":\"Three spacing values, 1, 2 and 6, sit off the 4 px grid, all on /. One pair of colors sits close enough to read as near-duplicates. The proposed set maps the three off-grid values to their nearest steps on the 4 px grid and folds the near-duplicate color into its neighbor. It keeps four grays and both type styles as they are. Every pair of text and background keeps its contrast ratio.\",\"designSystemIntro\":\"This design system was extracted from localhost:4198 across one page. It holds six colors, two type styles, zero spacing steps and three components.\"}",
+  "text": "{\"narrative\": \"The spacing leaks. Three values, 1, 2 and 6, sit off the 4 px grid, all on /. The colors also hold one near-duplicate pair. The proposed set maps the three off-grid values to their nearest steps and folds the near-duplicate into a set of four grays. The two type styles stay as they are. Every pair of text and background keeps its contrast ratio.\", \"designSystemIntro\": \"This design system was extracted from localhost:4198 across one page. It holds six colors, two type styles and three components.\"}",
   "usage": {
     "input_tokens": 239,
     "cache_creation_input_tokens": 0,
@@ -11,7 +11,7 @@
       "ephemeral_5m_input_tokens": 0,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 197,
+    "output_tokens": 177,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-26T09:29:31.970Z",
+  "recordedAt": "2026-10-26T19:46:58.501Z",
   "request": "{\"host\":\"localhost:4198\",\"colors\":6,\"typeStyles\":2,\"spacingSteps\":0,\"components\":3,\"pages\":1,\"headline\":\"3 spacing values, 3 of them off the 4 px grid.\",\"supporting\":[],\"numbers\":[{\"kind\":\"spacing\",\"before\":3,\"after\":0,\"caption\":\"Three sit off the 4 px grid: 1, 2 and 6, on /.\"}],\"findings\":{\"nearDuplicateColors\":1,\"offGrid\":[1,2,6],\"variantCollapses\":0,\"typeNearDuplicates\":0},\"proposal\":{\"grays\":4,\"spacingSteps\":0,\"typeStyles\":2,\"contrastKept\":true}}"
 }

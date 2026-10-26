@@ -73,6 +73,14 @@ describe('the proposed set', () => {
     expect(r.contrastKept).toBe(true);
     expect(r.colors.every((c) => c.contrastKept)).toBe(true);
   });
+  it('does not hold the proposal to a pair that already fails at token values (D-067)', () => {
+    const toks = set.map(([h, u], i) => color(`g${i}`, h, u));
+    // Measured on raw colors at 4.6:1, but #767676 on #EBEBEB is 3.9:1 at token values: no proposal can keep it.
+    toks[3]!.contrastPairs = [{ fg: 'g3', bg: 'g1', ratio: 4.6, large: false, where: '/' }];
+    const r = proposeColors(toks);
+    expect(r.grays).toEqual({ before: 7, after: 5 });
+    expect(r.contrastKept).toBe(true);
+  });
   it('keeps every semantic color and folds a rare brand color into its neighbor', () => {
     const r = proposeColors([color('w', '#FFFFFF', 100), color('blue', '#2458E6', 500, 'brand'), color('blue2', '#2E63ED', 2, 'brand'), color('ok', '#15803D', 3, 'semantic')]);
     expect(r.colors.map((c) => [c.name, c.absorbs])).toEqual([

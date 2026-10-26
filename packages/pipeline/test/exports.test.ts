@@ -109,3 +109,19 @@ describe('the exports module', () => {
     expect(names).toEqual(expect.arrayContaining(['tokens.css', 'design-system.md', 'prompt.md', 'README.txt', expect.stringMatching(/^components\/\w+\/preview\.html$/), expect.stringMatching(/^crops\/\w+\.png$/)]));
   });
 });
+
+describe('component CSS with token variables (D-069)', () => {
+  it('writes a value that maps as its token variable, by property, and leaves the rest', async () => {
+    const { withTokenVars } = await import('../src/exports/substitute');
+    const t = {
+      colors: [{ name: 'teal-500', value: '#0F8A8A', group: 'brand' as const, usage: 1 }],
+      space: [{ name: 'space-8', value: 8 }, { name: 'space-16', value: 16 }],
+      radius: [{ name: 'radius-md', value: 8, pill: false }],
+      shadow: [{ name: 'shadow-sm', value: '0 1px 2px rgba(0, 0, 0, 0.08)' }],
+    };
+    const css = '.tag { background: rgb(15, 138, 138); color: #fff; padding: 0 8px; border-radius: 8px; width: 8px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08); --x: 8px; }\n@media (min-width: 8px) { .a { margin: 16px 12px; } }';
+    expect(withTokenVars(css, t)).toBe(
+      '.tag { background: var(--color-teal-500); color: #fff; padding: 0 var(--space-8); border-radius: var(--radius-md); width: 8px; box-shadow: var(--shadow-sm); --x: 8px; }\n@media (min-width: 8px) { .a { margin: var(--space-16) 12px; } }',
+    );
+  });
+});
