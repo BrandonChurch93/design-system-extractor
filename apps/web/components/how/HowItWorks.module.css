@@ -113,6 +113,15 @@
   padding: 0;
 }
 
+/* The table lays out by its own width (the catalog shows it in a narrow column at desktop widths, D-064). */
+.tableWrap {
+  container-type: inline-size;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;
@@ -162,26 +171,14 @@
   gap: var(--dse-space-2);
 }
 
-@media (max-width: 1023px) {
+@container (max-width: 999px) {
   .table td.mono {
     white-space: normal;
   }
 }
 
-@media (max-width: 640px) {
-  .pair {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .stepRow {
-    grid-template-columns: 36px minmax(0, 1fr);
-  }
-
-  .stepRow > :last-child {
-    grid-column: 2;
-    justify-self: start;
-  }
-
+/* Stacked rows lose the header row, so each measured cell names itself. */
+@container (max-width: 559px) {
   .table thead {
     display: none;
   }
@@ -207,5 +204,34 @@
   .table td {
     padding: 0 0 var(--dse-space-1);
     border: 0;
+  }
+
+  .table td.mono {
+    padding-top: var(--dse-space-2);
+  }
+
+  .table td.mono::before {
+    content: attr(data-label);
+    display: block;
+    font-family: var(--dse-type-label-family);
+    font-size: var(--dse-type-label-size);
+    line-height: var(--dse-type-label-line);
+    font-weight: var(--dse-type-label-weight);
+    color: var(--dse-muted);
+  }
+}
+
+@media (max-width: 640px) {
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stepRow {
+    grid-template-columns: 36px minmax(0, 1fr);
+  }
+
+  .stepRow > :last-child {
+    grid-column: 2;
+    justify-self: start;
   }
 }

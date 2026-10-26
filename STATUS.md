@@ -18,7 +18,7 @@ Start P13: read `docs/specs/showcase.md`, `docs/design/pages.md` (meta, OG, inde
 
 ### Carried into P13 (found in the P12 review)
 
-- EvalTable (How it works) chooses its layout from the viewport, not its own width: in the catalog's 746 px desktop column at a 1440 viewport it keeps the no-wrap rule and overflows its card into the phone frame. On phones it hides the header row, so each fixture's two `precision · recall` lines and its live count carry no label. Fix: lay out by container width (as RecentRunRow, D-059) and label the stacked cells from the header strings; log D-063; the how-it-works 390 golden and the catalog golden change.
+- Done (D-064): EvalTable lays out by its own width, labels its stacked cells, wraps only at interpuncts; how-it-works 820 and 390 goldens and the catalog goldens updated, 1440 unchanged.
 - The visual gate's `maxDiffPixelRatio` of 0.001 is loose on tall pages (a 1440 run page is about 7,750 px of tolerance; the catalog about 68,000): a StatStrip at 0 instead of 9, and a price line moved, both passed. Decide in P13 or P14 whether tall pages get an absolute pixel bound.
 
 ### P12 self-review (flag on: `qa/billing` at 1440, 820, 390; flag off: qa:visual unchanged from P11; catalog v2 sections)
@@ -77,6 +77,8 @@ P12 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-064 · EvalTable lays out by its own width and labels its stacked cells.
+- D-063 · Showcase script: the content route lists exactly its runs; `--dry-run`; replacement and multiple-of-six rules; own worker locally with the build meter; cost is the run's record.
 - D-062 · A plan card under 280 px wide sets "per month" beneath the price, so one row shares one layout.
 - D-061 · QA starts every page at `qaNow`; `run-390-after-select` is the one page golden updated in P12 (its masked meta line wraps by the clock); `/qa/` ignored from the root so `tests/qa/` is committed.
 - D-060 · The flag is read from the build-time public value everywhere; the flag-off test is a unit half and a browser half; `qa:billing` serves a flag-on build on 3101; without a session TopNav shows Sign in and paid plans open the SignInSheet; the billing page shows the visitor's free day.

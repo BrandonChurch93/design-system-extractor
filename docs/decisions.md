@@ -520,3 +520,10 @@ Decision:
 - Showcase runs are kept off the public budget by the worker (P10); their cost is the run's own `cost` record and the script's table, not a model-call purpose.
 Affects: `docs/specs/showcase.md`, `docs/specs/architecture.md`, `apps/web/app/api/admin/showcase/content/route.ts`, `packages/pipeline/src/db/runs.ts`, `scripts/showcase/`.
 
+## D-064 · EvalTable lays out by its own width and labels its stacked cells
+
+Date: 2026-10-26 · Context: found in the P12 catalog review, a P11 defect. EvalTable chose its layout from the viewport: in the catalog's desktop column (746 px at a 1440 viewport) it kept the no-wrap desktop rule and ran out of its card into the phone frame. On phones it hid the header row, so each fixture's two `precision · recall` lines and its live count had no label. Narrow cells also broke inside "precision 1.00" and "26 of 27".
+Decision: the table is a size container and lays out by its own width, as RecentRunRow does (D-059): one line per value from 1000 px, wrapping values from 560 px, stacked rows below 560 px. Stacked, each measured cell shows its column name (`Tokens`, `Components`, `Live previews`, the header strings) above its value. A value wraps only at its interpunct; "precision 1.00", "recall 1.00" and "26 of 27" never break. The text is unchanged.
+Reasoning: a number without its label is not a measurement a reader can use; the component must hold its layout wherever it is placed.
+Affects: `docs/design/components.md`, `apps/web/components/how/`, the how-it-works goldens at 820 and 390, the catalog goldens.
+

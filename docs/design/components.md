@@ -163,7 +163,7 @@ Phone: Compare renders the two CompareColumns stacked, then a StateCard-style no
 
 **PipelineStep** · A numbered ring (36 px, 1 px `ink` border, mono number), `h3` step name, `body-sm` `muted` description, and a Pill at right: `soft` "Deterministic" or `inverse` "Model · Haiku" / "Model · Sonnet". Rules between steps draw as they enter the viewport.
 
-**EvalTable** · Columns: Fixture site, What it proves, Tokens (mono "precision 1.00 · recall 0.98"), Components (the same shape), Live previews (mono "38 of 46"). Values come from `fixtures/results.json`, never typed by hand.
+**EvalTable** · Columns: Fixture site, What it proves, Tokens (mono "precision 1.00 · recall 0.98"), Components (the same shape), Live previews (mono "38 of 46"). Values come from `fixtures/results.json`, never typed by hand. Lays out by its own width (D-064): stacked below 560 px, each measured cell labeled with its column name; a value wraps only at its interpunct.
 
 ## Flagged v2 surfaces (BILLING_ENABLED only)
 
