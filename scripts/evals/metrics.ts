@@ -149,3 +149,16 @@ export function scoreComponents(expected: ExpectedFixture, doc: RunDocumentParti
     states: { value: { rate: round3(stateRate), captured: got, expected: wanted, misses: stateMisses }, summary: `${stateRate.toFixed(3)} · ${got} of ${wanted}${stateMisses.length ? ` · missing ${stateMisses.slice(0, 8).join(', ')}` : ''}`, pass: (f) => stateRate >= f.states },
   };
 }
+
+/** Live previews over components; shown on How it works as "Live previews · 38 of 46". */
+export function scoreLiveRate(doc: RunDocumentPartial): Metric {
+  const comps = doc.components ?? [];
+  const live = comps.filter((c) => c.preview.mode === 'live').length;
+  const rate = comps.length ? live / comps.length : 0;
+  const captured = comps.filter((c) => c.preview.mode !== 'live').map((c) => `${c.name} (${c.preview.capturedReason ?? 'captured'}${c.preview.diffPct !== undefined ? ` ${c.preview.diffPct} %` : ''})`);
+  return {
+    value: { rate: round3(rate), live, total: comps.length, captured },
+    summary: `${rate.toFixed(3)} · ${live} of ${comps.length}${captured.length ? ` · captured ${captured.join(', ')}` : ''}`,
+    pass: (f) => rate >= f.liveRate,
+  };
+}

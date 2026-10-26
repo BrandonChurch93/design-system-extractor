@@ -1,6 +1,6 @@
 // pnpm evals [--through <stage>]: runs the five eval fixtures through the pipeline in replay mode
 // and scores them against expected.json (docs/evals.md). Writes fixtures/results.json.
-import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { allowedPrivateHosts, ExpectedFixture, Stage } from '@dse/schema';
@@ -10,9 +10,10 @@ import { defaultRecordingsDir, ModelClient, type ModelMode } from '@dse/pipeline
 import { DevSpendMeter } from '@dse/pipeline/models/meter';
 import { PIPELINE_VERSION, runPipeline, stageOrder } from '@dse/pipeline/run';
 import { evalFixtures, floors, type EvalFixture } from './evals/fixtures';
-import { scoreComponents, scoreSelection, scoreTokens, type FixtureResult, type Metric } from './evals/metrics';
+import { scoreComponents, scoreLiveRate, scoreSelection, scoreTokens, type FixtureResult, type Metric } from './evals/metrics';
 import { deltaE, parseCssColor } from '@dse/pipeline/color/parse';
 import { startFixtureServer } from './fixtures-serve';
+import { startStorageServer } from './storage-serve';
 
 const { values } = parseArgs({ options: { through: { type: 'string' }, only: { type: 'string' }, print: { type: 'boolean', default: false }, 'prune-recordings': { type: 'boolean', default: false }, fallback: { type: 'boolean', default: false } } });
 const through = values.through ? Stage.parse(values.through) : undefined;
@@ -31,6 +32,10 @@ try {
   server = await startFixtureServer(4100);
 }
 
+const evalsDir = resolve(root, '.dse/evals');
+mkdirSync(evalsDir, { recursive: true });
+const storagePort = 4400;
+const storageServer = await startStorageServer(evalsDir, storagePort);
 const browser = await launchBrowser();
 const results: FixtureResult[] = [];
 const usedRecordings = new Set<string>();
@@ -51,7 +56,7 @@ for (const name of only) {
     runId,
     { url, include: [], pageCap: 12, viewports: ['desktop', 'mobile'], userAgent: process.env.DSE_USER_AGENT ?? 'DesignSystemExtractorBot/1.0', allowPrivateHosts: allowedPrivateHosts(), timeoutMs: 600_000, keepIntermediate: true, byo: false },
     models,
-    new LocalStorage(outDir),
+    new LocalStorage(outDir, `http://localhost:${storagePort}/${name}`),
     { id: runId, url, host: 'localhost:4100', status: 'queued', createdAt: new Date().toISOString(), pipelineVersion: PIPELINE_VERSION, viewports: ['desktop', 'mobile'] },
     { info: () => {}, warn: () => {}, error: (o, m) => console.error(m, o) },
   );
@@ -67,12 +72,14 @@ for (const name of only) {
   if (reached('select')) metrics.selection = scoreSelection(expected, doc);
   if (reached('tokens')) metrics.tokens = scoreTokens(expected, doc, (a, b) => deltaE(parseCssColor(a)!, parseCssColor(b)!));
   if (reached('components')) Object.assign(metrics, scoreComponents(expected, doc));
+  if (reached('previews')) metrics.liveRate = scoreLiveRate(doc);
   if (values.print) console.log(name, (doc.pages ?? []).map((p) => `${p.path} ${p.reason}`), JSON.stringify(metrics.tokens?.value ?? null), JSON.stringify(ctx.events.filter((e) => e.stage === 'components').map((e) => [e.message, e.data])));
   results.push({ name, seconds: Math.round((Date.now() - started) / 1000), metrics });
   writeFileSync(resolve(outDir, 'run.json'), JSON.stringify(doc, null, 2));
 }
 await browser.close();
 server?.close();
+storageServer.close();
 
 // Score against the floors.
 const rows: string[] = [];

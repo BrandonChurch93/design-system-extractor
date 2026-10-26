@@ -10,27 +10,28 @@ None.
 
 ## Current phase
 
-P6 · Preview fidelity and sanitization. Started 2026-10-25.
+P7 · Checks. Started 2026-10-26.
 
 ## Next action
 
-Start P6: read `docs/specs/preview-fidelity.md` in full (and the CSP parts of `docs/specs/architecture.md`), then build `packages/pipeline/src/previews/` (markup from the snapshot, CSS from matched rules scoped to the preview, custom properties resolved, fonts, the sanitizer and its second pass, upload then render against the storage URL, pixelmatch against the default crop, the live-or-captured decision with reasons, per-state and per-variant preview files) and the `previews` stage, the app's sandboxed preview iframe and CSP header builder, and `pnpm test:security`; then the live-rate metric and `evals:gate` through previews.
+Start P7: read `docs/specs/checks.md` in full and the checks lines of `docs/design/copy.md`, then build `packages/pipeline/src/checks/` (contrast with compositing and the crop-sampling fallback, focus visible from the focus state, tap target at 390, label present, reduced motion from the probe), applicability, the per-run summary and by-check lists, the `checks` stage and its event; unit tables for each check, the detail-template test, and the planted-check metric in evals; then `evals:gate` through checks.
 
 ## Phase checklist
 
-P6 exit criteria (from `docs/plan.md`), plus the standing gate items:
+P7 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
-- [ ] Live rates meet the thresholds on the clean and css-in-js fixtures (`pnpm evals --through previews`), and every fixture reports its rate.
-- [ ] The security suite passes every case and asserts zero outbound requests outside the allowlist and zero script execution in the sandbox (`pnpm test:security`).
-- [ ] The messy fixture's unfaithful component (the promo card) is `captured` with the `diff` reason; the oversized-CSS unit test yields `css-too-large`.
-- [ ] Component `code` (html, css) filled from the preview builder.
-- [ ] `evals:gate` runs `--through previews`; from P6 on every gate includes `pnpm test:security`.
-- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm verify:all`, `pnpm qa:design` reviewed for touched pages (the preview iframe component in the catalog), commit naming P6, STATUS updated.
+- [ ] Planted check accuracy is 100% on every fixture (`pnpm evals --through checks`): every planted failure found, no planted pass flagged.
+- [ ] Contrast math tests against the design system's own pairs and the WCAG sample pairs; background compositing with alpha layers and a gradient fallback.
+- [ ] Focus, tap target, label and reduced-motion unit tables pass.
+- [ ] A test asserts every rendered check detail matches a template in `checks.md`.
+- [ ] `evals:gate` runs `--through checks`.
+- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, `pnpm qa:design` reviewed for touched pages, commit naming P7, STATUS updated.
 
-Notes carried into P6: components carry `preview` as a captured crop and empty `code` from P5; variant crops are at `variants/{variantId}/default.png`; revealed dropdowns have no page source crop (their default crop is the open-state crop).
+Notes carried into P7: checks apply per component and, per `CheckResult.variantId`, per variant where a variant can fail on its own (messy's warning badge, the newsletter input among inputs, the live badge's animation); contrast pairs are on the color tokens (D-051); motion probes are `motionMain` and `motionReduced` per element, `sheets.hasReducedMotionRule` per capture; focus records carry `reachedByKeyboard`; tap target reads mobile instances.
 
 ## Gates passed
 
+- P6 · Preview fidelity and sanitization · 2026-10-26 · live rates clean 0.963, messy 0.903, tailwind 0.963, css-in-js 0.963, library 0.955 (floors 0.90, 0.85, 0.90, 0.75, 0.90) · messy promo card captured with diff · security suite (37 cases, worker and app sandbox, zero requests off the allowlist, no script) · CSP builder tested · 250 KB CSS yields styles too large · D-053 logged with documents fixed · DOMPurify 3.4.17 for advisories in 3.4.16 · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green with test:security.
 - P5 · Component detection · 2026-10-25 · components P/R 1.000 / 1.000 on clean, messy, library and 0.963 / 0.963 on tailwind and css-in-js (floors 0.92 / 0.90 and 0.88 / 0.87) · variants and states above floors · fallback run passes with valid names · variant naming, cross-page merge, classification table, clustering and model-call tests · provenance and crops integration test · D-052 logged with documents fixed · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green · build spend $0.04.
 - P4 · Token clustering · 2026-10-25 · token precision and recall 1.000 on all five fixtures (`evals:gate`, replay) · fallback names valid and unique on every fixture (`evals --fallback`) · color naming recorded, model-call fallbacks tested · clustering, classification, naming, base inference, shadows, type roles unit tests · tokens integration test · D-051 logged with documents fixed · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green · build spend $0.0038.
 - P3 · Crawler, selection and capture · 2026-10-25 · selection exact on all five fixtures (`evals:gate`, replay) · capture, blocked-state, private-range, politeness, form and dialog, select model-call tests green (unit and integration) · expected.json complete for all five fixtures · D-040 to D-050 logged with documents fixed · catalog unchanged (qa:visual against goldens, qa:design reviewed at three viewports) · axe zero violations · verify:all green. Fixed during the gate: nested `run.mjs` runs lost the record of which variables came from `.env.local`, so `verify:all` ran evals live once ($0.0002); now kept and tested (`scripts/test/run-env.test.ts`).
@@ -42,6 +43,7 @@ Notes carried into P6: components carry `preview` as a captured crop and empty `
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-053 · Previews made exact: markup and variables kept by capture, the root keeps its page box on its ground, rules without media wrappers, alignment-tolerant comparison, CSS px sizes, a storage server for local runs, jsdom 29.
 - D-052 · Component clustering made exact: base class tokens and families, guarded style merge, look merge, variant rules, classification readings, collision guard, provenance and state details, popups opened at scroll 0, recordings with request text and retries.
 - D-051 · Token rules made exact: base 8 tried before 4, ARIA semantic context, hue bands, naming and collision rules, usage as occurrences, contrast pair collection, `evals --fallback`; messy expectations corrected.
 - D-050 · Rule classification tries specific forms first: toggle before button; breadcrumb, pagination and tabs before nav.
@@ -83,6 +85,7 @@ Things implemented differently from the spec, with the decision id that explains
 - Dev helpers: `pnpm exec tsx scripts/shot.ts <url> <out.png> [w] [h]` and `scripts/tile.ts` to cut tall screenshots for review.
 - Fixture authoring aids (need `pnpm fixtures:serve` or start the server themselves through the pipeline): `pnpm exec tsx scripts/fixtures-inventory.ts <site> [--where=10,18] [--color=#HEX,...]` prints every raw token value, the ΔE 2.3 clusters and the drift near-duplicate pairs; `scripts/fixtures-candidates.ts <site> [desktop|mobile]` prints every element candidate with its rules, box and states. Re-run both after any fixture change and keep `expected.json` in step (D-046, D-047).
 
+- jsdom is 29.1.1: jsdom 30 needs Node 22.22 (D-053). `pnpm exec tsx scripts/previews-inspect.ts <fixture> <outDir>` renders a fixture run's previews beside their crops after `pnpm evals --through previews`.
 - Node 22.14, pnpm 9.15.9, TypeScript 5.9.3 (the native 7.x compiler is not yet supported by Next.js tooling), ESLint 9 (ESLint 10 is not supported by the React, jsx-a11y and import plugins that `eslint-config-next` uses), Next.js 16.4, React 19.3, Zod 4.6, Vitest 5, Playwright 1.64 with its Chromium.
 - Internal packages `@dse/schema` and `@dse/pipeline` are consumed as TypeScript source; the worker, MCP and CLI bundles inline them with tsup.
 - Root scripts load `.env.local` (or `DOTENV_FILE`) through `scripts/run.mjs` without overriding variables already set, so `env DSE_MODEL_MODE=live pnpm evals` wins.
@@ -97,6 +100,7 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-26 · Gate passed · P6 · live rates above floors, security suite green, verify:all green.
 - 2026-10-25 · Gate passed · P5 · components at or above floors on all five fixtures, fallback valid, verify:all green.
 - 2026-10-25 · Gate passed · P4 · tokens 1.000 / 1.000 on all fixtures, fallback names valid, verify:all green.
 - 2026-10-25 · Gate passed · P3 · selection exact, capture and blocked-state tests, expected.json complete, verify:all green.

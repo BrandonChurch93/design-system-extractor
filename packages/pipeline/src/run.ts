@@ -10,6 +10,7 @@ import { discover, type DiscoverResult } from './stages/discover';
 import { select } from './stages/select';
 import { tokens } from './stages/tokens';
 import { components } from './stages/components';
+import { previews } from './stages/previews';
 
 export const PIPELINE_VERSION = '1.0.0';
 
@@ -89,8 +90,12 @@ export async function runPipeline(ctx: RunContext, deps: RunDeps): Promise<RunOu
     if (!reached('components', deps.through)) return ending;
     await checkCancel();
 
-    await components(ctx, captured, extracted);
+    const detected = await components(ctx, captured, extracted);
     if (!reached('previews', deps.through)) return ending;
+    await checkCancel();
+
+    await previews(ctx, captured, detected.components, detected.sources, deps.browser);
+    if (!reached('checks', deps.through)) return ending;
     await checkCancel();
 
     return ending;

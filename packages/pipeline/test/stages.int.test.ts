@@ -9,12 +9,15 @@ import { launchBrowser } from '../src/crawl/browser';
 import { ModelClient } from '../src/models/client';
 import { runPipeline } from '../src/run';
 import { startFixtureServer } from '../../../scripts/fixtures-serve';
+import { startStorageServer } from '../../../scripts/storage-serve';
+import type { Server } from 'node:http';
 
 const recordingsDir = resolve(import.meta.dirname, '../../../fixtures/recordings');
 let browser: Browser;
 let server: Awaited<ReturnType<typeof startFixtureServer>> | null = null;
 let ctx: MemoryRunContext;
 let storage: LocalStorage;
+let storageServer: Server;
 
 beforeAll(async () => {
   try {
@@ -24,20 +27,22 @@ beforeAll(async () => {
   }
   browser = await launchBrowser();
   const url = 'http://localhost:4100/sites/clean/';
-  const dir = mkdtempSync(join(tmpdir(), 'dse-tokens-'));
+  const dir = mkdtempSync(join(tmpdir(), 'dse-stages-'));
+  storageServer = await startStorageServer(dir, 4403);
   ctx = new MemoryRunContext(
     'tokenstest',
     { url, include: [], pageCap: 12, viewports: ['desktop', 'mobile'], userAgent: 'DesignSystemExtractorBot/1.0 (+http://localhost:3000/how-it-works)', allowPrivateHosts: allowedPrivateHosts({ DSE_ALLOW_PRIVATE_HOSTS: 'localhost:4100' }), timeoutMs: 600_000, keepIntermediate: false, byo: false },
     new ModelClient({ mode: 'replay', recordingsDir, strictReplay: true }),
-    (storage = new LocalStorage(dir)),
+    (storage = new LocalStorage(dir, 'http://localhost:4403')),
     { id: 'tokenstest', url, host: 'localhost:4100', status: 'queued', createdAt: new Date().toISOString(), pipelineVersion: '1.0.0', viewports: ['desktop', 'mobile'] },
   );
-  await runPipeline(ctx, { browser, through: 'components' });
+  await runPipeline(ctx, { browser, through: 'previews' });
 }, 300_000);
 
 afterAll(async () => {
   await browser?.close();
   server?.close();
+  storageServer?.close();
 });
 
 describe('the tokens stage on the clean fixture', () => {
@@ -104,5 +109,29 @@ describe('the components stage on the clean fixture', () => {
   it('logs the component count and the model use', () => {
     const lines = ctx.events.filter((e) => e.stage === 'components').map((e) => e.message);
     expect(lines[0]).toMatch(/^components · 27 found from [\d,]+ element candidates · 27 by model$/);
+  });
+});
+
+describe('the previews stage on the clean fixture', () => {
+  it('makes nearly every component live, stores each preview and its states, and fills the code', async () => {
+    const comps = ctx.document.components!;
+    const live = comps.filter((c) => c.preview.mode === 'live');
+    expect(live.length / comps.length).toBeGreaterThanOrEqual(0.9);
+    for (const c of live) {
+      expect(c.preview.diffPct!, c.name).toBeLessThanOrEqual(2.5);
+      expect((await storage.get(c.preview.htmlKey!))?.toString('utf8'), c.name).toContain('<div class="dse-root">');
+      expect(c.code.html.length, c.name).toBeGreaterThan(0);
+    }
+    const button = comps.find((c) => c.name === 'Button')!;
+    expect(Object.keys(button.preview.stateHtmlKeys ?? {}).sort()).toEqual(['active', 'focus', 'hover']);
+    const hover = (await storage.get(button.preview.stateHtmlKeys!.hover!))!.toString('utf8');
+    expect(hover).toContain('background-color: rgb(226, 232, 240) !important');
+    expect(button.variants.every((v) => v.preview.mode === 'live')).toBe(true);
+    expect(comps.find((c) => c.type === 'avatar')!.preview).toMatchObject({ mode: 'captured', capturedReason: 'diff' });
+  });
+
+  it('logs the build in the live-log voice', () => {
+    const line = ctx.events.find((e) => e.stage === 'previews')!.message;
+    expect(line).toMatch(/^previews · 27 built · 26 live · 1 captured \(median diff \d+\.\d %\)$/);
   });
 });

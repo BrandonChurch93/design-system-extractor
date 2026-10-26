@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-26T05:40:15.578Z",
+  "generatedAt": "2026-10-26T06:43:20.777Z",
   "mode": "replay",
-  "through": "components",
+  "through": "previews",
   "pipelineVersion": "1.0.0",
   "fixtures": [
     {
@@ -97,6 +97,14 @@
           "captured": 63,
           "expected": 63,
           "misses": []
+        },
+        "liveRate": {
+          "rate": 0.963,
+          "live": 26,
+          "total": 27,
+          "captured": [
+            "Avatar (diff 6.2 %)"
+          ]
         }
       }
     },
@@ -193,6 +201,16 @@
           "captured": 73,
           "expected": 73,
           "misses": []
+        },
+        "liveRate": {
+          "rate": 0.903,
+          "live": 28,
+          "total": 31,
+          "captured": [
+            "Feature card (diff 2.7 %)",
+            "Promo card (diff 92.2 %)",
+            "Avatar (diff 6.2 %)"
+          ]
         }
       }
     },
@@ -295,6 +313,14 @@
           "captured": 59,
           "expected": 59,
           "misses": []
+        },
+        "liveRate": {
+          "rate": 0.963,
+          "live": 26,
+          "total": 27,
+          "captured": [
+            "Avatar (diff 6.2 %)"
+          ]
         }
       }
     },
@@ -397,6 +423,14 @@
           "captured": 59,
           "expected": 59,
           "misses": []
+        },
+        "liveRate": {
+          "rate": 0.963,
+          "live": 26,
+          "total": 27,
+          "captured": [
+            "Avatar (diff 6.2 %)"
+          ]
         }
       }
     },
@@ -493,6 +527,14 @@
           "captured": 54,
           "expected": 54,
           "misses": []
+        },
+        "liveRate": {
+          "rate": 0.955,
+          "live": 21,
+          "total": 22,
+          "captured": [
+            "Previous link (diff 3.2 %)"
+          ]
         }
       }
     }

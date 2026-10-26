@@ -50,7 +50,7 @@ async function inView(page: Page, dse: string): Promise<{ x: number; y: number; 
   }, dse);
 }
 
-export async function cropOf(page: Page, dse: string, extra?: string): Promise<Buffer | undefined> {
+export async function cropOf(page: Page, dse: string, extra?: string, pad = CROP_PAD): Promise<Buffer | undefined> {
   const r = await inView(page, dse);
   if (!r) return undefined;
   let box = r;
@@ -68,10 +68,10 @@ export async function cropOf(page: Page, dse: string, extra?: string): Promise<B
     }
   }
   const vp = page.viewportSize()!;
-  const x = Math.max(0, box.x - CROP_PAD);
-  const y = Math.max(0, box.y - CROP_PAD);
-  const w = Math.min(vp.width - x, box.w + CROP_PAD * 2);
-  const h = Math.min(vp.height - y, box.h + CROP_PAD * 2);
+  const x = Math.max(0, box.x - pad);
+  const y = Math.max(0, box.y - pad);
+  const w = Math.min(vp.width - x, box.w + pad * 2);
+  const h = Math.min(vp.height - y, box.h + pad * 2);
   if (w < 1 || h < 1) return undefined;
   return page.screenshot({ clip: { x, y, width: w, height: h }, type: 'png', animations: 'disabled', caret: 'hide' });
 }

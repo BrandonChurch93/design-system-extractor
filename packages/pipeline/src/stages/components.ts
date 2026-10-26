@@ -94,7 +94,10 @@ export function tokensUsedBy(it: Item, tokens: Tokens): Pick<Component, 'tokensU
   return { tokensUsed: used, unmapped };
 }
 
-export async function components(ctx: RunContext, capture: CaptureOutput, tokens: Tokens): Promise<Component[]> {
+/** The capture items behind each component and each of its variants, for the previews stage. */
+export type ComponentSources = Map<string, { first: Item; variants: Map<string, Item> }>;
+
+export async function components(ctx: RunContext, capture: CaptureOutput, tokens: Tokens): Promise<{ components: Component[]; sources: ComponentSources }> {
   const items = itemsFrom(capture);
   for (const it of items) {
     if (!it.rules.includes('inline-mark')) continue;
@@ -200,25 +203,28 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
   }
 
   const out: Component[] = [];
+  const sources: ComponentSources = new Map();
   const ids = new Set<string>();
   for (const w of list) {
     let id = stableId(`component:${exactKey(representative(w.items))}`);
     for (let n = 2; ids.has(id); n++) id = stableId(`component:${exactKey(representative(w.items))}:${n}`);
     ids.add(id);
     out.push(await assemble(ctx, w, id, tokens));
+    sources.set(id, { first: firstSeen(w.items), variants: new Map(w.variants.map((v) => [stableId(`variant:${id}:${v.key}`), firstSeen(v.items)])) });
   }
 
   const byModel = list.filter((w) => w.naming!.by !== 'fallback').length;
   await ctx.emit({ stage: 'components', message: `${out.length} found from ${items.length.toLocaleString('en-US')} element candidates · ${byModel} by model`, data: { calls: named.calls, collisions: collisions.by }, patch: { components: out } });
   if (mergedByStyle + mergedCount > 0) await ctx.emit({ stage: 'components', message: `merged ${mergedCount} across pages` });
   if (noise + dropped > 0) await ctx.emit({ stage: 'components', message: `${noise + dropped} noise cluster${noise + dropped > 1 ? 's' : ''} dropped` });
-  return out;
+  return { components: out, sources };
 }
 
 async function put(ctx: RunContext, key: string, png: Buffer | null): Promise<{ key: string; width: number; height: number } | null> {
   if (!png) return null;
   await ctx.files.put(key, png, { contentType: 'image/png' });
-  return { key, width: png.readUInt32BE(16), height: png.readUInt32BE(20) };
+  // Crops are taken at device scale 2; sizes are recorded in CSS px.
+  return { key, width: Math.round(png.readUInt32BE(16) / 2), height: Math.round(png.readUInt32BE(20) / 2) };
 }
 
 const capturedPreview = (shot: { key: string; width: number; height: number }): Preview => ({ mode: 'captured', cropKey: shot.key, width: shot.width, height: shot.height });

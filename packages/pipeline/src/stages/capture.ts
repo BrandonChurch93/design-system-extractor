@@ -14,6 +14,7 @@ import { newPage, type RunBrowserContext } from '../crawl/browser';
 import { guardedFetch } from '../crawl/fetch';
 import { loadPage } from '../crawl/navigate';
 import { dismissConsent, loginFacts } from '../crawl/page-scripts';
+import { markupOf } from '../capture/markup';
 import type { Throttle } from '../crawl/throttle';
 import { BlockedError, CancelledError } from '../errors';
 import { keys } from '../storage/keys';
@@ -22,12 +23,26 @@ export const SNAPSHOT_CAP = 6000;
 export const CANDIDATE_CAP = 400;
 export const STATE_CAP = 40;
 export const OPEN_CAP = 3;
+/** Markup larger than this is left out; such a component can only be captured (its CSS cap is 200 KB). */
+export const MARKUP_CAP = 300_000;
+
+/** Every custom property the matched rules of these elements name. */
+export function varsIn(matched: Record<string, MatchedStyles>): string[] {
+  const names = new Set<string>();
+  for (const m of Object.values(matched)) {
+    const decls = [...m.rules.flatMap((r) => r.declarations), ...m.inline, ...m.pseudo.flatMap((p) => p.rules.flatMap((r) => r.declarations))];
+    for (const d of decls) for (const v of d.value.matchAll(/var\(\s*(--[\w-]+)/g)) names.add(v[1]!);
+  }
+  return [...names];
+}
 export const SCREENSHOT_MAX_HEIGHT = 8000;
 export const TAB_WALK_MAX = 80;
 
 export type MotionProbe = { animation: boolean; transition: boolean };
 
-export type OpenCapture = { trigger: string; revealed: string; snapshot: Snapshot; matched: Record<string, MatchedStyles>; crop?: Buffer; triggerDelta: StyleDelta[] };
+export type Markup = { html: string; vars: Record<string, string> };
+
+export type OpenCapture = { trigger: string; revealed: string; snapshot: Snapshot; matched: Record<string, MatchedStyles>; markup?: Markup; crop?: Buffer; /** The revealed element alone, no margin, for the preview check. */ rootCrop?: Buffer; triggerDelta: StyleDelta[] };
 
 export type ViewportCapture = {
   viewport: Viewport;
@@ -35,6 +50,8 @@ export type ViewportCapture = {
   candidates: ElementCandidate[];
   selectors: Record<string, string>;
   matched: Record<string, MatchedStyles>;
+  /** Markup and custom property values of each element candidate, for previews. */
+  markup: Record<string, Markup>;
   states: Record<string, StateRecord[]>;
   stateCaptured: Set<string>;
   tabOrder: string[];
@@ -181,8 +198,10 @@ async function openStates(page: PwPage, snapshot: Snapshot, cands: ElementCandid
       if (root) {
         const after = await readStyles(page, t.d);
         const crop = await cropOf(page, t.d, root.d);
+        const rootCrop = await cropOf(page, root.d, undefined, 0);
         const matched = await matchedCss(session, rootId, sub.elements.map((e) => e.d));
-        out.push({ trigger: t.d, revealed: root.d, snapshot: sub, matched, crop, triggerDelta: styleDelta(before, after) });
+        const markup = (await page.evaluate(markupOf, { items: [{ d: root.d, vars: varsIn(matched) }], cap: MARKUP_CAP }))[root.d];
+        out.push({ trigger: t.d, revealed: root.d, snapshot: sub, matched, markup, crop, rootCrop, triggerDelta: styleDelta(before, after) });
       }
       await page.evaluate(() => document.querySelector('[data-dse-open]')?.removeAttribute('data-dse-open'));
     }
@@ -255,6 +274,22 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
       }
     }
     const matched = await matchedCss(session, rootId, [...need]);
+    const subtree = (d: string): string[] => {
+      const e = snapshot.byDse.get(d);
+      if (!e) return [];
+      const ids = [d];
+      const stack = [...e.kids];
+      while (stack.length) {
+        const k = snapshot.elements[stack.pop()!]!;
+        ids.push(k.d);
+        stack.push(...k.kids);
+      }
+      return ids;
+    };
+    const markup = await p.evaluate(markupOf, {
+      items: candidates.map((c) => ({ d: c.dse, vars: varsIn(Object.fromEntries(subtree(c.dse).map((d) => [d, matched[d]!]).filter(([, m]) => m))) })),
+      cap: MARKUP_CAP,
+    });
 
     // States.
     const chosen = chooseForStates(snapshot, candidates);
@@ -330,6 +365,7 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
         candidates,
         selectors,
         matched,
+        markup,
         states,
         stateCaptured: chosenSet,
         tabOrder: walk.order,
