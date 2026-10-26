@@ -14,7 +14,7 @@ P13 · Showcase, SEO and content. P12 gate passed 2026-10-26.
 
 ## Next action
 
-P13, in progress. Done: the showcase script (D-063), EvalTable (D-064), the metadata helper and test (D-065). Now: make the pipeline finish real sites inside the 6-minute timeout (findings below), then fix the capture navigation crash, then re-run `pnpm showcase --dry-run` in full and paste its table here.
+P13, in progress. Done and committed: showcase script (D-063), EvalTable (D-064), metadata (D-065), the real-site performance and quality work (D-066 to D-070) with fixture recordings re-recorded and every eval passing in replay. Now: confirm stripe.com completes under the 360 s timeout with model names and checked previews (`pnpm pipeline:run https://stripe.com/`), then reseed (`pnpm db:seed:fixtures`, the seed documents change with the new recordings), update and review the run-page and catalog goldens, run verify:all, then re-run `pnpm showcase --dry-run` in full and paste its table below.
 
 ### P13 dry-run findings (first attempt, stopped after five sites, $0.013 spent)
 
@@ -87,6 +87,7 @@ P12 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-071 · Showcase runs take `DSE_SHOWCASE_TIMEOUT_MS` (15 min); the timeout detail names the run's own minutes.
 - D-070 · A trigger never merges by name with an action control; the novelty key carries trigger and icon-only.
 - D-069 · Component code is its own rules with token variables; design-system.md and the whole prompt bound their code; the full code stays in each component's prompt.
 - D-068 · Matched CSS read from the CSSOM: one query per selector instead of a CDP call per node (31 s to 1 s on a large page).

@@ -12,6 +12,7 @@ Anyone can run the tool. These rules are what keep that safe (D-005). All values
 | Page cap with BYO key | `DSE_BYO_PAGE_CAP` | 40 |
 | Worst-case run cost (pre-check) | `DSE_WORST_CASE_RUN_USD` | 0.60 |
 | Run timeout | `DSE_RUN_TIMEOUT_MS` | 360000 |
+| Showcase run timeout (D-071) | `DSE_SHOWCASE_TIMEOUT_MS` | 900000 |
 | Budget day boundary | `DSE_BUDGET_TIMEZONE` | America/Boise |
 | Dev spend cap (build only) | `DSE_DEV_SPEND_CAP_USD` | 20 |
 

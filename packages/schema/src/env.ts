@@ -40,6 +40,7 @@ export const envShape = {
   DSE_BYO_PAGE_CAP: posInt,
   DSE_WORST_CASE_RUN_USD: usd,
   DSE_RUN_TIMEOUT_MS: posInt,
+  DSE_SHOWCASE_TIMEOUT_MS: posInt.optional(),
   DSE_BUDGET_TIMEZONE: z.string().refine((tz) => {
     try {
       new Intl.DateTimeFormat('en-US', { timeZone: tz });

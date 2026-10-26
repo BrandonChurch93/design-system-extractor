@@ -3,7 +3,7 @@ import type { BlockedDetail, BlockedReason, RunDocumentPartial, Stage, Stats } f
 import type { RunContext } from './context';
 import { adoptContext, createRunContext, type RunBrowserContext } from './crawl/browser';
 import { Throttle } from './crawl/throttle';
-import { BlockedError, CancelledError, ModelAuthError, TimeoutError } from './errors';
+import { BlockedError, CancelledError, ModelAuthError, TimeoutError, timeoutDetail } from './errors';
 import { ReplayMissError } from './models/client';
 import { capture, type CaptureOutput } from './stages/capture';
 import { discover, type DiscoverResult } from './stages/discover';
@@ -50,7 +50,7 @@ export async function runPipeline(ctx: RunContext, deps: RunDeps): Promise<RunOu
   let rc: RunBrowserContext | null = null;
   let timer: NodeJS.Timeout | undefined;
   const timeout = new Promise<never>((_, reject) => {
-    timer = setTimeout(() => reject(new TimeoutError()), ctx.config.timeoutMs);
+    timer = setTimeout(() => reject(new TimeoutError(timeoutDetail(ctx.config.timeoutMs))), ctx.config.timeoutMs);
   });
   const checkCancel = async () => {
     if (await ctx.cancelled()) throw new CancelledError();

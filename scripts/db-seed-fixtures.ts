@@ -128,6 +128,7 @@ const worker = createRunWorker({
     userAgent: env.DSE_USER_AGENT ?? 'DesignSystemExtractorBot/1.0 (+http://localhost:3000/how-it-works)',
     appUrl: seed.appUrl,
     timeoutMs: 900_000,
+    showcaseTimeoutMs: 900_000,
     allowPrivateHosts: svc.allowPrivateHosts,
     keepIntermediate: false,
   },

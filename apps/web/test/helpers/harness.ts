@@ -75,6 +75,7 @@ export async function startHarness(opts: { env?: Record<string, string>; resolve
           userAgent: 'DesignSystemExtractorBot/1.0 (+http://localhost:3000/how-it-works)',
           appUrl: APP,
           timeoutMs: 600_000,
+          showcaseTimeoutMs: 900_000,
           allowPrivateHosts: svc.allowPrivateHosts,
           keepIntermediate: false,
           ...extra.config,

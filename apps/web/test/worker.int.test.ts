@@ -8,7 +8,8 @@ import { runRetention } from '../../worker/src/retention';
 import { POST as createRun } from '../app/api/runs/route';
 import { GET as getRun } from '../app/api/runs/[id]/route';
 import { GET as me } from '../app/api/me/route';
-import { ensureFixtureServer, params, request, startHarness, until, type Harness } from './helpers/harness';
+import { POST as showcaseRun } from '../app/api/admin/showcase/run/route';
+import { ADMIN_TOKEN, ensureFixtureServer, params, request, startHarness, until, type Harness } from './helpers/harness';
 
 // The worker's failure paths: a crash is retried once from the beginning, a second one fails the
 // run; the status gate; a visitor's key never reaches a log, a row or a plain Redis value.
@@ -148,4 +149,17 @@ describe('security · a visitor key', () => {
     expect(haystack).not.toContain('SECRET-never-logged');
     expect(h.logLines.join('\n')).toContain('run finished');
   }, 240_000);
+});
+
+describe('the run timeout', () => {
+  it('gives a showcase run its own, longer timeout and a visitor run the standard one (D-071)', async () => {
+    const seen = new Map<string, number>();
+    const w = h.startWorker({ pipeline: async (ctx) => (seen.set(ctx.runId, ctx.config.timeoutMs), { status: 'complete' as const }) });
+    const visitor = CreateRunCreated.parse(await (await createRun(request('/api/runs', { ip: '203.0.113.81', cookie: 'visitorTIMEOUT01', body: { url: CLEAN } }))).json());
+    const showcase = CreateRunCreated.parse(await (await showcaseRun(request('/api/admin/showcase/run', { body: { url: CLEAN }, headers: { authorization: `Bearer ${ADMIN_TOKEN}` } }))).json());
+    await until(async () => seen.has(visitor.id) && seen.has(showcase.id), 20_000, 100);
+    await w.close();
+    expect(seen.get(visitor.id)).toBe(600_000);
+    expect(seen.get(showcase.id)).toBe(900_000);
+  });
 });

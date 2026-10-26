@@ -12,8 +12,11 @@ export class BlockedError extends Error {
   }
 }
 
+/** copy.md, worker-side failure details: the minutes come from the run's own timeout (D-071). */
+export const timeoutDetail = (ms: number) => `Timed out after ${Math.round(ms / 60_000)} minutes.`;
+
 export class TimeoutError extends Error {
-  constructor(message = 'Timed out after 6 minutes.') {
+  constructor(message = timeoutDetail(360_000)) {
     super(message);
     this.name = 'TimeoutError';
   }

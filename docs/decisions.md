@@ -575,3 +575,10 @@ Date: 2026-10-26 · Context: re-recording the fixtures for D-066, the model name
 Decision: two same-named clusters merge, by style or by the collision call, only when both are triggers or neither is. The novelty key also carries whether the element opens something (`aria-haspopup`, `aria-controls`, `aria-expanded`) and whether it is icon-only (fewer than two characters of text), the two distinctions clustering already keeps (D-052, D-054). With both, every fixture passes every threshold with states at 1.000.
 Affects: `docs/specs/capture-and-states.md`, `docs/specs/component-detection.md`, `packages/pipeline/src/capture/candidates.ts`, `packages/pipeline/src/stages/components.ts`.
 
+## D-071 · Showcase runs get their own, longer timeout
+
+Date: 2026-10-26 · Context: with D-066, stripe.com completes inside the 6-minute timeout, but only by leaning on the time budget: on its 22,000 px pages capture took 178 s, so most components kept their deterministic names and most previews were not checked. That is an honest result for a visitor's run. The showcase is different: the owner's runs, generated once, and the first thing every visitor sees.
+Decision: a run at showcase priority (10) takes `DSE_SHOWCASE_TIMEOUT_MS` (default 900000, 15 minutes) instead of `DSE_RUN_TIMEOUT_MS` (360000). The budget shares apply to whichever timeout the run has. The timeout detail is computed from the run's own timeout: `Timed out after {minutes} minutes.` A visitor's run is unchanged.
+Reasoning: the showcase should show the product complete; visitors keep the promise they were given.
+Affects: `docs/specs/caps-and-budget.md`, `docs/design/copy.md`, `.env.example`, `packages/schema/src/env.ts`, `packages/pipeline/src/errors.ts`, `packages/pipeline/src/run.ts`, `apps/worker/src/`, `scripts/showcase/index.ts`, `scripts/db-seed-fixtures.ts`.
+

@@ -212,7 +212,7 @@ Unreachable: eyebrow `Could not crawl` · title `We could not reach {host}.` · 
 
 Invalid: eyebrow `Could not crawl` · title `That is not a public web address.` · body `Only http and https sites on the public internet can be crawled. Private and local addresses are not.` · button `Try again`
 
-Worker-side failure details (shown in the failed state and the live log): `Timed out after 6 minutes.` · `Your key was rejected by Anthropic.` · `The crawler stopped unexpectedly.`
+Worker-side failure details (shown in the failed state and the live log): `Timed out after {minutes} minutes.` (the run's own timeout: 6 for a visitor's run, 15 for a showcase run, D-071) · `Your key was rejected by Anthropic.` · `The crawler stopped unexpectedly.`
 
 ## Open a local run
 

@@ -56,6 +56,7 @@ async function main() {
       userAgent: env.DSE_USER_AGENT ?? `DesignSystemExtractorBot/1.0 (+${appUrl}/how-it-works)`,
       appUrl,
       timeoutMs: Number(env.DSE_RUN_TIMEOUT_MS ?? 360_000),
+      showcaseTimeoutMs: Number(env.DSE_SHOWCASE_TIMEOUT_MS ?? 900_000),
       allowPrivateHosts: allowedPrivateHosts(env),
       keepIntermediate: env.DSE_KEEP_INTERMEDIATE === '1',
       devMeter: production ? undefined : DevSpendMeter.fromEnv(root, env),

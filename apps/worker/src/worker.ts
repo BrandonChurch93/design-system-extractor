@@ -26,6 +26,8 @@ export type WorkerConfig = {
   userAgent: string;
   appUrl: string;
   timeoutMs: number;
+  /** Showcase runs (priority 10) are the owner's and get longer (D-071). */
+  showcaseTimeoutMs: number;
   allowPrivateHosts: string[];
   keepIntermediate: boolean;
   /** The build-time spend cap; absent in production. */
@@ -103,7 +105,7 @@ export function createRunWorker(deps: WorkerDeps): Worker {
       viewports: row.viewports as RunConfig['viewports'],
       userAgent: config.userAgent,
       allowPrivateHosts: config.allowPrivateHosts,
-      timeoutMs: config.timeoutMs,
+      timeoutMs: row.priority >= SHOWCASE_PRIORITY ? config.showcaseTimeoutMs : config.timeoutMs,
       keepIntermediate: config.keepIntermediate,
       byo,
       runUrl: `${config.appUrl}/r/${row.id}`,
