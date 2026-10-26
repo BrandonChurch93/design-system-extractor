@@ -589,3 +589,10 @@ Date: 2026-10-26 · Context: the P13 dry run of the real roster failed apple.com
 Decision: type collection skips text whose computed font size or line height is zero; its colors still count. The roster's sixth entry is notion.com. The off-site redirect rule is unchanged.
 Reasoning: text at zero size is not seen, so it is not part of the system a visitor reads; the roster names the site's current home rather than loosening a security rule for one domain.
 Affects: `docs/specs/token-clustering.md`, `docs/specs/showcase.md`, `packages/pipeline/src/tokens/collect.ts`, `scripts/showcase/roster.ts`.
+
+## D-073 · Visual goldens also take an absolute bound of 25 pixels
+
+Date: 2026-10-26 · Context: the visual gate compared with `maxDiffPixelRatio: 0.001` alone, which on tall pages allows thousands of pixels (about 7,750 on a 1440 run page). Measured with no tolerance at all, 118 of 125 goldens matched to the pixel, and the other seven differed by 280 to 1,841 pixels: real data changes from the P13 reseed (Compare's removed token names and its component rows, the in-progress run's palette strip and progress bar) that had passed under the ratio and so were never refreshed.
+Decision: every screenshot and OG comparison takes `maxDiffPixels: 25` beside the ratio; Playwright applies the smaller of the two. The seven goldens were reviewed and updated.
+Reasoning: rendering here is deterministic, so a bound near zero costs nothing in flakes and catches a changed digit or a moved line on any page height.
+Affects: `playwright.qa.config.ts`, `tests/qa/visual.spec.ts`, seven goldens in `apps/web/test/goldens/`.

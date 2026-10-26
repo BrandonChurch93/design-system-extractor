@@ -14,7 +14,47 @@ P13 · Showcase, SEO and content. P12 gate passed 2026-10-26.
 
 ## Next action
 
-P13, in progress. Done and committed: showcase script (D-063), EvalTable (D-064), metadata (D-065), the real-site performance and quality work (D-066 to D-070) with fixture recordings re-recorded and every eval passing in replay. Now: confirm stripe.com completes under the 360 s timeout with model names and checked previews (`pnpm pipeline:run https://stripe.com/`), then reseed (`pnpm db:seed:fixtures`, the seed documents change with the new recordings), update and review the run-page and catalog goldens, run verify:all, then re-run `pnpm showcase --dry-run` in full and paste its table below.
+P13, at its gate. Done and committed: showcase script (D-063), EvalTable (D-064), metadata (D-065), real-site performance and quality (D-066 to D-071), reseed and goldens, OG goldens, the full real-roster dry run (table below) and its two fixes (D-072). Now: record the apple.com and airbnb.com re-runs in the table, review `pnpm qa:design` for the home, catalog and touched pages, run verify:all, then mark the P13 gate passed and start P14.
+
+### P13 real-roster dry run (2026-10-26, `pnpm showcase --dry-run`, $0.140 for the full pass)
+
+| Order | Site | Result | Pages | Colors | Type styles | Spacing steps | Components | Checks passed | Duration | Cost |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | brandonchurchportfolio.com | complete | 4 | 14 | 24 | 12 | 16 | 27 of 35 | 2 min 27 s | $0.008 |
+| 2 | generative-ui-github.vercel.app | complete | 3 | 26 | 24 | 8 | 31 | 39 of 45 | 1 min 4 s | $0.005 |
+| 3 | stripe.com | complete | 12 | 80 | 24 | 12 | 120 | 109 of 187 | 10 min 8 s | $0.017 |
+| 4 | linear.app | complete | 12 | 80 | 24 | 12 | 120 | 117 of 202 | 6 min 41 s | $0.017 |
+| 5 | vercel.com | complete | 12 | 29 | 24 | 12 | 83 | 63 of 149 | 4 min 6 s | $0.009 |
+| 6 | notion.so | blocked · invalid-url · replaced by figma.com |  |  |  |  |  |  | 0 min 4 s | $0.000 |
+| 6 | figma.com | complete | 12 | 51 | 24 | 12 | 104 | 145 of 199 | 8 min 20 s | $0.013 |
+| 7 | apple.com | failed · replaced by airbnb.com | 12 | 80 | 0 | 0 | 0 | 0 of 0 | 6 min 2 s | $0.003 |
+| 7 | airbnb.com | failed · replaced by etsy.com | 12 | 33 | 0 | 0 | 0 | 0 of 0 | 4 min 28 s | $0.001 |
+| 7 | etsy.com | blocked · bot · replaced by bestbuy.com |  |  |  |  |  |  | 0 min 18 s | $0.000 |
+| 7 | bestbuy.com | blocked · unreachable · replaced by github.com |  |  |  |  |  |  | 1 min 49 s | $0.000 |
+| 7 | github.com | complete | 12 | 80 | 24 | 12 | 120 | 181 of 229 | 8 min 32 s | $0.020 |
+| 8 | wikipedia.org | complete | 2 | 17 | 20 | 11 | 21 | 29 of 40 | 0 min 52 s | $0.005 |
+| 9 | usa.gov | complete | 12 | 18 | 24 | 12 | 38 | 46 of 50 | 4 min 56 s | $0.006 |
+| 10 | homedepot.com | complete | 12 | 20 | 19 | 7 | 37 | 33 of 65 | 3 min 51 s | $0.006 |
+| 11 | modernsoftworks.com | sparse · replaced by shopify.com | 2 | 3 | 1 | 3 | 0 | 0 of 0 | 0 min 18 s | $0.002 |
+| 11 | shopify.com | complete | 12 | 80 | 24 | 12 | 120 | 116 of 157 | 11 min 57 s | $0.016 |
+| 12 | amazon.com | complete | 12 | 53 | 24 | 12 | 93 | 99 of 166 | 6 min 33 s | $0.013 |
+
+12 entries would be listed. Re-runs after the fixes (`--dry-run --only`):
+
+| Order | Site | Result | Pages | Colors | Type styles | Spacing steps | Components | Checks passed | Duration | Cost |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 6 | notion.com | complete | 12 | 38 | 24 | 12 | 79 | 94 of 156 | 5 min 34 s | $0.012 |
+| 7 | apple.com | complete | 12 | 80 | 24 | 12 | 119 | 117 of 196 | 13 min 18 s | $0.015 |
+
+With these, orders 6 and 7 list the roster's own sites (notion.com, apple.com); modernsoftworks.com, which has no Personal alternate, would take the first alternate left, github.com. The twelve entries cover every category chip. airbnb.com, no longer needed as an alternate, was checked through tokens with `pnpm pipeline:run https://airbnb.com/ --through tokens`: 24 type styles, all sizes and line heights positive.
+
+Findings:
+- apple.com and airbnb.com failed at the end of tokens: text set to `font-size: 0` or `line-height: 0` became a type style of size 0, which the document schema refuses. Fixed (D-072, regression test in `collect.test.ts`).
+- notion.so redirects to notion.com, another host, so the crawler blocked it "redirected off-site" as the spec requires. The roster now names notion.com (D-072).
+- modernsoftworks.com answers every request, including a plain browser request, with Hostinger's "403 Forbidden" page. That page carries no bot marker, so the start page failed, only the synthetic 404 was captured, and the run came back sparse and was replaced, as specified. Listed for Brandon below.
+- etsy.com blocks with a captcha (bot, correct); bestbuy.com gives no answer in 20 s (unreachable, correct).
+- homedepot.com: 7 of 12 selected pages answered 403 with no bot marker, so 5 were captured and the run is thinner (37 components) but complete. The Pages column counts selected pages.
+- The 80-color rows are the color cap. Every completed run finished inside the 15-minute showcase timeout (D-071); the longest was shopify.com at 12 min.
 
 ### P13 dry-run findings (first attempt, stopped after five sites, $0.013 spent)
 
@@ -29,7 +69,7 @@ P13, in progress. Done and committed: showcase script (D-063), EvalTable (D-064)
 ### Carried into P13 (found in the P12 review)
 
 - Done (D-064): EvalTable lays out by its own width, labels its stacked cells, wraps only at interpuncts; how-it-works 820 and 390 goldens and the catalog goldens updated, 1440 unchanged.
-- The visual gate's `maxDiffPixelRatio` of 0.001 is loose on tall pages (a 1440 run page is about 7,750 px of tolerance; the catalog about 68,000): a StatStrip at 0 instead of 9, and a price line moved, both passed. Decide in P13 or P14 whether tall pages get an absolute pixel bound.
+- Done (D-073): goldens take an absolute 25-pixel bound beside the ratio. Measured with no tolerance, 118 of 125 matched to the pixel; the other seven were stale data from the reseed, reviewed and updated.
 
 ### P12 self-review (flag on: `qa/billing` at 1440, 820, 390; flag off: qa:visual unchanged from P11; catalog v2 sections)
 
@@ -87,6 +127,8 @@ P12 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-073 · Visual goldens take `maxDiffPixels: 25` beside the ratio; seven stale goldens updated.
+- D-072 · Text at zero font size or line height is not a type style; the roster's Notion entry is notion.com.
 - D-071 · Showcase runs take `DSE_SHOWCASE_TIMEOUT_MS` (15 min); the timeout detail names the run's own minutes.
 - D-070 · A trigger never merges by name with an action control; the novelty key carries trigger and icon-only.
 - D-069 · Component code is its own rules with token variables; design-system.md and the whole prompt bound their code; the full code stays in each component's prompt.
@@ -158,11 +200,13 @@ Things implemented differently from the spec, with the decision id that explains
 Keep this list current. It is the only hands-on work he will do.
 
 1. Follow `docs/deploy-runbook.md`.
+2. modernsoftworks.com answers every request with Hostinger's "403 Forbidden" page (seen 2026-10-26, from a browser user agent too). Until it serves pages, the showcase replaces it with an alternate; once it does, `pnpm showcase --only modernsoftworks.com` restores it.
 
 ## Session log
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-26 · Session continued (after compaction) · P13 · re-read CLAUDE.md, STATUS, decisions, plan P13, showcase, crawler, token-clustering, handoff · tree clean at 7bbb9fa · full real-roster dry run finished, two fixes (D-072).
 - 2026-10-26 · Gate passed · P12 · flag-off test, flag-on captures and axe, goldens held, verify:all green.
 - 2026-10-26 · Session started · P12 · read CLAUDE.md, handoff, STATUS, decisions, plan, v2-seams, v2-plan, components, pages, copy, quality-bar, architecture · tree reconciled: P12 steps 1 to 5 uncommitted; `.gitignore`'s `qa/` also matched `tests/qa/`, so the QA suite was never committed (now `/qa/`); the nine in-progress goldens changed with `qaNow` show the StatStrip at 0, not a clock-only change (investigating); `pnpm check` green.
 

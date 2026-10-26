@@ -30,6 +30,6 @@ for (const [name, path] of [['og-home', '/opengraph-image'], ['og-run', '/api/ru
   test(`open graph image · ${name}`, async ({ request }) => {
     const res = await request.get(path);
     expect(res.status()).toBe(200);
-    expect(await res.body()).toMatchSnapshot(`${name}.png`, { maxDiffPixelRatio: 0.001 });
+    expect(await res.body()).toMatchSnapshot(`${name}.png`, { maxDiffPixelRatio: 0.001, maxDiffPixels: 25 });
   });
 }

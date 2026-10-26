@@ -12,7 +12,8 @@ export default defineConfig({
   retries: 0,
   timeout: 120_000,
   reporter: [['list']],
-  expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.001, threshold: 0.2 } },
+  // The ratio alone allowed thousands of pixels on tall pages (D-073); the smaller of the two bounds applies.
+  expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.001, maxDiffPixels: 25, threshold: 0.2 } },
   // Sandboxed preview frames are cross-origin; without site isolation they render in-process,
   // so full-page captures include them.
   use: {
