@@ -1,0 +1,435 @@
+{
+  "generatedAt": "2026-10-26T16:00:00.000Z",
+  "appUrl": "http://localhost:3000",
+  "runs": [
+    {
+      "fixture": "clean",
+      "id": "seedclean0",
+      "name": "Tidewater · Clean",
+      "category": "SaaS",
+      "order": 1,
+      "createdAt": "2026-10-12T15:04:00.000Z",
+      "startedAt": "2026-10-12T15:04:02.000Z",
+      "durationMs": 71000,
+      "cost": {
+        "inputTokens": 12265,
+        "outputTokens": 1606,
+        "usd": 0.006601,
+        "calls": [
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "colors",
+            "inputTokens": 1511,
+            "outputTokens": 213,
+            "usd": 0.00017255,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2654,
+            "outputTokens": 349,
+            "usd": 0.00047625,
+            "cached": false
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2798,
+            "outputTokens": 366,
+            "usd": 0.00033194,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 1995,
+            "outputTokens": 344,
+            "usd": 0.00024064,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 1954,
+            "outputTokens": 138,
+            "usd": 0.00013354,
+            "cached": true
+          },
+          {
+            "model": "claude-sonnet-5-5",
+            "purpose": "narrative",
+            "inputTokens": 1353,
+            "outputTokens": 196,
+            "usd": 0.0052465,
+            "cached": false
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "messy",
+      "id": "seedmessy0",
+      "name": "Tidewater · Messy",
+      "category": "SaaS",
+      "order": 2,
+      "createdAt": "2026-10-05T17:20:00.000Z",
+      "startedAt": "2026-10-05T17:20:03.000Z",
+      "durationMs": 84000,
+      "cost": {
+        "inputTokens": 15119,
+        "outputTokens": 2279,
+        "usd": 0.004936,
+        "calls": [
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "select",
+            "inputTokens": 1459,
+            "outputTokens": 117,
+            "usd": 0.0002243,
+            "cached": false
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "colors",
+            "inputTokens": 2371,
+            "outputTokens": 566,
+            "usd": 0.00043505,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2646,
+            "outputTokens": 342,
+            "usd": 0.00030474,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2697,
+            "outputTokens": 361,
+            "usd": 0.00031934,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2068,
+            "outputTokens": 353,
+            "usd": 0.00025244,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2355,
+            "outputTokens": 310,
+            "usd": 0.00025964,
+            "cached": true
+          },
+          {
+            "model": "claude-sonnet-5-5",
+            "purpose": "narrative",
+            "inputTokens": 1523,
+            "outputTokens": 230,
+            "usd": 0.0031401,
+            "cached": true
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "tailwind",
+      "id": "seedtailw0",
+      "name": "Tidewater · Tailwind",
+      "category": "Developer tools",
+      "order": 3,
+      "createdAt": "2026-10-14T16:41:00.000Z",
+      "startedAt": "2026-10-14T16:41:02.000Z",
+      "durationMs": 73000,
+      "cost": {
+        "inputTokens": 12313,
+        "outputTokens": 1645,
+        "usd": 0.003634,
+        "calls": [
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "colors",
+            "inputTokens": 1511,
+            "outputTokens": 213,
+            "usd": 0.00017255,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2624,
+            "outputTokens": 357,
+            "usd": 0.00031004,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2777,
+            "outputTokens": 363,
+            "usd": 0.00032834,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 1978,
+            "outputTokens": 345,
+            "usd": 0.00023944,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2070,
+            "outputTokens": 175,
+            "usd": 0.00016364,
+            "cached": true
+          },
+          {
+            "model": "claude-sonnet-5-5",
+            "purpose": "narrative",
+            "inputTokens": 1353,
+            "outputTokens": 192,
+            "usd": 0.0024201,
+            "cached": true
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "css-in-js",
+      "id": "seedcssin0",
+      "name": "Tidewater · CSS-in-JS",
+      "category": "Developer tools",
+      "order": 4,
+      "createdAt": "2026-10-15T14:12:00.000Z",
+      "startedAt": "2026-10-15T14:12:02.000Z",
+      "durationMs": 75000,
+      "cost": {
+        "inputTokens": 12314,
+        "outputTokens": 1643,
+        "usd": 0.003633,
+        "calls": [
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "colors",
+            "inputTokens": 1511,
+            "outputTokens": 213,
+            "usd": 0.00017255,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2624,
+            "outputTokens": 357,
+            "usd": 0.00031004,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2777,
+            "outputTokens": 363,
+            "usd": 0.00032834,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 1978,
+            "outputTokens": 345,
+            "usd": 0.00023944,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2071,
+            "outputTokens": 173,
+            "usd": 0.00016274,
+            "cached": true
+          },
+          {
+            "model": "claude-sonnet-5-5",
+            "purpose": "narrative",
+            "inputTokens": 1353,
+            "outputTokens": 192,
+            "usd": 0.0024201,
+            "cached": true
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "library",
+      "id": "seedlibra0",
+      "name": "Ledgerly · Bulma",
+      "category": "Finance",
+      "order": 5,
+      "createdAt": "2026-10-16T18:30:00.000Z",
+      "startedAt": "2026-10-16T18:30:02.000Z",
+      "durationMs": 92000,
+      "cost": {
+        "inputTokens": 10616,
+        "outputTokens": 1738,
+        "usd": 0.003756,
+        "calls": [
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "colors",
+            "inputTokens": 2363,
+            "outputTokens": 554,
+            "usd": 0.00042825,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2763,
+            "outputTokens": 368,
+            "usd": 0.00032944,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2296,
+            "outputTokens": 341,
+            "usd": 0.00026924,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 1841,
+            "outputTokens": 271,
+            "usd": 0.00018874,
+            "cached": true
+          },
+          {
+            "model": "claude-sonnet-5-5",
+            "purpose": "narrative",
+            "inputTokens": 1353,
+            "outputTokens": 204,
+            "usd": 0.0025401,
+            "cached": true
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "messy-after",
+      "id": "seedmafter",
+      "name": "Tidewater · Messy, half fixed",
+      "category": "SaaS",
+      "order": 6,
+      "createdAt": "2026-10-19T17:05:00.000Z",
+      "startedAt": "2026-10-19T17:05:02.000Z",
+      "durationMs": 80000,
+      "cost": {
+        "inputTokens": 16457,
+        "outputTokens": 2230,
+        "usd": 0.007904,
+        "calls": [
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "select",
+            "inputTokens": 1453,
+            "outputTokens": 111,
+            "usd": 0.0002207,
+            "cached": false
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "colors",
+            "inputTokens": 2060,
+            "outputTokens": 431,
+            "usd": 0.00044513,
+            "cached": false
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2640,
+            "outputTokens": 342,
+            "usd": 0.00047135,
+            "cached": false
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2499,
+            "outputTokens": 340,
+            "usd": 0.00028904,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2389,
+            "outputTokens": 360,
+            "usd": 0.00028804,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 2230,
+            "outputTokens": 349,
+            "usd": 0.00026664,
+            "cached": true
+          },
+          {
+            "model": "claude-haiku-5-5",
+            "purpose": "components",
+            "inputTokens": 1736,
+            "outputTokens": 60,
+            "usd": 0.00007274,
+            "cached": true
+          },
+          {
+            "model": "claude-sonnet-5-5",
+            "purpose": "narrative",
+            "inputTokens": 1450,
+            "outputTokens": 237,
+            "usd": 0.0058505,
+            "cached": false
+          }
+        ]
+      }
+    }
+  ],
+  "progress": [
+    {
+      "id": "seedprog01",
+      "fixture": "clean",
+      "through": "select",
+      "createdAt": "2026-10-26T15:00:00.000Z",
+      "startedAt": "2026-10-26T15:00:01.000Z"
+    },
+    {
+      "id": "seedprog02",
+      "fixture": "clean",
+      "through": "tokens",
+      "createdAt": "2026-10-26T15:00:00.000Z",
+      "startedAt": "2026-10-26T15:00:01.000Z"
+    },
+    {
+      "id": "seedprog03",
+      "fixture": "clean",
+      "through": "components",
+      "createdAt": "2026-10-26T15:00:00.000Z",
+      "startedAt": "2026-10-26T15:00:01.000Z"
+    }
+  ]
+}

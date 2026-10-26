@@ -15,7 +15,7 @@ import { checks } from './stages/checks';
 import { drift } from './stages/drift';
 import { exportsStage } from './stages/exports';
 
-export const PIPELINE_VERSION = '1.0.0';
+export { PIPELINE_VERSION } from './version';
 
 /** Stages in canonical order; `queue` and `done` are event stages with no module. */
 export const stageOrder: Stage[] = ['queue', 'discover', 'select', 'capture', 'tokens', 'components', 'previews', 'checks', 'drift', 'exports', 'done'];
@@ -85,8 +85,7 @@ export async function runPipeline(ctx: RunContext, deps: RunDeps): Promise<RunOu
       : { status: 'complete' };
     if (captured.loginWall) {
       const only = captured.pages[0]!;
-      const doc = (ctx as { document?: RunDocumentPartial }).document;
-      const page = doc?.pages?.find((p) => p.id === only.page.id);
+      const page = ctx.current().pages?.find((p) => p.id === only.page.id);
       await ctx.emit({ stage: 'capture', level: 'warn', message: `login wall · continuing with ${only.page.path} alone`, patch: page ? { pages: [page] } : undefined });
     }
     if (!reached('tokens', deps.through)) return ending;
@@ -131,6 +130,11 @@ export async function runPipeline(ctx: RunContext, deps: RunDeps): Promise<RunOu
   const finished = Date.now();
   const cost = ctx.cost();
   const patch: Partial<RunDocumentPartial> = { finishedAt: new Date(finished).toISOString(), durationMs: finished - started, cost };
+  const stats = statsOf(ctx.current());
+  if (stats) patch.stats = stats;
+  // Sparse: a finished run with fewer than four components (docs/design/pages.md, Run states).
+  const found = ctx.current().components;
+  if (found) patch.sparse = found.length < 4;
   if (outcome.status === 'complete') {
     await ctx.emit({ stage: 'done', message: `complete · ${Math.round((finished - started) / 1000)} s · $${cost.usd.toFixed(4)}`, patch: { ...patch, status: 'complete' } });
   } else if (outcome.status === 'blocked') {
@@ -141,6 +145,19 @@ export async function runPipeline(ctx: RunContext, deps: RunDeps): Promise<RunOu
     await ctx.emit({ stage: 'done', level: 'error', message: outcome.detail, patch: { ...patch, status: 'failed', failedDetail: outcome.detail } });
   }
   return outcome;
+}
+
+/** The stat strip's numbers, once tokens exist (the `stats` column, docs/specs/data-model.md). */
+export function statsOf(doc: RunDocumentPartial): Stats | undefined {
+  if (!doc.tokens) return undefined;
+  return {
+    colors: doc.tokens.colors?.length ?? 0,
+    typeStyles: doc.tokens.type?.length ?? 0,
+    spacingSteps: doc.tokens.space?.filter((s) => s.onGrid).length ?? 0,
+    components: doc.components?.length ?? 0,
+    checksPassed: doc.checks?.summary.passed ?? 0,
+    checksApplicable: doc.checks?.summary.applicable ?? 0,
+  };
 }
 
 export function classify(e: unknown): RunOutcome {

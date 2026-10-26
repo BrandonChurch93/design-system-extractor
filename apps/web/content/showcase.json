@@ -1,0 +1,306 @@
+{
+  "generatedAt": "2026-10-26T16:00:00.000Z",
+  "appUrl": "http://localhost:3000",
+  "entries": [
+    {
+      "runId": "seedclean0",
+      "url": "http://localhost:3000/r/seedclean0",
+      "host": "localhost:4100",
+      "name": "Tidewater · Clean",
+      "category": "SaaS",
+      "order": 1,
+      "stats": {
+        "colors": 9,
+        "typeStyles": 9,
+        "spacingSteps": 11,
+        "components": 27,
+        "checksPassed": 43,
+        "checksApplicable": 45
+      },
+      "palette": [
+        {
+          "value": "#0B1F3A",
+          "share": 0.603
+        },
+        {
+          "value": "#E2E8F0",
+          "share": 0.151
+        },
+        {
+          "value": "#2458E6",
+          "share": 0.092
+        },
+        {
+          "value": "#FFFFFF",
+          "share": 0.085
+        },
+        {
+          "value": "#0F8A8A",
+          "share": 0.027
+        },
+        {
+          "value": "#0B1F3A1F",
+          "share": 0.015
+        },
+        {
+          "value": "#15803D",
+          "share": 0.01
+        },
+        {
+          "value": "#B45309",
+          "share": 0.01
+        }
+      ]
+    },
+    {
+      "runId": "seedmessy0",
+      "url": "http://localhost:3000/r/seedmessy0",
+      "host": "localhost:4100",
+      "name": "Tidewater · Messy",
+      "category": "SaaS",
+      "order": 2,
+      "stats": {
+        "colors": 23,
+        "typeStyles": 9,
+        "spacingSteps": 11,
+        "components": 31,
+        "checksPassed": 47,
+        "checksApplicable": 55
+      },
+      "palette": [
+        {
+          "value": "#1F1F1F",
+          "share": 0.319
+        },
+        {
+          "value": "#0B1F3A",
+          "share": 0.116
+        },
+        {
+          "value": "#FFFFFF",
+          "share": 0.091
+        },
+        {
+          "value": "#2458E6",
+          "share": 0.09
+        },
+        {
+          "value": "#D1D1D1",
+          "share": 0.069
+        },
+        {
+          "value": "#676767",
+          "share": 0.043
+        },
+        {
+          "value": "#505050",
+          "share": 0.043
+        },
+        {
+          "value": "#E1E1E1",
+          "share": 0.04
+        }
+      ]
+    },
+    {
+      "runId": "seedtailw0",
+      "url": "http://localhost:3000/r/seedtailw0",
+      "host": "localhost:4100",
+      "name": "Tidewater · Tailwind",
+      "category": "Developer tools",
+      "order": 3,
+      "stats": {
+        "colors": 9,
+        "typeStyles": 9,
+        "spacingSteps": 11,
+        "components": 28,
+        "checksPassed": 44,
+        "checksApplicable": 46
+      },
+      "palette": [
+        {
+          "value": "#0B1F3A",
+          "share": 0.603
+        },
+        {
+          "value": "#E2E8F0",
+          "share": 0.151
+        },
+        {
+          "value": "#2458E6",
+          "share": 0.092
+        },
+        {
+          "value": "#FFFFFF",
+          "share": 0.085
+        },
+        {
+          "value": "#0F8A8A",
+          "share": 0.027
+        },
+        {
+          "value": "#0B1F3A1F",
+          "share": 0.015
+        },
+        {
+          "value": "#15803D",
+          "share": 0.01
+        },
+        {
+          "value": "#B45309",
+          "share": 0.01
+        }
+      ]
+    },
+    {
+      "runId": "seedcssin0",
+      "url": "http://localhost:3000/r/seedcssin0",
+      "host": "localhost:4100",
+      "name": "Tidewater · CSS-in-JS",
+      "category": "Developer tools",
+      "order": 4,
+      "stats": {
+        "colors": 9,
+        "typeStyles": 9,
+        "spacingSteps": 11,
+        "components": 28,
+        "checksPassed": 44,
+        "checksApplicable": 46
+      },
+      "palette": [
+        {
+          "value": "#0B1F3A",
+          "share": 0.603
+        },
+        {
+          "value": "#E2E8F0",
+          "share": 0.151
+        },
+        {
+          "value": "#2458E6",
+          "share": 0.092
+        },
+        {
+          "value": "#FFFFFF",
+          "share": 0.085
+        },
+        {
+          "value": "#0F8A8A",
+          "share": 0.027
+        },
+        {
+          "value": "#0B1F3A1F",
+          "share": 0.015
+        },
+        {
+          "value": "#15803D",
+          "share": 0.01
+        },
+        {
+          "value": "#B45309",
+          "share": 0.01
+        }
+      ]
+    },
+    {
+      "runId": "seedlibra0",
+      "url": "http://localhost:3000/r/seedlibra0",
+      "host": "localhost:4100",
+      "name": "Ledgerly · Bulma",
+      "category": "Finance",
+      "order": 5,
+      "stats": {
+        "colors": 23,
+        "typeStyles": 11,
+        "spacingSteps": 7,
+        "components": 22,
+        "checksPassed": 42,
+        "checksApplicable": 47
+      },
+      "palette": [
+        {
+          "value": "#404654",
+          "share": 0.31
+        },
+        {
+          "value": "#2E333D",
+          "share": 0.174
+        },
+        {
+          "value": "#C8CCD5",
+          "share": 0.1
+        },
+        {
+          "value": "#4258FF",
+          "share": 0.083
+        },
+        {
+          "value": "#090A0C",
+          "share": 0.082
+        },
+        {
+          "value": "#FFFFFF",
+          "share": 0.068
+        },
+        {
+          "value": "#E6E8EC",
+          "share": 0.037
+        },
+        {
+          "value": "#001F1A",
+          "share": 0.035
+        }
+      ]
+    },
+    {
+      "runId": "seedmafter",
+      "url": "http://localhost:3000/r/seedmafter",
+      "host": "localhost:4100",
+      "name": "Tidewater · Messy, half fixed",
+      "category": "SaaS",
+      "order": 6,
+      "stats": {
+        "colors": 18,
+        "typeStyles": 10,
+        "spacingSteps": 11,
+        "components": 33,
+        "checksPassed": 51,
+        "checksApplicable": 57
+      },
+      "palette": [
+        {
+          "value": "#1F1F1F",
+          "share": 0.314
+        },
+        {
+          "value": "#FFFFFF",
+          "share": 0.128
+        },
+        {
+          "value": "#0B1F3A",
+          "share": 0.107
+        },
+        {
+          "value": "#D1D1D1",
+          "share": 0.087
+        },
+        {
+          "value": "#2458E6",
+          "share": 0.08
+        },
+        {
+          "value": "#E1E1E1",
+          "share": 0.056
+        },
+        {
+          "value": "#737373",
+          "share": 0.052
+        },
+        {
+          "value": "#505050",
+          "share": 0.047
+        }
+      ]
+    }
+  ]
+}

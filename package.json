@@ -31,11 +31,12 @@
     "qa:lighthouse": "node scripts/run.mjs tsx scripts/qa-lighthouse.ts",
     "qa:copy": "node scripts/run.mjs tsx scripts/qa-copy.ts",
     "build": "node scripts/run.mjs pnpm -r build",
-    "verify:all": "node scripts/run.mjs node scripts/steps.mjs check test test:security test:e2e evals:gate build qa:visual qa:axe qa:lighthouse qa:copy audit",
+    "verify:all": "node scripts/run.mjs node scripts/steps.mjs check test test:security db:seed:check test:e2e evals:gate build qa:visual qa:axe qa:lighthouse qa:copy audit",
     "audit": "pnpm audit --audit-level high",
     "showcase": "node scripts/run.mjs tsx scripts/showcase/index.ts",
     "doctor": "node scripts/run.mjs tsx scripts/doctor.ts",
-    "prompts:build": "node scripts/run.mjs tsx scripts/prompts-build.ts"
+    "prompts:build": "node scripts/run.mjs tsx scripts/prompts-build.ts",
+    "db:seed:check": "node scripts/run.mjs tsx scripts/db-seed-fixtures.ts --if-missing"
   },
   "devDependencies": {
     "@anthropic-ai/sdk": "1.3.0",
@@ -49,10 +50,12 @@
     "@types/node": "22.20.5",
     "@types/pngjs": "^6.0.5",
     "axe-core": "4.14.0",
+    "drizzle-orm": "0.45.4",
     "eslint": "9.39.5",
     "eslint-config-next": "16.4.3",
     "globals": "16.4.0",
     "ioredis": "6.0.0",
+    "pino": "10.4.0",
     "pixelmatch": "8.0.0",
     "pngjs": "7.0.0",
     "postgres": "3.4.9",

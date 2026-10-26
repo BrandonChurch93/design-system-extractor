@@ -1,0 +1,24 @@
+{
+  "purpose": "components",
+  "size": "small",
+  "model": "claude-haiku-5-5",
+  "text": "{\"items\": [{\"id\": \"c1\", \"type\": \"header\", \"name\": \"Site header\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c2\", \"type\": \"input\", \"name\": \"Text input\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c3\", \"type\": \"button\", \"name\": \"Button\", \"isComponent\": true, \"variantHint\": null}]}",
+  "usage": {
+    "input_tokens": 154,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1454,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 123,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-26T09:29:28.546Z",
+  "request": "Items:\nc1 guess header 0.95, header, no class names, inside a:1, text \"Acme\", 2 instances on 1 page (/), variants Default, no picture\nc2 guess input 0.98, input, no class names, no children, text \"\", 4 instances on 1 page (/), variants Default, no picture\nc3 guess button 0.95, button, no class names, no children, text \"Sign in\", 2 instances on 1 page (/), variants Default, no picture"
+}

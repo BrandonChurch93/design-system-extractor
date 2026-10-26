@@ -1,0 +1,24 @@
+{
+  "purpose": "components",
+  "size": "small",
+  "model": "claude-haiku-5-5",
+  "text": "{\"items\": [{\"id\": \"c25\", \"type\": \"textarea\", \"name\": \"Text area\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c26\", \"type\": \"tabs\", \"name\": \"Tab bar\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c27\", \"type\": \"button\", \"name\": \"Tab button\", \"isComponent\": true, \"variantHint\": \"selected and unselected state\"}, {\"id\": \"c28\", \"type\": \"alert\", \"name\": \"Plan notice\", \"isComponent\": true, \"variantHint\": \"warning or success color\"}, {\"id\": \"c29\", \"type\": \"card\", \"name\": \"Promo card\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c30\", \"type\": \"tag\", \"name\": \"Step pill\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c31\", \"type\": \"button\", \"name\": \"Share button\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c32\", \"type\": \"list-row\", \"name\": \"Release entry\", \"isComponent\": true, \"variantHint\": null}]}",
+  "usage": {
+    "input_tokens": 776,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1454,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 349,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-26T09:28:57.251Z",
+  "request": "Items:\nc25 guess textarea 0.98, textarea, classes textarea, no children, text \"\", 2 instances on 1 page (/contact), variants Default, no picture\nc26 guess tabs 0.95, div role tablist, classes tabs, inside button:3, text \"Digests Slack Pages\", 2 instances on 1 page (/features), variants Default, no picture\nc27 guess button 0.95, button role tab, classes tab, no children, text \"Digests\", 6 instances on 1 page (/features), variants Default, no picture\nc28 guess alert 0.8, div role status, classes alert alert-success, inside div:2 p:1 span:1 svg:1, text \"Digests are included in every plan. Compare plans\", 4 instances on 2 pages (/features, /docs/getting-started), variants Warning, Success, picture below\nc29 guess card 0.6, section, classes promo, inside h3:1 p:1, text \"Ship notes on Fridays Teams that publish weekly see twice the readers.\", 2 instances on 1 page (/features), variants Default, picture below\nc30 guess tag 0.7, li, classes step, no children, text \"1 Connect\", 6 instances on 1 page (/features), variants Default, picture below\nc31 guess button 0.95, button, classes share-button, inside svg:1, text \"\", 2 instances on 1 page (/changelog), variants Default, no picture\nc32 guess list-row 0.7, article, classes release, inside h3:1 p:1 span:1, text \"Week 1 Faster digests A short note about faster digests.\", 8 instances on 1 page (/changelog), variants Default, picture below\nPicture of c28:\n[image]\nPicture of c29:\n[image]\nPicture of c30:\n[image]\nPicture of c32:\n[image]"
+}

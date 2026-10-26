@@ -21,6 +21,9 @@ function StateCell({ label, node, wide, inverse }: { label: string; node: React.
  *  itself to the frame's content, which posts its height. */
 function PhoneFrame({ slug, title, initialHeight, view = 'phone', width = 392 }: { slug: string; title: string; initialHeight: number; view?: 'phone' | 'states'; width?: number | string }) {
   const [height, setHeight] = useState(initialHeight);
+  const frame = useRef<HTMLIFrameElement>(null);
+  // The frame may load and post before this page hydrates, so the page also asks once it listens.
+  const ask = (f: HTMLIFrameElement | null) => f?.contentWindow?.postMessage({ dseFrameAsk: true }, window.location.origin);
   useEffect(() => {
     function onMessage(e: MessageEvent) {
       if (e.origin !== window.location.origin) return;
@@ -28,11 +31,12 @@ function PhoneFrame({ slug, title, initialHeight, view = 'phone', width = 392 }:
       if (data?.dseFrame === `${slug}:${view}` && typeof data.height === 'number') setHeight(Math.ceil(data.height));
     }
     window.addEventListener('message', onMessage);
+    ask(frame.current);
     return () => window.removeEventListener('message', onMessage);
   }, [slug, view]);
   const src = view === 'states' ? `/catalog/frame/${slug}?view=states` : `/catalog/frame/${slug}`;
   // Demo frames repeat content shown beside them, so they stay out of the tab order.
-  return <iframe className={view === 'states' ? styles.isolated : styles.frame} src={src} title={title} width={width} height={height} tabIndex={-1} />;
+  return <iframe ref={frame} onLoad={(e) => ask(e.currentTarget)} className={view === 'states' ? styles.isolated : styles.frame} src={src} title={title} width={width} height={height} tabIndex={-1} />;
 }
 
 function Section({ demo }: { demo: Demo }) {
@@ -95,8 +99,15 @@ export function CatalogFrame({ slug, view = 'phone' }: { slug: string; view?: 'p
     const post = () => window.parent.postMessage({ dseFrame: `${slug}:${view}`, height: el.getBoundingClientRect().height }, window.location.origin);
     const ro = new ResizeObserver(post);
     ro.observe(el);
+    const onAsk = (e: MessageEvent) => {
+      if (e.origin === window.location.origin && (e.data as { dseFrameAsk?: boolean })?.dseFrameAsk) post();
+    };
+    window.addEventListener('message', onAsk);
     post();
-    return () => ro.disconnect();
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('message', onAsk);
+    };
   }, [slug, view]);
   if (!demo) return null;
   return (

@@ -72,7 +72,7 @@ Indexes: `host`, `visitor_id, created_at`, `status`, `retention_until`.
 }
 ```
 
-`CheckSummary = { check (Check enum), passed, applicable, failing: { componentId, name, detail }[] }`. `local` is set only by `dse serve` for a run opened through `/open`. `blockedDetail` is `{ attempts: { url, status, marker?, retries }[], robots?: string }` for `bot` and `robots`, `{ redirectedTo? }` for `login`, `{ used, budget, runsToday, resetsAt }` for `budget` and `visitor-cap`, `{ queued }` for `busy`, and `{ reason: string }` otherwise.
+`CheckSummary = { check (Check enum), passed, applicable, failing: { componentId, name, detail }[] }`. `local` is set only by `dse serve` for a run opened through `/open`. `blockedDetail` is `{ attempts: { url, status, marker?, retries }[], robots?: string }` for `bot` and `robots`, `{ redirectedTo? }` for `login`, `{ used, budget, runsToday, resetsAt }` for `budget` (dollars spent, the daily budget, runs created today site-wide) and `visitor-cap` (the visitor's runs, the runs per day, the visitor's runs, D-057), `{ queued }` for `busy`, and `{ reason: string }` otherwise.
 
 Sections are optional while running and required when complete; the schema has `RunDocumentPartial` and `RunDocumentComplete`.
 

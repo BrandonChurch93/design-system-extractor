@@ -1,0 +1,24 @@
+{
+  "purpose": "narrative",
+  "size": "large",
+  "model": "claude-sonnet-5-5",
+  "text": "{\"narrative\": \"The system carries 13 spacing values where 11 would do, and two of them, 10 and 18, sit off the 4 px grid on 12 pages. It also holds 10 type styles where nine would do, and three differ by 1 px or less in size or line height. Four colors sit near a neighbor. The proposed set maps the off-grid spacing to the nearest grid steps, merges the near-duplicate type styles into nine and folds the grays into nine steps. Every pair of text and background keeps its contrast ratio.\", \"designSystemIntro\": \"This design system was extracted from localhost:4100 across 12 pages. It holds 18 colors, 10 type styles, 11 spacing steps and 33 components.\"}",
+  "usage": {
+    "input_tokens": 289,
+    "cache_creation_input_tokens": 1161,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 1161,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 237,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-26T09:29:09.269Z",
+  "request": "{\"host\":\"localhost:4100\",\"colors\":18,\"typeStyles\":10,\"spacingSteps\":11,\"components\":33,\"pages\":12,\"headline\":\"13 spacing values, 2 of them off the 4 px grid.\",\"supporting\":[\"10 type styles where nine would do.\"],\"numbers\":[{\"kind\":\"spacing\",\"before\":13,\"after\":11,\"caption\":\"Two sit off the 4 px grid: 10 and 18, on 12 pages.\"},{\"kind\":\"type\",\"before\":10,\"after\":9,\"caption\":\"Three differ by 1 px or less in size or line height.\"}],\"findings\":{\"nearDuplicateColors\":4,\"offGrid\":[10,18],\"variantCollapses\":0,\"typeNearDuplicates\":2},\"proposal\":{\"grays\":9,\"spacingSteps\":11,\"typeStyles\":9,\"contrastKept\":true}}"
+}

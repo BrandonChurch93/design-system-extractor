@@ -2,10 +2,14 @@ import { defineConfig } from 'vitest/config';
 
 const shared = ['packages/*/test/**', 'apps/*/test/**', 'scripts/test/**'];
 
+// Route handlers render JSX (the OG image); the app's tsconfig keeps JSX for Next, so tests compile it here.
+const oxc = { jsx: { runtime: 'automatic' as const } };
+
 export default defineConfig({
   test: {
     projects: [
       {
+        oxc,
         test: {
           name: 'unit',
           include: shared.map((g) => `${g}/*.test.ts`),
@@ -16,6 +20,7 @@ export default defineConfig({
         },
       },
       {
+        oxc,
         test: {
           name: 'integration',
           include: shared.map((g) => `${g}/*.int.test.ts`),

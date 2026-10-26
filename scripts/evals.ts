@@ -102,10 +102,17 @@ if (notMeasured.length) console.log(`\nnot yet measured: ${notMeasured.join(', '
 // --prune-recordings: after a full replay of every fixture, delete the recordings no call read.
 if (values['prune-recordings'] && mode === 'replay' && !values.only && !failed) {
   const dir = defaultRecordingsDir(root);
+  // Recordings for the seed and the queue tests are not read by evals; record-extra.ts lists them.
+  let extra = new Set<string>();
+  try {
+    extra = new Set((JSON.parse(readFileSync(join(dir, 'extra.json'), 'utf8')) as string[]).map((f) => join(dir, f)));
+  } catch {
+    extra = new Set();
+  }
   let pruned = 0;
   for (const purpose of readdirSync(dir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)) {
     for (const f of readdirSync(join(dir, purpose))) {
-      if (!usedRecordings.has(join(dir, purpose, f))) {
+      if (!usedRecordings.has(join(dir, purpose, f)) && !extra.has(join(dir, purpose, f))) {
         rmSync(join(dir, purpose, f));
         pruned++;
       }

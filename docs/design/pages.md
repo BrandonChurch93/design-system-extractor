@@ -152,11 +152,11 @@ Titles follow `{page} · Design System Extractor`; the `{page}` values and descr
 ## API routes
 
 - `POST /api/runs` · body `{url, include?: string[]}`; the BYO key travels in the `x-byo-key` header, never the body. Returns `200 {id, runsLeft}` or `200 {blocked: reason, detail, runsLeft}` (a blocked run is a result, not an error), `429` with `Retry-After` when rate limited, `400` when the body fails the schema.
-- `GET /api/runs/{id}` · `{ id, status, isShowcase, document, events }` (the run document, its run events for the live log, and whether it is in the showcase for the breadcrumb), plus `queuePosition` (the count of queued jobs with priority ≥ this run's, ahead of it) while queued; ETag; `Cache-Control: no-store` while queued or running, `public, max-age=3600, stale-while-revalidate=86400` once terminal. A run that has been unpublished or deleted returns 404 and the stale copy expires within the hour.
+- `GET /api/runs/{id}` · `{ id, status, isShowcase, document, events }` (the run document, its run events for the live log, and whether it is in the showcase for the breadcrumb), plus `queuePosition` (the count of queued jobs with priority ≥ this run's, ahead of it) while queued; ETag; `Cache-Control: no-store` while queued or running, `public, max-age=3600, stale-while-revalidate=86400` once terminal. A run that has been unpublished or deleted returns 404 (`no-store`) and the stale copy expires within the hour.
 - `GET /api/runs/{id}/export/{format}` · `format` in `tokens.css`, `tokens.json`, `tailwind.tokens.js`, `tokens.w3c.json`, `design-system.md`, `prompt.md`, `component/{componentId}/prompt.md`, `all.zip`; query `set=proposed|raw` (default proposed).
-- `GET /api/runs/{id}/pages/{pageId}/capture?viewport=desktop|mobile` · the full-page capture image.
+- `GET /api/runs/{id}/pages/{pageId}/capture?viewport=desktop|mobile` · the full-page capture image, as a 302 redirect to the stored file (a capture can be larger than a function may return, D-057).
 - `GET /api/runs/{id}/og` · the Open Graph image: the palette strip, the host, and the stats line on `bg`.
-- `POST /api/runs/{id}/cancel` · cancels a queued or running run from the browser that created it (the visitor cookie must match).
+- `POST /api/runs/{id}/cancel` · cancels a queued or running run from the browser that created it (the visitor cookie must match). Returns `{id, status}` with `cancelled` (a queued run, ended at once) or `cancelling` (a running run, ended by the worker between pages); `403` from another browser, `409` once the run has ended.
 - `GET /api/me` · `{ runsLeft, runsPerDay, resetsAt }` for the current visitor. The key is never sent to this route; whether a key is saved is known to the browser alone.
 - `GET /api/health` · `{ok, worker: {alive, queueDepth}, budget: {remaining, resetsAt}}`. `worker.alive` is true when the worker's heartbeat in Redis is under 45 s old.
 

@@ -38,7 +38,7 @@ One storage adapter interface (`put`, `get`, `publicUrl`, `delete`, `list`) with
 
 ## Data flow of a run
 
-1. `POST /api/runs` (web) runs the seven-step pre-check in `caps-and-budget.md` (schema, rate limit, URL, private address, queue depth, visitor cap, budget), inserts a `runs` row with status `queued`, enqueues a BullMQ job `{runId, byoKeyCiphertext?}` with priority, and returns `{id, runsLeft}` or a blocked result.
+1. `POST /api/runs` (web) runs the seven-step pre-check in `caps-and-budget.md` (schema, rate limit, URL, private address, queue depth, visitor cap, budget), inserts a `runs` row with status `queued`, enqueues a BullMQ job `{runId, byoKeyCiphertext?, counted?}` with priority (D-057), and returns `{id, runsLeft}` or a blocked result.
 2. The worker picks the job, marks the run `running`, and runs the pipeline with a `RunContext` that exposes `emit(stage, substage, message, patch)`.
 3. Every `emit` appends a `run_events` row and applies `patch` (a partial run document) to the run's `document` through `applyPatch`, a deep merge: objects merge recursively, arrays and scalars are replaced, so a `tokens:type` patch adds `tokens.type` without touching `tokens.colors`. Implemented as a read-modify-write inside a transaction on the run row. The document is therefore readable, partially, at any moment.
 4. The web app's `GET /api/runs/{id}` reads the row and returns the document with status. The in-progress page polls it (D-014).
@@ -83,14 +83,14 @@ Every root script loads `.env.local` from the repository root; setting `DOTENV_F
 | `pnpm pipeline:run <url> [--out file]` | runs the pipeline to a JSON file without the queue |
 | `pnpm evals [--through <stage>] [--fallback]` | runs the pipeline on the five eval fixtures through `MemoryRunContext` in replay mode (a replay miss fails the run), compares to expected, writes `fixtures/results.json`; `--through` scores only the metrics available up to that stage; `env DSE_MODEL_MODE=live` or `record` on the command line overrides replay; `--fallback` fails every model call so each step takes its fallback, and leaves `results.json` alone |
 | `pnpm db:migrate` · `pnpm db:reset` | Drizzle migrations |
-| `pnpm db:seed:fixtures` | runs the six fixture sites through the local queue and writes the local showcase content |
+| `pnpm db:seed:fixtures` | runs the six fixture sites through the local queue and writes the local showcase content; `pnpm db:seed:check` does so only when the seed is missing or incomplete (D-057) |
 | `pnpm qa:design` | screenshots every page and state at 1440, 820, 390 into `qa/` |
 | `pnpm qa:visual` | visual regression against committed goldens |
 | `pnpm qa:axe` | axe on every page and state |
 | `pnpm qa:lighthouse` | Lighthouse on home and a complete run page, against `next build` served by `next start` on a local port |
 | `pnpm qa:copy` | the em dash and forbidden-word grep (rules below) |
 | `pnpm build` | builds every package and the web app (`next build`) and the worker bundle |
-| `pnpm verify:all` | in order, failing fast: `check`, `test`, `test:security` (from P6), `test:e2e`, `evals:gate`, `build`, `qa:visual`, `qa:axe`, `qa:lighthouse`, `qa:copy`, `pnpm audit --audit-level high` |
+| `pnpm verify:all` | in order, failing fast: `check`, `test`, `test:security` (from P6), `db:seed:check` (from P10), `test:e2e`, `evals:gate`, `build`, `qa:visual`, `qa:axe`, `qa:lighthouse`, `qa:copy`, `pnpm audit --audit-level high` |
 | `pnpm showcase` | runs the showcase roster (local by default, `--remote` against production with the admin token) |
 | `pnpm run doctor [--production [--env <file>]]` | env and connectivity check; `--production` checks the shape of a production env file (default `.env.production.local`) without connecting. Always `pnpm run doctor`: pnpm's built-in `doctor` command shadows a bare `pnpm doctor` (D-028) |
 

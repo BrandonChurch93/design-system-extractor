@@ -28,16 +28,19 @@ byo:  { ...free, runsPerDay: Infinity, pageCap: 40 }
 
 ## Visitor identity
 
-A `dse_v` cookie: 16-char nanoid, `httpOnly`, `secure` in production, `sameSite=lax`, one year. Set on the first `POST /api/runs` (not on page view, to keep the home page cookie-free until a run). Fallback for cookie-less requests: a hash of the client IP (from the platform's forwarded header) plus the user agent. Both keys are counted, and the stricter count applies.
+A `dse_v` cookie: 16-char nanoid, `httpOnly`, `secure` in production, `sameSite=lax`, one year. Set on the first `POST /api/runs` (not on page view, to keep the home page cookie-free until a run). Fallback for cookie-less requests: a hash of the client IP (from the platform's forwarded header) plus the user agent, keyed with a key derived from `DSE_JOB_ENCRYPTION_KEY`; the cookie, when set, takes that same value, so a client that refuses cookies keeps one identity (D-057). The IP is kept only as a keyed hash. Both keys are counted, and the stricter count applies.
 
 ## Counting
 
 Redis keys, all with a TTL of 48 hours:
 
-- `cap:visitor:{visitorId}:{YYYY-MM-DD}` · integer, incremented when a run is created, decremented when the run ends `blocked`, `failed` or `cancelled` (so those do not count).
+- `cap:visitor:{visitorId}:{YYYY-MM-DD}` · integer, incremented when a run is created, decremented once when the run ends `blocked`, `failed` or `cancelled` (so those do not count). Runs with a visitor's key and showcase runs are not counted (D-057).
 - `cap:ip:{ipHash}:{YYYY-MM-DD}` · same, limit 6 (an IP shared by several people gets room; one person cannot exceed 2 per cookie).
-- `budget:{YYYY-MM-DD}` · integer cents of actual model spend, incremented after every model call with the computed cost of that call (token counts × the price table in `model-calls.md`).
-- `budget:reserved:{YYYY-MM-DD}` · cents reserved by running runs (worst-case each), released when the run ends and replaced by actual.
+- `budget:{YYYY-MM-DD}` · cents of actual model spend, kept as a decimal (`INCRBYFLOAT`, since one call costs a fraction of a cent), incremented after every model call with the computed cost of that call (token counts × the price table in `model-calls.md`).
+- `budget:reserved:{YYYY-MM-DD}` · cents reserved by queued and running runs (worst-case each), reserved when the run is created and released once when it ends, whatever the end (a cancel while queued included), the actual spend replacing it call by call (D-057).
+- `runs:{YYYY-MM-DD}` · runs created today, site-wide, for the budget page's runs-today line.
+
+A run job carries `{runId, byoKeyCiphertext?, counted?}`, where `counted` names the visitor and IP keys the run incremented, so a refund always decrements the day the run was created.
 
 The day is computed in `DSE_BUDGET_TIMEZONE`. The budget-reached page's "resets in about {hours} hours" uses the same clock.
 
@@ -51,7 +54,9 @@ In order, the first failure wins:
 4. Private address (`private-address`): resolve the host (A and AAAA); reject if any address is loopback, link-local, private (10/8, 172.16/12, 192.168/16, fc00::/7, fe80::/10), carrier NAT (100.64/10), multicast, or the metadata ranges (169.254.169.254, fd00:ec2::254). Also reject hosts `localhost`, `*.local`, `*.internal`, raw IPs in private ranges, and ports other than 80 and 443. The implementation is `packages/pipeline/src/net/private-ranges.ts`, shared with the crawler, which repeats the check on every redirect and before every navigation (DNS rebinding guard) and aborts with `private-address` if it ever fails. The one exception is `DSE_ALLOW_PRIVATE_HOSTS`, a comma-separated list of `host:port` values that the validator accepts; it is set to `localhost:4100,localhost:4300` in development and test so the fixture server and `dse serve` can be crawled, is empty in production, and `pnpm run doctor --production` fails if it is set.
 5. Queue depth (`busy`): if more than 20 runs are queued, blocked with reason `busy`. This applies to every run, with or without a key, because the single worker is the bottleneck.
 6. Visitor cap (`visitor-cap`): skipped with a BYO key.
-7. Budget (`budget`): skipped with a BYO key. Require `budget + reserved + worstCase ≤ dailyBudget` in cents; otherwise blocked with detail `{ used, budget, runsToday, resetsAt }`.
+7. Budget (`budget`): skipped with a BYO key. Require `budget + reserved + worstCase ≤ dailyBudget` in cents; otherwise blocked with detail `{ used, budget, runsToday, resetsAt }` (`used` and `budget` in dollars, `runsToday` site-wide). The visitor cap's detail has the same shape: `used` and `runsToday` are the visitor's count, `budget` the runs per day.
+
+Showcase runs (the admin path and the seed) skip steps 2, 6 and 7, never 5.
 
 A blocked result is `200 { blocked, detail, runsLeft }`; the client navigates to the state route in `docs/design/pages.md`. Nothing is enqueued and nothing counts. A successful result is `200 { id, runsLeft }`.
 
@@ -69,7 +74,7 @@ A blocked result is `200 { blocked, detail, runsLeft }`; the client navigates to
 - Page-candidate cap 300, fingerprint fetch cap 60, state-capture cap 40 per page per viewport, component cap 120, preview CSS cap 200 KB, screenshot height cap 8,000 px, snapshot cap 6,000 elements.
 - Concurrency: one run at a time per worker process (`concurrency: 1` in BullMQ); Railway runs one instance in v1. Two pages in flight within a run.
 - Memory: a browser context per run; pages closed after capture; the browser restarted every 25 runs or when RSS exceeds 1.5 GB.
-- Job retry: a job that crashes (worker restart) is retried once from the beginning; a second crash marks the run `failed` with the stopped-unexpectedly detail. Idempotency: the run row's status gate prevents double processing.
+- Job retry: a job that crashes (worker restart) is retried once from the beginning; a second crash marks the run `failed` with the stopped-unexpectedly detail. Idempotency: the run row's status gate prevents double processing. BullMQ settings: two attempts, `maxStartedAttempts: 2`, `maxStalledCount: 1`; a retried run's document, pages and log are reset; a job's BullMQ priority is 100 minus the app's priority, because BullMQ takes the lowest number first (D-057).
 - Cancel: `POST /api/runs/{id}/cancel` sets a Redis flag the worker checks between pages; the run becomes `cancelled`, the count is refunded.
 - Heartbeat: the worker writes `worker:heartbeat` (an ISO timestamp) to Redis every 15 s with a 60 s TTL; `/api/health` reports `alive` when it is under 45 s old.
 

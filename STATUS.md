@@ -10,24 +10,30 @@ None.
 
 ## Current phase
 
-P10 · Worker, queue, caps, API and seed. Started 2026-10-26.
+P11 · The web app. Started 2026-10-26.
 
 ## Next action
 
-Start P10: read `docs/specs/caps-and-budget.md`, `docs/specs/architecture.md`, `docs/design/pages.md` (API routes), `docs/specs/v2-seams.md` and `docs/specs/showcase.md` (local seed) in full, plus Next 16's route docs in `apps/web/node_modules/next/dist/docs`; then plan the files and tests in STATUS and build.
+Start P11: read `docs/design/pages.md`, `docs/design/components.md`, `docs/design/copy.md`, `docs/design/motion.md`, `docs/quality-bar.md` and `docs/specs/exports-and-mcp.md` (/open) in full, plus the Next 16 docs for pages, layouts, parallel routes, metadata and middleware in `apps/web/node_modules/next/dist/docs`; then plan the files and tests in STATUS and build. The seeded runs (`seedclean0` … `seedmafter`, frozen `seedprog01`-`03`) and `apps/web/content/showcase.json` are in place for pages, QA and goldens; the API routes and `lib/showcase.ts`, `lib/palette.ts`, `lib/entitlements.ts` are ready to use. Note: `next start` (the QA server) runs with `NODE_ENV=production`, which ignores `DSE_ALLOW_PRIVATE_HOSTS`, so a P11 test that crawls a fixture through the app needs the dev server or another route to the fixtures.
 
 ## Phase checklist
 
-P10 exit criteria (from `docs/plan.md`), plus the standing gate items:
+P11 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
-- [ ] Integration tests: a full run lifecycle on a fixture through the queue; budget block before enqueue; busy block; BYO bypass of budget and visitor cap but not busy; visitor cap and refund on blocked; cancel; worker crash retry once then fail; rate limit 429; a login-wall run ends `blocked: login` with a one-page document.
-- [ ] Security unit tables (URL, private ranges, rebinding, key never logged).
-- [ ] `GET /api/runs/{id}` serves partial documents during a run (tokens before components), with the cache headers per status and `queuePosition` while queued; the MCP `--run` path works against it.
-- [ ] `pnpm db:seed:fixtures` produces six complete runs and a six-entry local showcase content file.
-- [ ] `pnpm run doctor` still green.
-- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, `pnpm qa:design` reviewed for touched pages, commit naming P10, STATUS updated.
+- [ ] Every page and state in `pages.md` exists and is screenshotted at 1440, 820, 390; the `quality-bar.md` self-review applied to each and what was fixed noted here.
+- [ ] No horizontal scroll at 390 on any page (Playwright assertion).
+- [ ] axe: zero violations on every page and state.
+- [ ] Lighthouse thresholds on Home and a complete Run page.
+- [ ] Motion: a recorded video of the in-progress page filling on a fixture run reviewed; reduced-motion test passes on the run page.
+- [ ] Copy audit: every string in `strings.ts` appears verbatim in `copy.md`; `pnpm qa:copy` passes.
+- [ ] The `/open` Playwright test passes.
+- [ ] Visual goldens committed.
+- [ ] Polling: a run page open during a fixture run shows each stage landing with no full re-render (DOM mutation bound per poll).
+- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, `pnpm qa:design` reviewed, commit naming P11, STATUS updated.
 
 ## Gates passed
+
+- P10 · Worker, queue, caps, API and seed · 2026-10-26 · integration through the queue: lifecycle on clean with mid-run polls seeing tokens before components, budget, busy, BYO, visitor and address caps, refunds on blocked and cancel, crash retried once then failed, status gate, rate limit, login wall ending blocked with one page, retention · key never in a log, row or Redis value · every API route including exports, capture, OG, me, health, admin · MCP `--run` against the route and the production build · seed run twice with identical output (six complete runs, three frozen, six showcase entries) · worker image builds, boots in production mode and stops on SIGTERM · doctor green · D-057 logged with documents fixed · catalog frame-height race fixed (frames asked for their height after hydration; it had failed qa:visual one run in three) · verify:all green (395 tests) · qa:design reviewed (catalog unchanged; every phone frame sized to content at three widths) · build spend $0.093.
 
 - P9 · Exports, MCP and CLI · 2026-10-26 · golden tests for every format and both sets, W3C export validates against the vendored DTCG schema · scripted MCP client over stdio exercises every tool and resource (`--file`, `--run`, `--url`) · CLI end to end on clean including `--cdp`, `export` and `serve` · `npm pack` dry runs ship only the build · D-056 logged with documents fixed · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green.
 - P8 · Drift · 2026-10-26 · full `pnpm evals` passes every threshold on all five fixtures (replay) · messy drift recall 16 of 16, zero findings on clean, tailwind, css-in-js, library · contrast kept everywhere, the N increase path tested · narrative validator and fallbacks tested, narrative recorded · D-055 logged with documents fixed · catalog unchanged (qa:visual, qa:design) · axe zero violations · verify:all green with the full evals · build spend $0.08.
@@ -44,6 +50,7 @@ P10 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-057 · Worker, queue, caps and API made exact: visitor identity fallback becomes the cookie, key and showcase runs not counted, decimal cents and reservation at creation, job carries counted keys, queue depth and position from the runs table, BullMQ priority and retry settings, capture redirect, OG fonts, `stats` and `sparse`, seed with fixed ids at creation, extra recordings kept, `db:seed:check` in verify:all.
 - D-056 · Exports, MCP and CLI made exact: W3C header in `$description` and `$extensions`, export names, voice check on prose only, byte-stable zip, the exports stage and `runUrl`, the CLI's folder layout and served storage, `--cdp` per-tab guards, package entry points.
 - D-055 · Drift made exact: supporting sentence patterns, caption values, evidence strings, proposal details, the validator's extra rules, no date in the model's facts.
 - D-054 · Checks made exact: one worst result per check per component with its variant, `Not applicable`, nested components excluded from a container's contrast, focus and tap and label and motion readings, triggers cluster apart, the library's focus ring.
@@ -91,6 +98,7 @@ Things implemented differently from the spec, with the decision id that explains
 
 - jsdom is 29.1.1: jsdom 30 needs Node 22.22 (D-053). `pnpm exec tsx scripts/previews-inspect.ts <fixture> <outDir>` renders a fixture run's previews beside their crops after `pnpm evals --through previews`.
 - Node 22.14, pnpm 9.15.9, TypeScript 5.9.3 (the native 7.x compiler is not yet supported by Next.js tooling), ESLint 9 (ESLint 10 is not supported by the React, jsx-a11y and import plugins that `eslint-config-next` uses), Next.js 16.4, React 19.3, Zod 4.6, Vitest 5, Playwright 1.64 with its Chromium.
+- Queue and API (P10): tests use Redis logical database 15 and `dse_test`; the API route handlers are plain `Request`/`Response` functions, so integration tests call them directly with the harness in `apps/web/test/helpers/harness.ts`. `pnpm db:seed:fixtures` takes about ten minutes (six runs, concurrency 1) and refuses to run while a worker heartbeat is live: stop `pnpm dev` first. `pnpm db:seed:check` seeds only when the seed is missing. Sites outside the eval fixtures are recorded with `env DSE_MODEL_MODE=record pnpm exec node scripts/run.mjs tsx scripts/record-extra.ts messy-after walled` (listed in `fixtures/recordings/extra.json`, kept by prune). Next 16 rejects unknown exports from `route.ts` files: keep helpers in `lib/`.
 - Internal packages `@dse/schema` and `@dse/pipeline` are consumed as TypeScript source; the worker, MCP and CLI bundles inline them with tsup.
 - Root scripts load `.env.local` (or `DOTENV_FILE`) through `scripts/run.mjs` without overriding variables already set, so `env DSE_MODEL_MODE=live pnpm evals` wins.
 
@@ -104,6 +112,8 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-26 · Gate passed · P10 · queue, worker, API, seed, verify:all green.
+- 2026-10-26 · Session started (after compaction) · P10 · read CLAUDE.md, STATUS, decisions, plan P10, caps-and-budget, architecture, pages, v2-seams, showcase, data-model, evals seed section, Next 16 route handler docs · tree clean at 48d3dbe.
 - 2026-10-26 · Gate passed · P9 · exports, MCP and CLI tested end to end, verify:all green.
 - 2026-10-26 · Gate passed · P8 · full evals green on all fixtures, verify:all green.
 - 2026-10-26 · Gate passed · P7 · planted checks 100% on all fixtures, verify:all green.
