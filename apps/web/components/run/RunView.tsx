@@ -64,12 +64,13 @@ const logLines = (events: RunEvent[]): LogLine[] => events.map((e) => ({ id: e.i
 /** A template with its run id set in mono (docs/design/copy.md, rule 11). */
 function withRunId(template: string, id: string) {
   const [before, after = ''] = template.split('{id}');
+  // One inline element: a body that lays out its children as rows keeps the sentence on one line.
   return (
-    <>
+    <span>
       {before}
       <span className={styles.runId}>{id}</span>
       {after}
-    </>
+    </span>
   );
 }
 
