@@ -14,7 +14,7 @@ P15 · Final consistency, README, runbook, Definition of Done. P14 gate passed 2
 
 ## Next action
 
-P15, in progress. Work through the P15 plan below in order; tick each item as it lands, commit after each.
+P15, at the Definition of Done. Done and committed: traceability with every gap closed and held by `scripts/test/traceability.test.ts` (D-076 to D-080 for what the sweep changed), the final live eval, README, CHANGELOG 1.0.0, runbook verified, Known limitations, goldens. Now: reseed from scratch, then `pnpm verify:all` on a clean clone, `pnpm docker:smoke`, `pnpm --filter web build`, doctor on the production sample, and record `Build complete`.
 
 ### P15 plan
 
