@@ -10,11 +10,24 @@ None.
 
 ## Current phase
 
-P13 · Showcase, SEO and content. P12 gate passed 2026-10-26.
+P14 · Hardening. P13 gate passed 2026-10-26.
 
 ## Next action
 
-P13, at its gate. Done and committed: showcase script (D-063), EvalTable (D-064), metadata (D-065), real-site performance and quality (D-066 to D-071), reseed and goldens, OG goldens, the full real-roster dry run (table below) and its two fixes (D-072). Now: record the apple.com and airbnb.com re-runs in the table, review `pnpm qa:design` for the home, catalog and touched pages, run verify:all, then mark the P13 gate passed and start P14.
+P14, starting. Work through the P14 plan below in order; tick the checklist as each item lands, commit after each.
+
+### P14 plan
+
+Files and tests, in order:
+1. Error handling audit: every `catch` in `apps/` and `packages/*/src` classifies (a defined fallback value with a reason), logs, or rethrows; silent swallows that hide a failure get a log line (first finding: the OG route's storage put). Network timeouts: every `fetch`, Playwright navigation, S3 and Redis call has a bound; list them in a test where practical.
+2. Log review: a log capture test over a fixture run through the worker asserts no key, no `sk-ant-`, no HTML body (`<html`, `<body`) and no CSS text in any line.
+3. Dependency pinning: `@types/pngjs`, `@floating-ui/react-dom`, `server-only` to exact versions from the lockfile; a unit test that every dependency in every `package.json` is an exact version or `workspace:`.
+4. Chaos tests (`apps/web/test/chaos.int.test.ts`): worker process killed mid-run (SIGKILL) and a second worker takes the stalled job and finishes it from the beginning; Redis unavailable at enqueue (the run is not left queued, the count is refunded, the API answers the generic error); storage unavailable mid-capture (the run ends `failed` with the stopped detail, refunded).
+5. Soak (`pnpm soak`, `scripts/soak.ts`): ten fixture runs through one worker process; RSS sampled after each stays under the 1.5 GB restart threshold, browser contexts and pages return to zero, no growth trend; result written to `.dse/soak.json` and summarized here.
+6. `fixtures/env/production.sample` (every variable in `packages/schema/src/env.ts` with a placeholder of the right shape, `DSE_ALLOW_PRIVATE_HOSTS=` empty, `BILLING_ENABLED=false`, `DSE_SHOWCASE_TIMEOUT_MS`), a test that the sample names every env variable and that `pnpm run doctor --production --env fixtures/env/production.sample` passes; the web build validates env against the schema.
+7. Worker Dockerfile: `docker build -f apps/worker/Dockerfile .` and an end-to-end fixture extraction with the image against the Docker services (script `pnpm docker:smoke`).
+8. `pnpm --filter web build`; `pnpm audit --audit-level high`; the moderate advisory recorded with its id.
+9. Gate: consistency sweep against caps-and-budget.md and architecture.md, verify:all, STATUS.
 
 ### P13 real-roster dry run (2026-10-26, `pnpm showcase --dry-run`, $0.140 for the full pass)
 
@@ -97,14 +110,18 @@ Read for P11: pages, components, copy, motion, quality-bar, design-system, expor
 
 ## Phase checklist
 
-P12 exit criteria (from `docs/plan.md`), plus the standing gate items:
+P14 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
-- [x] Flag off: the flag-off test passes (unit half and 87 browser cases); `pnpm qa:visual` passes against the P11 goldens with every page golden unchanged except `run-390-after-select` (clock, D-061); the catalog golden updated once for the six surfaces and the plan-card alignment (D-062).
-- [x] Flag on: every surface renders in place, captured at 1440, 820, 390 and reviewed; axe zero violations (`qa:billing`, 16).
-- [x] No auth or payment dependency in any `package.json` (`flag-off.test.ts`).
-- [x] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, `pnpm qa:design` reviewed, commit naming P12, STATUS updated.
+- [ ] Soak test passes; chaos tests (worker killed mid-run, Redis unavailable at enqueue, storage unavailable mid-capture) end in the specified statuses with refunds.
+- [ ] `docker build -f apps/worker/Dockerfile .` succeeds and the image runs a fixture extraction end to end against the Docker services.
+- [ ] `pnpm --filter web build` succeeds.
+- [ ] `pnpm audit --audit-level high` has no findings, or each is listed here with advisory id and date.
+- [ ] Error handling audit, timeouts, log review, pinning, `fixtures/env/production.sample` with doctor passing.
+- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, commit naming P14, STATUS updated.
 
 ## Gates passed
+
+- P13 · Showcase, SEO and content · 2026-10-26 · showcase script with local, `--remote`, `--only`, `--alternates`, `--refresh-links`, `--dry-run` (D-063) and its tests · local six-entry showcase with no orphan rows at 3 and 2 columns (layout e2e) · real-roster dry run pasted above with per-site status, stats and cost, blocked and sparse sites noted with their alternates ($0.17 for the full pass and re-runs) · real-site fixes from the dry runs: CSSOM matched CSS, ordered novelty, time budget, parallel naming and checks, link guard, showcase timeout, hidden text (D-066 to D-072) · metadata on every route from copy.md (metadata e2e reads copy.md) · OG goldens · visual goldens with an absolute 25-pixel bound (D-073) · D-063 to D-073 logged with documents fixed · qa:design reviewed (home, how it works, catalog, run, compare, recent) · verify:all green (434 tests, e2e 138, evals, visual 125, axe 174, billing 16, Lighthouse home and run, copy) · `pnpm audit` one moderate advisory, none high.
 
 - P12 · V2 seams and flagged surfaces · 2026-10-26 · flag derived at build time and read through one module · auth and billing adapters with mocks · PricingSection, PlanBadge, AccountMenu, SignInSheet (with the TopNav Sign in), BillingPage and UpgradePrompt behind the flag with `data-testid="v2-surface"`, in the catalog always · flag-off test in two halves (D-060) · `qa:billing` on a flag-on build, reviewed at three viewports, axe zero · page goldens unchanged but `run-390-after-select` (D-061) · catalog golden updated · `tests/qa/` committed (was ignored) · D-060, D-061, D-062 logged with documents fixed · verify:all green (412 tests, e2e 134, visual 123, axe 174, billing 16) · `pnpm audit` one moderate advisory, none high.
 
@@ -206,6 +223,7 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-26 · Gate passed · P13 · dry run of the real roster, metadata and OG goldens, verify:all green.
 - 2026-10-26 · Session continued (after compaction) · P13 · re-read CLAUDE.md, STATUS, decisions, plan P13, showcase, crawler, token-clustering, handoff · tree clean at 7bbb9fa · full real-roster dry run finished, two fixes (D-072).
 - 2026-10-26 · Gate passed · P12 · flag-off test, flag-on captures and axe, goldens held, verify:all green.
 - 2026-10-26 · Session started · P12 · read CLAUDE.md, handoff, STATUS, decisions, plan, v2-seams, v2-plan, components, pages, copy, quality-bar, architecture · tree reconciled: P12 steps 1 to 5 uncommitted; `.gitignore`'s `qa/` also matched `tests/qa/`, so the QA suite was never committed (now `/qa/`); the nine in-progress goldens changed with `qaNow` show the StatStrip at 0, not a clock-only change (investigating); `pnpm check` green.
