@@ -57,6 +57,32 @@ export const styleProps = [
   'transition-duration',
   'flex-direction',
   'visibility',
+  'transform',
+  'translate',
+  'scale',
+  'rotate',
+  'filter',
+  'backdrop-filter',
+  'text-decoration-color',
+  'animation-duration',
+  'animation-timing-function',
+  'animation-delay',
+  'animation-iteration-count',
+  'transition-timing-function',
+  'transition-delay',
+] as const;
+
+/** Longhands the freeze removes, so they are kept from the snapshot taken before it (capture-and-states.md, 2b). */
+export const motionProps = [
+  'animation-name',
+  'animation-duration',
+  'animation-timing-function',
+  'animation-delay',
+  'animation-iteration-count',
+  'transition-property',
+  'transition-duration',
+  'transition-timing-function',
+  'transition-delay',
 ] as const;
 
 export type RawElement = {

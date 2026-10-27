@@ -1,43 +1,95 @@
 import type { FontFamily, TypeRole, TypeToken } from '@dse/schema';
 import { stableId } from '../ids';
 import type { RawTokens, RawType } from './collect';
-import { DISPLAY_MIN_WEIGHT, TYPE_CAP, TYPE_MIN_ELEMENTS } from './constants';
+import { TYPE_CAP, TYPE_MIN_ELEMENTS } from './constants';
 
 // Type (docs/specs/token-clustering.md, Type): exact tuples, roles, families.
 
-const headingTags = ['h1', 'h2', 'h3', 'h4'] as const;
-const bodyTags = ['p', 'li', 'td', 'span'];
+const bodyTags = ['p', 'li', 'td', 'span', 'div'];
 
 export const isMonospace = (t: Pick<RawType, 'family' | 'fallbackStack'>) => /mono|courier|consolas|menlo|monaco/i.test(t.family) || /\bmonospace\b/i.test(t.fallbackStack);
 
 const tagCount = (t: RawType, tags: readonly string[]) => tags.reduce((s, tag) => s + (t.tags.get(tag) ?? 0), 0);
 const hasHeading = (t: RawType) => [...t.tags.keys()].some((k) => /^h[1-6]$/.test(k));
 
-/** Roles in the spec's order: display, code, h1 to h4, body, then body-sm, label and caption against body. */
+/**
+ * Roles from size against body, never from tags (D-087): body is the most common tuple on running-text
+ * tags; the rest by ratio, then the small styles by size and weight; monospace is code; the rest text.
+ */
 export function assignRoles(types: RawType[]): Map<RawType, TypeRole> {
   const roles = new Map<RawType, TypeRole>();
+  for (const t of types) if (isMonospace(t)) roles.set(t, 'code');
   const open = () => types.filter((t) => !roles.has(t));
-  const display = types.filter((t) => t.homeLargest && t.weight >= DISPLAY_MIN_WEIGHT).sort((a, b) => b.size - a.size || b.count - a.count)[0];
-  if (display) roles.set(display, 'display');
-  for (const t of open()) if (isMonospace(t)) roles.set(t, 'code');
+  const body =
+    open()
+      .filter((t) => tagCount(t, bodyTags) > 0)
+      .sort((a, b) => tagCount(b, bodyTags) - tagCount(a, bodyTags) || b.count - a.count || a.key.localeCompare(b.key))[0] ?? [...open()].sort((a, b) => b.count - a.count || a.key.localeCompare(b.key))[0];
+  if (!body) return roles;
+  roles.set(body, 'body');
   for (const t of open()) {
-    const top = headingTags.map((h) => ({ h, n: t.tags.get(h) ?? 0 })).sort((a, b) => b.n - a.n)[0]!;
-    if (top.n > 0) roles.set(t, top.h);
-  }
-  const body = open()
-    .filter((t) => tagCount(t, bodyTags) > 0)
-    .sort((a, b) => tagCount(b, bodyTags) - tagCount(a, bodyTags) || b.count - a.count)[0];
-  if (body) roles.set(body, 'body');
-  for (const t of open()) {
-    if (!body) break;
+    const ratio = t.size / body.size;
     const less = body.size - t.size;
-    if (less >= 1 && less <= 2 && t.weight === 400) roles.set(t, 'body-sm');
-    else if (less >= 1 && less <= 3 && t.weight >= 500) roles.set(t, 'label');
-    else if (less >= 3 && t.weight === 400) roles.set(t, 'caption');
+    const em = t.letterSpacing / t.size;
+    // Weight 400 in the rules reads as "not a label weight": below 500 (D-090).
+    const light = t.weight < 500;
+    if (ratio >= 2.5) roles.set(t, 'display');
+    else if (ratio >= 1.75) roles.set(t, 'title');
+    else if (ratio >= 1.35) roles.set(t, 'heading');
+    else if (ratio >= 1.1) roles.set(t, 'subheading');
+    else if (t.textTransform === 'uppercase' && em >= 0.04 - 1e-9 && t.size <= body.size) roles.set(t, 'eyebrow');
+    else if (Math.abs(less) <= 1 && t.weight >= 500) roles.set(t, 'label');
+    else if (less >= 1 && less <= 2 && light) roles.set(t, 'body-sm');
+    else if (less >= 3 && light) roles.set(t, 'caption');
+    else roles.set(t, 'text');
   }
-  for (const t of open()) roles.set(t, 'other');
   return roles;
 }
+
+type Word = { word: string; applies: (t: RawType, first: RawType) => boolean };
+/** The words a later tuple of a role takes, in the order they are tried (D-089). */
+const words: Word[] = [
+  { word: 'strong', applies: (t, f) => t.weight > f.weight },
+  { word: 'soft', applies: (t, f) => t.weight < f.weight },
+  { word: 'lg', applies: (t, f) => t.size > f.size },
+  { word: 'sm', applies: (t, f) => t.size < f.size },
+  { word: 'wide', applies: (t, f) => t.letterSpacing > f.letterSpacing },
+];
+
+/**
+ * Names: the role, `text-{size}` for text; the second and later tuples of one name take words, not
+ * numbers; a tuple with no word left to tell it apart merges into the one holding the name.
+ */
+export function nameTypes(types: RawType[], roles: Map<RawType, TypeRole>): { names: Map<RawType, string>; mergedInto: Map<RawType, RawType> } {
+  const names = new Map<RawType, string>();
+  const mergedInto = new Map<RawType, RawType>();
+  const holder = new Map<string, RawType>();
+  const baseOf = (t: RawType) => (roles.get(t) === 'text' ? `text-${Math.round(t.size)}` : roles.get(t)!);
+  const groups = new Map<string, RawType[]>();
+  for (const t of types) groups.set(baseOf(t), [...(groups.get(baseOf(t)) ?? []), t]);
+  for (const [base, group] of groups) {
+    const sorted = [...group].sort((a, b) => b.size - a.size || b.weight - a.weight || b.count - a.count || a.key.localeCompare(b.key));
+    const first = sorted[0]!;
+    names.set(first, base);
+    holder.set(base, first);
+    for (const t of sorted.slice(1)) {
+      const apply = words.filter((w) => w.applies(t, first)).map((w) => w.word);
+      let name = base;
+      for (const w of apply) {
+        name = `${name}-${w}`;
+        if (!holder.has(name)) break;
+      }
+      if (holder.has(name)) {
+        mergedInto.set(t, holder.get(name)!);
+        continue;
+      }
+      names.set(t, name);
+      holder.set(name, t);
+    }
+  }
+  return { names, mergedInto };
+}
+
+const pagesOf = (m: Map<string, number>) => [...m].map(([pageId, count]) => ({ pageId, count })).sort((a, b) => b.count - a.count || a.pageId.localeCompare(b.pageId));
 
 export function buildType(raw: RawTokens): { tokens: TypeToken[]; families: FontFamily[] } {
   const kept = [...raw.type.values()]
@@ -45,38 +97,45 @@ export function buildType(raw: RawTokens): { tokens: TypeToken[]; families: Font
     .sort((a, b) => b.count - a.count || b.size - a.size || a.key.localeCompare(b.key))
     .slice(0, TYPE_CAP);
   const roles = assignRoles(kept);
-  const seen = new Map<TypeRole, number>();
-  const named = new Map<RawType, string>();
-  for (const t of kept) {
-    const role = roles.get(t)!;
-    const n = (seen.get(role) ?? 0) + 1;
-    seen.set(role, n);
-    named.set(t, n === 1 ? role : `${role}-${n}`);
-  }
-  const tokens: TypeToken[] = [...kept]
+  const { names, mergedInto } = nameTypes(kept, roles);
+  const absorbed = new Map<RawType, RawType[]>();
+  for (const [t, into] of mergedInto) absorbed.set(into, [...(absorbed.get(into) ?? []), t]);
+  const tokens: TypeToken[] = kept
+    .filter((t) => names.has(t))
     .sort((a, b) => b.size - a.size || b.weight - a.weight || b.count - a.count)
-    .map((t) => ({
-      id: stableId(`type:${t.key}`),
-      name: named.get(t)!,
-      role: roles.get(t)!,
-      family: t.family,
-      fallbackStack: t.fallbackStack,
-      size: t.size,
-      lineHeight: t.lineHeight,
-      weight: t.weight,
-      letterSpacing: t.letterSpacing,
-      ...(t.textTransform ? { textTransform: t.textTransform } : {}),
-      usage: t.count,
-      pages: [...t.pages].map(([pageId, count]) => ({ pageId, count })).sort((a, b) => b.count - a.count || a.pageId.localeCompare(b.pageId)),
-      sample: t.sample,
-    }));
+    .map((t) => {
+      const all = [t, ...(absorbed.get(t) ?? [])];
+      const tags = new Map<string, number>();
+      const pages = new Map<string, number>();
+      for (const m of all) {
+        for (const [k, n] of m.tags) tags.set(k, (tags.get(k) ?? 0) + n);
+        for (const [k, n] of m.pages) pages.set(k, (pages.get(k) ?? 0) + n);
+      }
+      return {
+        id: stableId(`type:${t.key}`),
+        name: names.get(t)!,
+        role: roles.get(t)!,
+        family: t.family,
+        fallbackStack: t.fallbackStack,
+        size: t.size,
+        lineHeight: t.lineHeight,
+        weight: t.weight,
+        letterSpacing: t.letterSpacing,
+        ...(t.textTransform ? { textTransform: t.textTransform } : {}),
+        uppercase: t.textTransform === 'uppercase',
+        tags: [...tags].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).map(([k]) => k),
+        usage: all.reduce((s, m) => s + m.count, 0),
+        pages: pagesOf(pages),
+        sample: t.sample,
+      };
+    });
   return { tokens, families: familiesOf(tokens, raw) };
 }
 
 /** Sans body family, then the display family if different, then monospace (docs/specs/token-clustering.md). */
 function familiesOf(tokens: TypeToken[], raw: RawTokens): FontFamily[] {
   const pick = (role: TypeRole) => tokens.find((t) => t.role === role);
-  const order = [pick('body') ?? tokens[0], pick('display') ?? pick('h1'), pick('code')].filter(Boolean) as TypeToken[];
+  const order = [pick('body') ?? tokens[0], pick('display') ?? pick('title'), pick('code')].filter(Boolean) as TypeToken[];
   const rest = tokens.filter((t) => !order.includes(t));
   const out: FontFamily[] = [];
   for (const t of [...order, ...rest]) {

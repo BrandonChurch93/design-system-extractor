@@ -8,7 +8,6 @@ export const COLOR_CAP = 80;
 
 export const TYPE_CAP = 24;
 export const TYPE_MIN_ELEMENTS = 3;
-export const DISPLAY_MIN_WEIGHT = 600;
 
 export const SPACE_MIN = 1;
 export const SPACE_MAX = 200;

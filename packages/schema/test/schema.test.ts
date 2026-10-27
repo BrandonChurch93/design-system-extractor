@@ -24,6 +24,7 @@ describe('run document', () => {
       'tokens:palette',
       'tokens:type',
       'tokens:space',
+      'tokens:motion',
       'components',
       'previews',
       'checks',
@@ -97,7 +98,7 @@ describe('enums and labels', () => {
   it('takes every label verbatim from copy.md', () => {
     const all = enumNames.flatMap((name) => Object.values(schema.labels[name] as Record<string, string>));
     const v = schema.variantWords;
-    const extra = [...Object.values(schema.checkDescriptions), schema.frameworkDetected, v.single, ...v.ranked, v.rankedMore, v.outlined, v.ghost, v.small, v.large];
+    const extra = [...Object.values(schema.checkDescriptions), schema.frameworkDetected, v.single, ...v.ranked, v.outlined, v.ghost, v.small, v.large, ...Object.values(v.third), ...schema.ordinalWords.slice(0, 3), ...Object.values(schema.durationRoleLabels)];
     for (const label of [...all, ...extra]) expect(copyMd.includes(`\`${label}\``), label).toBe(true);
   });
 
@@ -122,6 +123,14 @@ describe('types named in data-model.md', () => {
     'SpaceToken',
     'RadiusToken',
     'ShadowToken',
+    'OverlayToken',
+    'DurationToken',
+    'EasingToken',
+    'Keyframes',
+    'BreakpointToken',
+    'SiteVariable',
+    'MotionPattern',
+    'ComponentMotion',
     'Component',
     'Variant',
     'Instance',

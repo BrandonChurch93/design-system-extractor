@@ -47,6 +47,7 @@ export const completeRun: RunDocumentComplete = {
     },
   ],
   tokens: {
+    overlays: [{ id: 'ov000001', name: 'white-8', base: 'white', alpha: 0.08, value: 'rgb(255 255 255 / 8%)', usage: 3, pages: [{ pageId: home, count: 3 }], rawValues: [{ value: '#FFFFFF14', count: 3 }] }],
     colors: [
       {
         id: 'co000001',
@@ -103,6 +104,8 @@ export const completeRun: RunDocumentComplete = {
         lineHeight: 64,
         weight: 700,
         letterSpacing: -1.4,
+        uppercase: false,
+        tags: ['h1'],
         usage: 4,
         pages: [{ pageId: home, count: 4 }],
         sample: 'Ship calmer releases',
@@ -117,6 +120,8 @@ export const completeRun: RunDocumentComplete = {
         lineHeight: 26,
         weight: 400,
         letterSpacing: 0,
+        uppercase: false,
+        tags: ['p', 'li'],
         usage: 300,
         pages: [{ pageId: home, count: 300 }],
         sample: 'Release notes your team will read.',
@@ -132,9 +137,46 @@ export const completeRun: RunDocumentComplete = {
       { id: 'ra000002', value: 999, isPill: true, usage: 12, pages: [{ pageId: pricing, count: 12 }] },
     ],
     shadow: [{ id: 'sh000001', name: 'md', value: '0 4px 12px rgba(11, 31, 58, 0.12)', usage: 9, pages: [{ pageId: pricing, count: 9 }] }],
-    breakpoints: [640, 1024],
+    duration: [{ id: 'du000001', name: 'duration-160', ms: 160, role: 'base', usage: 12, pages: [{ pageId: home, count: 12 }], rawValues: ['0.16s'] }],
+    easing: [{ id: 'ea000001', name: 'ease-out-quart', siteName: '--ease-out-quart', value: 'cubic-bezier(0.25, 1, 0.5, 1)', usage: 12, pages: [{ pageId: home, count: 12 }] }],
+    keyframes: [{ name: 'fade-up', css: '@keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }', used: true, usage: 1, pages: [{ pageId: home, count: 1 }], unresolved: [] }],
+    breakpoints: [
+      { value: 640, usage: 4 },
+      { value: 1024, usage: 3 },
+    ],
+    siteVariables: [
+      { name: '--ease-out-quart', value: 'cubic-bezier(0.25, 1, 0.5, 1)', resolved: 'cubic-bezier(0.25, 1, 0.5, 1)', kind: 'easing', hashed: false, usage: 6, pages: [{ pageId: home, count: 6 }], scope: 'root' },
+      { name: '--sx-1fj52yw', value: '#0B1F3A', resolved: '#0B1F3A', kind: 'color', hashed: true, usage: 2, pages: [{ pageId: home, count: 2 }], scope: 'component' },
+    ],
     rawCounts: { colors: 212, fontDecls: 940, spacingValues: 1830, radii: 2, shadows: 1 },
     families: [{ name: 'Inter', loaded: true }],
+  },
+  motion: {
+    patterns: [
+      {
+        id: 'mp000001',
+        kind: 'entrance',
+        elementKey: 'h1|0.1.0|3f2a',
+        selector: '.hero h1',
+        pageId: home,
+        pageIds: [home],
+        viewport: 'desktop',
+        instances: 1,
+        trigger: { type: 'load' },
+        start: { opacity: '0', transform: 'translateY(12px)' },
+        end: { opacity: '1', transform: 'none' },
+        durationMs: 480,
+        delayMs: 0,
+        easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+        easingTokenId: 'ea000001',
+        iterations: 1,
+        keyframesName: 'fade-up',
+        source: 'css-animation',
+        observed: false,
+      },
+    ],
+    truncatedPages: [],
+    intersectionObservers: 1,
   },
   components: [
     {
@@ -177,7 +219,12 @@ export const completeRun: RunDocumentComplete = {
       },
       states: [
         { state: 'default', captured: true, cropKey: 'runs/abc123def4/components/cm000001/default.png', delta: [] },
-        { state: 'hover', captured: true, cropKey: 'runs/abc123def4/components/cm000001/hover.png', delta: [{ property: 'background-color', from: '#0B1F3A', to: '#13294B' }] },
+        {
+          state: 'hover',
+          captured: true,
+          cropKey: 'runs/abc123def4/components/cm000001/hover.png',
+          delta: [{ property: 'background-color', from: '#0B1F3A', to: '#13294B', transition: { durationMs: 160, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' } }],
+        },
         { state: 'focus', captured: true, reachedByKeyboard: true, delta: [{ property: 'outline-width', from: '0px', to: '2px' }] },
         { state: 'disabled', captured: false, reason: 'no instance found', delta: [] },
       ],
@@ -200,6 +247,13 @@ export const completeRun: RunDocumentComplete = {
         { check: 'label', status: 'na', detail: 'Text content' },
         { check: 'reduced-motion', status: 'na', detail: 'Stops under reduced motion' },
       ],
+      tier: 'core',
+      slug: 'primary-button',
+      motion: {
+        transitions: [{ state: 'hover', property: 'background-color', durationMs: 160, delayMs: 0, easingTokenId: 'ea000001' }],
+        animations: [],
+        patternIds: [],
+      },
     },
   ],
   checks: {
@@ -254,10 +308,11 @@ export function partialsByStage(doc: RunDocumentComplete): { stage: string; doc:
   const captured = { ...discovered, pages: doc.pages };
   const palette = { ...captured, tokens: { colors: doc.tokens.colors } };
   const type = { ...captured, tokens: { colors: doc.tokens.colors, type: doc.tokens.type, families: doc.tokens.families } };
-  const space = { ...captured, tokens: doc.tokens };
-  const components = { ...space, components: doc.components.map((c) => ({ ...c, checks: [] })) };
-  const previews = { ...space, components: doc.components.map((c) => ({ ...c, checks: [] })) };
-  const checks = { ...space, components: doc.components, checks: doc.checks };
+  const space = { ...captured, tokens: { ...doc.tokens, duration: undefined, easing: undefined, keyframes: undefined } };
+  const motion = { ...captured, tokens: doc.tokens, motion: doc.motion };
+  const components = { ...motion, components: doc.components.map((c) => ({ ...c, checks: [] })) };
+  const previews = { ...motion, components: doc.components.map((c) => ({ ...c, checks: [] })) };
+  const checks = { ...motion, components: doc.components, checks: doc.checks };
   const drift = { ...checks, drift: doc.drift, exports: { designSystemIntro: doc.exports.designSystemIntro } };
   const exportsLanded = { ...drift, exports: doc.exports };
   return [
@@ -268,6 +323,7 @@ export function partialsByStage(doc: RunDocumentComplete): { stage: string; doc:
     { stage: 'tokens:palette', doc: palette },
     { stage: 'tokens:type', doc: type },
     { stage: 'tokens:space', doc: space },
+    { stage: 'tokens:motion', doc: motion },
     { stage: 'components', doc: components },
     { stage: 'previews', doc: previews },
     { stage: 'checks', doc: checks },

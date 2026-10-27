@@ -10,7 +10,7 @@ export type BlockedReason = z.infer<typeof BlockedReason>;
 export const Stage = z.enum(['queue', 'discover', 'select', 'capture', 'tokens', 'components', 'previews', 'checks', 'drift', 'exports', 'done']);
 export type Stage = z.infer<typeof Stage>;
 
-export const Substage = z.enum(['tokens:palette', 'tokens:type', 'tokens:space']);
+export const Substage = z.enum(['tokens:palette', 'tokens:type', 'tokens:space', 'tokens:motion']);
 export type Substage = z.infer<typeof Substage>;
 
 export const EventLevel = z.enum(['info', 'warn', 'error']);
@@ -47,7 +47,7 @@ export type PageStatus = z.infer<typeof PageStatus>;
 export const FrameworkHint = z.enum(['tailwind', 'bootstrap', 'mui', 'chakra', 'css-in-js']);
 export type FrameworkHint = z.infer<typeof FrameworkHint>;
 
-export const TokenKind = z.enum(['color', 'type', 'space', 'radius', 'shadow', 'breakpoint']);
+export const TokenKind = z.enum(['color', 'type', 'space', 'radius', 'shadow', 'breakpoint', 'duration', 'easing']);
 export type TokenKind = z.infer<typeof TokenKind>;
 
 export const ColorGroup = z.enum(['brand', 'neutral', 'semantic']);
@@ -56,7 +56,7 @@ export type ColorGroup = z.infer<typeof ColorGroup>;
 export const SemanticRole = z.enum(['success', 'warning', 'danger', 'info']);
 export type SemanticRole = z.infer<typeof SemanticRole>;
 
-export const TypeRole = z.enum(['display', 'h1', 'h2', 'h3', 'h4', 'body', 'body-sm', 'label', 'caption', 'code', 'other']);
+export const TypeRole = z.enum(['display', 'title', 'heading', 'subheading', 'body', 'body-sm', 'label', 'eyebrow', 'caption', 'code', 'text']);
 export type TypeRole = z.infer<typeof TypeRole>;
 
 export const ComponentType = z.enum([
@@ -158,8 +158,17 @@ export type EvidenceKind = z.infer<typeof EvidenceKind>;
 export const PlanId = z.enum(['free', 'pro', 'team']);
 export type PlanId = z.infer<typeof PlanId>;
 
-export const ExportFormat = z.enum(['tokens.css', 'tokens.json', 'tailwind.tokens.js', 'tokens.w3c.json', 'design-system.md', 'prompt.md', 'component-prompt.md', 'all.zip']);
+export const ExportFormat = z.enum(['tokens.css', 'tokens.json', 'tailwind.tokens.js', 'tokens.w3c.json', 'design-system.md', 'prompt.md', 'component-prompt.md', 'motion.css', 'motion.json', 'all.zip']);
 export type ExportFormat = z.infer<typeof ExportFormat>;
+
+export const MotionKind = z.enum(['entrance', 'scroll-reveal', 'scroll-progress', 'scrolled-header', 'hover', 'loop', 'open']);
+export type MotionKind = z.infer<typeof MotionKind>;
+
+export const MotionSource = z.enum(['css-transition', 'css-animation', 'waapi', 'inline-style']);
+export type MotionSource = z.infer<typeof MotionSource>;
+
+export const ComponentTier = z.enum(['core', 'page']);
+export type ComponentTier = z.infer<typeof ComponentTier>;
 
 export const ExportSet = z.enum(['proposed', 'raw']);
 export type ExportSet = z.infer<typeof ExportSet>;
@@ -190,6 +199,9 @@ export const enums = {
   EvidenceKind,
   PlanId,
   ExportFormat,
+  MotionKind,
+  MotionSource,
+  ComponentTier,
 } as const;
 
 export type EnumName = keyof typeof enums;

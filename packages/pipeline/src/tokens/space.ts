@@ -1,4 +1,4 @@
-import type { RadiusToken, ShadowToken, SpaceToken, Tokens } from '@dse/schema';
+import type { BreakpointToken, RadiusToken, ShadowToken, SpaceToken, Tokens } from '@dse/schema';
 import { stableId } from '../ids';
 import type { RawShadow, RawTokens } from './collect';
 import { BASE_SHARE, BREAKPOINT_CAP, OFF_GRID_SHARE, RADIUS_CAP, SHADOW_BUCKETS, SHADOW_NAMES, SPACE_STEP_CAP } from './constants';
@@ -40,10 +40,10 @@ export function buildRadius(raw: RawTokens): RadiusToken[] {
 
 /**
  * Up to three buckets by largest blur, named sm, md and lg by increasing blur. With more distinct
- * shadows, the least used merge into the bucket nearest in blur. Names a site gives its shadows
- * (`--shadow-md`) win.
+ * shadows, the least used merge into the bucket nearest in blur. A site's own names are applied after
+ * (token-clustering.md, Site variables).
  */
-export function buildShadows(raw: RawTokens, siteNames: Map<string, string> = new Map()): ShadowToken[] {
+export function buildShadows(raw: RawTokens): ShadowToken[] {
   type Bucket = { members: RawShadow[] };
   const buckets: Bucket[] = [...raw.shadows.values()].sort((a, b) => a.maxBlur - b.maxBlur || b.count - a.count || a.value.localeCompare(b.value)).map((s) => ({ members: [s] }));
   const usage = (b: Bucket) => b.members.reduce((s, m) => s + m.count, 0);
@@ -56,23 +56,30 @@ export function buildShadows(raw: RawTokens, siteNames: Map<string, string> = ne
     for (let i = 1; i < buckets.length; i++) if (Math.abs(blur(buckets[i]!) - blur(gone!)) < Math.abs(blur(buckets[near]!) - blur(gone!))) near = i;
     buckets[near]!.members.push(...gone!.members);
   }
-  const used = new Set<string>();
   return buckets.map((b, i) => {
     const rep = [...b.members].sort((x, y) => y.count - x.count || x.value.localeCompare(y.value))[0]!;
     const pages = new Map<string, number>();
     for (const m of b.members) for (const [p, n] of m.pages) pages.set(p, (pages.get(p) ?? 0) + n);
-    const own = siteNames.get(rep.value);
-    const name = own && !used.has(own) ? own : (SHADOW_NAMES[i] ?? `shadow-${i + 1}`);
-    used.add(name);
-    return { id: stableId(`shadow:${rep.value}`), name, value: rep.value, usage: usage(b), pages: pagesOf(pages) };
+    return { id: stableId(`shadow:${rep.value}`), name: SHADOW_NAMES[i] ?? `shadow-${i + 1}`, value: rep.value, usage: usage(b), pages: pagesOf(pages) };
   });
 }
 
-/** The six most used media-query widths, ascending. */
-export function buildBreakpoints(raw: RawTokens): number[] {
-  return [...raw.breakpoints]
+/**
+ * The six most used media-query widths, ascending. A width exactly one more than another (1281 next to
+ * 1280) is its max-width twin: folded into the lower one and not a token of its own.
+ */
+export function buildBreakpoints(raw: RawTokens): BreakpointToken[] {
+  const counts = new Map(raw.breakpoints);
+  const twins = new Map<number, number>();
+  for (const [w] of [...counts].sort((a, b) => a[0] - b[0])) {
+    if (!counts.has(w + 1) || twins.has(w)) continue;
+    twins.set(w, w + 1);
+    counts.set(w, counts.get(w)! + counts.get(w + 1)!);
+    counts.delete(w + 1);
+  }
+  return [...counts]
     .sort((a, b) => b[1] - a[1] || a[0] - b[0])
     .slice(0, BREAKPOINT_CAP)
-    .map(([w]) => w)
-    .sort((a, b) => a - b);
+    .sort((a, b) => a[0] - b[0])
+    .map(([value, usage]) => ({ value, usage, ...(twins.has(value) ? { maxTwin: twins.get(value) } : {}) }));
 }

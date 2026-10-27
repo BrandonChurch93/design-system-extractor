@@ -21,9 +21,9 @@ export function requiredWord(t: ColorToken): string {
 
 export function namingTable(tokens: ColorToken[], pageCount: number): string {
   const lines = tokens.map((t) =>
-    [t.id, t.name, t.value, t.group, t.semanticRole ?? '-', t.group === 'neutral' ? 'gray' : hueWord(t.oklch.h), lightnessStep(t.oklch.l), `text ${t.uses.text} background ${t.uses.background} border ${t.uses.border} other ${t.uses.other}`, `${t.pages.length} of ${pageCount} pages`].join(' | '),
+    [t.id, t.name, t.value, t.group, t.semanticRole ?? '-', t.group === 'neutral' ? 'gray' : hueWord(t.oklch.h), lightnessStep(t.oklch.l), `text ${t.uses.text} background ${t.uses.background} border ${t.uses.border} other ${t.uses.other}`, `${t.pages.length} of ${pageCount} pages`, t.siteName ? 'site' : '-'].join(' | '),
   );
-  return ['id | name now | hex | group | role | hue | step | uses | pages', ...lines].join('\n');
+  return ['id | name now | hex | group | role | hue | step | uses | pages | fixed', ...lines].join('\n');
 }
 
 /**
@@ -35,7 +35,8 @@ export function applyNames(tokens: ColorToken[], proposed: { id: string; name: s
   const want = new Map<string, string>();
   for (const p of proposed) {
     const t = byId.get(p.id);
-    if (!t || want.has(p.id)) continue;
+    // A site-named token keeps the site's name whatever the model answers (D-082).
+    if (!t || t.siteName || want.has(p.id)) continue;
     const name = p.name.trim();
     const parts = name.split('-');
     if (!namePattern.test(name) || parts.length > 3 || !parts.includes(requiredWord(t))) continue;

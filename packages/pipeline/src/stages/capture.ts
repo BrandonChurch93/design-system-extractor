@@ -3,12 +3,13 @@ import type { Page as PwPage } from 'playwright';
 import type { FrameworkHint, Page as DocPage, SelectedPage, Viewport } from '@dse/schema';
 import { viewportSize } from '@dse/schema';
 import { capCandidates, findCandidates, noveltyKey, type ElementCandidate } from '../capture/candidates';
-import { matchedFromCssom } from '../capture/cssom-match';
+import { matchedFromCssom, unreadableSheets } from '../capture/cssom-match';
+import { endScriptAnimations, motionInit, motionMarkScroll, motionReadout, type MotionRecords } from '../capture/motion-script';
 import type { MatchedStyles } from '../capture/matched-css';
 import { scanSheets, type SheetScan } from '../capture/sheet-scan';
 import { buildSnapshot, compactSnapshot, descendants, type SnapElement, type Snapshot } from '../capture/snapshot';
-import { buildSelectors, styleProps, takeSnapshot } from '../capture/snapshot-script';
-import { activeState, cropOf, hoverState, neutral, readStyles, scrolledState, styleDelta, tabWalk, type StateRecord, type StyleDelta } from '../capture/states';
+import { buildSelectors, motionProps, styleProps, takeSnapshot } from '../capture/snapshot-script';
+import { activeState, cropOf, hoverState, neutral, readStyles, scrolledState, settle, splitList, STATE_WAIT_CAP, styleDelta, tabWalk, withTransitions, type StateRecord, type StyleDelta } from '../capture/states';
 import type { RunContext } from '../context';
 import { isBotChallenge, isLoginWalled, looksLikeLoginPage, loginPathPattern } from '../crawl/blocked';
 import { newPage, type RunBrowserContext } from '../crawl/browser';
@@ -119,6 +120,10 @@ export type ViewportCapture = {
   motionMain: Record<string, MotionProbe>;
   motionReduced: Record<string, MotionProbe>;
   sheets: SheetScan;
+  /** The runtime motion records, read before the freeze (motion-capture.md). */
+  motion: MotionRecords | null;
+  /** Stable selectors for the elements motion records name. */
+  motionSelectors: Record<string, string>;
   opens: OpenCapture[];
   screenshot: { key: string; width: number; height: number; cut: boolean; png: Buffer };
   submitAttempts: number;
@@ -294,6 +299,7 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     d.dismiss().catch(() => {});
   });
   await p.addInitScript(pageGuards);
+  await p.addInitScript(motionInit);
   try {
     const load = await loadPage(p, page.url, throttle);
     if (!load.ok) return { error: load.error ?? 'navigation failed', status: load.status, html: '' };
@@ -304,19 +310,32 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
       await ctx.emit({ stage: 'capture', message: `${page.path} · consent dismissed · ${consent}` });
     }
     const facts = await p.evaluate(loginFacts);
+    // The motion pass (step 2b): the sampler has run since document start and keeps running through the scroll pass.
+    await p.evaluate(motionMarkScroll).catch(() => 0);
     await scrollPass(p);
-    const sheets = await p.evaluate(scanSheets);
+    const sheetTexts: Record<number, string> = {};
+    for (const u of await p.evaluate(unreadableSheets)) {
+      const t = await cssText(u.href);
+      if (t) sheetTexts[u.index] = t;
+    }
+    const sheets = await p.evaluate(scanSheets, sheetTexts);
 
     // Header styles at scroll 0 and 400 must be read before the freeze.
     const pre = buildSnapshot(await p.evaluate(takeSnapshot, { props: [...styleProps], cap: SNAPSHOT_CAP }));
     const headerIds = pre.elements.filter((e) => e.vis && (e.tag === 'header' || e.role === 'banner' || (e.tag === 'nav' && e.y < 10)) && e.y < 10).map((e) => e.d);
     const scrolled = new Map<string, StateRecord>();
     for (const d of headerIds.slice(0, 2)) {
-      const r = await scrolledState(p, d);
-      if (r) scrolled.set(d, r);
+      // Transitions are live before the freeze, so the scrolled values are read once the header's own transition ends.
+      const st = pre.byDse.get(d)!.style;
+      const longest = Math.max(0, ...splitList(st['transition-duration']).map((v, i) => (parseFloat(v) + (parseFloat(splitList(st['transition-delay'])[i] ?? '0') || 0)) * 1000));
+      const r = await scrolledState(p, d, Math.min(STATE_WAIT_CAP, Math.max(150, longest + 50)));
+      if (r) scrolled.set(d, { ...r, delta: withTransitions(r.delta, st) });
     }
+    // Read the motion records out first; the freeze ends every running animation.
+    const motion = await p.evaluate(motionReadout).catch(() => null);
     // Marked so the matched CSS never takes capture's own rules for the site's.
     await (await p.addStyleTag({ content: freezeCss })).evaluate((el) => (el as Element).setAttribute('data-dse-capture', ''));
+    await p.evaluate(endScriptAnimations).catch(() => 0);
     await p.waitForTimeout(50);
 
     const vp = viewportSize[viewport];
@@ -330,6 +349,12 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     const snapshot = buildSnapshot(await p.evaluate(takeSnapshot, { props: [...styleProps], cap: SNAPSHOT_CAP }));
     const candidates = capCandidates(findCandidates(snapshot, viewport), CANDIDATE_CAP);
     const selectors = await p.evaluate(buildSelectors, candidates.map((c) => c.dse));
+    const motionIds = [...new Set((motion?.elements ?? []).map((e) => e.d).filter((d): d is string => d !== null && !(d in selectors)))];
+    const motionSelectors = { ...Object.fromEntries((motion?.elements ?? []).flatMap((e) => (e.d && selectors[e.d] ? [[e.d, selectors[e.d]!]] : []))), ...(motionIds.length ? await p.evaluate(buildSelectors, motionIds) : {}) };
+    if (motion) {
+      await ctx.emit({ stage: 'capture', message: `${page.path} · ${viewportSize[viewport].width} · motion ${motion.anims.length} animations · ${motion.samples.length} style samples` });
+      if (motion.truncated) await ctx.emit({ stage: 'capture', level: 'warn', message: `${page.path} · motion records cut at ${motion.anims.length >= 400 ? '400' : '2,000'}` });
+    }
 
     // Matched CSS for every candidate and its descendants.
     const need = new Set<string>();
@@ -376,7 +401,7 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     const unreachable = new Set<string>();
     const states: Record<string, StateRecord[]> = {};
     const add = (d: string, r: StateRecord | null) => {
-      if (r) (states[d] ??= []).push(r);
+      if (r) (states[d] ??= []).push(r.state === 'scrolled' ? r : { ...r, delta: withTransitions(r.delta, pre.byDse.get(d)?.style, r.animations) });
     };
     const marker = await p.evaluate(() => ((window as unknown as { __dseDoc: number }).__dseDoc = Math.random()));
     let left = false;
@@ -413,9 +438,10 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
         if (!walk.focus.has(d)) {
           await neutral(p);
           await p.evaluate((x) => (document.querySelector(`[data-dse-id="${x}"]`) as HTMLElement | null)?.focus({ preventScroll: false }), d);
+          const animations = await settle(p, d);
           const styles = await readStyles(p, d);
           const crop = await cropOf(p, d);
-          add(d, { state: 'focus', crop, delta: styleDelta(b, styles), reachedByKeyboard: false });
+          add(d, { state: 'focus', crop, delta: styleDelta(b, styles), reachedByKeyboard: false, ...(animations.length ? { animations } : {}) });
           focusFallback++;
         }
         const a = await activeState(p, d, b);
@@ -458,11 +484,7 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     }
     for (const e of pre.elements) {
       const s = snapshot.byDse.get(e.d);
-      if (s) {
-        s.style['animation-name'] = e.style['animation-name'];
-        s.style['transition-property'] = e.style['transition-property'];
-        s.style['transition-duration'] = e.style['transition-duration'];
-      }
+      if (s) for (const prop of motionProps) s.style[prop] = e.style[prop];
     }
 
     await ctx.files.put(keys.pageSnapshot(ctx.runId, page.id, viewport), gzipSync(JSON.stringify(compactSnapshot(snapshot))), { contentType: 'application/gzip' });
@@ -483,6 +505,8 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
         motionMain,
         motionReduced: {},
         sheets: { ...sheets, hasReducedMotionRule: sheets.hasReducedMotionRule },
+        motion,
+        motionSelectors,
         opens,
         screenshot: { key: shotKey, width: vp.width, height, cut, png },
         submitAttempts,

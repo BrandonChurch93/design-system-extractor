@@ -7,12 +7,15 @@ import type {
   CheckStatus,
   ColorGroup,
   ComponentGroup,
+  ComponentTier,
   ComponentType,
   DriftKind,
   EventLevel,
   EvidenceKind,
   ExportFormat,
   FrameworkHint,
+  MotionKind,
+  MotionSource,
   PageReason,
   PageStatus,
   PlanId,
@@ -68,6 +71,7 @@ export const substageLabels: Record<Substage, string> = {
   'tokens:palette': 'Palette',
   'tokens:type': 'Type',
   'tokens:space': 'Spacing',
+  'tokens:motion': 'Motion',
 };
 
 export const eventLevelLabels: Record<EventLevel, string> = {
@@ -125,6 +129,8 @@ export const tokenKindLabels: Record<TokenKind, string> = {
   radius: 'Radius',
   shadow: 'Shadow',
   breakpoint: 'Breakpoint',
+  duration: 'Duration',
+  easing: 'Easing',
 };
 
 export const colorGroupLabels: Record<ColorGroup, string> = {
@@ -143,16 +149,16 @@ export const semanticRoleLabels: Record<SemanticRole, string> = {
 /** The sample text in TypeScaleRow. */
 export const typeRoleLabels: Record<TypeRole, string> = {
   display: 'Display',
-  h1: 'Heading 1',
-  h2: 'Heading 2',
-  h3: 'Heading 3',
-  h4: 'Heading 4',
-  body: 'Body, the reading size',
-  'body-sm': 'Body, small',
+  title: 'Title',
+  heading: 'Heading',
+  subheading: 'Subheading',
+  body: 'Body',
+  'body-sm': 'Body small',
   label: 'Label',
+  eyebrow: 'Eyebrow',
   caption: 'Caption',
   code: 'Code',
-  other: 'Other',
+  text: 'Text',
 };
 
 export const componentTypeLabels: Record<ComponentType, string> = {
@@ -194,11 +200,56 @@ export const componentTypeLabels: Record<ComponentType, string> = {
 export const variantWords = {
   single: 'Default',
   ranked: ['Primary', 'Secondary', 'Tertiary'],
-  rankedMore: 'Variant {n}',
   outlined: 'Outlined',
   ghost: 'Ghost',
   small: 'small',
   large: 'large',
+  /** Third words, for variants that would share a name, in the order their fields are compared (D-084). */
+  third: {
+    bordered: 'bordered',
+    rounded: 'rounded',
+    square: 'square',
+    tight: 'tight',
+    wide: 'wide',
+    bold: 'bold',
+    muted: 'muted',
+    tall: 'tall',
+    short: 'short',
+    faint: 'faint',
+  },
+} as const;
+
+/** Ordinal words for a generated name still shared after its context (D-089). */
+export const ordinalWords = ['second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth'] as const;
+
+export const motionKindLabels: Record<MotionKind, string> = {
+  entrance: 'Entrance',
+  'scroll-reveal': 'Scroll reveal',
+  'scroll-progress': 'Scroll progress',
+  'scrolled-header': 'Scrolled header',
+  hover: 'Hover',
+  loop: 'Loop',
+  open: 'Open',
+};
+
+export const motionSourceLabels: Record<MotionSource, string> = {
+  'css-transition': 'CSS transition',
+  'css-animation': 'CSS animation',
+  waapi: 'Web Animations',
+  'inline-style': 'Inline style',
+};
+
+export const componentTierLabels: Record<ComponentTier, string> = {
+  core: 'Core',
+  page: 'Page-specific',
+};
+
+export const durationRoleLabels = {
+  faster: 'Faster',
+  fast: 'Fast',
+  base: 'Base',
+  slow: 'Slow',
+  slower: 'Slower',
 } as const;
 
 export const componentGroupLabels: Record<ComponentGroup, string> = {
@@ -288,6 +339,8 @@ export const exportFormatLabels: Record<ExportFormat, string> = {
   'design-system.md': 'design-system.md',
   'prompt.md': 'Prompt',
   'component-prompt.md': 'Component prompt',
+  'motion.css': 'Motion CSS',
+  'motion.json': 'Motion JSON',
   'all.zip': 'All files',
 };
 
@@ -317,6 +370,9 @@ export const labels = {
   EvidenceKind: evidenceKindLabels,
   PlanId: planLabels,
   ExportFormat: exportFormatLabels,
+  MotionKind: motionKindLabels,
+  MotionSource: motionSourceLabels,
+  ComponentTier: componentTierLabels,
 } as const;
 
 /** Replaces `{key}` placeholders. A missing value leaves the placeholder, which tests catch. */

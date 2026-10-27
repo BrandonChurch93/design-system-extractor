@@ -24,6 +24,11 @@ export const TokensJson = z.object({
   space: z.array(z.number().positive()),
   radius: z.record(z.string(), z.string()),
   shadow: z.record(z.string(), z.string()),
+  overlays: z.record(z.string(), z.object({ value: z.string(), base: z.string(), alpha: z.number() })),
+  duration: z.record(z.string(), z.object({ value: z.string(), role: z.string().optional() })),
+  easing: z.record(z.string(), z.string()),
+  keyframes: z.record(z.string(), z.object({ css: z.string(), used: z.boolean() })),
   breakpoints: z.array(z.number().positive()),
+  siteVariables: z.record(z.string(), z.object({ value: z.string(), kind: z.string().optional() })),
 });
 export type TokensJson = z.infer<typeof TokensJson>;

@@ -7,16 +7,20 @@ import {
   CheckStatus,
   ColorGroup,
   ComponentGroup,
+  ComponentTier,
   ComponentType,
   DriftKind,
   EvidenceKind,
   FrameworkHint,
+  MotionKind,
+  MotionSource,
   PageReason,
   PageStatus,
   PreviewMode,
   RunStatus,
   SemanticRole,
   State,
+  TokenKind,
   TypeRole,
   Viewport,
 } from './enums';
@@ -71,9 +75,15 @@ export const ContrastPair = z.object({
 });
 export type ContrastPair = z.infer<typeof ContrastPair>;
 
+/** A token name: generated names are kebab case; a site's own names may carry capitals and underscores (D-082). */
+export const TokenName = z.string().regex(/^[a-zA-Z][\w-]*$/);
+/** The full custom property a site-named token took its name from. */
+const SiteName = z.string().regex(/^--[\w-]+$/);
+
 export const ColorToken = z.object({
   id: EntityId,
-  name: z.string().regex(/^[a-z]+(-[a-z0-9]+)*$/),
+  name: TokenName,
+  siteName: SiteName.optional(),
   value: Hex,
   oklch: Oklch,
   group: ColorGroup,
@@ -86,9 +96,25 @@ export const ColorToken = z.object({
 });
 export type ColorToken = z.infer<typeof ColorToken>;
 
+/** A translucent color as a base and an alpha, never a palette step (D-086). */
+export const OverlayToken = z.object({
+  id: EntityId,
+  name: TokenName,
+  siteName: SiteName.optional(),
+  base: z.union([EntityId, z.literal('white'), z.literal('black')]),
+  alpha: z.number().gt(0).lt(1),
+  /** `rgb(r g b / a%)`. */
+  value: z.string().min(1),
+  usage: count,
+  pages: z.array(PageCount),
+  rawValues: z.array(z.object({ value: Hex, count: count })),
+});
+export type OverlayToken = z.infer<typeof OverlayToken>;
+
 export const TypeToken = z.object({
   id: EntityId,
-  name: z.string().min(1),
+  name: TokenName,
+  siteName: SiteName.optional(),
   role: TypeRole,
   family: z.string().min(1),
   fallbackStack: z.string(),
@@ -97,6 +123,9 @@ export const TypeToken = z.object({
   weight: z.number().int().min(1).max(1000),
   letterSpacing: z.number(),
   textTransform: z.string().optional(),
+  uppercase: z.boolean(),
+  /** The HTML tags the tuple was found on, most common first: provenance, never a name (D-087). */
+  tags: z.array(z.string()),
   usage: count,
   pages: z.array(PageCount),
   sample: z.string(),
@@ -106,6 +135,7 @@ export type TypeToken = z.infer<typeof TypeToken>;
 export const SpaceToken = z.object({
   id: EntityId,
   value: z.number().positive(),
+  siteName: SiteName.optional(),
   onGrid: z.boolean(),
   usage: count,
   pages: z.array(PageCount),
@@ -116,6 +146,7 @@ export type SpaceToken = z.infer<typeof SpaceToken>;
 export const RadiusToken = z.object({
   id: EntityId,
   value: nonNeg,
+  siteName: SiteName.optional(),
   isPill: z.boolean(),
   usage: count,
   pages: z.array(PageCount),
@@ -124,12 +155,77 @@ export type RadiusToken = z.infer<typeof RadiusToken>;
 
 export const ShadowToken = z.object({
   id: EntityId,
-  name: z.string().min(1),
+  name: TokenName,
+  siteName: SiteName.optional(),
   value: z.string().min(1),
   usage: count,
   pages: z.array(PageCount),
 });
 export type ShadowToken = z.infer<typeof ShadowToken>;
+
+export const DurationRole = z.enum(['faster', 'fast', 'base', 'slow', 'slower']);
+export type DurationRole = z.infer<typeof DurationRole>;
+
+export const DurationToken = z.object({
+  id: EntityId,
+  name: TokenName,
+  siteName: SiteName.optional(),
+  ms: z.number().positive(),
+  role: DurationRole.optional(),
+  usage: count,
+  pages: z.array(PageCount),
+  rawValues: z.array(z.string()),
+});
+export type DurationToken = z.infer<typeof DurationToken>;
+
+export const EasingToken = z.object({
+  id: EntityId,
+  name: TokenName,
+  /** A keyword, `cubic-bezier(…)`, `steps(…)` or `linear(…)`. */
+  value: z.string().min(1),
+  siteName: SiteName.optional(),
+  usage: count,
+  pages: z.array(PageCount),
+});
+export type EasingToken = z.infer<typeof EasingToken>;
+
+export const Keyframes = z.object({
+  name: z.string().min(1),
+  css: z.string().min(1),
+  /** The `@media` or `@supports` condition the block sat in. */
+  condition: z.string().optional(),
+  used: z.boolean(),
+  usage: count,
+  pages: z.array(PageCount),
+  unresolved: z.array(z.string()),
+});
+export type Keyframes = z.infer<typeof Keyframes>;
+
+export const BreakpointToken = z.object({
+  value: z.number().positive(),
+  usage: count,
+  /** A value one more than this one, folded in and not exported. */
+  maxTwin: z.number().positive().optional(),
+  siteName: SiteName.optional(),
+});
+export type BreakpointToken = z.infer<typeof BreakpointToken>;
+
+export const SiteVariableScope = z.enum(['root', 'theme', 'component']);
+export type SiteVariableScope = z.infer<typeof SiteVariableScope>;
+
+export const SiteVariable = z.object({
+  name: SiteName,
+  value: z.string(),
+  resolved: z.string(),
+  kind: TokenKind.optional(),
+  /** The token this variable resolves to when another variable named it. */
+  mapsTo: EntityId.optional(),
+  hashed: z.boolean(),
+  usage: count,
+  pages: z.array(PageCount),
+  scope: SiteVariableScope,
+});
+export type SiteVariable = z.infer<typeof SiteVariable>;
 
 export const FontFamily = z.object({ name: z.string().min(1), loaded: z.boolean(), fallback: z.string().optional() });
 export type FontFamily = z.infer<typeof FontFamily>;
@@ -145,13 +241,18 @@ export type RawCounts = z.infer<typeof RawCounts>;
 
 export const Tokens = z.object({
   colors: z.array(ColorToken),
+  overlays: z.array(OverlayToken),
   type: z.array(TypeToken),
   space: z.array(SpaceToken),
   /** The inferred base grid in px, and whether 85% of values agreed with it. */
   spaceBase: z.object({ value: z.union([z.literal(4), z.literal(8)]), clear: z.boolean() }),
   radius: z.array(RadiusToken),
   shadow: z.array(ShadowToken),
-  breakpoints: z.array(z.number().positive()),
+  duration: z.array(DurationToken),
+  easing: z.array(EasingToken),
+  keyframes: z.array(Keyframes),
+  breakpoints: z.array(BreakpointToken),
+  siteVariables: z.array(SiteVariable).max(400),
   rawCounts: RawCounts,
   families: z.array(FontFamily),
 });
@@ -196,7 +297,9 @@ export const StateCapture = z.object({
   captured: z.boolean(),
   reason: z.string().optional(),
   cropKey: z.string().optional(),
-  delta: z.array(z.object({ property: z.string(), from: z.string(), to: z.string() })),
+  delta: z.array(
+    z.object({ property: z.string(), from: z.string(), to: z.string(), transition: z.object({ durationMs: nonNeg, easing: z.string() }).optional() }),
+  ),
   reachedByKeyboard: z.boolean().optional(),
   instanceId: EntityId.optional(),
 });
@@ -233,6 +336,24 @@ export const Provenance = z.object({
 });
 export type Provenance = z.infer<typeof Provenance>;
 
+export const ComponentMotion = z.object({
+  transitions: z.array(
+    z.object({ state: State, property: z.string(), durationMs: nonNeg, delayMs: nonNeg, easingTokenId: EntityId.optional(), easing: z.string().optional() }),
+  ),
+  animations: z.array(
+    z.object({
+      keyframesName: z.string(),
+      durationMs: nonNeg,
+      easingTokenId: EntityId.optional(),
+      easing: z.string().optional(),
+      iterations: z.union([nonNeg, z.literal('infinite')]),
+      trigger: MotionKind,
+    }),
+  ),
+  patternIds: z.array(EntityId),
+});
+export type ComponentMotion = z.infer<typeof ComponentMotion>;
+
 export const Component = z.object({
   id: EntityId,
   name: z.string().min(1),
@@ -256,8 +377,49 @@ export const Component = z.object({
   code: z.object({ html: z.string(), css: z.string(), tailwind: z.string().optional() }),
   checks: z.array(CheckResult),
   responsiveVariant: z.object({ mobilePreview: Preview, note: z.string() }).optional(),
+  tier: ComponentTier,
+  /** The kebab case of the name, unique in the run: `motion.css` and the prompt use it. */
+  slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
+  motion: ComponentMotion.nullable(),
 });
 export type Component = z.infer<typeof Component>;
+
+// Motion (docs/specs/motion-capture.md)
+
+export const MotionTriggerType = z.enum(['load', 'in-view', 'scroll', 'hover', 'open']);
+export type MotionTriggerType = z.infer<typeof MotionTriggerType>;
+
+export const MotionPattern = z.object({
+  id: EntityId,
+  kind: MotionKind,
+  elementKey: z.string(),
+  selector: z.string().min(1),
+  componentId: EntityId.optional(),
+  pageId: EntityId,
+  pageIds: z.array(EntityId).min(1),
+  viewport: Viewport,
+  instances: count.min(1),
+  trigger: z.object({ type: MotionTriggerType, value: z.number().optional() }),
+  start: z.record(z.string(), z.string()),
+  end: z.record(z.string(), z.string()),
+  durationMs: nonNeg,
+  delayMs: nonNeg,
+  easing: z.string().nullable(),
+  easingTokenId: EntityId.optional(),
+  iterations: z.union([nonNeg, z.literal('infinite')]),
+  keyframesName: z.string().optional(),
+  source: MotionSource,
+  stagger: z.object({ count: count.min(2), stepMs: nonNeg }).optional(),
+  observed: z.boolean(),
+});
+export type MotionPattern = z.infer<typeof MotionPattern>;
+
+export const Motion = z.object({
+  patterns: z.array(MotionPattern).max(80),
+  truncatedPages: z.array(z.string()),
+  intersectionObservers: count,
+});
+export type Motion = z.infer<typeof Motion>;
 
 // Checks
 
@@ -417,6 +579,7 @@ const sections = {
   sparse: z.boolean(),
   pages: z.array(Page),
   tokens: Tokens,
+  motion: Motion,
   components: z.array(Component),
   checks: Checks,
   drift: Drift,
@@ -432,6 +595,7 @@ export const RunDocumentPartial = z.object({
   sparse: sections.sparse.optional(),
   pages: sections.pages.optional(),
   tokens: Tokens.partial().optional(),
+  motion: sections.motion.optional(),
   components: sections.components.optional(),
   checks: sections.checks.optional(),
   drift: sections.drift.optional(),
