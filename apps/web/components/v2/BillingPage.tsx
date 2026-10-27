@@ -2,7 +2,7 @@
 import type { Limits, PlanId } from '@dse/schema';
 import { v2 } from '../../copy/strings';
 import type { Session } from '../../lib/auth/adapter';
-import { billing } from '../../lib/billing/adapter';
+import { portalFor } from '../../lib/billing/adapter';
 import { count } from '../../lib/format';
 import { Button } from '../Button';
 import { Card } from '../Card';
@@ -16,7 +16,8 @@ export type Usage = { runs: number; pages: number };
 /** `/account/billing`: plan, this period's usage against the plan's cap, invoices. Flagged. */
 export function BillingPage({ plan, limits, usage, session = null }: { plan: PlanId; limits: Limits; usage: Usage; session?: Session | null }) {
   async function manage() {
-    if (session) window.location.assign(await billing.createPortal(session.userId));
+    const go = await portalFor(session);
+    if (go) window.location.assign(go);
   }
   return (
     <div className={styles.billing} data-testid="v2-surface">

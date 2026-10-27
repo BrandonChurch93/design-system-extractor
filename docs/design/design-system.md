@@ -134,7 +134,7 @@ One density. Cards use `space-5` padding at desktop and tablet, `space-4` at pho
 
 - Focus: 2 px solid `focus` ring at 2 px offset, on every interactive element, via `:focus-visible`. Never removed, never replaced by a color change alone. Inside an `inverse-bg` ground the ring is `focus-inverse` (D-036).
 - Hover on a card that is a link: `shadow-card-hover`, border stays, translateY(-1px) over `motion-fast`.
-- Hover on a row: ground becomes `surface-tint` inset by `space-2` with `radius-sm`; the hairline below hides.
+- Hover on a row that leads somewhere (the recent runs list): ground becomes `surface-tint` inset by `space-2` with `radius-sm`; the hairline below hides. Table rows are read, not clicked, and do not change (D-079).
 - Hover on a chip: border becomes `line-strong`. Selected chip: `ink` ground, `inverse-ink` text.
 - Hover on a primary button: ground stays `ink`, the label shifts to 90% opacity over `motion-fast`. On a ghost button: border becomes `line-strong`.
 

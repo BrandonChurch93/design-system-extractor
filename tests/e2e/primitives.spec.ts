@@ -208,3 +208,12 @@ test('CaptureViewer: Escape closes it and focus returns to the opener', async ({
   await expect(viewer).toHaveCount(0);
   await expect(opener).toBeFocused();
 });
+
+test('the catalog shows the build spend meter when running locally', async ({ page }) => {
+  await catalog(page);
+  const dev = page.locator('[data-qa-mask="dev-spend"]');
+  await expect(dev).toContainText(/^Design QA · build spend \$\d+\.\d{2} of \$\d+\.\d{2}$/);
+  const meter = dev.getByRole('meter');
+  expect(Number(await meter.getAttribute('aria-valuemax'))).toBeGreaterThan(0);
+  expect(Number(await meter.getAttribute('aria-valuenow'))).toBeGreaterThanOrEqual(0);
+});

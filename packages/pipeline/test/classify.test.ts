@@ -11,9 +11,9 @@ import { snap, type El } from './helpers/snap';
 const body: El = { tag: 'body', box: [0, 0, 1440, 3000] };
 const round = (r: number): Partial<StyleMap> => ({ 'border-top-left-radius': `${r}px`, 'border-top-right-radius': `${r}px`, 'border-bottom-right-radius': `${r}px`, 'border-bottom-left-radius': `${r}px` });
 
-function typeOf(els: El[]): string {
+function typeOf(els: El[], extra: Partial<Item> = {}): string {
   const s = snap([body, ...els]);
-  const it = { el: s.elements[1]!, snapshot: s, rules: [], page: { reason: 'nav' }, viewport: 'desktop' } as unknown as Item;
+  const it = { el: s.elements[1]!, snapshot: s, rules: [], page: { reason: 'nav' }, viewport: 'desktop', ...extra } as unknown as Item;
   return classify([it]).type;
 }
 
@@ -51,6 +51,48 @@ describe('rule classification by structure', () => {
     const form: El = { tag: 'form', parent: 0, box: [0, 100, 400, 200] };
     expect(typeOf([form, { tag: 'input', parent: 1, type: 'email' }, { tag: 'textarea', parent: 1 }, { tag: 'button', parent: 1, text: 'Send' }])).toBe('form');
     expect(typeOf([form, { tag: 'input', parent: 1, type: 'email' }, { tag: 'input', parent: 1, type: 'hidden' }, { tag: 'button', parent: 1, text: 'Join' }])).not.toBe('form');
+  });
+});
+
+describe('rule classification, the rest of the table', () => {
+  const fixed: Partial<StyleMap> = { position: 'fixed' };
+  it.each<[string, El[], string, Partial<Item>?]>([
+    ['radio', [{ tag: 'input', parent: 0, type: 'radio' }], 'radio'],
+    ['checkbox', [{ tag: 'input', parent: 0, type: 'checkbox' }], 'checkbox'],
+    ['dropdown', [{ tag: 'ul', parent: 0, role: 'listbox', box: [0, 60, 240, 200] }], 'dropdown', { revealed: {} } as Partial<Item>],
+    ['menu', [{ tag: 'ul', parent: 0, role: 'menu', box: [0, 60, 240, 200] }], 'menu'],
+    ['modal', [{ tag: 'div', parent: 0, role: 'dialog', box: [400, 200, 640, 400] }], 'modal'],
+    ['tooltip', [{ tag: 'div', parent: 0, role: 'tooltip', box: [400, 200, 160, 32] }], 'tooltip'],
+    ['toast', [{ tag: 'div', parent: 0, cls: ['toast'], text: 'Saved', box: [1100, 820, 300, 56], style: fixed }], 'toast'],
+    ['tag', [{ tag: 'span', parent: 0, text: 'Beta', own: 'Beta', box: [0, 100, 48, 22] }], 'tag', { rules: ['inline-mark'] } as Partial<Item>],
+    ['badge', [{ tag: 'span', parent: 0, text: 'Live', own: 'Live', box: [0, 100, 48, 22] }], 'badge', { rules: ['inline-mark'] } as Partial<Item>],
+    [
+      'section header',
+      [
+        { tag: 'div', parent: 0, text: 'Pricing Plans for every team', box: [184, 100, 800, 120] },
+        { tag: 'h2', parent: 1, own: 'Pricing', text: 'Pricing', box: [184, 100, 400, 40], style: { 'font-size': '32px', 'font-weight': '700' } },
+        { tag: 'p', parent: 1, own: 'Plans for every team', text: 'Plans for every team', box: [184, 150, 400, 26] },
+      ],
+      'section-header',
+    ],
+    [
+      'list row',
+      [
+        { tag: 'ul', parent: 0, box: [184, 100, 800, 300] },
+        ...[0, 1, 2].map((i): El => ({ tag: 'li', parent: 1, text: `Row ${i}`, box: [184, 100 + i * 80, 780, 72] })),
+      ],
+      'list-row',
+    ],
+    ['other', [{ tag: 'div', parent: 0, box: [0, 100, 300, 40] }], 'other'],
+  ])('%s', (_name, els, type, extra) => {
+    // The list row is judged on its rows; everything else on the first element.
+    if (type === 'list-row') {
+      const s = snap([body, ...els]);
+      const rows = s.elements.filter((e) => e.tag === 'li').map((el) => ({ el, snapshot: s, rules: ['container'], page: { id: 'p', reason: 'nav' }, viewport: 'desktop' }) as unknown as Item);
+      expect(classify(rows).type).toBe(type);
+      return;
+    }
+    expect(typeOf(els, extra)).toBe(type);
   });
 });
 

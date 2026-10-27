@@ -30,3 +30,14 @@ export class MockBillingAdapter implements BillingAdapter {
 }
 
 export const billing: BillingAdapter = new MockBillingAdapter();
+
+/** Choosing a paid plan: a visitor without a session signs in first; with one, checkout through the adapter. */
+export async function checkoutFor(session: { userId: string } | null, plan: PaidPlan, adapter: BillingAdapter = billing): Promise<{ signIn: true } | { go: string }> {
+  return session ? { go: await adapter.createCheckout(session.userId, plan) } : { signIn: true };
+}
+
+/** Managing billing opens the adapter's portal, and only with a session. */
+export async function portalFor(session: { userId: string } | null, adapter: BillingAdapter = billing): Promise<string | null> {
+  return session ? adapter.createPortal(session.userId) : null;
+}
+

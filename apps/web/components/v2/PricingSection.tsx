@@ -5,7 +5,7 @@ import type { Limits, PlanId } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { v2 } from '../../copy/strings';
 import type { Session } from '../../lib/auth/adapter';
-import { billing, type PaidPlan } from '../../lib/billing/adapter';
+import { checkoutFor, type PaidPlan } from '../../lib/billing/adapter';
 import { count } from '../../lib/format';
 import { Button } from '../Button';
 import { Card } from '../Card';
@@ -20,8 +20,9 @@ const order: PlanId[] = ['free', 'pro', 'team'];
 export function PricingSection({ limits, session = null }: { limits: Record<PlanId, Limits>; session?: Session | null }) {
   const [signIn, setSignIn] = useState(false);
   async function choose(plan: PaidPlan) {
-    if (!session) return setSignIn(true);
-    window.location.assign(await billing.createCheckout(session.userId, plan));
+    const next = await checkoutFor(session, plan);
+    if ('signIn' in next) return setSignIn(true);
+    window.location.assign(next.go);
   }
   return (
     <section id="plans" className={styles.plans} aria-labelledby="plans-title" data-testid="v2-surface">

@@ -91,3 +91,20 @@ export function variantsFor(move: Exclude<Move, 'count'>, reduced: boolean, opts
       return revealFrameVariants();
   }
 }
+
+/**
+ * Exits run first (docs/design/motion.md, Reverses): after a filter change an entering card waits for
+ * a leaving one, whose content wipes out over motion-fast and whose frame then closes over motion-base.
+ * The delay lives in the variant's own transition, which a transition prop beside it cannot override.
+ */
+export function afterExits(v: Variants): Variants {
+  const shown = v.shown as (i: number) => { transition?: Transition };
+  return {
+    ...v,
+    shown: (i: number) => {
+      const t = shown(i);
+      return { ...t, transition: { ...t.transition, delay: ((t.transition as { delay?: number } | undefined)?.delay ?? 0) + duration.fast + duration.base } };
+    },
+  };
+}
+

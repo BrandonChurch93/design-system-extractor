@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useMemo, useRef, useState } from 'react';
 import { ShowcaseCategory, type ShowcaseEntry } from '@dse/schema';
 import { home } from '../../copy/strings';
-import { duration, revealFrameVariants, reducedVariants } from '../../lib/motion';
+import { afterExits, revealFrameVariants, reducedVariants } from '../../lib/motion';
 import { usePrefersReducedMotion } from '../../lib/motion/reduced';
 import { useEntered } from '../../lib/motion/use-entered';
 import { ChipGroup } from '../ChipGroup';
@@ -25,7 +25,7 @@ export function Showcase({ entries }: { entries: ShowcaseEntry[] }) {
     ...ShowcaseCategory.options.filter((c) => sorted.some((e) => e.category === c)).map((c) => ({ value: c as Filter, label: home.categories[c] })),
   ];
   const shown = filter === 'all' ? sorted : sorted.filter((e) => e.category === filter);
-  const frame = reduced ? reducedVariants() : revealFrameVariants();
+  const frame = reduced ? reducedVariants() : changed ? afterExits(revealFrameVariants()) : revealFrameVariants();
 
   return (
     <section id="showcase" className={styles.section} aria-labelledby="showcase-title">
@@ -46,7 +46,7 @@ export function Showcase({ entries }: { entries: ShowcaseEntry[] }) {
         className={styles.chips}
       />
       <motion.ul ref={gridRef} className={styles.grid} layout={!reduced}>
-        <AnimatePresence mode="popLayout" initial={false}>
+        <AnimatePresence mode="popLayout">
           {shown.map((e, i) => (
             <motion.li
               key={e.runId}
@@ -58,8 +58,6 @@ export function Showcase({ entries }: { entries: ShowcaseEntry[] }) {
               data-move="reveal"
               animate={changed || entered ? 'shown' : 'hidden'}
               exit="exit"
-              // Exits run first: an entering card waits for the leaving ones.
-              transition={changed && !reduced ? { delay: duration.base } : undefined}
             >
               <ShowcaseCard entry={e} reveal={!reduced} />
             </motion.li>
