@@ -15,7 +15,8 @@ export type QaState = {
 export type QaPage = { name: string; path: string; states: QaState[]; mask?: string[]; axeExclude?: string[] };
 
 // Time-dependent text: elapsed time, runs left today, hours to the budget reset.
-const dynamic = ['[data-qa-mask="elapsed"]', '[data-qa-mask="runs-left"]', '[data-qa-mask="hours"]'];
+// A pattern read by sampling inline styles differs a little on every run (motion-capture.md, Honesty rules).
+const dynamic = ['[data-qa-mask="elapsed"]', '[data-qa-mask="runs-left"]', '[data-qa-mask="hours"]', '[data-qa-mask="sampled"]'];
 
 const recentList = [
   { id: 'seedclean0', host: 'localhost:4100', createdAt: '2026-10-12T15:04:00.000Z', status: 'complete', stats: { colors: 9, typeStyles: 9, spacingSteps: 11, components: 28, checksPassed: 43, checksApplicable: 45 }, palette: [{ value: '#0B1F3A', share: 0.6 }, { value: '#E2E8F0', share: 0.15 }, { value: '#2458E6', share: 0.09 }, { value: '#FFFFFF', share: 0.08 }] },
@@ -147,6 +148,7 @@ export const qaPages: QaPage[] = [
   {
     name: 'open',
     path: '/open',
+    mask: dynamic,
     states: [
       { name: 'empty' },
       {

@@ -72,6 +72,7 @@ export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId }: { pa
   const component = p.componentId ? doc.components?.find((c) => c.id === p.componentId) : undefined;
   const easing = easingName(doc, p.easingTokenId, p.easing);
   const props = [...new Set([...Object.keys(p.start), ...Object.keys(p.end)])];
+  const sampled = p.source === 'inline-style';
   const timing = `${p.durationMs}ms ${p.easing ?? 'ease'} ${p.delayMs}ms`;
   return (
     <li className={styles.row} data-testid="pattern-row">
@@ -97,13 +98,16 @@ export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId }: { pa
           )}
           {p.observed ? <Tag>{M.observed}</Tag> : null}
         </div>
-        <p className={styles.trigger}>{dots([triggerPhrase(p), p.stagger ? fill(M.stagger, { count: p.stagger.count, step: p.stagger.stepMs }) : null])}</p>
-        <div className={styles.changes}>
+        <p className={styles.trigger} data-qa-mask={sampled ? 'sampled' : undefined}>{dots([triggerPhrase(p), p.stagger ? fill(M.stagger, { count: p.stagger.count, step: p.stagger.stepMs }) : null])}</p>
+        {/* A sampled reading differs a little on every run; QA masks it like the clock. */}
+        <div className={styles.changes} data-qa-mask={sampled ? 'sampled' : undefined}>
           {props.map((prop) => (
             <Change key={prop} property={prop} from={p.start[prop]} to={p.end[prop]} />
           ))}
         </div>
-        <p className={styles.timing}>{dots([durationText(p), easing])}</p>
+        <p className={styles.timing} data-qa-mask={sampled ? 'sampled' : undefined}>
+          {dots([durationText(p), easing])}
+        </p>
         {p.observed && !easing ? <p className={styles.caption}>{fill(M.observedCaption, { name: suggestedEasing(doc) })}</p> : null}
       </div>
       <div className={styles.replay}>

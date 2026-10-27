@@ -8,7 +8,7 @@ This design system was extracted from localhost:4100 across 12 pages. It holds 2
 | --- | --- | --- | --- |
 | blue-900 | #0B1F3A | brand | 168 |
 | blue-600 | #2458E6 | brand | 89 |
-| blue-link | #1C4EDB | brand | 70 |
+| blue-600b | #1C4EDB | brand | 70 |
 | teal-500 | #0F8A8A | brand | 44 |
 | blue-500 | #2E63ED | brand | 2 |
 | gray-900 | #1F1F1F | neutral | 684 |
@@ -20,11 +20,11 @@ This design system was extracted from localhost:4100 across 12 pages. It holds 2
 | gray-800 | #353535 | neutral | 72 |
 | gray-500 | #737373 | neutral | 36 |
 | gray-100 | #EBEBEB | neutral | 34 |
-| gray-500-border | #868686 | neutral | 25 |
-| gray-50-tint | #F5F5F5 | neutral | 6 |
+| gray-500b | #868686 | neutral | 25 |
+| gray-50b | #F5F5F5 | neutral | 6 |
 | gray-400 | #B1B1B1 | neutral | 8 |
-| gray-300-border | #C4C4C4 | neutral | 4 |
-| gray-400-border | #9E9E9E | neutral | 2 |
+| gray-300b | #C4C4C4 | neutral | 4 |
+| gray-400b | #9E9E9E | neutral | 2 |
 | success | #15803D | semantic | 18 |
 | danger | #DC2626 | semantic | 12 |
 | warning | #F59E0B | semantic | 2 |
@@ -118,7 +118,7 @@ This design system was extracted from localhost:4100 across 12 pages. It holds 2
 :root {
   --color-blue-900: #0B1F3A;
   --color-blue-600: #2458E6;
-  --color-blue-link: #1C4EDB;
+  --color-blue-600b: #1C4EDB;
   --color-teal-500: #0F8A8A;
   --color-blue-500: #2E63ED;
   --color-gray-900: #1F1F1F;
@@ -130,11 +130,11 @@ This design system was extracted from localhost:4100 across 12 pages. It holds 2
   --color-gray-800: #353535;
   --color-gray-500: #737373;
   --color-gray-100: #EBEBEB;
-  --color-gray-500-border: #868686;
-  --color-gray-50-tint: #F5F5F5;
+  --color-gray-500b: #868686;
+  --color-gray-50b: #F5F5F5;
   --color-gray-400: #B1B1B1;
-  --color-gray-300-border: #C4C4C4;
-  --color-gray-400-border: #9E9E9E;
+  --color-gray-300b: #C4C4C4;
+  --color-gray-400b: #9E9E9E;
   --color-success: #15803D;
   --color-danger: #DC2626;
   --color-warning: #F59E0B;
@@ -250,7 +250,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-ghost { background: transparent; color: var(--color-blue-900); }
 ```
@@ -303,7 +303,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Tab button
+### Tab
 
 Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Selected
@@ -373,7 +373,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .link-pill { display: inline-flex; align-items: center; height: 44px; padding: 0px var(--space-16); border: 1px solid var(--color-gray-300); border-radius: 999px; color: var(--color-gray-900); font-size: 14px; line-height: 20px; font-weight: 600; }
 .link-pill { transition: border-color var(--duration-300); }
 .link-pill { border-color: var(--overlay-gray-700-30); }
@@ -550,10 +550,10 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
-.site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-500-border); transition: box-shadow var(--duration-160) var(--ease-out-quad); }
+.site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-500b); transition: box-shadow var(--duration-160) var(--ease-out-quad); }
 .container { max-width: 1120px; margin: 0px auto; padding: 0px var(--space-24); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-32); height: 72px; }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .logo { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--color-gray-800); }
 .logo { transition: color var(--duration-150) var(--ease-linear); }
 .nav-links { display: flex; align-items: center; gap: var(--space-24); }
@@ -563,13 +563,13 @@ a { color: var(--color-blue-link); text-decoration: none; }
 button { font: inherit; color: inherit; }
 .dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 svg { display: block; }
-.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300-border); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
 .header-actions { display: flex; align-items: center; gap: var(--space-10); }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-ghost { background: transparent; color: var(--color-blue-900); }
 .btn-primary { background: var(--color-blue-600); color: var(--color-gray-50); }
 .menu-button { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0px; border-radius: var(--radius-sm); background: transparent; color: var(--color-blue-900); cursor: pointer; }
-.mobile-menu { border-top: 1px solid var(--color-gray-500-border); padding: var(--space-8) 0px var(--space-16); }
+.mobile-menu { border-top: 1px solid var(--color-gray-500b); padding: var(--space-8) 0px var(--space-16); }
 ```
 
 ### Site footer
@@ -616,7 +616,7 @@ button, input { padding: 0px; padding: 0px; padding: 0px; }
 p { font-size: 16px; line-height: 26px; }
 .caption { font-size: 12px; line-height: 16px; color: var(--color-gray-500); }
 .footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .footer-link { font-size: 14px; line-height: 22px; color: var(--color-gray-600); }
 .footer-link { transition: color var(--duration-120) var(--ease-out); }
 .newsletter { display: flex; gap: var(--space-8); align-items: center; }
@@ -651,7 +651,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 
 ```css
 .footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .footer-link { font-size: 14px; line-height: 22px; color: var(--color-gray-600); }
 .footer-link { transition: color var(--duration-120) var(--ease-out); }
 ```
@@ -687,14 +687,14 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
 .nav-links { display: flex; align-items: center; gap: var(--space-24); }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .nav-link { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-gray-700); }
 .nav-link { transition: color var(--duration-100); }
 .dropdown { position: relative; }
 button { font: inherit; color: inherit; }
 .dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 svg { display: block; }
-.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300-border); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
 ```
 
 ### Feature card
@@ -738,7 +738,7 @@ States captured: Default
 Tokens used: overlay-black-4 (background-color), color-gray-900 (color), space-16 (padding-left), type-body (font)
 Motion: none
 Checks: 0 of 1
-- Contrast AA · fail · 4.3:1 on gray-50-tint, needs 4.5:1
+- Contrast AA · fail · 4.3:1 on gray-50b, needs 4.5:1
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -861,7 +861,7 @@ ol { margin: 0px; margin: 0px; margin: 0px; }
 ol { padding: 0px; padding: 0px; padding: 0px; }
 ol { list-style: none; }
 .breadcrumb { display: flex; align-items: center; gap: var(--space-8); font-size: 14px; line-height: 22px; }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .crumb { color: var(--color-blue-500); }
 .crumb { transition: color var(--duration-200) var(--ease-custom-2); }
 .crumb-current { color: var(--color-blue-900); }
@@ -887,7 +887,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
-.tabs { display: flex; gap: var(--space-4); border-bottom: 1px solid var(--color-gray-400-border); }
+.tabs { display: flex; gap: var(--space-4); border-bottom: 1px solid var(--color-gray-400b); }
 button { font: inherit; color: inherit; }
 .tab { height: 44px; padding: 0px var(--space-16); border-width: 0px 0px 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: none; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 .tab[aria-selected="true"] { color: var(--color-blue-600); border-bottom-color: var(--color-blue-600); }
@@ -932,9 +932,9 @@ ul { list-style: none; }
 .plan-features { display: flex; flex-direction: column; gap: var(--space-8); }
 .text-sm { font-size: 14px; line-height: 22px; color: var(--color-gray-700); }
 .card .text-sm { font-size: 15px; }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
-.btn-secondary { background: var(--color-gray-50); color: var(--color-blue-link); border-color: var(--color-blue-link); }
+.btn-secondary { background: var(--color-gray-50); color: var(--color-blue-600b); border-color: var(--color-blue-600b); }
 ```
 
 ### Promo card
@@ -960,7 +960,7 @@ h3 { color: var(--color-gray-800); }
 p { font-size: 16px; line-height: 26px; }
 ```
 
-### Success notice
+### Notice
 
 Alert · 1 variant: Default
 States captured: Default
@@ -990,13 +990,13 @@ svg { display: block; }
 .stack { display: flex; flex-direction: column; gap: var(--space-16); }
 p { font-size: 16px; line-height: 26px; }
 .hero-actions { display: flex; gap: var(--space-12); flex-wrap: wrap; }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-sm { height: 36px; padding: 0px var(--space-16); }
 .btn-primary { background: var(--color-blue-600); color: var(--color-gray-50); }
 ```
 
-### Not found state
+### Empty state
 
 Empty state · 1 variant: Default
 States captured: Default
@@ -1023,7 +1023,7 @@ h1, p { margin: 0px; margin: 0px; margin: 0px; }
 svg { display: block; }
 h1 { font-size: 36px; line-height: 44px; font-weight: 700; }
 p { font-size: 16px; line-height: 26px; }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-ghost { background: transparent; color: var(--color-blue-900); }
 ```
@@ -1035,7 +1035,7 @@ States captured: Default
 Tokens used: color-gray-900 (color), type-body-xs (font)
 Motion: none
 Checks: 1 of 1
-- Contrast AA · pass · 15.1:1 on gray-50-tint
+- Contrast AA · pass · 15.1:1 on gray-50b
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -1053,7 +1053,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```css
 td, th { padding: 0px; padding: 0px; padding: 0px; }
 .table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 22px; }
-.th { padding: var(--space-12) var(--space-16); background: var(--color-gray-50-tint); border-bottom: 1px solid var(--color-gray-100); text-align: left; font-size: 14px; line-height: 20px; font-weight: 600; }
+.th { padding: var(--space-12) var(--space-16); background: var(--color-gray-50b); border-bottom: 1px solid var(--color-gray-100); text-align: left; font-size: 14px; line-height: 20px; font-weight: 600; }
 .td { padding: var(--space-12) var(--space-16); border-bottom: 1px solid var(--color-gray-100); }
 ```
 
@@ -1084,7 +1084,7 @@ pre { margin: 0px; margin: 0px; margin: 0px; }
 
 Dropdown · 1 variant: Default
 States captured: Default
-Tokens used: color-gray-50 (background-color), color-gray-900 (color), color-gray-300-border (border-color), radius-lg (border-radius), space-8 (padding-top), space-8 (padding-right), space-8 (padding-bottom), space-8 (padding-left), type-body (font), shadow-md (box-shadow)
+Tokens used: color-gray-50 (background-color), color-gray-900 (color), color-gray-300b (border-color), radius-lg (border-radius), space-8 (padding-top), space-8 (padding-right), space-8 (padding-bottom), space-8 (padding-left), type-body (font), shadow-md (box-shadow)
 Motion: none
 Checks: 1 of 1
 - Contrast AA · pass · 16.5:1 on gray-50
@@ -1100,8 +1100,8 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300-border); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
-a { color: var(--color-blue-link); text-decoration: none; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .menu-item { display: flex; align-items: center; height: 44px; padding: 0px var(--space-12); border-radius: var(--radius-sm); font-size: 14px; line-height: 22px; color: var(--color-blue-900); }
 ```
 
@@ -1109,7 +1109,7 @@ a { color: var(--color-blue-link); text-decoration: none; }
 
 Dropdown · 1 variant: Default
 States captured: Default
-Tokens used: color-gray-900 (color), color-gray-500-border (border-color), space-8 (padding-top), space-16 (padding-bottom), type-body (font)
+Tokens used: color-gray-900 (color), color-gray-500b (border-color), space-8 (padding-top), space-16 (padding-bottom), type-body (font)
 Motion: none
 Checks: 1 of 1
 - Contrast AA · pass · 16.5:1 on gray-50
@@ -1127,8 +1127,8 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-.mobile-menu { border-top: 1px solid var(--color-gray-500-border); padding: var(--space-8) 0px var(--space-16); }
-a { color: var(--color-blue-link); text-decoration: none; }
+.mobile-menu { border-top: 1px solid var(--color-gray-500b); padding: var(--space-8) 0px var(--space-16); }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .mobile-link { display: flex; align-items: center; height: 48px; font-size: 16px; line-height: 26px; color: var(--color-blue-900); }
 ```
 
@@ -1142,7 +1142,7 @@ a { color: var(--color-blue-link); text-decoration: none; }
 
 Proposed set: 16 colors, 11 spacing steps, 8 type styles, 9 durations, 6 easings. Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.
 
-The palette carries 14 grays where nine would do, and nine of them sit within ΔE 6.0 of a neighbor. Two spacing values, 10 and 18, sit off the 4 px grid, on 12 pages. Type runs to nine styles, and three differ by 1 px or less in size or line height. The proposed set folds the grays into nine steps, maps the off-grid values to their nearest steps and merges the near-duplicate type styles into eight. Every pair of text and background keeps its contrast ratio.
+The palette carries 14 grays where nine would do, and nine of them sit within ΔE 6.0 of a neighbor. Two spacing values, 10 and 18, sit off the 4 px grid, on 12 pages. Three type styles differ by 1 px or less in size or line height. The proposed set folds the grays into nine steps, brings spacing to 11 steps and merges the near-duplicate type styles into eight. Every pair of text and background keeps its contrast ratio.
 
 ## How this was made
 

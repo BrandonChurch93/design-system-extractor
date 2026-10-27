@@ -20,10 +20,10 @@
       "$value": "#2458E6",
       "$description": "blue-600 · 89 uses"
     },
-    "blue-link": {
+    "blue-600b": {
       "$type": "color",
       "$value": "#1C4EDB",
-      "$description": "blue-link · 70 uses"
+      "$description": "blue-600b · 70 uses"
     },
     "teal-500": {
       "$type": "color",
@@ -80,30 +80,30 @@
       "$value": "#EBEBEB",
       "$description": "gray-100 · 34 uses"
     },
-    "gray-500-border": {
+    "gray-500b": {
       "$type": "color",
       "$value": "#868686",
-      "$description": "gray-500-border · 25 uses"
+      "$description": "gray-500b · 25 uses"
     },
-    "gray-50-tint": {
+    "gray-50b": {
       "$type": "color",
       "$value": "#F5F5F5",
-      "$description": "gray-50-tint · 6 uses"
+      "$description": "gray-50b · 6 uses"
     },
     "gray-400": {
       "$type": "color",
       "$value": "#B1B1B1",
       "$description": "gray-400 · 8 uses"
     },
-    "gray-300-border": {
+    "gray-300b": {
       "$type": "color",
       "$value": "#C4C4C4",
-      "$description": "gray-300-border · 4 uses"
+      "$description": "gray-300b · 4 uses"
     },
-    "gray-400-border": {
+    "gray-400b": {
       "$type": "color",
       "$value": "#9E9E9E",
-      "$description": "gray-400-border · 2 uses"
+      "$description": "gray-400b · 2 uses"
     },
     "success": {
       "$type": "color",

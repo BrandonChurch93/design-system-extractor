@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-27T19:18:23.063Z",
+  "generatedAt": "2026-10-27T21:02:05.368Z",
   "mode": "record",
   "through": "done",
   "pipelineVersion": "1.1.0",
@@ -83,7 +83,7 @@
           "predicted": 28,
           "expected": 28,
           "matched": 28,
-          "nameAgreement": 0.679,
+          "nameAgreement": 0.714,
           "namesValid": true,
           "misses": [],
           "extras": []
@@ -230,7 +230,7 @@
           "predicted": 31,
           "expected": 31,
           "matched": 31,
-          "nameAgreement": 0.71,
+          "nameAgreement": 0.774,
           "namesValid": true,
           "misses": [],
           "extras": []
@@ -382,7 +382,7 @@
           "predicted": 28,
           "expected": 28,
           "matched": 28,
-          "nameAgreement": 0.643,
+          "nameAgreement": 0.607,
           "namesValid": true,
           "misses": [],
           "extras": []
@@ -524,23 +524,19 @@
           }
         },
         "components": {
-          "precision": 0.966,
+          "precision": 1,
           "recall": 1,
-          "predicted": 29,
+          "predicted": 28,
           "expected": 28,
           "matched": 28,
           "nameAgreement": 0.607,
           "namesValid": true,
           "misses": [],
-          "extras": [
-            "Info notice (alert) /docs/getting-started"
-          ]
+          "extras": []
         },
         "variants": {
-          "accuracy": 0.964,
-          "misses": [
-            "Alert 1 of 2"
-          ]
+          "accuracy": 1,
+          "misses": []
         },
         "states": {
           "rate": 1,
@@ -566,16 +562,14 @@
           "roleOther": 0,
           "variantNames": 1,
           "numericNames": 0,
-          "tiers": 0.9642857142857143,
+          "tiers": 1,
           "fallbackNames": 1,
-          "missed": [
-            "tier Alert page not core"
-          ]
+          "missed": []
         },
         "liveRate": {
-          "rate": 0.966,
-          "live": 28,
-          "total": 29,
+          "rate": 0.964,
+          "live": 27,
+          "total": 28,
           "captured": [
             "Avatar (diff 6.2 %)"
           ]
@@ -584,10 +578,10 @@
           "failures": 1,
           "passes": 1,
           "summary": {
-            "passed": 48,
+            "passed": 47,
             "failed": 2,
-            "total": 145,
-            "applicable": 50
+            "total": 140,
+            "applicable": 49
           },
           "missedFailures": [],
           "flaggedPasses": []
@@ -598,7 +592,7 @@
           "headline": "Nothing to collapse. 9 colors, 11 spacing steps, all on the grid."
         },
         "exports": {
-          "files": 68,
+          "files": 66,
           "undeclared": []
         }
       }
@@ -682,7 +676,7 @@
           "predicted": 22,
           "expected": 22,
           "matched": 22,
-          "nameAgreement": 0.364,
+          "nameAgreement": 0.409,
           "namesValid": true,
           "misses": [],
           "extras": []

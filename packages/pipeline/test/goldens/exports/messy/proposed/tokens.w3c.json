@@ -65,10 +65,10 @@
       "$value": "#2458E6",
       "$description": "blue-600 · 91 uses"
     },
-    "blue-link": {
+    "blue-600b": {
       "$type": "color",
       "$value": "#1C4EDB",
-      "$description": "blue-link · 70 uses"
+      "$description": "blue-600b · 70 uses"
     },
     "teal-500": {
       "$type": "color",

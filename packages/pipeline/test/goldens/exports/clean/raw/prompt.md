@@ -131,7 +131,7 @@ Patterns:
 
 - Entrance · h1.display · on load · opacity 0 → 1, transform translateY(12px) → none · 480 ms · ease-out-quart
 - Scroll reveal · Feature card · when it enters the viewport at 15% from the bottom · opacity 0 → 1, transform translateY(16px) → none · 240 ms · ease-out-quart · 3 items · 60 ms apart
-- Scroll reveal · div.testimonial · when it enters the viewport at 30% from the bottom · opacity 0.03 → 1, transform translateY(15.5px) → translateY(0px) · about 398 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
+- Scroll reveal · div.testimonial · when it enters the viewport at 30% from the bottom · opacity 0.08 → 1, transform translateY(14.7px) → translateY(0px) · about 382 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
 - Scrolled header · Site header · after 400 px of scrolling · box-shadow none → 0px 12px 32px 0px #0B1F3A1F · 160 ms · ease-out-quad
 - Loop · Notice · loops every 1,600 ms · opacity 1 → 0.4 · 1,600 ms · ease-out-quart
 
@@ -203,7 +203,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Tab button
+### Feature tab
 
 Button. Variants: Default.
 States: Default, Hover, Focus, Active, Selected.
@@ -516,7 +516,7 @@ td, th { padding: 0px; padding: 0px; padding: 0px; }
 .td { padding: var(--space-12) var(--space-16); border-bottom: 1px solid var(--color-gray-border); }
 ```
 
-### Install snippet
+### Code block
 
 Code block. Variants: Default.
 States: Default.

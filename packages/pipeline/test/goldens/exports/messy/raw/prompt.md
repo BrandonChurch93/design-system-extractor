@@ -6,7 +6,7 @@ You are building an interface that must match this design system exactly.
 :root {
   --color-blue-900: #0B1F3A;
   --color-blue-600: #2458E6;
-  --color-blue-link: #1C4EDB;
+  --color-blue-600b: #1C4EDB;
   --color-teal-500: #0F8A8A;
   --color-blue-500: #2E63ED;
   --color-gray-900: #1F1F1F;
@@ -18,11 +18,11 @@ You are building an interface that must match this design system exactly.
   --color-gray-800: #353535;
   --color-gray-500: #737373;
   --color-gray-100: #EBEBEB;
-  --color-gray-500-border: #868686;
-  --color-gray-50-tint: #F5F5F5;
+  --color-gray-500b: #868686;
+  --color-gray-50b: #F5F5F5;
   --color-gray-400: #B1B1B1;
-  --color-gray-300-border: #C4C4C4;
-  --color-gray-400-border: #9E9E9E;
+  --color-gray-300b: #C4C4C4;
+  --color-gray-400b: #9E9E9E;
   --color-success: #15803D;
   --color-danger: #DC2626;
   --color-warning: #F59E0B;
@@ -183,7 +183,7 @@ Default: text color-blue-900 · border 1px rgba(0, 0, 0, 0) · radius radius-sm 
 Motion: hover · background-color · 160 ms · ease-out-quad; active · background-color · 160 ms · ease-out-quad
 
 ```css
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-ghost { background: transparent; color: var(--color-blue-900); }
 ```
@@ -224,7 +224,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Tab button
+### Tab
 
 Button. Variants: Default.
 States: Default, Hover, Focus, Active, Selected.
@@ -266,7 +266,7 @@ Default: text color-gray-900 · border 1px overlay-gray-700-30 · radius radius-
 Motion: none
 
 ```css
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .link-pill { display: inline-flex; align-items: center; height: 44px; padding: 0px var(--space-16); border: 1px solid var(--color-gray-300); border-radius: 999px; color: var(--color-gray-900); font-size: 14px; line-height: 20px; font-weight: 600; }
 .link-pill { transition: border-color var(--duration-300); }
 .link-pill { border-color: var(--overlay-gray-700-30); }
@@ -367,10 +367,10 @@ Motion: scrolled · box-shadow · 160 ms · ease-out-quad; 1 motion pattern in t
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
-.site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-500-border); transition: box-shadow var(--duration-160) var(--ease-out-quad); }
+.site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-500b); transition: box-shadow var(--duration-160) var(--ease-out-quad); }
 .container { max-width: 1120px; margin: 0px auto; padding: 0px var(--space-24); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-32); height: 72px; }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .logo { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--color-gray-800); }
 .logo { transition: color var(--duration-150) var(--ease-linear); }
 .nav-links { display: flex; align-items: center; gap: var(--space-24); }
@@ -380,13 +380,13 @@ a { color: var(--color-blue-link); text-decoration: none; }
 button { font: inherit; color: inherit; }
 .dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 svg { display: block; }
-.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300-border); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
 .header-actions { display: flex; align-items: center; gap: var(--space-10); }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-ghost { background: transparent; color: var(--color-blue-900); }
 .btn-primary { background: var(--color-blue-600); color: var(--color-gray-50); }
 .menu-button { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0px; border-radius: var(--radius-sm); background: transparent; color: var(--color-blue-900); cursor: pointer; }
-.mobile-menu { border-top: 1px solid var(--color-gray-500-border); padding: var(--space-8) 0px var(--space-16); }
+.mobile-menu { border-top: 1px solid var(--color-gray-500b); padding: var(--space-8) 0px var(--space-16); }
 ```
 
 ### Site footer
@@ -409,7 +409,7 @@ button, input { padding: 0px; padding: 0px; padding: 0px; }
 p { font-size: 16px; line-height: 26px; }
 .caption { font-size: 12px; line-height: 16px; color: var(--color-gray-500); }
 .footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .footer-link { font-size: 14px; line-height: 22px; color: var(--color-gray-600); }
 .footer-link { transition: color var(--duration-120) var(--ease-out); }
 .newsletter { display: flex; gap: var(--space-8); align-items: center; }
@@ -432,7 +432,7 @@ Motion: none
 
 ```css
 .footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .footer-link { font-size: 14px; line-height: 22px; color: var(--color-gray-600); }
 .footer-link { transition: color var(--duration-120) var(--ease-out); }
 ```
@@ -448,14 +448,14 @@ Motion: none
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
 .nav-links { display: flex; align-items: center; gap: var(--space-24); }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .nav-link { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-gray-700); }
 .nav-link { transition: color var(--duration-100); }
 .dropdown { position: relative; }
 button { font: inherit; color: inherit; }
 .dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 svg { display: block; }
-.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300-border); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
 ```
 
 ### Feature card
@@ -581,7 +581,7 @@ Tokens: color-gray-50 for color, radius-lg for border-radius, space-32 for paddi
 Default: text color-gray-50 · radius radius-lg · padding space-32 space-32 space-32 space-32 · font type-body
 Motion: none
 
-### Success notice
+### Notice
 
 Alert. Variants: Default.
 States: Default.
@@ -589,7 +589,7 @@ Tokens: color-gray-50 for background-color, color-blue-900 for color, color-succ
 Default: background color-gray-50 · text color-blue-900 · border 1px color-success · radius radius-sm · padding space-16 space-16 space-16 space-16 · font type-body
 Motion: none
 
-### Not found state
+### Empty state
 
 Empty state. Variants: Default.
 States: Default.
@@ -617,16 +617,16 @@ Motion: none
 
 Dropdown. Variants: Default.
 States: Default.
-Tokens: color-gray-50 for background-color, color-gray-900 for color, color-gray-300-border for border-color, radius-lg for border-radius, space-8 for padding-top, space-8 for padding-right, space-8 for padding-bottom, space-8 for padding-left, type-body for font, shadow-md for box-shadow.
-Default: background color-gray-50 · text color-gray-900 · border 1px color-gray-300-border · radius radius-lg · padding space-8 space-8 space-8 space-8 · font type-body · shadow shadow-md
+Tokens: color-gray-50 for background-color, color-gray-900 for color, color-gray-300b for border-color, radius-lg for border-radius, space-8 for padding-top, space-8 for padding-right, space-8 for padding-bottom, space-8 for padding-left, type-body for font, shadow-md for box-shadow.
+Default: background color-gray-50 · text color-gray-900 · border 1px color-gray-300b · radius radius-lg · padding space-8 space-8 space-8 space-8 · font type-body · shadow shadow-md
 Motion: none
 
 ### Mobile menu
 
 Dropdown. Variants: Default.
 States: Default.
-Tokens: color-gray-900 for color, color-gray-500-border for border-color, space-8 for padding-top, space-16 for padding-bottom, type-body for font.
-Default: text color-gray-900 · border 1px color-gray-500-border · padding space-8 0px space-16 0px · font type-body
+Tokens: color-gray-900 for color, color-gray-500b for border-color, space-8 for padding-top, space-16 for padding-bottom, type-body for font.
+Default: text color-gray-900 · border 1px color-gray-500b · padding space-8 0px space-16 0px · font type-body
 Motion: none
 
 ## Rules

@@ -15,7 +15,7 @@ You are building an interface that must match this design system exactly.
   --color-gray-900: #1F1F1F;
   --color-blue-900: #0B1F3A;
   --color-blue-600: #2458E6;
-  --color-blue-link: #1C4EDB;
+  --color-blue-600b: #1C4EDB;
   --color-teal-500: #0F8A8A;
   --color-success: #15803D;
   --color-danger: #DC2626;
@@ -169,7 +169,7 @@ Default: text color-blue-900 · border 1px rgba(0, 0, 0, 0) · radius radius-sm 
 Motion: hover · background-color · 160 ms · ease-out-quad; active · background-color · 160 ms · ease-out-quad
 
 ```css
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-ghost { background: transparent; color: var(--color-blue-900); }
 ```
@@ -210,7 +210,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Tab button
+### Tab
 
 Button. Variants: Default.
 States: Default, Hover, Focus, Active, Selected.
@@ -252,7 +252,7 @@ Default: text color-gray-900 · border 1px overlay-gray-700-30 · radius radius-
 Motion: none
 
 ```css
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .link-pill { display: inline-flex; align-items: center; height: 44px; padding: 0px var(--space-16); border: 1px solid var(--color-gray-300); border-radius: 999px; color: var(--color-gray-900); font-size: 14px; line-height: 20px; font-weight: 600; }
 .link-pill { transition: border-color var(--duration-300); }
 .link-pill { border-color: var(--overlay-gray-700-30); }
@@ -356,7 +356,7 @@ button { padding: 0px; padding: 0px; padding: 0px; }
 .site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-500); transition: box-shadow var(--duration-160) var(--ease-out-quad); }
 .container { max-width: 1120px; margin: 0px auto; padding: 0px var(--space-24); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-32); height: 72px; }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .logo { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--color-gray-800); }
 .logo { transition: color var(--duration-150) var(--ease-linear); }
 .nav-links { display: flex; align-items: center; gap: var(--space-24); }
@@ -395,7 +395,7 @@ button, input { padding: 0px; padding: 0px; padding: 0px; }
 p { font-size: 16px; line-height: 26px; }
 .caption { font-size: 12px; line-height: 16px; color: rgb(115, 115, 115); }
 .footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .footer-link { font-size: 14px; line-height: 22px; color: var(--color-gray-600); }
 .footer-link { transition: color var(--duration-120) var(--ease-out); }
 .newsletter { display: flex; gap: var(--space-8); align-items: center; }
@@ -418,7 +418,7 @@ Motion: none
 
 ```css
 .footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .footer-link { font-size: 14px; line-height: 22px; color: var(--color-gray-600); }
 .footer-link { transition: color var(--duration-120) var(--ease-out); }
 ```
@@ -434,7 +434,7 @@ Motion: none
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
 .nav-links { display: flex; align-items: center; gap: var(--space-24); }
-a { color: var(--color-blue-link); text-decoration: none; }
+a { color: var(--color-blue-600b); text-decoration: none; }
 .nav-link { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-gray-700); }
 .nav-link { transition: color var(--duration-100); }
 .dropdown { position: relative; }
@@ -567,7 +567,7 @@ Tokens: color-gray-50 for color, radius-lg for border-radius, space-32 for paddi
 Default: text color-gray-50 · radius radius-lg · padding space-32 space-32 space-32 space-32 · font type-body
 Motion: none
 
-### Success notice
+### Notice
 
 Alert. Variants: Default.
 States: Default.
@@ -575,7 +575,7 @@ Tokens: color-gray-50 for background-color, color-blue-900 for color, color-succ
 Default: background color-gray-50 · text color-blue-900 · border 1px color-success · radius radius-sm · padding space-16 space-16 space-16 space-16 · font type-body
 Motion: none
 
-### Not found state
+### Empty state
 
 Empty state. Variants: Default.
 States: Default.
