@@ -340,7 +340,7 @@ export function scoreNaming(expected: ExpectedFixture, doc: RunDocumentPartial, 
 
 /** Export integrity (v1.1): every export of the run, in both sets, declares every custom property it names. */
 export function scoreExportIntegrity(doc: RunDocumentPartial, generate: (format: string, set: 'proposed' | 'raw', componentId?: string) => string, undeclared: (text: string) => string[]): Metric {
-  const formats = ['tokens.css', 'tailwind.tokens.js', 'motion.css', 'design-system.md', 'prompt.md'];
+  const formats = ['tokens.css', 'tokens.json', 'tailwind.tokens.js', 'tokens.w3c.json', 'motion.css', 'motion.json', 'design-system.md', 'prompt.md'];
   const bad: string[] = [];
   let files = 0;
   for (const set of ['proposed', 'raw'] as const) {
@@ -353,9 +353,22 @@ export function scoreExportIntegrity(doc: RunDocumentPartial, generate: (format:
       for (const v of undeclared(generate('component-prompt.md', set, c.id))) bad.push(`${c.name} prompt ${set} ${v}`);
     }
   }
+  // The prompt's shape (docs/plan.md, Definition of Done 11): Motion, Site variables, a Default line per component, core first.
+  const prompt = generate('prompt.md', 'proposed');
+  const shape: string[] = [];
+  if (!/^## Motion$/m.test(prompt)) shape.push('no Motion section');
+  if (!/^## Site variables$/m.test(prompt)) shape.push('no Site variables block');
+  const sections = prompt.split(/^### /m).slice(1);
+  const contracts = sections.filter((sec) => /^(Default|Tokens|States): /m.test(sec) || /\. Variants: /.test(sec));
+  const noDefault = contracts.filter((sec) => !/^Default: /m.test(sec)).map((sec) => sec.split('\n')[0]);
+  if (noDefault.length) shape.push(`no Default line: ${noDefault.slice(0, 4).join(', ')}`);
+  if (contracts.length !== (doc.components ?? []).length) shape.push(`${contracts.length} contracts for ${(doc.components ?? []).length} components`);
+  const core = prompt.indexOf('## Core components');
+  const page = prompt.indexOf('## Page-specific components');
+  if (core < 0 || page < 0 || core > page) shape.push('core components not before page-specific ones');
   return {
-    value: { files, undeclared: bad },
-    summary: `${files} files · ${bad.length} undeclared${bad.length ? ` · ${bad.slice(0, 6).join(', ')}` : ''}`,
-    pass: () => bad.length === 0,
+    value: { files, undeclared: bad, promptShape: shape },
+    summary: `${files} files · ${bad.length} undeclared${bad.length ? ` · ${bad.slice(0, 6).join(', ')}` : ''}${shape.length ? ` · prompt ${shape.join(', ')}` : ''}`,
+    pass: () => bad.length === 0 && shape.length === 0,
   };
 }

@@ -91,7 +91,7 @@ Computed by `pnpm evals` into `fixtures/results.json` with a per-fixture row:
 - **Selection exactness**: selected pages equal expected pages.
 - **Motion** (v1.1): duration and easing token recall (by value, and by name where `expected.json` names it); keyframes recall by name; pattern recall with kind and trigger type exact, duration within ±40 ms and the `observed` flag exact; hover delta completeness over the planted properties, each carrying its transition timing; outline-noise entries (outline entries on a planted `outline: none` element) must be 0.
 - **Naming** (v1.1): site-variable naming over the planted variables; tokens named by a hashed variable (must be 0); overlay split (every expected overlay found with its base and alpha, and no translucent value in the palette); type role names against the `name` of each `tokens.type` entry, with no token named `other`; variant names on the planted pairs; component and variant names ending in a digit (must be 0); tier assignment against `tiers`. Fallback names are scored by `pnpm evals --fallback`; tiers are not, since a fallback run never merges clusters by name across pages and tiers follow that merge (D-090).
-- **Export integrity** (v1.1): every export of every fixture run (both sets) names no `var(--` that the same export does not declare.
+- **Export integrity** (v1.1): every export of every fixture run (both sets, every format and every component prompt) names no `var(--` that the same export does not declare; and the prompt has a Motion section, a Site variables block, a Default line for every component and its core components before the page-specific ones (docs/plan.md, Definition of Done 11; D-090).
 
 ## Thresholds (the floor)
 

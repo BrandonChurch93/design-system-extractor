@@ -664,17 +664,23 @@ export async function capture(ctx: RunContext, deps: CaptureDeps): Promise<Captu
 
   // Two pages in flight at most (docs/specs/crawler.md, Politeness).
   let next = 0;
+  // A failure stops both workers taking pages, and the run fails only once the other page has finished,
+  // so no capture line lands after the run's last event.
+  let failure: { error: unknown } | null = null;
   const worker = async () => {
-    while (next < pages.length) {
+    while (!failure && next < pages.length) {
       const i = next++;
       try {
         await one(i);
+      } catch (error) {
+        failure ??= { error };
       } finally {
         ledger.settle(i, ctx.config.viewports);
       }
     }
   };
   await Promise.all([worker(), worker()]);
+  if (failure) throw (failure as { error: unknown }).error;
 
   const failed = results.filter((r) => r.status === 'failed');
   if (challenged > pages.length / 2) throw new BlockedError('bot', { attempts: failed.map((f) => ({ url: f.page.url, status: 0, retries: 0 })) });
