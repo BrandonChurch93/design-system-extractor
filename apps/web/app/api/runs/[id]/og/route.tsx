@@ -48,6 +48,7 @@ export async function GET(_request: Request, ctx: { params: Promise<{ id: string
     },
   );
   const png = new Uint8Array(await image.arrayBuffer());
-  if (complete) await svc.storage.put(key, png, { contentType: 'image/png' }).catch(() => {});
+  // The image is still served when it cannot be kept; the next request draws it again.
+  if (complete) await svc.storage.put(key, png, { contentType: 'image/png' }).catch((e: Error) => console.error(JSON.stringify({ route: 'GET /api/runs/{id}/og', error: e.message })));
   return new Response(png, { headers: { 'content-type': 'image/png', 'cache-control': complete ? TERMINAL_CACHE : NO_STORE } });
 }

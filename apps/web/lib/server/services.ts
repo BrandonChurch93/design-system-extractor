@@ -3,7 +3,7 @@ import type { Redis } from 'ioredis';
 import { allowedPrivateHosts } from '@dse/schema';
 import { createDb, type Db } from '@dse/pipeline/db';
 import type { Resolver } from '@dse/pipeline/net/private-ranges';
-import { capsFromEnv, createQueue, createRedis, RunCounters } from '@dse/pipeline/queue';
+import { capsFromEnv, createApiRedis, createQueue, RunCounters } from '@dse/pipeline/queue';
 import { S3Storage, s3ConfigFromEnv, type Storage } from '@dse/pipeline/storage';
 
 /** Everything the API routes reach: built once per server process from the environment. */
@@ -32,7 +32,7 @@ function need(env: Record<string, string | undefined>, key: string): string {
 }
 
 export function servicesFromEnv(env: Record<string, string | undefined> = process.env): Services {
-  const redis = createRedis(need(env, 'REDIS_URL'));
+  const redis = createApiRedis(need(env, 'REDIS_URL'));
   return {
     db: createDb(need(env, 'DATABASE_URL'), { max: 3 }),
     redis,

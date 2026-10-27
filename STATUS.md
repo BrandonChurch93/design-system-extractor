@@ -144,6 +144,7 @@ P14 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-074 · Outage outcomes: a killed worker's run restarts on the next worker; the web app's Redis fails fast; a failed enqueue fails its run and gives everything back; a storage outage fails the run, refunded.
 - D-073 · Visual goldens take `maxDiffPixels: 25` beside the ratio; seven stale goldens updated.
 - D-072 · Text at zero font size or line height is not a type style; the roster's Notion entry is notion.com.
 - D-071 · Showcase runs take `DSE_SHOWCASE_TIMEOUT_MS` (15 min); the timeout detail names the run's own minutes.

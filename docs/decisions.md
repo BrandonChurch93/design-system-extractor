@@ -596,3 +596,14 @@ Date: 2026-10-26 · Context: the visual gate compared with `maxDiffPixelRatio: 0
 Decision: every screenshot and OG comparison takes `maxDiffPixels: 25` beside the ratio; Playwright applies the smaller of the two. The seven goldens were reviewed and updated.
 Reasoning: rendering here is deterministic, so a bound near zero costs nothing in flakes and catches a changed digit or a moved line on any page height.
 Affects: `playwright.qa.config.ts`, `tests/qa/visual.spec.ts`, seven goldens in `apps/web/test/goldens/`.
+
+## D-074 · What a worker crash, a Redis outage and a storage outage end in
+
+Date: 2026-10-26 · Context: P14's chaos tests need the specified statuses, and the specs give them only for a crash. The web app also built its Redis client with BullMQ's worker settings (no retry limit per request), so with Redis down `POST /api/runs` waited for it indefinitely instead of answering.
+Decision:
+- A worker killed mid-run: its job's lock lapses, the next worker finds the job stalled and runs it again from the beginning (document, pages and log reset); a run that completes is counted once. A second crash fails it with the stopped detail and refunds it, as before.
+- Redis down when a run is requested: the web app's client (`createApiRedis`: one retry per request, 5 s connect and command timeouts) fails the pre-check within seconds; the route answers 500 with "Something broke on our side." and no run exists. When only the enqueue fails, the run row it created ends `failed` with the stopped detail, and the count refund and the reservation release are each attempted on their own, so one failing cannot keep the others from happening; failures are logged.
+- Storage down during capture: the run ends `failed` with the stopped detail and is refunded. The file storage used by the CLI and evals treats only a missing file as missing.
+- The OG route logs a failed write of its image instead of ignoring it; the image is still served.
+Reasoning: a visitor gets an answer in seconds, never a run left queued forever, and is never charged for a run that could not happen.
+Affects: `docs/specs/caps-and-budget.md`, `packages/pipeline/src/queue/redis.ts`, `packages/pipeline/src/context.ts`, `apps/web/lib/server/services.ts`, `apps/web/lib/server/runs.ts`, `apps/web/app/api/runs/[id]/og/route.tsx`, `apps/web/test/chaos.int.test.ts`.

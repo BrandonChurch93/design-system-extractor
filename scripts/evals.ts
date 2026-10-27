@@ -126,7 +126,7 @@ if (values.fallback) {
   console.log(`\n${failed ? 'evals failed' : 'evals passed'} · fallback run, results.json unchanged`);
   process.exit(failed ? 1 : 0);
 }
-let previous: { fixtures?: { name: string; metrics: Record<string, unknown> }[] } = {};
+let previous: { mode?: string; through?: string; pipelineVersion?: string; fixtures?: { name: string; metrics: Record<string, unknown> }[] } = {};
 try {
   previous = JSON.parse(readFileSync(resultsFile, 'utf8'));
 } catch {
@@ -137,6 +137,9 @@ const merged = evalFixtures.map((name) => {
   const before = previous.fixtures?.find((p) => p.name === name);
   return { name, metrics: { ...(before?.metrics ?? {}), ...Object.fromEntries(Object.entries(now?.metrics ?? {}).map(([k, m]) => [k, m.value])) } };
 });
-writeFileSync(resultsFile, `${JSON.stringify({ generatedAt: new Date().toISOString(), mode, through: through ?? 'done', pipelineVersion: PIPELINE_VERSION, fixtures: merged }, null, 2)}\n`);
-console.log(`\n${failed ? 'evals failed' : 'evals passed'} · fixtures/results.json`);
+const body = { mode, through: through ?? 'done', pipelineVersion: PIPELINE_VERSION, fixtures: merged };
+// The same numbers keep their date, so a gate run leaves the tree clean.
+const same = JSON.stringify(body) === JSON.stringify({ mode: previous.mode, through: previous.through, pipelineVersion: previous.pipelineVersion, fixtures: previous.fixtures });
+if (!same) writeFileSync(resultsFile, `${JSON.stringify({ generatedAt: new Date().toISOString(), ...body }, null, 2)}\n`);
+console.log(`\n${failed ? 'evals failed' : 'evals passed'} · fixtures/results.json${same ? ' unchanged' : ''}`);
 process.exitCode = failed ? 1 : 0;

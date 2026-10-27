@@ -132,9 +132,13 @@ export async function admitRun(svc: Services, input: AdmitInput): Promise<AdmitR
     const data: RunJobData = { runId: id, ...(input.byoKey ? { byoKeyCiphertext: encryptSecret(input.byoKey, svc.encryptionKey) } : {}), ...(counted ? { counted } : {}) };
     await enqueueRun(svc.queue, data, priority);
   } catch (e) {
-    await finishOpenRun(svc.db, id, { status: 'failed', failedDetail: 'The crawler stopped unexpectedly.', finishedAt: new Date().toISOString() });
-    if (counted) await svc.counters.refund(id, counted);
-    await svc.counters.release(id);
+    // Each step is tried on its own, so a Redis that is still down cannot keep the row open (D-074).
+    const undo = await Promise.allSettled([
+      finishOpenRun(svc.db, id, { status: 'failed', failedDetail: 'The crawler stopped unexpectedly.', finishedAt: new Date().toISOString() }),
+      counted ? svc.counters.refund(id, counted) : Promise.resolve(false),
+      svc.counters.release(id),
+    ]);
+    for (const u of undo) if (u.status === 'rejected') console.error(JSON.stringify({ route: 'POST /api/runs', runId: id, undo: (u.reason as Error).message }));
     throw e;
   }
   return { kind: 'created', body: { id, runsLeft: await runsLeft() } };

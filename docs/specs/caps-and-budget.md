@@ -78,6 +78,7 @@ A blocked result is `200 { blocked, detail, runsLeft }`; the client navigates to
 - Memory: a browser context per run; pages closed after capture; the browser restarted every 25 runs or when RSS exceeds 1.5 GB.
 - Job retry: a job that crashes (worker restart) is retried once from the beginning; a second crash marks the run `failed` with the stopped-unexpectedly detail. Idempotency: the run row's status gate prevents double processing. BullMQ settings: two attempts, `maxStartedAttempts: 2`, `maxStalledCount: 1`; a retried run's document, pages and log are reset; a job's BullMQ priority is 100 minus the app's priority, because BullMQ takes the lowest number first (D-057).
 - Cancel: `POST /api/runs/{id}/cancel` sets a Redis flag the worker checks between pages; the run becomes `cancelled`, the count is refunded.
+- Outages (D-074): a worker killed mid-run is picked up by the next worker once its lock lapses and runs from the beginning; Redis down at request time fails the request within seconds (the web app's Redis client allows one retry and 5 s connect and command timeouts) and no run is created; an enqueue that fails ends the created run `failed` with the stopped detail and gives back its count and reservation; storage down during a run ends it `failed` with the stopped detail, refunded.
 - Heartbeat: the worker writes `worker:heartbeat` (an ISO timestamp) to Redis every 15 s with a 60 s TTL; `/api/health` reports `alive` when it is under 45 s old.
 
 ## Redis and BullMQ settings

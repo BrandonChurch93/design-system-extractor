@@ -94,8 +94,9 @@ export class LocalStorage implements Storage {
   async get(key: string): Promise<Buffer | null> {
     try {
       return readFileSync(this.file(key));
-    } catch {
-      return null;
+    } catch (e) {
+      if ((e as NodeJS.ErrnoException).code === 'ENOENT') return null;
+      throw e;
     }
   }
 
@@ -113,8 +114,9 @@ export class LocalStorage implements Storage {
       let names: string[] = [];
       try {
         names = readdirSync(dir);
-      } catch {
-        return;
+      } catch (e) {
+        if ((e as NodeJS.ErrnoException).code === 'ENOENT') return;
+        throw e;
       }
       for (const n of names) {
         const p = join(dir, n);
