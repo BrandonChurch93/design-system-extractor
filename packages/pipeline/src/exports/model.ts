@@ -1,4 +1,5 @@
 import type { ColorGroup, Component, ExportSet, Keyframes, RunDocumentPartial } from '@dse/schema';
+import { resolveSiteVariables, sealKeyframes } from './vars';
 
 // The token set an export writes, with the names every format and the panel share
 // (docs/specs/exports-and-mcp.md, Formats). Browser-safe: no Node imports anywhere in exports/.
@@ -23,9 +24,11 @@ export type ExportTokens = {
   breakpoints: { name: string; var: string; value: number }[];
   keyframes: Keyframes[];
   /** Non-hashed site variables this export does not already declare as a token, resolved (D-083). */
-  siteVariables: { name: string; value: string; kind?: string }[];
+  siteVariables: { name: string; value: string; literal: string; kind?: string }[];
   /** A raw token id to the name of the token that stands for it in this set, as its variable without `--`. */
   refs: Map<string, string>;
+  /** Every custom property this export declares: the token variables and the site variables (D-090). */
+  declares: Set<string>;
 };
 
 export type ExportContext = { doc: RunDocumentPartial; set: ExportSet; runUrl: string };
@@ -135,24 +138,31 @@ export function exportTokens(doc: RunDocumentPartial, set: ExportSet): ExportTok
   });
 
   const keyframes = [...(t.keyframes ?? [])].sort((a, b) => Number(b.used) - Number(a.used));
-  const declared = new Set<string>([
-    ...colors.map((c) => c.var),
-    ...overlays.map((o) => o.var),
-    ...type.flatMap((x) => [`--type-${x.name}-size`, `--type-${x.name}-line`, `--type-${x.name}-weight`, `--type-${x.name}-tracking`]),
-    ...fonts.map((f) => `--font-${f.name}`),
-    ...space.map((s) => s.var),
-    ...radius.map((r) => r.var),
-    ...shadow.map((s) => s.var),
-    ...durations.map((d) => d.var),
-    ...durations.filter((d) => d.role).map((d) => `--duration-${d.role}`),
-    ...easings.map((e) => e.var),
-    ...breakpoints.map((b) => b.var),
+  // Every token variable this export writes, with its value, for the site values that read one (D-090).
+  const tokenValues = new Map<string, string>([
+    ...colors.map((c) => [c.var, c.value] as const),
+    ...overlays.map((o) => [o.var, o.value] as const),
+    ...type.flatMap((x) => [[`--type-${x.name}-size`, `${x.size}px`], [`--type-${x.name}-line`, `${x.lineHeight}px`], [`--type-${x.name}-weight`, String(x.weight)], ...(x.letterSpacing ? [[`--type-${x.name}-tracking`, `${x.letterSpacing}px`]] : [])] as [string, string][]),
+    ...fonts.map((f) => [`--font-${f.name}`, f.stack.join(', ')] as const),
+    ...space.map((s) => [s.var, `${s.value}px`] as const),
+    ...radius.map((r) => [r.var, `${r.value}px`] as const),
+    ...shadow.map((s) => [s.var, s.value] as const),
+    ...durations.map((d) => [d.var, `${d.ms}ms`] as const),
+    ...durations.filter((d) => d.role).map((d) => [`--duration-${d.role}`, `${d.ms}ms`] as const),
+    ...easings.map((e) => [e.var, e.value] as const),
+    ...breakpoints.map((b) => [b.var, `${b.value}px`] as const),
   ]);
-  const siteVariables = (t.siteVariables ?? [])
-    .filter((v) => !v.hashed && !declared.has(v.name) && v.resolved)
-    .map((v) => ({ name: v.name, value: v.resolved, ...(v.kind ? { kind: v.kind } : {}) }))
+  const declared = new Set(tokenValues.keys());
+  const siteVariables = resolveSiteVariables(
+    (t.siteVariables ?? []).filter((v) => !v.hashed && !declared.has(v.name)),
+    tokenValues,
+  )
+    .map((v) => ({ name: v.name, value: v.written, literal: v.literal, ...(v.kind ? { kind: v.kind } : {}) }))
     .sort((a, b) => a.name.localeCompare(b.name));
-  return { set, colors, overlays, type, fonts, space, radius, shadow, durations, easings, breakpoints, keyframes, siteVariables, refs };
+  const declares = new Set([...declared, ...siteVariables.map((v) => v.name)]);
+  const known = (n: string) => declares.has(n);
+  const sealed = keyframes.map((k) => ({ ...k, css: sealKeyframes(k.name, k.css, known) }));
+  return { set, colors, overlays, type, fonts, space, radius, shadow, durations, easings, breakpoints, keyframes: sealed, siteVariables, refs, declares };
 }
 
 /** The name a component's token reference has in this export, or null when the set has no token for it. */

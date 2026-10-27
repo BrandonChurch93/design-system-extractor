@@ -36,8 +36,9 @@ export function collectTimings(capture: CaptureOutput) {
   const easings = new Map<string, EaseAcc>();
   const keyframeUse = new Map<string, Map<string, number>>();
   const addDuration = (raw: string, ms: number, pageId: string) => {
-    if (ms <= 0) return;
     const r = roundMs(ms);
+    // Under 2.5 ms rounds to nothing: an instant change, not a duration.
+    if (r <= 0) return;
     const d = durations.get(r) ?? { ms: r, usage: 0, pages: new Map(), raw: new Set() };
     d.usage++;
     bump(d.pages, pageId);
@@ -66,7 +67,7 @@ export function collectTimings(capture: CaptureOutput) {
           props.forEach((_p, i) => {
             const raw = durs[i % Math.max(1, durs.length)] ?? '0s';
             const ms = msOf(raw);
-            if (ms <= 0) return;
+            if (roundMs(ms) <= 0) return;
             addDuration(raw, ms, pageId);
             addEasing(eases[i % Math.max(1, eases.length)] ?? 'ease', pageId);
           });
@@ -80,14 +81,14 @@ export function collectTimings(capture: CaptureOutput) {
             bump((keyframeUse.get(n) ?? keyframeUse.set(n, new Map()).get(n)!), pageId);
             const raw = durs[i % Math.max(1, durs.length)] ?? '0s';
             const ms = msOf(raw);
-            if (ms <= 0) return;
+            if (roundMs(ms) <= 0) return;
             addDuration(raw, ms, pageId);
             addEasing(eases[i % Math.max(1, eases.length)] ?? 'ease', pageId);
           });
         }
       }
       for (const a of vc.motion?.anims ?? []) {
-        if (a.source !== 'waapi') continue;
+        if (a.source !== 'waapi' || roundMs(a.duration) <= 0) continue;
         addDuration(`${a.duration}ms`, a.duration, pageId);
         addEasing(a.easing, pageId);
       }

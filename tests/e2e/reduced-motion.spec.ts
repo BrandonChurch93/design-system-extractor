@@ -98,8 +98,9 @@ test('the run page control: swatches, bars and cards do move without the prefere
 // docs/design/components.md, ReplayButton: under reduced motion the dot shows the end state still.
 async function motionSection(page: Page) {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/r/seedclean0');
-  await page.locator('#motion').scrollIntoViewIfNeeded();
+  await page.goto('/r/seedclean0', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(400);
+  await page.locator('#motion').evaluate((el) => el.scrollIntoView({ block: 'start' }));
   await page.waitForTimeout(600);
   return page.locator('#motion');
 }

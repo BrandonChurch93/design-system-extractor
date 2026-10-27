@@ -5,7 +5,7 @@ export type SkeletonRegion = 'palette' | 'type' | 'spacing' | 'motion' | 'compon
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 /** The clean fixture's Motion section at 1440 (D-080). */
-const MOTION = { strip: 160, easing: 220, patterns: 420 };
+const MOTION = { strip: 153, easing: 251, patterns: 977 };
 
 /**
  * A run page region before its stage lands, at the height of a typical result so nothing below it
@@ -63,6 +63,7 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
       return (
         <span className={styles.stack} aria-hidden="true">
           <Skeleton height={32} width="56%" radius="pill" />
+          <Skeleton height={20} width={180} />
           <ul className={styles.cards}>
             {range(6).map((i) => (
               <li key={i} className={styles.card}>
@@ -107,7 +108,7 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
           <ul className={styles.cards}>
             {range(8).map((i) => (
               <li key={i}>
-                <Skeleton height={149} radius="lg" />
+                <Skeleton height={146} radius="lg" />
               </li>
             ))}
           </ul>

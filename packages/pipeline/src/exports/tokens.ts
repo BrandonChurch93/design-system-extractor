@@ -51,7 +51,7 @@ export function tokensJson(doc: RunDocumentPartial, t: ExportTokens): TokensJson
     easing: Object.fromEntries(t.easings.map((e) => [e.name, e.value])),
     keyframes: Object.fromEntries(t.keyframes.map((k) => [k.name, { css: k.css, used: k.used }])),
     breakpoints: t.breakpoints.map((b) => b.value),
-    siteVariables: Object.fromEntries(t.siteVariables.map((v) => [v.name, { value: v.value, ...(v.kind ? { kind: v.kind } : {}) }])),
+    siteVariables: Object.fromEntries(t.siteVariables.map((v) => [v.name, { value: v.literal, ...(v.kind ? { kind: v.kind } : {}) }])),
   };
 }
 
@@ -118,7 +118,7 @@ export function tailwindTokens(doc: RunDocumentPartial, t: ExportTokens): string
     if (rest.length && typeof group === 'object') group[rest.join('-')] = o.value;
     else colors[key] = o.value;
   }
-  const used = t.keyframes.filter((k) => k.used);
+  const used = t.keyframes.filter((k) => k.used && k.css.startsWith('@keyframes'));
   const theme = {
     colors,
     fontFamily: Object.fromEntries(t.fonts.map((f) => [f.name, f.stack])),

@@ -1,0 +1,10 @@
+import { readFileSync, writeFileSync } from 'node:fs';
+import { RunDocumentPartial } from '@dse/schema';
+import { generateExport, undeclaredVars } from '@dse/pipeline/exports';
+const doc = RunDocumentPartial.parse(JSON.parse(readFileSync(process.argv[2]!, 'utf8')));
+const formats = ['tokens.css', 'tokens.json', 'tailwind.tokens.js', 'tokens.w3c.json', 'motion.css', 'motion.json', 'design-system.md', 'prompt.md'] as const;
+const bad = (['proposed', 'raw'] as const).flatMap((set) => formats.flatMap((f) => undeclaredVars(generateExport(doc, f, { set, runUrl: 'x' }).body).map((v) => `${set} ${f} ${v}`)));
+const comp = (doc.components ?? []).flatMap((c) => undeclaredVars(generateExport(doc, 'component-prompt.md', { runUrl: 'x', componentId: c.id }).body).map((v) => `${c.name} ${v}`));
+const prompt = generateExport(doc, 'prompt.md', { runUrl: `http://localhost:3000/r/${doc.id}` }).body;
+writeFileSync(process.argv[3]!, prompt);
+console.log(JSON.stringify({ bad, comp: comp.slice(0, 10), compCount: comp.length, leftOut: (prompt.match(/left out:/g) ?? []).length }));

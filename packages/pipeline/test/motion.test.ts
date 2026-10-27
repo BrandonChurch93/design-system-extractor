@@ -42,12 +42,13 @@ describe('static motion', () => {
           el({ 'transition-property': 'background-color, transform, box-shadow', 'transition-duration': '0.16s, 0.16s, 0.16s', 'transition-timing-function': 'cubic-bezier(0.25, 0.46, 0.45, 0.94), cubic-bezier(0.25, 0.46, 0.45, 0.94), cubic-bezier(0.25, 0.46, 0.45, 0.94)', 'transition-delay': '0s' }),
           el({ 'transition-property': 'opacity', 'transition-duration': '240ms', 'transition-timing-function': 'cubic-bezier(0.25, 1, 0.5, 1)', 'transition-delay': '0.06s' }),
           el({ 'transition-property': 'opacity', 'transition-duration': '0.242s', 'transition-timing-function': 'cubic-bezier(0.25, 1, 0.5, 1)', 'transition-delay': '0.12s' }),
+          el({ 'transition-property': 'color', 'transition-duration': '0.001s', 'transition-timing-function': 'cubic-bezier(0.25, 1, 0.5, 1)', 'transition-delay': '0s' }),
           el({ 'animation-name': 'fade-up', 'animation-duration': '0.48s', 'animation-timing-function': 'cubic-bezier(0.25, 1, 0.5, 1)', 'animation-iteration-count': '1', 'transition-property': 'all', 'transition-duration': '0s' }),
         ]),
       },
     ]);
 
-  it('reads durations from transition and animation longhands, rounded to 5 ms, delays never', () => {
+  it('reads durations from transition and animation longhands, rounded to 5 ms, delays never, an instant change never', () => {
     const t = collectTimings(capture());
     expect([...t.durations.keys()].sort((a, b) => a - b)).toEqual([160, 240, 480]);
     expect(t.durations.get(160)!.usage).toBe(3);

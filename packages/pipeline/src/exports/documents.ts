@@ -3,6 +3,7 @@ import { assertVoice, byTier, exportTokens, runDate, tokenRef, type ExportTokens
 import { triggerWords } from './motion';
 import { componentCss } from './substitute';
 import { siteVariablesBlock, tokenBlock } from './tokens';
+import { sealHtml } from './vars';
 import type { ExportSet } from '@dse/schema';
 
 // design-system.md and prompt.md, assembled from facts (docs/specs/exports-and-mcp.md). No model
@@ -106,7 +107,7 @@ function componentSection(c: Component, t: ExportTokens, depth = 3): string {
     '',
     DISCLAIMER,
   ];
-  if (c.code.html) lines.push('', fence(shorten(c.code.html, 'html'), 'html'));
+  if (c.code.html) lines.push('', fence(shorten(sealHtml(c.code.html, (n) => t.declares.has(n)), 'html'), 'html'));
   if (css) lines.push('', fence(shorten(css, 'css'), 'css'));
   if (!c.code.html && !css) lines.push('', defaultLine(c, t));
   return lines.join('\n');

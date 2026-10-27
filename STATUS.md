@@ -126,6 +126,122 @@ Read for P11: pages, components, copy, motion, quality-bar, design-system, expor
 10. Catalog entries for every page-level component.
 11. QA: `tests/qa/pages.ts` with every page and state, goldens, axe, no horizontal scroll at 390, Lighthouse script and thresholds, `/open` test, polling mutation bound test, reduced-motion on the run page, a recorded video of the in-progress page reviewed, the Compare deltas test (messy to messy-after).
 
+## P16 real-site check
+
+A fresh local run of stripe.com (`env DSE_MODEL_MODE=live pnpm pipeline:run https://stripe.com`, run `uno14531eh`, 2026-10-27): complete in 324 s for $0.0097, 12 pages, 120 components (95 core, 25 page-specific), 80 patterns, 46 of them observed. The prompt export has a Motion section, zero `var(--` references to undeclared names in any export of either set or any component prompt, no component or variant name ending in a digit, no type token named `other`, and every component has a tier and a slug. Naming reached its time budget on this site, so the components carry the rules' names (D-066, D-078). The first run of this check failed validation on a 0 ms duration and the exports named stripe's theme and runtime variables without declaring them; both are fixed (D-090). The whole prompt (125 KB) is `docs/real-site-check/stripe-prompt.md`; STATUS holds its opening, the Motion section with the first patterns, and the first contract, because the whole file would bury this one (D-090).
+
+````markdown
+You are building an interface that must match this design system exactly.
+
+## Motion
+
+Durations:
+
+| Name | Value | Role |
+| --- | --- | --- |
+| duration-50 | 50 ms | Faster |
+| duration-120 | 120 ms | Fast |
+| duration-150 | 150 ms | Base |
+| navigation-duration | 240 ms | Slow |
+| duration-250 | 250 ms | Slower |
+| accordionCollapseAnimationDuration | 300 ms |  |
+| duration-325 | 325 ms |  |
+| duration-375 | 375 ms |  |
+| duration-400 | 400 ms |  |
+| duration-450 | 450 ms |  |
+| duration-500 | 500 ms |  |
+| duration-600 | 600 ms |  |
+| duration-700 | 700 ms |  |
+| duration-750 | 750 ms |  |
+| card-duration | 800 ms |  |
+| duration-850 | 850 ms |  |
+| duration-1000 | 1000 ms |  |
+| duration-1100 | 1100 ms |  |
+| duration-1200 | 1200 ms |  |
+| duration-1250 | 1250 ms |  |
+| duration-1420 | 1420 ms |  |
+| duration-2000 | 2000 ms |  |
+| duration-2260 | 2260 ms |  |
+| duration-2500 | 2500 ms |  |
+| duration-3000 | 3000 ms |  |
+| duration-4000 | 4000 ms |  |
+| duration-5000 | 5000 ms |  |
+| duration-7000 | 7000 ms |  |
+| duration-11700 | 11700 ms |  |
+| duration-11950 | 11950 ms |  |
+| duration-86400000 | 86400000 ms |  |
+
+Easings:
+
+| Name | Value |
+| --- | --- |
+| ease-out-cubic | cubic-bezier(0.215, 0.61, 0.355, 1) |
+| ease-custom-1 | cubic-bezier(0.25, 1, 0.5, 1) |
+| ease | ease |
+| linear | linear |
+| ease-custom-2 | cubic-bezier(0.4, 0, 0.2, 1) |
+| ease-in-out | ease-in-out |
+| ease-custom-3 | cubic-bezier(0.33, 1, 0.68, 1) |
+| navigation-easing | cubic-bezier(0.45, 0.05, 0.55, 0.95) |
+| ease-custom-5 | cubic-bezier(0.7, 0, 0, 1) |
+| ease-out | ease-out |
+| steps-1 | steps(1) |
+| accordionCollapseAnimationEasing | cubic-bezier(0.65, 0, 0.35, 1) |
+| card-ease | cubic-bezier(0.165, 0.84, 0.44, 1) |
+| ease-custom-7 | cubic-bezier(0.3, 0, 0.2, 1) |
+| steps-1b | steps(1, start) |
+| ease-custom-10 | cubic-bezier(0.22, 1, 0.36, 1) |
+| ease-custom-11 | cubic-bezier(0.61, 1, 0.88, 1) |
+| ease-custom-12 | cubic-bezier(0.9, 0, 0.1, 1) |
+| ease-custom-8 | cubic-bezier(0, 0.09, 0.4, 1) |
+| ease-custom-9 | cubic-bezier(0.16, 1, 0.3, 1) |
+| ease-in | ease-in |
+| ease-custom-13 | cubic-bezier(0.2, 0, 0, 1) |
+| ease-custom-15 | cubic-bezier(0.78, 0, 0.22, 1) |
+| ease-custom-16 | cubic-bezier(0.12, 0, 0.39, 0) |
+
+Keyframes: (32 blocks, in the full file)
+
+Patterns:
+
+- Entrance · div.UniversalChatCtaCard__container.UniversalChatCtaCard__container--fixed · on load · opacity 0 → 1, transform translateY(16px) → translateY(0px) · 300 ms · ease-custom-1
+- Entrance · div.EnterpriseHubTicker__track > div:nth-of-type(1) · on load · transform translateX(-2.90533%) → translateX(-13.2013%) · about 4758 ms · easing not recorded, nearest token suggested: ease-out-cubic · observed
+- Entrance · div.dom-graphic.dom-graphic--variant-default.crypto-hero-phone-animation__graphic · on load · transform translateY(160px) → translateY(0px) · 1,100 ms · ease-out · observed
+- Entrance · div.dom-graphic.dom-graphic--variant-default.crypto-hero-phone-animation__graphic · on load · opacity 0 → 1 · 1,100 ms · ease-out · observed
+- Entrance · div.crypto-hero-phone-animation__phone-input-screen · on load · opacity 1 → 0 · 11,950 ms · ease-in-out · observed
+- Entrance · div.crypto-hero-phone-animation__phone-input-screen · on load · transform translateX(0px) → translateX(-266px) · 11,950 ms · ease-in-out · observed
+- Entrance · div.crypto-hero-phone-animation__phone-review-screen · on load · transform translateX(266px) → translateX(-266px) · 11,950 ms · ease-in-out · observed
+- Entrance · div.crypto-hero-phone-animation__phone-success-screen · on load · opacity 0 → 1 · 11,950 ms · ease-in-out · observed
+
+- … 72 more patterns in the full file
+
+## Core components
+
+### Button (nav, second)
+
+Button. Variants: Primary, Secondary, Tertiary, Blue, Pink, Cyan.
+States: Default, Hover, Focus, Active.
+- Hover: background-color #0A2540 (300 ms); opacity 0.6 (300 ms)
+- Focus: box-shadow 0px 0px 0px 2px #4D90FE, inset 0px 0px 0px 2px #FFFFFFE6
+- Active: background-color #0A2540 (300 ms); opacity 0.6 (300 ms)
+Tokens: hds-color-core-brand-500 for background-color, color-gray-50 for color, radius-pill for border-radius, hds-space-core-150 for padding-right, listSpacing for padding-bottom, columnPaddingNormal for padding-left, type-text-15 for font, accordionCollapseAnimationDuration for transition-duration, ease-custom-1 for transition-timing-function.
+Default: background hds-color-core-brand-500 · text color-gray-50 · radius radius-pill · padding 3px hds-space-core-150 listSpacing columnPaddingNormal · font type-text-15
+Motion: hover · background-color · 300 ms · ease-custom-1; hover · opacity · 300 ms · ease-custom-1; active · background-color · 300 ms · ease-custom-1; active · opacity · 300 ms · ease-custom-1; 1 motion pattern in the Motion section
+
+```css
+.dse-root .CtaButton { display: flex; align-items: center; justify-content: center; }
+.dse-root .CtaButton { transition-property: opacity, color, background-color, border, fill, stroke; transition-duration: var(--accordionCollapseAnimationDuration); transition-timing-function: var(--ease-custom-1); transform: translateZ(0px); }
+.CtaButton { display: inline-block; padding: 3px 0px 6px; border-radius: 16.5px; font: var(--ctaFont); color: var(--buttonColor); transition: var(--hoverTransition); outline: none; }
+.CtaButton.variant--Button { padding-left: var(--columnPaddingNormal); padding-right: var(--columnPaddingNormal); background-color: var(--buttonColor); color: var(--knockoutColor); white-space: nowrap; transition-property: background-color, opacity; }
+.CtaButton.variant--Button.CtaButton--arrow { padding-right: var(--hds-space-core-150); }
+.nobr { white-space: nowrap; line-height: 0; }
+.dse-root .HoverArrow { --hoverTransition: 150ms cubic-bezier(0.215,0.61,0.355,1); }
+.HoverArrow { --arrowSpacing: 5px; position: relative; top: 1px; margin-left: var(--arrowSpacing); stroke-width: 2px; fill: none; stroke: currentcolor; }
+a { text-decoration: none; }
+```
+
+````
+
 ## Phase checklist
 
 P16 gate (docs/plan.md):
@@ -266,7 +382,7 @@ Motion and naming (v1.1)
 - Component names come from a model and can differ in wording between two runs of one site; what decides structure (tone variants, badge or tag, the merge across pages by style) is held by rules (D-090), and the evals replay recorded answers.
 
 Large and real sites
-- A site that needs more than its timeout's shares takes the lighter paths: later pages without states, names from the rules, previews captured instead of checked, the narrative from its template. Each cut is logged and shown honestly (D-066, D-078). On stripe.com in P13 about 30% of previews were live; the color names fell back to the rules there.
+- A site that needs more than its timeout's shares takes the lighter paths: later pages without states, names from the rules, previews captured instead of checked, the narrative from its template. Each cut is logged and shown honestly (D-066, D-078). On stripe.com in P13 about 30% of previews were live; the color names fell back to the rules there. On stripe.com in P16 the run finished in 324 s of its 360, with 5 of 120 previews live and every component named by the rules: the motion pass adds its reads and waits to each page's capture, which leaves less of the budget for naming.
 - Showcase runs get 15 minutes; a visitor's run gets 6 (D-071).
 - A page that answers 403, 429 or 503 without a known challenge marker is a failed page, not a bot block; a site whose start page does that comes back sparse (modernsoftworks.com in P13). An interstitial that never settles is caught only through its marker or as unreachable (D-076).
 - A font served from another origin without CORS is not copied; its preview uses the fallback stack and may be captured as fonts unavailable (D-077).

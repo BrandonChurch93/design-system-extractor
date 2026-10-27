@@ -13,18 +13,18 @@
         "colors": 9,
         "typeStyles": 9,
         "spacingSteps": 11,
-        "components": 27,
-        "checksPassed": 43,
-        "checksApplicable": 45
+        "components": 28,
+        "checksPassed": 47,
+        "checksApplicable": 49
       },
       "palette": [
         {
           "value": "#0B1F3A",
-          "share": 0.625
+          "share": 0.619
         },
         {
           "value": "#E2E8F0",
-          "share": 0.143
+          "share": 0.144
         },
         {
           "value": "#FFFFFF",
@@ -32,15 +32,15 @@
         },
         {
           "value": "#2458E6",
-          "share": 0.069
+          "share": 0.072
         },
         {
           "value": "#0F8A8A",
           "share": 0.03
         },
         {
-          "value": "#0B1F3A1F",
-          "share": 0.012
+          "value": "#5F6368",
+          "share": 0.014
         },
         {
           "value": "#15803D",
@@ -60,45 +60,45 @@
       "category": "SaaS",
       "order": 2,
       "stats": {
-        "colors": 23,
+        "colors": 22,
         "typeStyles": 9,
         "spacingSteps": 11,
         "components": 31,
-        "checksPassed": 47,
-        "checksApplicable": 55
+        "checksPassed": 48,
+        "checksApplicable": 57
       },
       "palette": [
         {
           "value": "#1F1F1F",
-          "share": 0.357
+          "share": 0.364
         },
         {
           "value": "#FFFFFF",
-          "share": 0.1
+          "share": 0.102
         },
         {
           "value": "#0B1F3A",
-          "share": 0.088
+          "share": 0.089
         },
         {
           "value": "#D1D1D1",
-          "share": 0.079
+          "share": 0.077
         },
         {
           "value": "#676767",
-          "share": 0.05
+          "share": 0.051
         },
         {
           "value": "#505050",
-          "share": 0.049
+          "share": 0.05
         },
         {
           "value": "#2458E6",
-          "share": 0.046
+          "share": 0.047
         },
         {
           "value": "#E1E1E1",
-          "share": 0.046
+          "share": 0.043
         }
       ]
     },
@@ -114,17 +114,17 @@
         "typeStyles": 9,
         "spacingSteps": 11,
         "components": 28,
-        "checksPassed": 44,
-        "checksApplicable": 46
+        "checksPassed": 47,
+        "checksApplicable": 49
       },
       "palette": [
         {
           "value": "#0B1F3A",
-          "share": 0.626
+          "share": 0.621
         },
         {
           "value": "#E2E8F0",
-          "share": 0.143
+          "share": 0.145
         },
         {
           "value": "#FFFFFF",
@@ -132,15 +132,15 @@
         },
         {
           "value": "#2458E6",
-          "share": 0.068
+          "share": 0.069
         },
         {
           "value": "#0F8A8A",
           "share": 0.03
         },
         {
-          "value": "#0B1F3A1F",
-          "share": 0.012
+          "value": "#5F6368",
+          "share": 0.014
         },
         {
           "value": "#15803D",
@@ -164,17 +164,17 @@
         "typeStyles": 9,
         "spacingSteps": 11,
         "components": 28,
-        "checksPassed": 44,
-        "checksApplicable": 46
+        "checksPassed": 47,
+        "checksApplicable": 49
       },
       "palette": [
         {
           "value": "#0B1F3A",
-          "share": 0.626
+          "share": 0.621
         },
         {
           "value": "#E2E8F0",
-          "share": 0.143
+          "share": 0.145
         },
         {
           "value": "#FFFFFF",
@@ -182,15 +182,15 @@
         },
         {
           "value": "#2458E6",
-          "share": 0.068
+          "share": 0.069
         },
         {
           "value": "#0F8A8A",
           "share": 0.03
         },
         {
-          "value": "#0B1F3A1F",
-          "share": 0.012
+          "value": "#5F6368",
+          "share": 0.014
         },
         {
           "value": "#15803D",
@@ -210,8 +210,8 @@
       "category": "Finance",
       "order": 5,
       "stats": {
-        "colors": 23,
-        "typeStyles": 11,
+        "colors": 21,
+        "typeStyles": 10,
         "spacingSteps": 7,
         "components": 22,
         "checksPassed": 42,
@@ -220,27 +220,27 @@
       "palette": [
         {
           "value": "#404654",
-          "share": 0.322
+          "share": 0.329
         },
         {
           "value": "#2E333D",
-          "share": 0.174
+          "share": 0.178
         },
         {
           "value": "#C8CCD5",
-          "share": 0.11
+          "share": 0.113
         },
         {
           "value": "#4258FF",
-          "share": 0.092
+          "share": 0.094
         },
         {
           "value": "#FFFFFF",
-          "share": 0.068
+          "share": 0.07
         },
         {
           "value": "#090A0C",
-          "share": 0.058
+          "share": 0.06
         },
         {
           "value": "#E6E8EC",
@@ -248,7 +248,7 @@
         },
         {
           "value": "#001F1A",
-          "share": 0.032
+          "share": 0.033
         }
       ]
     },
@@ -260,45 +260,45 @@
       "category": "SaaS",
       "order": 6,
       "stats": {
-        "colors": 18,
-        "typeStyles": 10,
+        "colors": 17,
+        "typeStyles": 9,
         "spacingSteps": 11,
         "components": 33,
-        "checksPassed": 51,
-        "checksApplicable": 57
+        "checksPassed": 52,
+        "checksApplicable": 59
       },
       "palette": [
         {
           "value": "#1F1F1F",
-          "share": 0.346
+          "share": 0.347
         },
         {
           "value": "#FFFFFF",
-          "share": 0.14
+          "share": 0.143
         },
         {
           "value": "#0B1F3A",
-          "share": 0.081
+          "share": 0.082
         },
         {
           "value": "#D1D1D1",
-          "share": 0.079
-        },
-        {
-          "value": "#E1E1E1",
-          "share": 0.064
+          "share": 0.08
         },
         {
           "value": "#737373",
-          "share": 0.059
+          "share": 0.064
         },
         {
           "value": "#505050",
-          "share": 0.054
+          "share": 0.057
+        },
+        {
+          "value": "#E1E1E1",
+          "share": 0.055
         },
         {
           "value": "#2458E6",
-          "share": 0.041
+          "share": 0.043
         }
       ]
     }

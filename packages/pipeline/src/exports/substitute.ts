@@ -1,6 +1,7 @@
 import type { Component } from '@dse/schema';
 import { hexOf, parseCssColor } from '../color/parse';
 import type { ExportTokens } from './model';
+import { sealCss } from './vars';
 
 // A component's CSS with token variables where a value maps (docs/design/components.md, Code;
 // D-069, D-083), named as this export's tokens.css names them, so the code and the token files read
@@ -72,5 +73,5 @@ export function withTokenVars(css: string, t: Pick<ExportTokens, 'colors' | 'spa
 
 /** A component's exported CSS: its stored code with this export's token variables. */
 export function componentCss(c: Pick<Component, 'code'>, t: ExportTokens): string {
-  return c.code.css ? withTokenVars(c.code.css, t) : '';
+  return c.code.css ? sealCss(withTokenVars(c.code.css, t), (n) => t.declares.has(n)) : '';
 }

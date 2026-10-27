@@ -60,11 +60,12 @@ export function Tabs<T extends string>({ items, value, onChange, label, forceFoc
             >
               {t.label}
               {selected ? (
-                <motion.span
-                  layoutId={`${base}-underline`}
-                  className={styles.underline}
-                  transition={reduced ? { duration: 0 } : { duration: duration.base, ease: ease.standard }}
-                />
+                // Reduced motion: the underline only appears under the tab, so it never takes part in layout projection.
+                reduced ? (
+                  <span className={styles.underline} />
+                ) : (
+                  <motion.span layoutId={`${base}-underline`} className={styles.underline} transition={{ duration: duration.base, ease: ease.standard }} />
+                )
               ) : null}
             </button>
           );
