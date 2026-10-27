@@ -146,3 +146,20 @@ test.describe('performance rules', () => {
     expect(at(0.95)).toBeLessThan(34);
   });
 });
+
+test.describe('the in-progress run page', () => {
+  test('nothing below a region moves when it fills: each skeleton has the height of a typical result', async ({ page }) => {
+    // Typical is the clean fixture at 1440; drift varies with what a site gets wrong and animates its height (motion.md).
+    const heights = async (id: string) => {
+      await page.goto(`/r/${id}`);
+      await settle(page);
+      return page.evaluate(() => ({
+        palette: Math.round(document.querySelector('main section')!.getBoundingClientRect().height),
+        ...Object.fromEntries(['tokens', 'components', 'checks', 'exports'].map((s) => [s, Math.round(document.getElementById(s)!.getBoundingClientRect().height)])),
+      }));
+    };
+    const skeleton = await heights('seedprog01');
+    const real = await heights('seedclean0');
+    for (const k of Object.keys(real) as (keyof typeof real)[]) expect(Math.abs(skeleton[k] - real[k]), `${k}: ${skeleton[k]} vs ${real[k]}`).toBeLessThanOrEqual(4);
+  });
+});

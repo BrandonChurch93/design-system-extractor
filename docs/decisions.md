@@ -690,3 +690,13 @@ Decision:
 - The row hover applies to rows that lead somewhere, the recent runs list: the `surface-tint` ground extends from the left as a `scaleX` transform over `motion-fast`, and the row's hairline hides. Table rows (checks, compare, evidence) are read, not clicked, and stay still.
 Reasoning: the documents describe the product's entrances and hovers; these make the code do what they describe, with every move on an allowed property.
 Affects: `docs/design/design-system.md`, `apps/web/lib/motion/moves.ts`, `apps/web/components/home/Showcase.tsx`, `apps/web/components/run/ComponentsSection.tsx`, `apps/web/components/recent/RecentRunRow.module.css`, `tests/e2e/motion.spec.ts`.
+
+## D-080 · Skeleton heights, the published eval results, and the last test seams
+
+Date: 2026-10-26 · Context: closing the last three traceability gaps measured the in-progress run page against a complete one: each RegionSkeleton was 70 to 270 px shorter than a typical result at 1440, so everything below a region jumped when it filled, against motion.md. Separately, the final live eval must be what How it works shows, but every replay in `verify:all` would have overwritten it.
+Decision:
+- Each skeleton takes the clean fixture's heights at 1440 (the typical result): the color card 483, type 580, spacing 446, the components filter row, cards and Show all, the checks summary 143 and table 374, the exports download row, cards 149 and the MCP card 158. A test holds the in-progress page within 4 px of the complete one for every region but drift, which varies by design and animates its height.
+- `fixtures/results.json` holds the final live run. A replay writes it only when it is not a live run's; otherwise it scores and keeps it.
+- The showcase script reads its content from `DSE_SHOWCASE_CONTENT` when set, so its `--remote`, `--only` and `--refresh-links` paths run in a test against a stub of the admin API without touching the committed content.
+Reasoning: the documents ask for a page that fills without moving and for published numbers from a live run; the seams let tests prove the script's every path.
+Affects: `docs/design/components.md`, `docs/evals.md`, `apps/web/components/run/RegionSkeleton.tsx`, `apps/web/components/run/RegionSkeleton.module.css`, `apps/web/components/run/TokensSection.tsx`, `scripts/evals.ts`, `scripts/showcase/index.ts`, `tests/e2e/motion.spec.ts`, `scripts/test/showcase.int.test.ts`.

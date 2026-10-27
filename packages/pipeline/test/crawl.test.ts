@@ -3,6 +3,7 @@ import { createServer, type Server } from 'node:http';
 import type { AddressInfo } from 'node:net';
 import { resolve } from 'node:path';
 import { gzipSync } from 'node:zlib';
+import type { Page } from 'playwright';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { classifyNetworkError, isBotChallenge, isLoginWalled, looksLikeLoginPage } from '../src/crawl/blocked';
 import { isTracker } from '../src/crawl/blocklist';
@@ -290,5 +291,36 @@ describe('the guarded fetch', () => {
     expect(await guardedFetch(`${origin}/to-loopback`, { userAgent: 'test', allow })).toMatchObject({ ok: false, error: 'private-address' });
     expect(await guardedFetch(`${origin}/to-file`, { userAgent: 'test', allow })).toMatchObject({ ok: false, error: 'invalid-url' });
     expect(hits.get('/landed')).toBeUndefined();
+  });
+});
+
+describe('the navigation waits', () => {
+  it('waits for domcontentloaded up to 20 s, network idle up to 5 s, the fonts, then 500 ms, in that order', async () => {
+    const { loadPage } = await import('../src/crawl/navigate');
+    const { Throttle } = await import('../src/crawl/throttle');
+    const calls: string[] = [];
+    const page = {
+      goto: async (_u: string, o: { waitUntil: string; timeout: number }) => (calls.push(`goto ${o.waitUntil} ${o.timeout}`), { status: () => 200, text: async () => '<html></html>', request: () => ({ redirectedFrom: () => null }) }),
+      waitForLoadState: async (s: string, o: { timeout: number }) => void calls.push(`load ${s} ${o.timeout}`),
+      evaluate: async () => (calls.push('fonts'), true),
+      waitForTimeout: async (ms: number) => void calls.push(`settle ${ms}`),
+      url: () => 'https://t.app/',
+    } as unknown as Page;
+    const r = await loadPage(page, 'https://t.app/', new Throttle(0, 2));
+    expect(r).toMatchObject({ ok: true, status: 200 });
+    expect(calls).toEqual(['goto domcontentloaded 20000', 'load networkidle 5000', 'fonts', 'settle 500']);
+  });
+
+  it('gives up on network idle after its cap and still continues', async () => {
+    const { loadPage } = await import('../src/crawl/navigate');
+    const { Throttle } = await import('../src/crawl/throttle');
+    const page = {
+      goto: async () => ({ status: () => 200, text: async () => '', request: () => ({ redirectedFrom: () => null }) }),
+      waitForLoadState: async () => Promise.reject(new Error('Timeout 5000ms exceeded.')),
+      evaluate: async () => true,
+      waitForTimeout: async () => {},
+      url: () => 'https://t.app/',
+    } as unknown as Page;
+    expect((await loadPage(page, 'https://t.app/', new Throttle(0, 2))).ok).toBe(true);
   });
 });

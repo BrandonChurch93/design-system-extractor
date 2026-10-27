@@ -16,7 +16,7 @@ import { entryFor, nextAlternate, refreshLinks, toMultipleOfSix, unusable, withE
 import { alternates, roster, type Site } from './roster';
 
 const root = resolve(import.meta.dirname, '../..');
-const contentFile = resolve(root, 'apps/web/content/showcase.json');
+const contentFile = resolve(root, process.env.DSE_SHOWCASE_CONTENT ?? 'apps/web/content/showcase.json');
 const reportFile = resolve(root, process.env.DSE_SHOWCASE_REPORT ?? '.dse/showcase-report.md');
 const args = process.argv.slice(2);
 const flag = (name: string) => args.includes(`--${name}`);

@@ -202,7 +202,7 @@ export function TokensSection({ doc }: { doc: RunDocumentPartial }) {
   const rc = t?.rawCounts;
   return (
     <Section id="tokens" title={T.heading} caption={rc ? fill(T.caption, { rawColors: count(rc.colors), fontDecls: count(rc.fontDecls), spacingValues: count(rc.spacingValues) }) : undefined}>
-      {t?.colors ? <ColorCard doc={doc} /> : <Skeleton height={300} radius="lg" />}
+      {t?.colors ? <ColorCard doc={doc} /> : <Skeleton height={483} radius="lg" />}
       {doc.darkThemeDetected ? <p className={styles.note}>{T.darkTheme}</p> : null}
       <div className={styles.split}>
         {t?.type ? <TypeCard doc={doc} /> : <RegionSkeleton region="type" />}

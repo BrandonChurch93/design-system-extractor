@@ -17,15 +17,15 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
           {range(8).map((i) => (
             <li key={i} className={styles.swatch}>
               <Skeleton height={96} radius="md" />
-              <Skeleton height={12} width="60%" />
-              <Skeleton height={12} width="80%" />
+              <Skeleton height={14} width="60%" />
+              <Skeleton height={14} width="80%" />
             </li>
           ))}
         </ul>
       );
     case 'type':
       return (
-        <span className={styles.rows} style={{ height: 520 }} aria-hidden="true">
+        <span className={styles.rows} style={{ height: 580 }} aria-hidden="true">
           {range(8).map((i) => (
             <Skeleton key={i} height={0} width={`${92 - i * 7}%`} radius="md" className={styles.row} />
           ))}
@@ -33,7 +33,7 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
       );
     case 'spacing':
       return (
-        <span className={styles.rows} style={{ height: 300 }} aria-hidden="true">
+        <span className={styles.rows} style={{ height: 446 }} aria-hidden="true">
           {range(9).map((i) => (
             <Skeleton key={i} height={0} width={`${12 + i * 11}%`} radius="sm" className={styles.row} />
           ))}
@@ -41,24 +41,28 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
       );
     case 'components':
       return (
-        <ul className={styles.cards} aria-hidden="true">
-          {range(6).map((i) => (
-            <li key={i} className={styles.card}>
-              <Skeleton height={152} on="surface" />
-              <span className={styles.cardBody}>
-                <Skeleton height={16} width="50%" on="surface" />
-                <Skeleton height={12} width="80%" on="surface" />
-                <Skeleton height={12} width="60%" on="surface" />
-              </span>
-            </li>
-          ))}
-        </ul>
+        <span className={styles.stack} aria-hidden="true">
+          <Skeleton height={32} width="56%" radius="pill" />
+          <ul className={styles.cards}>
+            {range(6).map((i) => (
+              <li key={i} className={styles.card}>
+                <Skeleton height={152} on="surface" />
+                <span className={styles.cardBody}>
+                  <Skeleton height={16} width="50%" on="surface" />
+                  <Skeleton height={12} width="80%" on="surface" />
+                  <Skeleton height={12} width="60%" on="surface" />
+                </span>
+              </li>
+            ))}
+          </ul>
+          <Skeleton height={44} width={120} radius="md" />
+        </span>
       );
     case 'checks':
       return (
         <span className={styles.stack} aria-hidden="true">
-          <Skeleton height={112} radius="lg" />
-          <span className={styles.rows} style={{ height: 320 }}>
+          <Skeleton height={143} radius="lg" />
+          <span className={styles.rows} style={{ height: 374 }}>
             {range(5).map((i) => (
               <Skeleton key={i} height={0} radius="md" className={styles.row} />
             ))}
@@ -79,14 +83,15 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
     case 'exports':
       return (
         <span className={styles.stack} aria-hidden="true">
+          <Skeleton height={36} width="40%" radius="pill" />
           <ul className={styles.cards}>
             {range(6).map((i) => (
               <li key={i}>
-                <Skeleton height={132} radius="lg" />
+                <Skeleton height={149} radius="lg" />
               </li>
             ))}
           </ul>
-          <Skeleton height={176} radius="lg" />
+          <Skeleton height={158} radius="lg" />
         </span>
       );
   }

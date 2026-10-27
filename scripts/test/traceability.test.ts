@@ -59,8 +59,7 @@ describe('docs/traceability.md', () => {
     expect(paths.filter((p) => !existsSync(resolve(root, p)))).toEqual([]);
   });
 
-  // P15: skipped until the last gap below closes (STATUS, P15 plan 1).
-  it.skip('lists no open gaps', () => {
+  it('lists no open gaps', () => {
     const gaps = trace.slice(trace.indexOf('## Gaps'));
     expect(gaps.split('\n').filter((l) => l.startsWith('- ') && !/· closed/.test(l))).toEqual([]);
   });
