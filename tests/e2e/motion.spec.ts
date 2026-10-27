@@ -155,7 +155,7 @@ test.describe('the in-progress run page', () => {
       await settle(page);
       return page.evaluate(() => ({
         palette: Math.round(document.querySelector('main section')!.getBoundingClientRect().height),
-        ...Object.fromEntries(['tokens', 'components', 'checks', 'exports'].map((s) => [s, Math.round(document.getElementById(s)!.getBoundingClientRect().height)])),
+        ...Object.fromEntries(['tokens', 'motion', 'components', 'checks', 'exports'].map((s) => [s, Math.round(document.getElementById(s)!.getBoundingClientRect().height)])),
       }));
     };
     const skeleton = await heights('seedprog01');

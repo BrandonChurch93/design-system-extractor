@@ -1,0 +1,121 @@
+.list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--dse-space-4);
+  padding: var(--dse-space-4) 0;
+  border-bottom: 1px solid var(--dse-line-soft);
+}
+
+.row:first-child {
+  padding-top: 0;
+}
+
+.row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dse-space-2);
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dse-space-2) var(--dse-space-3);
+}
+
+.selector {
+  composes: code from '../../styles/type.module.css';
+  color: var(--dse-ink);
+  overflow-wrap: anywhere;
+}
+
+.link {
+  composes: label from '../../styles/type.module.css';
+  font-weight: 600;
+  color: var(--dse-ink);
+  text-decoration: underline;
+  text-decoration-color: var(--dse-line-strong);
+  text-underline-offset: 3px;
+  border-radius: var(--dse-radius-xs);
+}
+
+.link:hover {
+  text-decoration-color: var(--dse-ink);
+}
+
+.trigger,
+.caption {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+.changes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dse-space-2) var(--dse-space-5);
+}
+
+.change {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dse-space-2);
+  min-width: 0;
+  color: var(--dse-muted);
+}
+
+.property {
+  composes: meta from '../../styles/type.module.css';
+  color: var(--dse-ink-2);
+}
+
+.timing {
+  composes: meta from '../../styles/type.module.css';
+  color: var(--dse-ink-2);
+}
+
+.replay {
+  display: flex;
+  align-items: center;
+  gap: var(--dse-space-3);
+}
+
+.chip {
+  position: relative;
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  background: var(--dse-surface-tint);
+  border-radius: var(--dse-radius-sm);
+}
+
+.block {
+  display: block;
+  width: 18px;
+  height: 18px;
+  background-color: var(--dse-ink);
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -5,7 +5,7 @@ import type { RunDocumentPartial } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { compare as C, global, recent, runPage } from '../../copy/strings';
 import { noRecent, recentSnapshot, subscribeRecent } from '../../lib/browser-store';
-import { colorDiff, componentChanges, deltaCaptions, deltas, span, type Stat } from '../../lib/compare';
+import { colorDiff, componentChanges, deltaCaptions, deltas, motionDiff, span, type Stat } from '../../lib/compare';
 import { count, runDate, shortDate } from '../../lib/format';
 import { pagesWord } from '../../lib/run-view';
 import { Button } from '../Button';
@@ -141,7 +141,7 @@ export function CompareView({ a, b, shareUrl, embedded }: Props) {
               <p>{C.footer}</p>
               <OpenButtons before={before} after={after} />
             </Card>
-            <Desktop before={before} after={after} />
+            <Desktop before={before} after={after} labels={[labels[0]!, labels[1]!]} />
           </>
         ) : null}
       </Main>
@@ -172,11 +172,12 @@ function OpenButtons({ before, after }: { before: RunDocumentPartial; after: Run
   );
 }
 
-function Desktop({ before, after }: { before: RunDocumentPartial; after: RunDocumentPartial }) {
+function Desktop({ before, after, labels }: { before: RunDocumentPartial; after: RunDocumentPartial; labels: [string, string] }) {
   const d = deltas(before, after);
   const cap = deltaCaptions(d);
   const colors = colorDiff(before, after);
   const changes = componentChanges(before, after);
+  const motion = motionDiff(before, after);
   const L = runPage.statLabels;
   return (
     <div className={styles.desktop}>
@@ -222,6 +223,31 @@ function Desktop({ before, after }: { before: RunDocumentPartial; after: RunDocu
             </div>
           </Card>
         </div>
+      </section>
+      <section className={styles.section}>
+        <h2 id="compare-motion" className={styles.h2}>
+          {C.motion.heading}
+        </h2>
+        <Card className={styles.tableCard}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <td />
+                <th scope="col">{labels[0]}</th>
+                <th scope="col">{labels[1]}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {motion.map((m) => (
+                <tr key={m.label}>
+                  <th scope="row">{C.motion[m.label]}</th>
+                  <td className={styles.mono}>{count(m.before)}</td>
+                  <td className={styles.mono}>{count(m.after)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </Card>
       </section>
       <section className={styles.section}>
         <h2 id="compare-components" className={styles.h2}>

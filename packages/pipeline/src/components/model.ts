@@ -7,6 +7,7 @@ import { prompts } from '../models/prompts/index.generated';
 import type { Guess } from './classify';
 import { representative, styleDifference } from './cluster';
 import type { Item } from './items';
+import { contextOf } from './naming';
 
 // The two component model calls (docs/specs/model-calls.md): naming and typing in batches of 8,
 // then collisions between same-named clusters. Every failure keeps the rule answer.
@@ -39,6 +40,7 @@ function describe(d: Draft): string {
     `${it.el.tag}${f.role ? ` role ${f.role}` : ''}`,
     f.classTokens.length ? `classes ${f.classTokens.join(' ')}` : 'no class names',
     f.structure ? `inside ${f.structure}` : 'no children',
+    `in ${contextOf(it)}`,
     `text "${it.el.text.slice(0, 80)}"`,
     `${d.items.length} instances on ${pages.length} page${pages.length > 1 ? 's' : ''} (${pages.slice(0, 4).join(', ')})`,
     `variants ${d.variantNames.join(', ')}`,
@@ -85,9 +87,12 @@ export async function nameComponents(ctx: RunContext, drafts: Draft[]): Promise<
       if (i < 0) continue;
       const d = batch[i]!;
       const unsure = d.guess.confidence < IMAGE_BELOW_CONFIDENCE;
+      // Between badge and tag the rule's reading of the text decides: a status word or a number is a badge (D-090).
+      const marks = new Set(['badge', 'tag']);
+      const type = unsure && !(marks.has(answer.type) && marks.has(d.guess.type)) ? answer.type : d.guess.type;
       namings[start + i] = {
         // A confident rule keeps its type; the model types what the rules were unsure about.
-        type: unsure ? answer.type : d.guess.type,
+        type,
         name: validName(answer.name) ? answer.name.trim() : fallback[start + i]!,
         isComponent: unsure ? answer.isComponent : true,
         by: result.by,
@@ -109,7 +114,7 @@ export type CollisionPair = { id: string; a: Draft; b: Draft; name: string };
 function describePair(p: CollisionPair): string {
   const side = (d: Draft) => {
     const it = representative(d.items);
-    return `${it.el.tag}${it.fp.role ? ` role ${it.fp.role}` : ''} with ${it.fp.classTokens.length ? `classes ${it.fp.classTokens.join(' ')}` : 'no class names'}, ${it.fp.structure ? `inside ${it.fp.structure}` : 'no children'}, text "${it.el.text.slice(0, 60)}"`;
+    return `${it.el.tag}${it.fp.role ? ` role ${it.fp.role}` : ''} with ${it.fp.classTokens.length ? `classes ${it.fp.classTokens.join(' ')}` : 'no class names'}, ${it.fp.structure ? `inside ${it.fp.structure}` : 'no children'}, in ${contextOf(it)}, text "${it.el.text.slice(0, 60)}"`;
   };
   const ra = representative(p.a.items).fp.style;
   const rb = representative(p.b.items).fp.style;

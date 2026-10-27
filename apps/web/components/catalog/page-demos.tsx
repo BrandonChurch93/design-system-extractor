@@ -22,6 +22,12 @@ import { ComponentCard, cardTokens } from '../run/ComponentCard';
 import { ComponentsSection } from '../run/ComponentsSection';
 import { DriftHeadline } from '../run/DriftHeadline';
 import { DriftSection } from '../run/DriftSection';
+import { DurationStrip } from '../run/DurationStrip';
+import { EasingCard, EasingGrid } from '../run/EasingCard';
+import { KeyframesList } from '../run/KeyframesList';
+import { MotionSection } from '../run/MotionSection';
+import { PatternList } from '../run/PatternList';
+import { ReplayButton } from '../run/ReplayButton';
 import { ExportsSection } from '../run/ExportsSection';
 import { PageList, PageListPopover } from '../run/PageList';
 import { PagesCard } from '../run/PagesCard';
@@ -54,6 +60,13 @@ const pending: Ring[] = rail({ ...progressRun.document, pages: undefined, status
 const done: Ring[] = rail(doc, [], 'complete');
 const now = new Date('2026-10-12T18:00:00.000Z');
 const noDoc = { ...doc, tokens: undefined, checks: undefined, drift: undefined };
+
+const motionDoc = cleanDoc;
+const durations = motionDoc.tokens?.duration ?? [];
+const easings = motionDoc.tokens?.easing ?? [];
+const siteNamed = easings.find((e) => e.siteName) ?? { name: 'ease-out-quart', value: 'cubic-bezier(0.25, 1, 0.5, 1)', siteName: '--ease-out-quart' };
+const moving = (motionDoc.components ?? []).find((c) => c.motion?.patternIds.length) ?? (motionDoc.components ?? []).find((c) => c.motion);
+const motionStill = { ...motionDoc, tokens: motionDoc.tokens ? { ...motionDoc.tokens, duration: [], easing: [], keyframes: [] } : undefined, motion: { patterns: [], truncatedPages: [], intersectionObservers: 0 } };
 
 function Wide({ children }: { children: ReactNode }) {
   return <div className={styles.fullWidth}>{children}</div>;
@@ -185,6 +198,67 @@ export const pageDemos: Demo[] = [
     states: () => [{ label: runPage.tokens.heading, wide: true, node: <Wide><TokensSection doc={doc} /></Wide> }],
   },
   {
+    slug: 'motion-section',
+    name: 'Motion section',
+    tokens: ['h2', 'caption', 'h3', 'meta', 'surface', 'line-soft', 'radius-lg'],
+    frameHeight: 2600,
+    states: () => [
+      { label: runPage.motion.heading, wide: true, node: <Wide><MotionSection doc={motionDoc} landed hrefFor={() => '#'} /></Wide> },
+      { label: runPage.motion.empty, wide: true, node: <Wide><MotionSection doc={motionStill} landed /></Wide> },
+      { label: 'Skeleton', wide: true, node: <Wide><MotionSection doc={motionDoc} landed={false} /></Wide> },
+    ],
+  },
+  {
+    slug: 'duration-strip',
+    name: 'DurationStrip',
+    tokens: ['hex', 'caption', 'muted', 'ink (marks, dot)', 'line'],
+    frameHeight: 420,
+    states: () => [
+      { label: stateLabels.default, wide: true, node: <Card><DurationStrip durations={durations} /></Card> },
+      { label: 'Close ticks', wide: true, node: <Card><DurationStrip durations={[{ name: 'duration-100', ms: 100, usage: 3 }, { name: 'duration-120', ms: 120, usage: 9, role: 'fast' }, { name: 'duration-150', ms: 150, usage: 4 }, { name: 'duration-600', ms: 600, usage: 1, role: 'slow' }]} /></Card> },
+    ],
+  },
+  {
+    slug: 'easing-card',
+    name: 'EasingCard and EasingGrid',
+    tokens: ['surface', 'line-soft', 'shadow-card', 'radius-lg', 'h3', 'code', 'surface-tint', 'ink (curve, dot)', 'line (baseline, track)'],
+    frameHeight: 1400,
+    states: () => [
+      { label: stateLabels.default, node: <EasingCard easing={easings[0] ?? { name: 'ease-out', value: 'cubic-bezier(0, 0, 0.58, 1)' }} durationMs={300} /> },
+      { label: runPage.namedBySite, node: <EasingCard easing={siteNamed} durationMs={300} /> },
+      { label: 'steps()', node: <EasingCard easing={{ name: 'steps-4', value: 'steps(4, end)' }} durationMs={300} /> },
+      { label: 'linear()', node: <EasingCard easing={{ name: 'spring', value: 'linear(0, 0.6, 1.1, 0.95, 1)' }} durationMs={300} /> },
+      { label: 'EasingGrid', wide: true, node: <Wide><EasingGrid easings={easings} durationMs={300} /></Wide> },
+    ],
+  },
+  {
+    slug: 'keyframes-list',
+    name: 'KeyframesList',
+    tokens: ['meta', 'caption', 'muted', 'line-soft', 'code'],
+    frameHeight: 600,
+    states: () => [
+      { label: stateLabels.default, wide: true, node: <Card><KeyframesList keyframes={[...(motionDoc.tokens?.keyframes ?? []), { name: 'spin-legacy', css: '@keyframes spin-legacy { to { transform: rotate(360deg); } }', used: false, usage: 0, pages: [], unresolved: [] }]} doc={motionDoc} /></Card> },
+    ],
+  },
+  {
+    slug: 'pattern-list',
+    name: 'PatternList and PatternRow',
+    tokens: ['pill soft', 'code', 'caption', 'meta', 'tag', 'swatch mini', 'surface-tint', 'ink (block)', 'line-soft'],
+    frameHeight: 1500,
+    states: () => [{ label: stateLabels.default, wide: true, node: <Card><PatternList patterns={motionDoc.motion?.patterns ?? []} doc={motionDoc} hrefFor={() => '#'} /></Card> }],
+  },
+  {
+    slug: 'replay-button',
+    name: 'ReplayButton',
+    tokens: ['button ghost sm', 'caption', 'muted'],
+    frameHeight: 300,
+    states: () => [
+      { label: runPage.motion.replay, node: <ReplayButton playing={false} onToggle={() => {}} /> },
+      { label: runPage.motion.stop, node: <ReplayButton playing onToggle={() => {}} /> },
+      { label: 'Reduced motion', node: <ReplayButton playing={false} onToggle={() => {}} forceReduced /> },
+    ],
+  },
+  {
     slug: 'component-card',
     name: 'ComponentCard, StatesStrip and CheckBadge',
     tokens: ['surface', 'surface-tint', 'line-soft', 'shadow-card', 'radius-lg', 'h3', 'caption', 'tag', 'ink (dots, badge)'],
@@ -245,11 +319,11 @@ export const pageDemos: Demo[] = [
     name: 'RegionSkeleton',
     tokens: ['skeleton', 'surface', 'surface-tint', 'line-soft', 'radius-sm', 'radius-md', 'radius-lg'],
     frameHeight: 2600,
-    states: () => (['palette', 'type', 'spacing', 'components', 'checks', 'drift', 'exports'] as const).map((region) => ({ label: region, wide: true, node: <RegionSkeleton region={region} /> })),
+    states: () => (['palette', 'type', 'spacing', 'motion', 'components', 'checks', 'drift', 'exports'] as const).map((region) => ({ label: region, wide: true, node: <RegionSkeleton region={region} /> })),
   },
   {
     slug: 'component-panel',
-    name: 'ComponentPanel and ComponentPage',
+    name: 'ComponentPanel, ComponentPage and MotionRow',
     tokens: ['surface', 'shadow-panel', 'line-soft', 'h2', 'label', 'caption', 'code', 'radius-lg'],
     frameHeight: 2200,
     states: () => [
@@ -262,12 +336,25 @@ export const pageDemos: Demo[] = [
           </Card>
         ),
       },
+      ...(moving
+        ? [
+            {
+              label: componentPanel.motion,
+              wide: true,
+              node: (
+                <Card className={styles.panelBox}>
+                  <ComponentDetail doc={motionDoc} component={moving} base={sampleBase} runUrl="https://design-system-extractor.vercel.app/r/catalogcln" />
+                </Card>
+              ),
+            },
+          ]
+        : []),
       { label: 'CheckList', node: <Card className={styles.popoverBox}><CheckList checks={comps[0]!.checks} /></Card> },
     ],
   },
   {
     slug: 'compare',
-    name: 'CompareModeToggle, CompareColumns, DeltaStrip, TokenDiff and ChangeTable',
+    name: 'CompareModeToggle, CompareColumns, DeltaStrip, TokenDiff, MotionDiff and ChangeTable',
     tokens: ['title-sm', 'h2-sm', 'stat', 'meta', 'ink (after border, selected segment)', 'line-strong'],
     frameHeight: 1600,
     states: () => [{ label: stateLabels.default, wide: true, node: <Wide><CompareView a={messyDoc} b={{ ...cleanDoc, createdAt: '2026-11-23T16:00:00.000Z' }} shareUrl="https://design-system-extractor.vercel.app/compare" embedded /></Wide> }],

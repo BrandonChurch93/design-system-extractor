@@ -63,3 +63,16 @@
   gap: var(--dse-space-1);
   color: var(--dse-ink-2);
 }
+
+.notes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dse-space-2) var(--dse-space-3);
+}
+
+.note {
+  composes: meta from '../../styles/type.module.css';
+  color: var(--dse-ink-2);
+  overflow-wrap: anywhere;
+}

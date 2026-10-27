@@ -1,17 +1,19 @@
 'use client';
 import { TriangleAlert } from 'lucide-react';
 import { useState } from 'react';
-import type { ColorToken, RunDocumentPartial } from '@dse/schema';
+import type { ColorToken, OverlayToken, RunDocumentPartial } from '@dse/schema';
 import { fill, typeRoleLabels } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
 import { count } from '../../lib/format';
 import { pagePaths } from '../../lib/doc';
 import { Button } from '../Button';
 import { Card } from '../Card';
+import { PaletteStrip } from '../PaletteStrip';
 import { Popover } from '../Popover';
 import { Skeleton } from '../Skeleton';
 import { RegionSkeleton } from './RegionSkeleton';
 import { Swatch } from '../Swatch';
+import { Tag } from '../Tag';
 import { Enter } from '../motion/Enter';
 import { CardHead, Section } from './Section';
 import { TokenPopover, tokenInfo } from './TokenPopover';
@@ -38,6 +40,35 @@ function ColorGroup({ doc, title, colors, mini }: { doc: RunDocumentPartial; tit
   );
 }
 
+/** Translucent colors over a ground half light, half dark, then each by name (D-086). */
+function OverlayGroup({ doc, overlays }: { doc: RunDocumentPartial; overlays: OverlayToken[] }) {
+  if (!overlays.length) return null;
+  const list = [...overlays].sort((a, b) => b.usage - a.usage);
+  return (
+    <div className={styles.group}>
+      <p className={styles.groupLabel}>{T.overlays}</p>
+      <p className={styles.groupCaption}>{T.overlaysCaption}</p>
+      <span className={styles.overlayGround}>
+        <PaletteStrip bands={list.map((o) => ({ value: o.value, share: o.usage }))} height={48} />
+      </span>
+      <ul className={styles.overlayNames}>
+        {list.map((o) => (
+          <li key={o.id}>
+            <TokenPopover
+              info={tokenInfo(doc, o.id)!}
+              trigger={(t) => (
+                <Tag interactive {...t}>
+                  {o.name}
+                </Tag>
+              )}
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 function ColorCard({ doc }: { doc: RunDocumentPartial }) {
   const colors = [...(doc.tokens?.colors ?? [])].sort((a, b) => b.usage - a.usage);
   const neutral = colors.filter((c) => c.group === 'neutral').sort((a, b) => b.oklch.l - a.oklch.l);
@@ -48,6 +79,7 @@ function ColorCard({ doc }: { doc: RunDocumentPartial }) {
         <ColorGroup doc={doc} title={T.groups.brand} colors={colors.filter((c) => c.group === 'brand')} />
         <ColorGroup doc={doc} title={fill(T.groups.neutral, { n: count(neutral.length) })} colors={neutral} mini={neutral.length > 8} />
         <ColorGroup doc={doc} title={T.groups.semantic} colors={colors.filter((c) => c.group === 'semantic')} />
+        <OverlayGroup doc={doc} overlays={doc.tokens?.overlays ?? []} />
       </div>
     </Card>
   );
@@ -143,7 +175,7 @@ function SpacingCard({ doc }: { doc: RunDocumentPartial }) {
           </li>
         ))}
       </ul>
-      {t.breakpoints?.length ? <p className={styles.note}>{fill(T.breakpoints, { list: t.breakpoints.join(' · ') })}</p> : null}
+      {t.breakpoints?.length ? <p className={styles.note}>{fill(T.breakpoints, { list: t.breakpoints.map((b) => b.value).join(' · ') })}</p> : null}
     </Card>
   );
 }

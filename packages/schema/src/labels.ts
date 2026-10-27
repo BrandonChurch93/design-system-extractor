@@ -235,7 +235,7 @@ export const motionKindLabels: Record<MotionKind, string> = {
 export const motionSourceLabels: Record<MotionSource, string> = {
   'css-transition': 'CSS transition',
   'css-animation': 'CSS animation',
-  waapi: 'Web Animations',
+  waapi: 'Web animations',
   'inline-style': 'Inline style',
 };
 

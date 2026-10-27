@@ -49,13 +49,13 @@ describe('copy audit · the other direction', () => {
   const placeholders = (v: string) => v.replace(/\$\{[^}\n]*\}/g, '{}').replace(/\{[\w ]+\}/g, '{}');
   // Lines the pipeline writes into the run document (drift headlines, worker failure details,
   // missing-state reasons); copy.md lists them with the rest of the visible copy.
-  const pipeline = ['drift/report.ts', 'errors.ts', 'models/client.ts', 'run.ts', 'stages/components.ts'].map((f) => readFileSync(resolve(root, 'packages/pipeline/src', f), 'utf8'));
+  const pipeline = ['drift/report.ts', 'errors.ts', 'models/client.ts', 'run.ts', 'stages/components.ts', 'components/naming.ts', 'exports/documents.ts'].map((f) => readFileSync(resolve(root, 'packages/pipeline/src', f), 'utf8'));
   const implemented: string[] = [...Object.values(links)];
   collect(strings, implemented);
   collect(labels, implemented);
   const corpus = placeholders([...implemented, ...pipeline].join('\n'));
   // Examples that show a composed result rather than a string of their own.
-  const examples = ['Primary small', 'Primary 2', 'Card 2', 'Six variants across four components where three would do. Nine spacing values, two of them off the 4 px grid.'];
+  const examples = ['Primary small', 'Teal', 'Ghost rounded', 'Button (footer)', 'Button (footer, pricing)', 'Button (footer, second)', 'Six variants across four components where three would do. Nine spacing values, two of them off the 4 px grid.'];
   // Names quoted for reference: enum keys, an env var, a metadata value, the shadow bucket names from the run.
   const references = ['discover', 'invalid-url', 'private-address', 'summary_large_image', 'DSE_CONTACT_EMAIL', 'lg'];
 

@@ -55,7 +55,9 @@ function usedLine(c: Component, t: ExportTokens, joiner: (name: string, property
   });
 }
 
-/** `Default: background {token} · text {token} · border {width} {token} · radius {value} · padding {values} · font {token} · shadow {token}`, absent parts left out. */
+/** The Default line's template (docs/design/copy.md); a part whose value is absent is left out. */
+export const DEFAULT_LINE = 'Default: background {token} · text {token} · border {width} {token} · radius {value} · padding {values} · font {token} · shadow {token}';
+
 export function defaultLine(c: Component, t: ExportTokens): string {
   const val = (property: string) => {
     const u = c.tokensUsed.find((x) => x.property === property);
@@ -63,17 +65,13 @@ export function defaultLine(c: Component, t: ExportTokens): string {
     return ref ?? c.unmapped.find((x) => x.property === property)?.value ?? null;
   };
   const pads = ['padding-top', 'padding-right', 'padding-bottom', 'padding-left'].map(val);
-  const border = val('border-color');
-  const parts = [
-    val('background-color') ? `background ${val('background-color')}` : '',
-    val('color') ? `text ${val('color')}` : '',
-    border ? `border ${c.borderWidth ?? 1}px ${border}` : '',
-    val('border-radius') ? `radius ${val('border-radius')}` : '',
-    pads.some(Boolean) ? `padding ${pads.map((p) => p ?? '0px').join(' ')}` : '',
-    val('font') ? `font ${val('font')}` : '',
-    val('box-shadow') ? `shadow ${val('box-shadow')}` : '',
-  ].filter(Boolean);
-  return `Default: ${parts.join(' · ') || 'no ground, border or padding'}`;
+  const values = [val('background-color'), val('color'), val('border-color'), val('border-radius'), pads.some(Boolean) ? pads.map((p) => p ?? '0px').join(' ') : null, val('font'), val('box-shadow')];
+  const [head, ...rest] = DEFAULT_LINE.split(': ');
+  const parts = rest
+    .join(': ')
+    .split(' · ')
+    .flatMap((part, i) => (values[i] ? [part.replace('{width}', `${c.borderWidth ?? 1}px`).replace(/\{(token|value|values)\}/, values[i]!)] : []));
+  return parts.length ? `${head}: ${parts.join(' · ')}` : `${head}: ${DEFAULT_LINE.split(': ')[1]!.split(' · ')[0]!.replace(' {token}', '')} none`;
 }
 
 /** `Motion: hover · background-color · 160 ms · ease-out-quad; …`, or `Motion: none`. */

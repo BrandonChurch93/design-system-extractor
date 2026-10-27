@@ -33,7 +33,8 @@
   outline-offset: var(--dse-focus-offset);
 }
 
-.chip[aria-checked='true'] {
+.chip[aria-checked='true'],
+.chip[aria-pressed='true'] {
   background: var(--dse-ink);
   border-color: var(--dse-ink);
   color: var(--dse-inverse-ink);

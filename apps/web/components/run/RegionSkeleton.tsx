@@ -1,9 +1,11 @@
 import { Skeleton } from '../Skeleton';
 import styles from './RegionSkeleton.module.css';
 
-export type SkeletonRegion = 'palette' | 'type' | 'spacing' | 'components' | 'checks' | 'drift' | 'exports';
+export type SkeletonRegion = 'palette' | 'type' | 'spacing' | 'motion' | 'components' | 'checks' | 'drift' | 'exports';
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
+/** The clean fixture's Motion section at 1440 (D-080). */
+const MOTION = { strip: 160, easing: 220, patterns: 420 };
 
 /**
  * A run page region before its stage lands, at the height of a typical result so nothing below it
@@ -37,6 +39,24 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
           {range(9).map((i) => (
             <Skeleton key={i} height={0} width={`${12 + i * 11}%`} radius="sm" className={styles.row} />
           ))}
+        </span>
+      );
+    case 'motion':
+      return (
+        <span className={styles.stack} aria-hidden="true">
+          <Skeleton height={MOTION.strip} radius="lg" />
+          <ul className={styles.easings}>
+            {range(2).map((i) => (
+              <li key={i}>
+                <Skeleton height={MOTION.easing} radius="lg" />
+              </li>
+            ))}
+          </ul>
+          <span className={styles.rows} style={{ height: MOTION.patterns }}>
+            {range(4).map((i) => (
+              <Skeleton key={i} height={0} radius="md" className={styles.row} />
+            ))}
+          </span>
         </span>
       );
     case 'components':
@@ -85,7 +105,7 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
         <span className={styles.stack} aria-hidden="true">
           <Skeleton height={36} width="40%" radius="pill" />
           <ul className={styles.cards}>
-            {range(6).map((i) => (
+            {range(8).map((i) => (
               <li key={i}>
                 <Skeleton height={149} radius="lg" />
               </li>

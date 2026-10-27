@@ -78,7 +78,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Page statuses: `Pending` · `Captured` · `Failed`
 - Token kinds: `Color` · `Type` · `Spacing` · `Radius` · `Shadow` · `Breakpoint` · `Duration` · `Easing`
 - Motion kinds: `Entrance` · `Scroll reveal` · `Scroll progress` · `Scrolled header` · `Hover` · `Loop` · `Open`
-- Motion sources: `CSS transition` · `CSS animation` · `Web Animations` · `Inline style`
+- Motion sources: `CSS transition` · `CSS animation` · `Web animations` · `Inline style` (sentence case, rule 2, D-090)
 - Component tiers: `Core` · `Page-specific`
 - Color groups: `Brand` · `Neutral` · `Semantic`
 - Semantic roles: `Success` · `Warning` · `Danger` · `Info`
@@ -130,14 +130,14 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Dark theme caption: `A dark theme was detected and not extracted.`
 - Overlays: label `Overlays` · caption `Translucent colors, as a base color and an alpha.`
 - Site names (D-082): Pill `Named by the site` · provenance line `Named by {variable}` · type tags line `Found on {tags}` (tags joined by ·)
-- Motion section (D-081): title `Motion` · caption `{durations} durations · {easings} easings · {keyframes} keyframes · {patterns} patterns` · empty `No transitions or animations found.` with caption `This site does not move, or its motion is driven by scripts the crawler could not observe.`
+- Motion section (D-081): title `Motion` · caption `{durations} durations · {easings} easings · {keyframes} keyframes · {patterns} patterns` · empty `No transitions or animations found.` with caption `This site does not move, or its motion is driven by scripts the crawler could not observe.` · card heads `Durations` · `Easings` · `Keyframes` · `Patterns`, the Compare row words, each with its count as meta (D-090)
 - Duration role labels: `Faster` · `Fast` · `Base` · `Slow` · `Slower`
 - Easing card: value caption `{value}` · site-named caption `Named by the site`
 - Keyframes: `{n} uses` (`1 use`) · unused Pill `Unused`
 - Replay button: `Replay` · while playing `Stop` · reduced motion caption `Replay is off because your system prefers reduced motion.`
 - Pattern trigger phrases: load `On load` · in-view `When it enters the viewport at {pct}% from the bottom` · scroll `Over {range} viewport heights of scrolling` · scrolled header `After {px} px of scrolling` (D-089) · hover `On hover` · open `When it opens` · loop `Loops every {duration}`
 - Stagger phrase: `{count} items · {step} ms apart`
-- Observed tag `Observed` · observed caption `Measured at runtime. Easing not recorded; nearest token: {name}.` · inline-style duration phrase `about {ms} ms`
+- Observed tag `Observed` · observed caption `Measured at runtime. Easing not recorded; nearest token: {name}.` · inline-style duration phrase `about {ms} ms` · a measured duration `{ms} ms`
 - Tier headings `Core components` · `Page-specific components`; filter chip `Core only`
 - Components caption: `{n} found · grouped by type · open one for states, code and tokens`
 - Component chips: `All · {n}` then `{group} · {n}` for each group with a count

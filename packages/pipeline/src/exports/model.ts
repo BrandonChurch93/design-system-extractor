@@ -181,7 +181,7 @@ export function meta(doc: RunDocumentPartial, set: ExportSet) {
 
 /** Copy rules 1 and 3, asserted on generated prose (docs/specs/exports-and-mcp.md). */
 export function assertVoice(text: string, file: string): string {
-  if (/[—–]/.test(text)) throw new Error(`${file} contains a dash the copy rules forbid`);
+  if (/[\u2014\u2013]/.test(text)) throw new Error(`${file} contains a dash the copy rules forbid`);
   if (/\b(accessible|compliant|a11y)\b/i.test(text)) throw new Error(`${file} contains a forbidden word`); // qa-copy-allow
   return text;
 }

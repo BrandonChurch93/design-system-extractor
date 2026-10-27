@@ -17,12 +17,14 @@ import { Section } from './Section';
 import styles from './ExportsSection.module.css';
 
 const X = runPage.exports;
-type TextFormat = 'tokens.css' | 'tokens.json' | 'tailwind.tokens.js' | 'tokens.w3c.json' | 'design-system.md' | 'prompt.md';
+type TextFormat = 'tokens.css' | 'tokens.json' | 'tailwind.tokens.js' | 'tokens.w3c.json' | 'motion.css' | 'motion.json' | 'design-system.md' | 'prompt.md';
 const cards: { format: TextFormat; copy: { name: string; file: string } }[] = [
   { format: 'tokens.css', copy: X.cards.css },
   { format: 'tokens.json', copy: X.cards.json },
   { format: 'tailwind.tokens.js', copy: X.cards.tailwind },
   { format: 'tokens.w3c.json', copy: X.cards.w3c },
+  { format: 'motion.css', copy: X.cards.motionCss },
+  { format: 'motion.json', copy: X.cards.motionJson },
   { format: 'design-system.md', copy: X.cards.md },
   { format: 'prompt.md', copy: X.cards.prompt },
 ];
@@ -53,7 +55,7 @@ function save(name: string, data: BlobPart, type: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-/** Six export cards, the set toggle, Download all, and the MCP card (docs/design/components.md). */
+/** Eight export cards, the set toggle, Download all, and the MCP card (docs/design/components.md). */
 export function ExportsSection({ doc, landed, runUrl, source }: { doc: RunDocumentPartial; landed: boolean; runUrl: string; source: ExportSource }) {
   const [set, setSet] = useState<ExportSet>('proposed');
   const mod = useExporters();

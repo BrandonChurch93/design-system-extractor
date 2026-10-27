@@ -45,9 +45,10 @@ describe('the stage rail', () => {
   });
 
   it('lands Components only once previews close, naming in between', () => {
-    const doc = { ...base, tokens: { colors: [], type: [], space: [] }, components: [] } as unknown as RunDocumentPartial;
+    const doc = { ...base, tokens: { colors: [], type: [], space: [], duration: [], easing: [], keyframes: [] }, motion: { patterns: [], truncatedPages: [], intersectionObservers: 0 }, components: [] } as unknown as RunDocumentPartial;
     const evs = [ev('capture', { message: 'capture · 9 of 9 pages captured' }), ev('tokens'), ev('components')];
-    expect(rail(doc, evs, 'running')[4]).toMatchObject({ state: 'running', label: 'Components · naming' });
+    expect(rail(doc, evs, 'running')[4]).toMatchObject({ state: 'done', label: 'Motion · none found' });
+    expect(rail(doc, evs, 'running')[5]).toMatchObject({ state: 'running', label: 'Components · naming' });
     expect(landed(doc, evs, 'running').components).toBe(false);
     expect(landed(doc, [...evs, ev('previews')], 'running').components).toBe(true);
   });

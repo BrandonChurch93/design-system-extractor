@@ -13,6 +13,7 @@ export { DISCLAIMER, PROMPT_OPENING, defaultLine, designSystemMd, motionLine, pa
 export { byTier, easingVar, exportTokens, headerLine, spaceName, tokenRef, undeclaredVars, type ExportTokens } from './model';
 export { durationRef, easingRef, motionCss, motionJson, patternClasses, suggestedEasing, triggerWords } from './motion';
 export { componentCss } from './substitute';
+export { bezierOf, type Bezier } from '../tokens/easing-table';
 export { keyframesObject, siteVariablesBlock, tailwindTokens, tokenBlock, tokensCss, tokensJson, w3cShadow, w3cTokens } from './tokens';
 export { crc32, zip, type ZipEntry } from './zip';
 export { withTokenVars } from './substitute';

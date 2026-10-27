@@ -1,9 +1,9 @@
 'use client';
 import { Copy } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import type * as ExportsModule from '@dse/pipeline/exports';
 import type { Component, RunDocumentPartial, State } from '@dse/schema';
-import { capturedReasonLabels, fill, stateLabels } from '@dse/schema/labels';
+import { capturedReasonLabels, fill, motionKindLabels, stateLabels } from '@dse/schema/labels';
 import { componentPanel as P, global, runPage } from '../../copy/strings';
 import { checkCounts, fileUrl } from '../../lib/doc';
 import { count } from '../../lib/format';
@@ -16,6 +16,8 @@ import { Tabs } from '../Tabs';
 import { Tag } from '../Tag';
 import { useToast } from '../Toast';
 import { CheckList } from '../run/CheckBadge';
+import { PatternRow } from '../run/PatternList';
+import { ReplayCaption } from '../run/ReplayButton';
 import { TokenPopover, tokenInfo } from '../run/TokenPopover';
 import styles from './ComponentDetail.module.css';
 
@@ -30,6 +32,30 @@ function fidelity(c: { preview: Component['preview'] }): string {
   if (p.mode === 'live') return fill(P.fidelityLive, { pct: pct(p.diffPct) });
   const reason = p.capturedReason ? fill(capturedReasonLabels[p.capturedReason], { pct: pct(p.diffPct) }) : '';
   return fill(P.fidelityCaptured, { reason });
+}
+
+/** `{state} · {property} · {duration} · {easing}`, the easing a Tag that opens its token (MotionRow). */
+function MotionRow({ doc, state, property, durationMs, easingTokenId, easing }: { doc: RunDocumentPartial; state: string; property: string; durationMs: number; easingTokenId?: string; easing?: string }) {
+  const info = easingTokenId ? tokenInfo(doc, easingTokenId) : null;
+  const [head] = P.motionRow.split(' · {easing}');
+  return (
+    <li className={styles.motionRow}>
+      <span>{fill(head!, { state, property, duration: fill(runPage.motion.ms, { ms: count(durationMs) }) })}</span>
+      <span aria-hidden="true"> · </span>
+      {info ? (
+        <TokenPopover
+          info={info}
+          trigger={(t) => (
+            <Tag interactive {...t}>
+              {info.name}
+            </Tag>
+          )}
+        />
+      ) : (
+        <span>{easing ?? 'ease'}</span>
+      )}
+    </li>
+  );
 }
 
 async function copy(text: string, toast: { show: (m: string) => void }) {
@@ -50,6 +76,7 @@ export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel 
   const [viewer, setViewer] = useState(false);
   const [allPages, setAllPages] = useState(false);
   const [exporters, setExporters] = useState<typeof ExportsModule | null>(null);
+  const replayCaption = useId();
   useEffect(() => {
     let live = true;
     void import('@dse/pipeline/exports').then((m) => live && setExporters(m));
@@ -72,9 +99,12 @@ export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel 
   const counts = checkCounts(ownChecks);
   const tokens = [...new Map(c.tokensUsed.map((u) => [u.tokenId, u])).values()];
   const variantName = (id: string) => c.variants.find((v) => v.id === id)?.name;
+  // The CSS names tokens as tokens.css does; until the exporters load it shows the resolved rules.
+  const css = exporters && doc.tokens?.colors ? exporters.componentCss(c, exporters.exportTokens(doc, 'proposed')) : c.code.css;
+  const patterns = (c.motion?.patternIds ?? []).map((id) => doc.motion?.patterns.find((p) => p.id === id)).filter((p) => p !== undefined);
   const tabs = [
     { value: 'html' as const, label: runPage.codeTabs.html, panel: <CodeBlock code={c.code.html} label={runPage.codeTabs.html} /> },
-    { value: 'css' as const, label: runPage.codeTabs.css, panel: <CodeBlock code={c.code.css} label={runPage.codeTabs.css} /> },
+    { value: 'css' as const, label: runPage.codeTabs.css, panel: <CodeBlock code={css} label={runPage.codeTabs.css} /> },
     ...(doc.frameworkHint === 'tailwind' && c.code.tailwind ? [{ value: 'tailwind' as const, label: runPage.codeTabs.tailwind, panel: <CodeBlock code={c.code.tailwind} label={runPage.codeTabs.tailwind} /> }] : []),
   ];
   const seenLine = (n: number) => fill(P.seenOn, { paths: seenPaths.slice(0, 4).join(', '), n: count(n) });
@@ -176,6 +206,38 @@ export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel 
         {missing.length ? <p className={styles.caption}>{fill(P.notCaptured, { names: missing.map((s) => (s.reason ? `${stateLabels[s.state]} (${s.reason})` : stateLabels[s.state])).join(' · ') })}</p> : null}
       </section>
 
+      <section className={styles.section} aria-labelledby={`m-${c.id}`}>
+        <H id={`m-${c.id}`} className={styles.label}>
+          {P.motion}
+        </H>
+        {c.motion ? (
+          <>
+            {c.motion.transitions.length || c.motion.animations.length ? (
+              <ul className={styles.motionRows}>
+                {c.motion.transitions.map((m) => (
+                  <MotionRow key={`${m.state}-${m.property}`} doc={doc} state={stateLabels[m.state]} property={m.property} durationMs={m.durationMs} easingTokenId={m.easingTokenId} easing={m.easing} />
+                ))}
+                {c.motion.animations.map((a) => (
+                  <MotionRow key={`a-${a.keyframesName}`} doc={doc} state={motionKindLabels[a.trigger]} property={a.keyframesName} durationMs={a.durationMs} easingTokenId={a.easingTokenId} easing={a.easing} />
+                ))}
+              </ul>
+            ) : null}
+            {patterns.length ? (
+              <>
+                <ReplayCaption id={replayCaption} />
+                <ul className={styles.patterns}>
+                  {patterns.map((p) => (
+                    <PatternRow key={p.id} pattern={p} doc={doc} captionId={replayCaption} />
+                  ))}
+                </ul>
+              </>
+            ) : null}
+          </>
+        ) : (
+          <p className={styles.caption}>{P.motionNone}</p>
+        )}
+      </section>
+
       <section className={styles.section} aria-labelledby={`ch-${c.id}`}>
         <H id={`ch-${c.id}`} className={styles.label}>
           {fill(P.checks, { passed: count(counts.passed), applicable: count(counts.applicable), variant: c.variants[0]!.name })}
@@ -233,7 +295,7 @@ export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel 
         >
           {P.actions.copyPrompt}
         </Button>
-        <Button variant="ghost" onClick={() => copy(`${c.code.html}\n\n${c.code.css}`, toast)}>
+        <Button variant="ghost" onClick={() => copy(`${c.code.html}\n\n${css}`, toast)}>
           {P.actions.copyCode}
         </Button>
       </div>

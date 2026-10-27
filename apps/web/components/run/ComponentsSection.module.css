@@ -12,6 +12,52 @@
   justify-self: start;
 }
 
+.filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--dse-space-2);
+  min-width: 0;
+}
+
+.filter > [role='radiogroup'] {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.tier,
+.tierBody {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dse-space-5);
+}
+
+.tierTitle {
+  composes: h3 from '../../styles/type.module.css';
+}
+
+.disclosure {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--dse-space-2);
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  border-radius: var(--dse-radius-xs);
+}
+
+.chevron {
+  transition: transform var(--dse-motion-fast) var(--dse-ease-standard);
+}
+
+.disclosure[aria-expanded='true'] .chevron {
+  transform: rotate(180deg);
+}
+
 
 @media (max-width: 1023px) {
   .grid {

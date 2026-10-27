@@ -138,6 +138,33 @@
   gap: var(--dse-space-2);
 }
 
+.motionRows {
+  composes: meta from '../../styles/type.module.css';
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dse-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--dse-ink-2);
+}
+
+.motionRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--dse-space-1);
+  overflow-wrap: anywhere;
+}
+
+.patterns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .unmapped {
   composes: hex from '../../styles/type.module.css';
   display: grid;

@@ -97,3 +97,12 @@ export function componentChanges(a: RunDocumentPartial, b: RunDocumentPartial): 
   const rank = { new: 0, changed: 1, removed: 2 };
   return out.sort((x, y) => rank[x.change] - rank[y.change] || x.name.localeCompare(y.name));
 }
+
+export type MotionCounts = { label: 'durations' | 'easings' | 'keyframes' | 'patterns'; before: number; after: number }[];
+
+/** The Motion table's four counts for each run (D-089). */
+export function motionDiff(a: RunDocumentPartial, b: RunDocumentPartial): MotionCounts {
+  const n = (d: RunDocumentPartial) => ({ durations: d.tokens?.duration?.length ?? 0, easings: d.tokens?.easing?.length ?? 0, keyframes: d.tokens?.keyframes?.length ?? 0, patterns: d.motion?.patterns.length ?? 0 });
+  const [x, y] = [n(a), n(b)];
+  return (['durations', 'easings', 'keyframes', 'patterns'] as const).map((label) => ({ label, before: x[label], after: y[label] }));
+}

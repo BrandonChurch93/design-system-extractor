@@ -56,6 +56,21 @@ export function styleDifference(a: StyleInputs, b: StyleInputs): { differing: nu
   return { differing, beyond };
 }
 
+/** Two looks that differ only in color: the same shape, type and box, another tone (D-090). */
+export function toneOnly(a: StyleInputs, b: StyleInputs): boolean {
+  return (
+    a.borderWidth === b.borderWidth &&
+    a.borderStyle === b.borderStyle &&
+    a.radius === b.radius &&
+    a.padding.join() === b.padding.join() &&
+    a.fontSize === b.fontSize &&
+    a.fontWeight === b.fontWeight &&
+    a.display === b.display &&
+    a.shadow === b.shadow &&
+    a.textTransform === b.textTransform
+  );
+}
+
 const subsetOf = (a: string[], b: string[]) => a.every((t) => b.includes(t));
 const root = (t: string) => t.split(/-+/)[0]!;
 

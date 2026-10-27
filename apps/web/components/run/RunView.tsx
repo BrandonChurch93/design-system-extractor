@@ -19,6 +19,7 @@ import { ChecksSection } from './ChecksSection';
 import { ComponentsSection } from './ComponentsSection';
 import { DriftHeadline } from './DriftHeadline';
 import { DriftSection } from './DriftSection';
+import { MotionSection } from './MotionSection';
 import { ExportsSection, type ExportSource } from './ExportsSection';
 import { PagesCard } from './PagesCard';
 import { PaletteRow } from './PaletteRow';
@@ -31,6 +32,7 @@ import styles from './RunView.module.css';
 export const POLL_MS = 1500;
 const sections = [
   { id: 'tokens', label: runPage.sectionNav.tokens },
+  { id: 'motion', label: runPage.sectionNav.motion },
   { id: 'components', label: runPage.sectionNav.components },
   { id: 'checks', label: runPage.sectionNav.checks },
   { id: 'drift', label: runPage.sectionNav.drift },
@@ -235,6 +237,7 @@ export function RunView({ initial, storageBase, appUrl, contactEmail, partial, l
             <SectionNav items={sections} label={global.sectionsLabel} />
             <div className={styles.sections}>
               <TokensSection doc={regions.palette ? doc : { ...doc, tokens: undefined }} />
+              <MotionSection doc={doc} landed={regions.motion} hrefFor={hrefFor} onOpen={onOpenComponent} />
               <ComponentsSection doc={doc} landed={regions.components} base={storageBase} hrefFor={hrefFor} opened={params.get('c') ?? undefined} onOpen={onOpenComponent} />
               <ChecksSection doc={regions.checks ? doc : { ...doc, checks: undefined }} />
               <DriftSection doc={regions.drift ? doc : { ...doc, drift: undefined }} base={storageBase} />

@@ -93,7 +93,7 @@ describe('the time budget', () => {
     const comps = ctx.current().components ?? [];
     expect(comps.length).toBeGreaterThan(0);
     expect(comps.every((c) => c.preview.mode === 'captured' && c.preview.capturedReason === 'not-checked')).toBe(true);
-    expect(comps.every((c) => /^[A-Z][a-z-]*( [a-z0-9-]+)*( \d+)?$/.test(c.name))).toBe(true);
+    expect(comps.every((c) => /^[A-Z][a-z]*( [a-z]+)*( \([\p{Ll}\p{N} -]+(, [\p{Ll}\p{N} -]+)?\))?$/u.test(c.name) && !/\d\)?$/.test(c.name))).toBe(true);
     const log = messages(ctx);
     expect(log.some((m) => /time budget for naming reached · \d+ of \d+ batches named by the rules/.test(m))).toBe(true);
     expect(log.some((m) => m.includes(`time budget for render checks reached · ${comps.length} previews not checked`))).toBe(true);

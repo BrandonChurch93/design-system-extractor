@@ -20,6 +20,29 @@
   color: var(--dse-muted);
 }
 
+.groupCaption {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+/* Light and dark halves: an overlay is made to sit on one of them. */
+.overlayGround {
+  display: block;
+  border-radius: var(--dse-radius-md);
+  background: linear-gradient(to bottom, var(--dse-ink) 50%, var(--dse-surface) 50%);
+  box-shadow: inset 0 0 0 1px var(--dse-line-soft);
+  overflow: hidden;
+}
+
+.overlayNames {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dse-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
 .swatchRow {
   display: flex;
   flex-wrap: wrap;

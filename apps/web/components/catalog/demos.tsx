@@ -7,7 +7,7 @@ import { CaptureFigure } from '../CaptureViewer';
 import { Button } from '../Button';
 import { CaptureViewer } from '../CaptureViewer';
 import { Card } from '../Card';
-import { ChipGroup } from '../ChipGroup';
+import { ChipGroup, ToggleChip } from '../ChipGroup';
 import { CodeBlock } from '../CodeBlock';
 import { EmptyState } from '../EmptyState';
 import { Footer } from '../Footer';
@@ -111,6 +111,11 @@ function ChipDemo({ force }: { force?: { value: string; state: 'hover' | 'focus'
       ]}
     />
   );
+}
+
+function ToggleChipDemo({ initial }: { initial: boolean }) {
+  const [on, setOn] = useState(initial);
+  return <ToggleChip label={runPage.components.coreOnly} pressed={on} onChange={setOn} />;
 }
 
 function TabsDemo({ forceFocus }: { forceFocus?: 'html' | 'css' }) {
@@ -333,8 +338,15 @@ const primitiveDemos: Demo[] = [
       { label: s.default, node: <ChipDemo /> },
       { label: s.hover, node: <ChipDemo force={{ value: 'inputs', state: 'hover' }} /> },
       { label: s.focus, node: <ChipDemo force={{ value: 'buttons', state: 'focus' }} /> },
+      { label: `${runPage.components.coreOnly} · off`, node: <ToggleChipDemo initial={false} /> },
+      { label: `${runPage.components.coreOnly} · on`, node: <ToggleChipDemo initial /> },
     ],
-    phone: () => <ChipDemo />,
+    phone: () => (
+      <>
+        <ChipDemo />
+        <ToggleChipDemo initial />
+      </>
+    ),
   },
   {
     slug: 'tag',

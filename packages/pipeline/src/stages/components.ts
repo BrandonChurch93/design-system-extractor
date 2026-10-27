@@ -3,7 +3,7 @@ import { ComponentGroup, componentGroupOf, viewportSize, type Component, type Co
 import { deltaE, parseCssColor } from '../color/parse';
 import { px, radiusOf } from '../capture/snapshot';
 import { classify, type Guess } from '../components/classify';
-import { classesAllowMerge, clusterItems, exactKey, representative, type Cluster } from '../components/cluster';
+import { classesAllowMerge, clusterItems, exactKey, representative, structureSimilarity, toneOnly, type Cluster } from '../components/cluster';
 import { cropShot, downscale, padded, sourceRegion } from '../components/crop';
 import { itemsFrom, type Item } from '../components/items';
 import { nameComponents, resolveCollisions, stylesAgree, type CollisionPair, type Draft, type Naming } from '../components/model';
@@ -22,6 +22,8 @@ import type { ExtractedTokens } from './tokens';
 // Stage `components` (docs/specs/component-detection.md).
 
 export const COMPONENT_CAP = 120;
+/** Types whose tone is a variant, never a component of its own (D-090). */
+const TONED = new Set<ComponentType>(['alert', 'toast']);
 const stateOrder: State[] = ['default', 'hover', 'focus', 'active', 'disabled', 'error', 'checked', 'selected', 'open', 'scrolled'];
 
 type Working = { id: string; items: Item[]; guess: Guess; naming?: Naming; variants: VariantDraft[] };
@@ -150,6 +152,21 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
       if (!a.items.some(sized) || !b.items.some(sized)) continue;
       const looks = new Set(a.variants.map((v) => v.key));
       if (!b.variants.some((v) => looks.has(v.key))) continue;
+      a.items.push(...b.items);
+      working.splice(j, 1);
+      rebuild(a, tokens);
+    }
+  }
+  // Notices that differ only in color are one component in several tones (D-090).
+  for (let i = 0; i < working.length; i++) {
+    for (let j = working.length - 1; j > i; j--) {
+      const a = working[i]!;
+      const b = working[j]!;
+      if (a.guess.type !== b.guess.type || !TONED.has(a.guess.type)) continue;
+      const ra = representative(a.items).fp;
+      const rb = representative(b.items).fp;
+      if (ra.tag !== rb.tag || ra.role !== rb.role || ra.iconOnly !== rb.iconOnly || ra.trigger !== rb.trigger || !classesAllowMerge(ra.baseTokens, rb.baseTokens)) continue;
+      if (structureSimilarity(ra.structure, rb.structure) < 0.7 || !toneOnly(ra.style, rb.style)) continue;
       a.items.push(...b.items);
       working.splice(j, 1);
       rebuild(a, tokens);

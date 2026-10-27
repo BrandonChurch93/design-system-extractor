@@ -64,3 +64,12 @@ export function ChipGroup<T extends string>({ options, value, onChange, label, c
     </div>
   );
 }
+
+/** A Chip that toggles on its own, beside a ChipGroup and not part of its radio group. */
+export function ToggleChip({ label, pressed, onChange }: { label: string; pressed: boolean; onChange: (pressed: boolean) => void }) {
+  return (
+    <button type="button" className={styles.chip} aria-pressed={pressed} onClick={() => onChange(!pressed)}>
+      {label}
+    </button>
+  );
+}

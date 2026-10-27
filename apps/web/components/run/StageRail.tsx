@@ -38,7 +38,7 @@ function RingMark({ state, landed }: { state: Ring['state']; landed: boolean }) 
   );
 }
 
-/** Seven rings with live labels; a hairline draws between rings as stages complete. */
+/** Eight rings with live labels; a hairline draws between rings as stages complete. */
 export function StageRail({ rings }: { rings: Ring[] }) {
   const reduced = usePrefersReducedMotion();
   const [doneAtMount] = useState(() => new Set(rings.filter((r) => r.state === 'done').map((r) => r.key)));

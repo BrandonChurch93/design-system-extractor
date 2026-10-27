@@ -1,0 +1,54 @@
+.strip {
+  --line-h: 18px;
+  position: relative;
+  padding: calc(var(--rows) * var(--line-h)) 28px var(--line-h);
+}
+
+.scale {
+  position: relative;
+  height: var(--dse-space-5);
+  border-bottom: 1px solid var(--dse-line);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tick {
+  position: absolute;
+  bottom: -1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translateX(-50%);
+}
+
+.value {
+  composes: hex from '../../styles/type.module.css';
+  position: absolute;
+  bottom: calc(100% + var(--dse-space-1) + var(--row) * var(--line-h));
+  color: var(--dse-ink-2);
+  white-space: nowrap;
+}
+
+.mark {
+  display: block;
+  width: 1px;
+  height: var(--dse-space-4);
+  background: var(--dse-ink);
+}
+
+.tick[data-most-used] .mark {
+  width: 8px;
+  height: 8px;
+  margin-top: var(--dse-space-2);
+  border-radius: var(--dse-radius-pill);
+  transform: translateY(4px);
+}
+
+.role {
+  composes: caption from '../../styles/type.module.css';
+  position: absolute;
+  top: calc(100% + var(--dse-space-1));
+  color: var(--dse-muted);
+  white-space: nowrap;
+}

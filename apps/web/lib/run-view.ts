@@ -6,11 +6,11 @@ import { count, dots, duration, runDate } from './format';
 // The run page's view of a document and its events (docs/design/pages.md, Stage to rail to region).
 // Pure: the server render, the poller and the tests all call it.
 
-export type RingKey = 'pages' | 'palette' | 'type' | 'spacing' | 'components' | 'checks' | 'drift';
+export type RingKey = 'pages' | 'palette' | 'type' | 'spacing' | 'motion' | 'components' | 'checks' | 'drift';
 export type RingState = 'pending' | 'running' | 'done';
 export type Ring = { key: RingKey; state: RingState; label: string };
 
-export type RegionKey = 'pages' | 'palette' | 'type' | 'spacing' | 'components' | 'checks' | 'drift' | 'exports';
+export type RegionKey = 'pages' | 'palette' | 'type' | 'spacing' | 'motion' | 'components' | 'checks' | 'drift' | 'exports';
 
 export const terminal = (s: RunStatus) => s === 'complete' || s === 'blocked' || s === 'failed' || s === 'cancelled';
 
@@ -56,6 +56,7 @@ export function landed(doc: RunDocumentPartial, events: RunEvent[], status: RunS
     palette: Boolean(doc.tokens?.colors),
     type: Boolean(doc.tokens?.type),
     spacing: Boolean(doc.tokens?.space),
+    motion: Boolean(doc.tokens?.duration && doc.motion),
     components: Boolean(doc.components) && (p.seen.has('previews') || done),
     checks: Boolean(doc.checks),
     drift: Boolean(doc.drift),
@@ -63,7 +64,7 @@ export function landed(doc: RunDocumentPartial, events: RunEvent[], status: RunS
   };
 }
 
-/** The seven rings of the StageRail with their labels from copy. */
+/** The eight rings of the StageRail with their labels from copy. */
 export function rail(doc: RunDocumentPartial, events: RunEvent[], status: RunStatus): Ring[] {
   const p = progress(doc, events);
   const r = landed(doc, events, status);
@@ -94,9 +95,15 @@ export function rail(doc: RunDocumentPartial, events: RunEvent[], status: RunSta
     : type.state === 'done' && !terminal(status)
       ? { key: 'spacing', state: 'running', label: L.running.spacing }
       : { key: 'spacing', state: 'pending', label: L.pending.spacing };
+  const motionCount = (doc.tokens?.duration?.length ?? 0) + (doc.tokens?.easing?.length ?? 0) + (doc.tokens?.keyframes?.length ?? 0) + (doc.motion?.patterns.length ?? 0);
+  const motion: Ring = r.motion
+    ? { key: 'motion', state: 'done', label: motionCount ? fill(L.done.motion, { n: count(doc.tokens!.duration!.length) }) : L.done.motionNone }
+    : spacing.state === 'done' && !terminal(status)
+      ? { key: 'motion', state: 'running', label: L.running.motion }
+      : { key: 'motion', state: 'pending', label: L.pending.motion };
   const components: Ring = r.components
     ? { key: 'components', state: 'done', label: fill(L.done.components, { n: count(doc.components!.length) }) }
-    : spacing.state === 'done' && !terminal(status)
+    : motion.state === 'done' && !terminal(status)
       ? { key: 'components', state: 'running', label: p.seen.has('components') ? L.running.componentsNaming : L.running.componentsClustering }
       : { key: 'components', state: 'pending', label: L.pending.components };
   const checks: Ring = r.checks
@@ -109,7 +116,7 @@ export function rail(doc: RunDocumentPartial, events: RunEvent[], status: RunSta
     : checks.state === 'done' && !terminal(status)
       ? { key: 'drift', state: 'running', label: L.running.drift }
       : { key: 'drift', state: 'pending', label: L.pending.drift };
-  return [pages, palette, type, spacing, components, checks, drift];
+  return [pages, palette, type, spacing, motion, components, checks, drift];
 }
 
 /** "{n} pages", or "1 page". */

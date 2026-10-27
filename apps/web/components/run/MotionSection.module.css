@@ -1,0 +1,25 @@
+.stack {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dse-space-6);
+}
+
+.group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--dse-space-4);
+}
+
+.empty {
+  display: grid;
+  gap: var(--dse-space-2);
+}
+
+.emptyTitle {
+  composes: h3 from '../../styles/type.module.css';
+}
+
+.emptyCaption {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}

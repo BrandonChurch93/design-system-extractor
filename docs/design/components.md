@@ -142,7 +142,7 @@ Every motion primitive follows the Card, Chip, Pill and CodeBlock tokens. Curves
 
 **MotionRow** · One line in the panel: `{state} · {property} · {duration} · {easing}` in `meta`, the easing name a Tag that opens its TokenPopover when it is a token.
 
-**ReplayButton** · A `sm` ghost Button with a play glyph (Lucide `play`) and the label `Replay`; while playing, a stop glyph (Lucide `square`) and `Stop`. It plays once, over the run's base duration (300 ms when the run has none) for an easing and over the pattern's own duration for a pattern. With reduced motion it jumps to the end state, disables itself and shows the reduced-motion caption beneath.
+**ReplayButton** · A `sm` ghost Button with a play glyph (Lucide `play`) and the label `Replay`; while playing, a stop glyph (Lucide `square`) and `Stop`. It plays once, over the run's base duration (300 ms when the run has none) for an easing and over the pattern's own duration for a pattern. With reduced motion it jumps to the end state, disables itself and shows the reduced-motion caption beneath; where several Replay buttons sit together (the Motion section, the panel's patterns) they share one caption above the group, which each disabled button names with `aria-describedby` (D-090).
 
 ## Component panel and page
 
