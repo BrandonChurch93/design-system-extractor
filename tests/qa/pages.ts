@@ -15,8 +15,8 @@ export type QaState = {
 export type QaPage = { name: string; path: string; states: QaState[]; mask?: string[]; axeExclude?: string[] };
 
 // Time-dependent text: elapsed time, runs left today, hours to the budget reset.
-// A pattern read by sampling inline styles differs a little on every run (motion-capture.md, Honesty rules).
-const dynamic = ['[data-qa-mask="elapsed"]', '[data-qa-mask="runs-left"]', '[data-qa-mask="hours"]', '[data-qa-mask="sampled"]'];
+// A pattern read by sampling inline styles, and the log line counting the samples, differ a little on every run (D-090).
+const dynamic = ['[data-qa-mask="elapsed"]', '[data-qa-mask="runs-left"]', '[data-qa-mask="hours"]', '[data-qa-mask="sampled"]', 'text=/style samples/'];
 
 const recentList = [
   { id: 'seedclean0', host: 'localhost:4100', createdAt: '2026-10-12T15:04:00.000Z', status: 'complete', stats: { colors: 9, typeStyles: 9, spacingSteps: 11, components: 28, checksPassed: 43, checksApplicable: 45 }, palette: [{ value: '#0B1F3A', share: 0.6 }, { value: '#E2E8F0', share: 0.15 }, { value: '#2458E6', share: 0.09 }, { value: '#FFFFFF', share: 0.08 }] },
@@ -212,7 +212,8 @@ export async function withFullHeight<T>(page: Page, fn: () => Promise<T>): Promi
   if (!vp) return fn();
   const height = await page.evaluate(() => Math.ceil(document.documentElement.scrollHeight));
   await page.setViewportSize({ width: vp.width, height: Math.max(vp.height, height) });
-  await page.waitForTimeout(700);
+  // Everything below the fold enters at once on the resize; the catalog's run of entrances takes longer.
+  await page.waitForTimeout(height > 10_000 ? 3000 : 700);
   try {
     return await fn();
   } finally {
