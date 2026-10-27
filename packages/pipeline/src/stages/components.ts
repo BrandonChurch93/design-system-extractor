@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { ComponentGroup, componentGroupOf, viewportSize, type Component, type ComponentType, type Preview, type State, type StateCapture, type Tokens } from '@dse/schema';
+import { ComponentGroup, componentGroupOf, viewportSize, type Component, type ComponentTier, type ComponentType, type Preview, type State, type StateCapture, type Tokens } from '@dse/schema';
 import { deltaE, parseCssColor } from '../color/parse';
 import { px, radiusOf } from '../capture/snapshot';
 import { classify, type Guess } from '../components/classify';
@@ -7,12 +7,17 @@ import { classesAllowMerge, clusterItems, exactKey, representative, type Cluster
 import { cropShot, downscale, padded, sourceRegion } from '../components/crop';
 import { itemsFrom, type Item } from '../components/items';
 import { nameComponents, resolveCollisions, stylesAgree, type CollisionPair, type Draft, type Naming } from '../components/model';
+import { componentMotion, easingLink, patternOwners, withOwners } from '../components/motion';
+import { endsInDigit, slugsOf, uniqueNames } from '../components/naming';
 import { nameVariants, sized, splitVariants, stateOf, type VariantDraft } from '../components/variants';
 import type { RunContext } from '../context';
 import { stableId } from '../ids';
 import { keys } from '../storage/keys';
+import { splitList } from '../capture/states';
 import { normalizeShadow } from '../tokens/collect';
+import { msOf, roundMs } from '../tokens/motion';
 import type { CaptureOutput } from './capture';
+import type { ExtractedTokens } from './tokens';
 
 // Stage `components` (docs/specs/component-detection.md).
 
@@ -48,25 +53,26 @@ function crop(it: Item, margin = 8): Buffer | null {
 }
 
 function rebuild(w: Working, tokens: Tokens) {
-  w.variants = splitVariants(w.items);
-  nameVariants(w.variants, tokens.colors);
+  w.variants = nameVariants(splitVariants(w.items), tokens.colors);
 }
 
 function nearestColorToken(value: string, tokens: Tokens) {
   const c = parseCssColor(value);
   if (!c) return undefined;
   let best: { id: string; d: number } | undefined;
-  for (const t of tokens.colors) {
+  // A translucent value is an overlay's, never a palette step's (D-086).
+  const pool = c.a < 1 ? (tokens.overlays ?? []).map((o) => ({ id: o.id, value: o.value })) : tokens.colors;
+  for (const t of pool) {
     const tc = parseCssColor(t.value)!;
     if (Math.abs(tc.a - c.a) > 0.05) continue;
-    const d = deltaE(tc, c);
+    const d = deltaE({ ...tc, a: 1 }, { ...c, a: 1 });
     if (!best || d < best.d) best = { id: t.id, d };
   }
   return best && best.d <= 2.3 ? best.id : undefined;
 }
 
 /** Each default value linked to the token it matches, the rest listed as unmapped. */
-export function tokensUsedBy(it: Item, tokens: Tokens): Pick<Component, 'tokensUsed' | 'unmapped'> {
+export function tokensUsedBy(it: Item, tokens: Tokens): Pick<Component, 'tokensUsed' | 'unmapped' | 'borderWidth'> {
   const used: Component['tokensUsed'] = [];
   const unmapped: Component['unmapped'] = [];
   const st = it.el.style;
@@ -91,13 +97,28 @@ export function tokensUsedBy(it: Item, tokens: Tokens): Pick<Component, 'tokensU
   }
   const shadow = normalizeShadow(st['box-shadow']);
   if (shadow) link('box-shadow', shadow, tokens.shadow.find((t) => t.value === shadow)?.id);
-  return { tokensUsed: used, unmapped };
+  // The durations and easings of its transitions.
+  const durs = splitList(st['transition-duration'] ?? '');
+  const eases = splitList(st['transition-timing-function'] ?? '');
+  splitList(st['transition-property'] ?? '').forEach((p, i) => {
+    if (p === 'none') return;
+    const ms = roundMs(msOf(durs[i % Math.max(1, durs.length)] ?? '0s'));
+    if (ms <= 0) return;
+    const d = (tokens.duration ?? []).find((t) => t.ms === ms);
+    if (!used.some((u) => u.property === 'transition-duration' && u.tokenId === d?.id)) link('transition-duration', `${ms}ms`, d?.id);
+    const e = easingLink(eases[i % Math.max(1, eases.length)] ?? 'ease', tokens.easing ?? []);
+    if ('easingTokenId' in e) {
+      if (!used.some((u) => u.tokenId === e.easingTokenId)) used.push({ tokenId: e.easingTokenId, property: 'transition-timing-function' });
+    } else if (!unmapped.some((u) => u.value === e.easing)) unmapped.push({ property: 'transition-timing-function', value: e.easing });
+  });
+  const borderWidth = px(st['border-top-width']) > 0 && st['border-top-style'] !== 'none' ? px(st['border-top-width']) : undefined;
+  return { tokensUsed: used, unmapped, ...(borderWidth ? { borderWidth } : {}) };
 }
 
 /** The capture items behind each component and each of its variants, for the previews stage. */
 export type ComponentSources = Map<string, { first: Item; variants: Map<string, Item>; items: Item[]; variantOf: Map<Item, string> }>;
 
-export async function components(ctx: RunContext, capture: CaptureOutput, tokens: Tokens): Promise<{ components: Component[]; sources: ComponentSources }> {
+export async function components(ctx: RunContext, capture: CaptureOutput, tokens: ExtractedTokens): Promise<{ components: Component[]; sources: ComponentSources }> {
   const items = itemsFrom(capture);
   for (const it of items) {
     if (!it.rules.includes('inline-mark')) continue;
@@ -151,6 +172,8 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
   const pairs: CollisionPair[] = [];
   const byName = new Map<string, Working[]>();
   for (const w of list) {
+    // A generated name carries no judgment, so it never merges two clusters.
+    if (w.naming!.by === 'fallback') continue;
     const k = `${w.naming!.type}|${w.naming!.name.toLowerCase()}`;
     byName.set(k, [...(byName.get(k) ?? []), w]);
   }
@@ -187,13 +210,10 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
   const mergedCount = list.length - roots.length;
   list = roots;
   for (const w of list) rebuild(w, tokens);
-  // Names still shared after merging take a number: Card, Card 2 (docs/specs/model-calls.md).
-  const nameUse = new Map<string, number>();
-  for (const w of list) {
-    const n = (nameUse.get(w.naming!.name.toLowerCase()) ?? 0) + 1;
-    nameUse.set(w.naming!.name.toLowerCase(), n);
-    if (n > 1) w.naming = { ...w.naming!, name: `${w.naming!.name} ${n}` };
-  }
+  // Names still shared after merging take their context, never a number; a name ending in one is renamed (D-084).
+  const finalNames = list.map((w) => ({ name: w.naming!.name, first: firstSeen(w.items) }));
+  const renamed = uniqueNames(finalNames);
+  list.forEach((w, i) => (w.naming = { ...w.naming!, name: finalNames[i]!.name }));
 
   // Caps and order: by group, then instance count.
   const groupRank = (t: ComponentType) => ComponentGroup.options.indexOf(componentGroupOf[t]);
@@ -204,21 +224,40 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
     list.splice(drop, 1);
   }
 
-  const out: Component[] = [];
+  const assembled: Assembled[] = [];
   const sources: ComponentSources = new Map();
   const ids = new Set<string>();
+  const owners = new Map<string, string>();
   for (const w of list) {
     let id = stableId(`component:${exactKey(representative(w.items))}`);
     for (let n = 2; ids.has(id); n++) id = stableId(`component:${exactKey(representative(w.items))}:${n}`);
     ids.add(id);
-    out.push(await assemble(ctx, w, id, tokens));
+    for (const it of w.items) owners.set(`${it.page.id}|${it.viewport}|${it.el.d}`, id);
+    assembled.push(await assemble(ctx, w, id, tokens));
     const variantOf = new Map<Item, string>();
     for (const v of w.variants) for (const it of v.items) variantOf.set(it, stableId(`variant:${id}:${v.key}`));
     sources.set(id, { first: firstSeen(w.items), variants: new Map(w.variants.map((v) => [stableId(`variant:${id}:${v.key}`), firstSeen(v.items)])), items: w.items, variantOf });
   }
 
+  // Tier (D-085), slug, and motion (motion-capture.md, Attachment to components).
+  const owned = patternOwners(capture, owners, tokens.motionBuild.targets);
+  const patternsOf = new Map<string, string[]>();
+  for (const [pid, cids] of owned) for (const cid of cids) patternsOf.set(cid, [...(patternsOf.get(cid) ?? []), pid]);
+  const tiers = tiersOf(assembled);
+  const slugs = slugsOf(assembled.map((c) => c.name));
+  const out: Component[] = assembled.map((c, i) => {
+    const w = list[i]!;
+    return { ...c, tier: tiers[i]!, slug: slugs[i]!, motion: componentMotion(firstSeen(w.items), w.items, c.states, tokens.easing, patternsOf.get(c.id) ?? []) };
+  });
+  const motion = { ...tokens.motionBuild.motion, patterns: withOwners(tokens.motionBuild.motion.patterns, owned) };
+  for (const v of out.flatMap((c) => c.variants)) if (endsInDigit(v.name)) throw new Error(`variant name ends in a number: ${v.name}`);
+
   const byModel = list.filter((w) => w.naming!.by !== 'fallback').length;
-  await ctx.emit({ stage: 'components', message: `${out.length} found from ${items.length.toLocaleString('en-US')} element candidates · ${byModel} by model`, data: { calls: named.calls, collisions: collisions.by }, patch: { components: out } });
+  await ctx.emit({ stage: 'components', message: `${out.length} found from ${items.length.toLocaleString('en-US')} element candidates · ${byModel} by model`, data: { calls: named.calls, collisions: collisions.by }, patch: { components: out, motion } });
+  for (const r of renamed) await ctx.emit({ stage: 'components', message: `renamed ${r.from} to ${r.to}` });
+  const core = out.filter((c) => c.tier === 'core').length;
+  await ctx.emit({ stage: 'components', message: `${core} core · ${out.length - core} page-specific` });
+  await ctx.emit({ stage: 'components', message: `motion attached to ${out.filter((c) => c.motion).length} components · ${owned.size} patterns` });
   const cut = named.calls.filter((c) => c === 'by fallback (time budget)').length;
   if (cut) await ctx.emit({ stage: 'components', level: 'warn', message: `time budget for naming reached · ${cut} of ${named.calls.length} batches named by the rules` });
   if (mergedByStyle + mergedCount > 0) await ctx.emit({ stage: 'components', message: `merged ${mergedCount} across pages` });
@@ -235,7 +274,25 @@ async function put(ctx: RunContext, key: string, png: Buffer | null): Promise<{ 
 
 const capturedPreview = (shot: { key: string; width: number; height: number }): Preview => ({ mode: 'captured', cropKey: shot.key, width: shot.width, height: shot.height });
 
-async function assemble(ctx: RunContext, w: Working, id: string, tokens: Tokens): Promise<Component> {
+type Assembled = Omit<Component, 'tier' | 'slug' | 'motion'>;
+
+const coreTypes = new Set<ComponentType>(['button', 'input', 'select', 'checkbox', 'radio', 'toggle', 'textarea', 'link', 'badge', 'tag', 'avatar', 'tooltip']);
+
+/**
+ * Core: instances on two or more pages, or three or more on one page, or the most used component of a
+ * control or mark type; everything else is page-specific (D-085).
+ */
+export function tiersOf(list: Pick<Component, 'type' | 'provenance'>[]): ComponentTier[] {
+  const total = (c: Pick<Component, 'provenance'>) => c.provenance.pages.reduce((s, p) => s + p.count, 0);
+  const top = new Map<ComponentType, number>();
+  list.forEach((c, i) => {
+    const prev = top.get(c.type);
+    if (coreTypes.has(c.type) && (prev === undefined || total(c) > total(list[prev]!))) top.set(c.type, i);
+  });
+  return list.map((c, i) => (c.provenance.pages.length >= 2 || c.provenance.pages.some((p) => p.count >= 3) || top.get(c.type) === i ? 'core' : 'page'));
+}
+
+async function assemble(ctx: RunContext, w: Working, id: string, tokens: Tokens): Promise<Assembled> {
   const first = firstSeen(w.items);
   const instanceId = (it: Item) => stableId(`instance:${it.key}`);
   const variantIds = new Map(w.variants.map((v) => [v, stableId(`variant:${id}:${v.key}`)]));

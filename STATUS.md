@@ -14,7 +14,9 @@ P16 · Fidelity: motion, site variables, naming, export integrity (v1.1). In pro
 
 ## Next action
 
-Build P16 step 2, the schema: every new enum, type and field from `docs/specs/data-model.md` in `packages/schema/src/` with labels from `docs/design/copy.md`, then continue down the P16 plan below.
+P16 steps 2 to 9 are written in the pipeline source (schema, capture motion pass and state diff, tokens, components, previews, drift, exports) and `packages/pipeline/src` typechecks; next: MCP `get_motion` and the motion resource, the CLI formats, then fix the consumers the typecheck names (web, scripts, tests), write the unit tests listed in the plan, then the fixtures (step 3) and evals (step 10).
+
+Rulings to log as D-090 when P16's code settles (already referenced in code comments): eyebrow tried before label, body-sm and caption; "weight 400" read as below 500; inline-style scroll-progress only when every value change coincides with a scroll change; in-view value from the observer's root margin after a class toggle; CSS transitions of one element starting within 50 ms with the same timing are one pattern; header motion during the scroll pass is the scrolled header's; inline sample runs split at 250 ms gaps; the tab walk's focus is not waited for; variants sharing both words keep the color word before third words; `borderWidth` on Component for the Default line; design-system.md gains a "Tokens as CSS" section so every var() in it is declared; component code stores no token variables, which each export writes for its own set (the panel uses the proposed set).
 
 ### P16 plan
 

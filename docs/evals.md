@@ -51,7 +51,7 @@ The messy site with roughly half of its drift fixed: grays reduced from 14 to 9,
   "pages": [{ "path", "reason" }],
   "tokens": {
     "colors": [{ "value", "group", "minUsage" }],
-    "type": [{ "role", "size", "weight" }],
+    "type": [{ "role", "size", "weight", "name" }],
     "space": { "base": 4, "steps": [4, 8, 12, 16, 24, 32, 48, 64, 96], "offGrid": [] },
     "radius": [4, 8, 12, 999],
     "shadowCount": 2,
@@ -68,7 +68,6 @@ The messy site with roughly half of its drift fixed: grays reduced from 14 to 9,
   },
   "siteVariables": { "named": { "text-primary": "--color-text-primary" }, "hashed": ["--sx-1fj52yw"] },
   "overlays": [{ "name", "base", "alpha" }],
-  "typeRoles": [{ "size", "weight", "role", "name" }],
   "tiers": { "Button": "core" },
   "variantNames": [{ "component", "names": ["Ghost", "Ghost rounded"] }],
   "fallbackNames": [{ "component", "name": "Button (footer)" }],
@@ -91,7 +90,7 @@ Computed by `pnpm evals` into `fixtures/results.json` with a per-fixture row:
 - **Preview live rate**: live components / components. On the How it works page this is shown as "Live previews" with the counts, "38 of 46". A component listed under `previews.captured` (the messy fixture's planted promo card) must come out captured with that reason, or the metric fails.
 - **Selection exactness**: selected pages equal expected pages.
 - **Motion** (v1.1): duration and easing token recall (by value, and by name where `expected.json` names it); keyframes recall by name; pattern recall with kind and trigger type exact, duration within ±40 ms and the `observed` flag exact; hover delta completeness over the planted properties, each carrying its transition timing; outline-noise entries (outline entries on a planted `outline: none` element) must be 0.
-- **Naming** (v1.1): site-variable naming over the planted variables; tokens named by a hashed variable (must be 0); overlay split (every expected overlay found with its base and alpha, and no translucent value in the palette); type role names against `typeRoles` with no token named `other`; variant names on the planted pairs; component and variant names ending in a digit (must be 0); tier assignment against `tiers`. Fallback names are scored by `pnpm evals --fallback`.
+- **Naming** (v1.1): site-variable naming over the planted variables; tokens named by a hashed variable (must be 0); overlay split (every expected overlay found with its base and alpha, and no translucent value in the palette); type role names against the `name` of each `tokens.type` entry, with no token named `other`; variant names on the planted pairs; component and variant names ending in a digit (must be 0); tier assignment against `tiers`. Fallback names are scored by `pnpm evals --fallback`.
 - **Export integrity** (v1.1): every export of every fixture run (both sets) names no `var(--` that the same export does not declare.
 
 ## Thresholds (the floor)

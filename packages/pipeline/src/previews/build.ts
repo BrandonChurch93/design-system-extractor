@@ -21,9 +21,72 @@ export type PreviewInput = {
   imageColors: Record<string, string>;
   fonts: PreviewFonts;
   policy: CssPolicy;
+  /** The site variables the exports declare by name; every other custom property is resolved in the code (D-083). */
+  siteVars?: ReadonlySet<string>;
 };
 
-export type PreviewDoc = { html: string; css: string; /** The component's own rules, without the preview's fonts and root. */ rules: string; markup: string; bytes: number; tooLarge: boolean; report: SanitizeReport };
+export type PreviewDoc = {
+  html: string;
+  css: string;
+  /** The component's own rules, reset-filtered, without the preview's fonts and root. */
+  rules: string;
+  /** The rules as exported code: every custom property resolved but the site variables the exports declare (D-083). */
+  code: string;
+  markup: string;
+  bytes: number;
+  tooLarge: boolean;
+  report: SanitizeReport;
+};
+
+/** Values that only reset (preview-fidelity.md, Reset filtering). */
+const resetValue = /^(inherit|unset|initial|revert|revert-layer)$/i;
+const resetProps = new Set(['box-sizing', '-webkit-tap-highlight-color']);
+const universal = /^(\*|\*::?before|\*::?after|::?before|::?after)$/;
+
+/** Drops what only resets: reset values, `box-sizing`, tap highlights, rules on `*` and the bare pseudo-elements. */
+export function filterResets(rule: MatchedRule): MatchedRule['declarations'] | null {
+  const parts = splitSelectorList(rule.selector);
+  if (parts.length && parts.every((s) => universal.test(s.trim()))) return null;
+  const decls = rule.declarations.filter((d) => !resetValue.test(d.value.trim()) && !resetProps.has(d.name.toLowerCase()) && !(d.name.toLowerCase() === 'all'));
+  return decls.length ? decls : null;
+}
+
+/** The end of a `var(` call, nested parentheses included. */
+function closing(text: string, open: number): number {
+  let depth = 0;
+  for (let i = open; i < text.length; i++) {
+    if (text[i] === '(') depth++;
+    else if (text[i] === ')' && --depth === 0) return i;
+  }
+  return -1;
+}
+
+/**
+ * Every `var()` resolved to the value the element computed, except the names in `keep`; a reference
+ * nothing resolves takes its fallback, else its declaration is dropped.
+ */
+export function resolveVars(value: string, vars: Record<string, string>, keep: ReadonlySet<string>): string | null {
+  let out = '';
+  let i = 0;
+  for (;;) {
+    const at = value.indexOf('var(', i);
+    if (at < 0) return out + value.slice(i);
+    const end = closing(value, at + 3);
+    if (end < 0) return null;
+    const inner = value.slice(at + 4, end);
+    const comma = inner.indexOf(',');
+    const name = (comma >= 0 ? inner.slice(0, comma) : inner).trim();
+    const fallback = comma >= 0 ? inner.slice(comma + 1).trim() : undefined;
+    out += value.slice(i, at);
+    if (keep.has(name)) out += value.slice(at, end + 1);
+    else {
+      const v = vars[name] ?? (fallback !== undefined ? resolveVars(fallback, vars, keep) : null);
+      if (v === null || v === undefined || v === '') return null;
+      out += v;
+    }
+    i = end + 1;
+  }
+}
 
 const inherited = ['font-family', 'font-size', 'color', 'line-height', 'letter-spacing'] as const;
 const placeholderTags = new Set(['img', 'picture', 'video', 'iframe', 'canvas', 'object', 'embed']);
@@ -174,21 +237,31 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
     lists.push(list);
   }
   const rules = mergeInOrder(lists);
-  const declarationText = (decls: MatchedRule['declarations']) =>
+  const declarationText = (decls: MatchedRule['declarations'], code = false) =>
     decls
       .map((d) => {
         const s = sanitizeDeclaration(d.name, d.value, policy);
-        return s ? `${s.name}: ${s.value}${d.important ? ' !important' : ''};` : null;
+        if (!s) return null;
+        if (!code) return `${s.name}: ${s.value}${d.important ? ' !important' : ''};`;
+        // A custom property is code only when the exports declare it; every other is resolved where it is used.
+        if (s.name.startsWith('--') && !keep.has(s.name)) return null;
+        const value = resolveVars(s.value, input.vars, keep);
+        return value === null ? null : `${s.name}: ${value}${d.important ? ' !important' : ''};`;
       })
       .filter(Boolean)
       .join(' ');
-  const ruleText = rules
-    .map((p) => {
-      const body = declarationText(p.rule.declarations);
-      return body ? `${p.selectors.join(', ')} { ${body} }` : '';
-    })
-    .filter(Boolean)
-    .join('\n');
+  const keep = input.siteVars ?? new Set<string>();
+  const filtered = rules.map((p) => ({ p, decls: filterResets(p.rule) })).filter((x): x is { p: Placed; decls: MatchedRule['declarations'] } => x.decls !== null);
+  const textOf = (code: boolean) =>
+    filtered
+      .map(({ p, decls }) => {
+        const body = declarationText(decls, code);
+        return body ? `${p.selectors.join(', ')} { ${body} }` : '';
+      })
+      .filter(Boolean)
+      .join('\n');
+  const ruleText = textOf(false);
+  const codeText = textOf(true);
 
   // The root: what the element inherits, the custom properties it uses, its ground.
   const parent = input.root.p >= 0 ? input.snapshot.elements[input.root.p] : undefined;
@@ -211,7 +284,7 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
   const links = input.fonts.googleLinks.map((href) => `<link rel="stylesheet" href="${href.replace(/"/g, '&quot;')}">`).join('');
   const html = `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${csp}"><style>html,body{margin:0;background:transparent}</style>${links}<style>\n${css.replace(/<\/style/gi, '<\\/style')}\n</style></head><body><div class="dse-root">${sanitized.html}</div></body></html>`;
   const bytes = Buffer.byteLength(css, 'utf8');
-  return { html, css, rules: ruleText, markup: sanitized.html, bytes, tooLarge: bytes > CSS_CAP_BYTES, report: sanitized.report };
+  return { html, css, rules: ruleText, code: codeText, markup: sanitized.html, bytes, tooLarge: bytes > CSS_CAP_BYTES, report: sanitized.report };
 }
 
 /** The same document plus one rule that applies a state's computed-style diff to the root element. */

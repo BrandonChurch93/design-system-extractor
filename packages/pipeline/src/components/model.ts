@@ -46,15 +46,9 @@ function describe(d: Draft): string {
   ].join(', ');
 }
 
-/** The deterministic name: the type label, numbered within the type from the second on. */
+/** The deterministic name is the type label; a name that repeats takes its context later, never a number (D-084). */
 export function fallbackNames(drafts: { guess: Guess }[]): string[] {
-  const seen = new Map<string, number>();
-  return drafts.map((d) => {
-    const n = (seen.get(d.guess.type) ?? 0) + 1;
-    seen.set(d.guess.type, n);
-    const label = componentTypeLabels[d.guess.type];
-    return n === 1 ? label : `${label} ${n}`;
-  });
+  return drafts.map((d) => componentTypeLabels[d.guess.type]);
 }
 
 /** Naming calls in flight at once; answers are applied by batch, so the order never changes a name (D-066). */

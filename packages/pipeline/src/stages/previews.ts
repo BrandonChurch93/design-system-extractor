@@ -5,8 +5,6 @@ import { effectiveBackground } from '../capture/snapshot';
 import { cropShot } from '../components/crop';
 import type { Item } from '../components/items';
 import { overBudget } from '../budget';
-import { exportTokens } from '../exports/model';
-import { withTokenVars } from '../exports/substitute';
 import type { RunContext } from '../context';
 import { buildPreview, statePreview, type PreviewDoc } from '../previews/build';
 import { LIVE_MAX_DIFF_PCT } from '../previews/constants';
@@ -71,7 +69,7 @@ function cssSource(src: NonNullable<ReturnType<ComponentSources['get']>>, it: It
   return src.items.find((x) => !x.revealed && x.viewport === it.viewport && src.variantOf.get(x) === variant && x.vc.matched[x.el.d]) ?? it;
 }
 
-async function previewFor(ctx: RunContext, it: Item, htmlKey: string, existing: Preview, policy: CssPolicy, session: RenderSession, copier: FontCopier): Promise<Outcome> {
+async function previewFor(ctx: RunContext, it: Item, htmlKey: string, existing: Preview, policy: CssPolicy, session: RenderSession, copier: FontCopier, siteVars: ReadonlySet<string>): Promise<Outcome> {
   if (overBudget(ctx, 'previews')) return { preview: { ...existing, mode: 'captured', capturedReason: 'not-checked' } };
   const markup = it.revealed ? it.revealed.open.markup : it.vc.markup[it.el.d];
   const matched = it.revealed ? it.revealed.open.matched : it.vc.matched;
@@ -84,7 +82,7 @@ async function previewFor(ctx: RunContext, it: Item, htmlKey: string, existing: 
   }
   const bg = effectiveBackground(it.snapshot, it.el, false);
   const fonts = await fontsFor(fontsUsed(it), it.vc.sheets, copier);
-  const doc = buildPreview({ markup: markup.html, vars: markup.vars, snapshot: it.snapshot, root: it.el, matched, ground: `rgb(${Math.round(bg.r)}, ${Math.round(bg.g)}, ${Math.round(bg.b)})`, imageColors, fonts, policy });
+  const doc = buildPreview({ markup: markup.html, vars: markup.vars, snapshot: it.snapshot, root: it.el, matched, ground: `rgb(${Math.round(bg.r)}, ${Math.round(bg.g)}, ${Math.round(bg.b)})`, imageColors, fonts, policy, siteVars });
   if (doc.tooLarge) return { preview: { ...existing, mode: 'captured', capturedReason: 'css-too-large' }, doc, fonts: fonts.mode };
   await ctx.files.put(htmlKey, doc.html, { contentType: 'text/html; charset=utf-8' });
   const shot = await renderPreview(session, ctx.files.publicUrl(htmlKey), { w: it.el.w, h: it.el.h });
@@ -106,13 +104,14 @@ export async function previews(ctx: RunContext, capture: CaptureOutput, comps: C
   const diffs: number[] = [];
   const fontCases: Record<string, number> = {};
   const out: Component[] = new Array(comps.length);
-  // The Code tab and the exports show the component's own rules with token variables (D-069).
-  const raw = exportTokens(ctx.current(), 'raw');
+  // The Code tab and the exports show the component's own reset-filtered rules; token variables are written per export set (D-069, D-083).
+  // The site variables the exports declare by name stay named in the code; the rest resolve (D-083).
+  const siteVars = new Set((ctx.current().tokens?.siteVariables ?? []).filter((v) => !v.hashed).map((v) => v.name));
 
   const one = async (c: Component, session: RenderSession): Promise<Component> => {
     const src = sources.get(c.id);
     if (!src) return c;
-    const main = await previewFor(ctx, cssSource(src, src.first), keys.componentPreview(ctx.runId, c.id), c.preview, policy, session, copier);
+    const main = await previewFor(ctx, cssSource(src, src.first), keys.componentPreview(ctx.runId, c.id), c.preview, policy, session, copier, siteVars);
     if (main.preview.diffPct !== undefined) diffs.push(main.preview.diffPct);
     if (main.fonts) fontCases[main.fonts] = (fontCases[main.fonts] ?? 0) + 1;
     // A live component gets one file per captured state: the same document plus that state's diff.
@@ -133,10 +132,10 @@ export async function previews(ctx: RunContext, capture: CaptureOutput, comps: C
         variants.push({ ...v, preview: { ...v.preview, mode: main.preview.mode, ...(main.preview.capturedReason ? { capturedReason: main.preview.capturedReason } : {}), ...(main.preview.htmlKey ? { htmlKey: main.preview.htmlKey } : {}), ...(main.preview.diffPct !== undefined ? { diffPct: main.preview.diffPct } : {}) } });
         continue;
       }
-      const r = await previewFor(ctx, cssSource(src, rep), keys.variantPreview(ctx.runId, c.id, v.id), v.preview, policy, session, copier);
+      const r = await previewFor(ctx, cssSource(src, rep), keys.variantPreview(ctx.runId, c.id, v.id), v.preview, policy, session, copier, siteVars);
       variants.push({ ...v, preview: r.preview });
     }
-    const code = main.doc ? { html: main.doc.markup, css: withTokenVars(main.doc.rules, raw), ...(capture.frameworkHint === 'tailwind' ? { tailwind: main.doc.markup } : {}) } : c.code;
+    const code = main.doc ? { html: main.doc.markup, css: main.doc.code, ...(capture.frameworkHint === 'tailwind' ? { tailwind: main.doc.markup } : {}) } : c.code;
     return { ...c, preview: main.preview, variants, code };
   };
 

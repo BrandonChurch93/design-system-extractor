@@ -377,6 +377,8 @@ export const Component = z.object({
   code: z.object({ html: z.string(), css: z.string(), tailwind: z.string().optional() }),
   checks: z.array(CheckResult),
   responsiveVariant: z.object({ mobilePreview: Preview, note: z.string() }).optional(),
+  /** The first-seen instance's border width in px when it has a visible border, for the exports' Default line. */
+  borderWidth: nonNeg.optional(),
   tier: ComponentTier,
   /** The kebab case of the name, unique in the run: `motion.css` and the prompt use it. */
   slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
@@ -460,6 +462,12 @@ export const ProposedType = z.object({
 });
 export type ProposedType = z.infer<typeof ProposedType>;
 
+export const ProposedDuration = z.object({ name: z.string().min(1), ms: z.number().positive(), role: DurationRole.optional(), absorbs: z.array(z.string()) });
+export type ProposedDuration = z.infer<typeof ProposedDuration>;
+
+export const ProposedEasing = z.object({ name: z.string().min(1), value: z.string().min(1), absorbs: z.array(z.string()) });
+export type ProposedEasing = z.infer<typeof ProposedEasing>;
+
 export const DriftNumber = z.object({ kind: DriftKind, before: count, after: count, caption: z.string() });
 export type DriftNumber = z.infer<typeof DriftNumber>;
 
@@ -492,6 +500,8 @@ export const Drift = z.object({
     colors: z.array(ProposedColor),
     spacing: z.array(z.number().positive()),
     type: z.array(ProposedType),
+    durations: z.array(ProposedDuration),
+    easings: z.array(ProposedEasing),
     contrastKept: z.boolean(),
   }),
   variantCollapses: z.array(VariantCollapse),

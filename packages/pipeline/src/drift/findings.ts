@@ -3,6 +3,7 @@ import { deltaE, parseCssColor } from '../color/parse';
 import type { Item } from '../components/items';
 import { tupleOf } from '../components/variants';
 import { hueWord, NEUTRAL_CHROMA } from '../tokens/constants';
+import { nearEasing } from '../tokens/easing-table';
 
 // Drift findings (docs/specs/drift.md, Findings). Raw spread is evidence only, never a finding.
 
@@ -13,6 +14,8 @@ export const NEAR_STEP_SHARE = 0.05;
 export const RAW_SPREAD_MIN = 4;
 export const RADIUS_SPRAWL = 4;
 export const SHADOW_SPRAWL = 3;
+export const DURATION_SPRAWL = 6;
+export const EASING_SPRAWL = 5;
 export const EVIDENCE_CAP = 40;
 
 export type ColorPair = { a: ColorToken; b: ColorToken; delta: number; pages: string[] };
@@ -144,6 +147,18 @@ export function sprawlEvidence(tokens: Tokens): Evidence[] {
   const out: Evidence[] = [];
   if (tokens.radius.length > RADIUS_SPRAWL) out.push({ a: `${tokens.radius.length} radii`, b: tokens.radius.map((r) => (r.isPill ? 'pill' : `${r.value}`)).join(', '), delta: `${tokens.radius.length} radii`, kind: 'sprawl', pages: [], usesA: tokens.radius.reduce((s, r) => s + r.usage, 0), usesB: 0, evidenceOnly: false });
   if (tokens.rawCounts.shadows > SHADOW_SPRAWL) out.push({ a: `${tokens.rawCounts.shadows} shadows`, b: `merged into ${tokens.shadow.length}`, delta: `${tokens.rawCounts.shadows} shadows merged into ${tokens.shadow.length}`, kind: 'sprawl', pages: [], usesA: tokens.shadow.reduce((s, t) => s + t.usage, 0), usesB: 0, evidenceOnly: false });
+  // Motion sprawl comes after the other sprawl rows (motion-capture.md, Drift).
+  const durations = tokens.duration ?? [];
+  if (durations.length > DURATION_SPRAWL) {
+    const list = `${durations.map((d) => d.ms).join(', ')} ms`;
+    out.push({ a: `${durations.length} durations`, b: list, delta: `${durations.length} durations: ${list}`, kind: 'sprawl', pages: [], usesA: durations.reduce((s, d) => s + d.usage, 0), usesB: 0, evidenceOnly: false });
+  }
+  const easings = tokens.easing ?? [];
+  if (easings.length > EASING_SPRAWL) {
+    const top = [...easings].sort((a, b) => b.usage - a.usage)[0]!;
+    const near = easings.filter((e) => e !== top && nearEasing(e.value, top.value)).length;
+    out.push({ a: `${easings.length} easings`, b: `${near} within 0.05 of ${top.name}`, delta: `${easings.length} easings, ${near} within 0.05 of ${top.name}`, kind: 'sprawl', pages: [], usesA: easings.reduce((s, e) => s + e.usage, 0), usesB: 0, evidenceOnly: false });
+  }
   return out;
 }
 

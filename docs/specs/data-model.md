@@ -115,13 +115,14 @@ Sections are optional while running and required when complete; the schema has `
   code: { html: string, css: string, tailwind?: string },
   checks: CheckResult[],
   responsiveVariant?: { mobilePreview: Preview, note: string },
+  borderWidth?: number,
   tier: ComponentTier,
   slug: string,
   motion: ComponentMotion | null
 }
 ```
 
-`slug` is the kebab case of the name, unique in the run, used by `motion.css` and the prompt. `tier` follows the rule in `component-detection.md` (D-085). `ComponentMotion = { transitions: { state: State, property, durationMs, delayMs, easingTokenId?: string, easing?: string }[], animations: { keyframesName, durationMs, easingTokenId?, easing?, iterations: number | 'infinite', trigger: MotionKind }[], patternIds: string[] }`; `motion` is null when the component has no transitions, no animations and no patterns (`motion-capture.md`).
+`slug` is the kebab case of the name, unique in the run, used by `motion.css` and the prompt. `borderWidth` is the first-seen instance's border width in px when it has a visible border, which the exports' Default line names (D-090). `tier` follows the rule in `component-detection.md` (D-085). `ComponentMotion = { transitions: { state: State, property, durationMs, delayMs, easingTokenId?: string, easing?: string }[], animations: { keyframesName, durationMs, easingTokenId?, easing?, iterations: number | 'infinite', trigger: MotionKind }[], patternIds: string[] }`; `motion` is null when the component has no transitions, no animations and no patterns (`motion-capture.md`).
 
 - `Variant`: `{ id, name, instanceIds: string[], delta: { property, value }[], preview: Preview }`
 - `Instance`: `{ id, pageId, viewport, selector, bbox: {x, y, w, h}, variantId, text? }`
@@ -138,7 +139,7 @@ Enums (`packages/schema/src/enums.ts`), every one with a Zod enum and a label ma
   headline: { kind: 'grays' | 'variants' | 'spacing' | 'type' | null, before, after, sentence },
   supporting: string[],
   numbers: { kind, before, after, caption }[],
-  proposal: { colors: ProposedColor[], spacing: number[], type: ProposedType[], contrastKept: boolean },
+  proposal: { colors: ProposedColor[], spacing: number[], type: ProposedType[], durations: ProposedDuration[], easings: ProposedEasing[], contrastKept: boolean },
   variantCollapses: { componentId, keep: variantId, merge: variantId[], delta: string }[],
   evidence: { a, b, delta: string, kind: EvidenceKind, pages: string[], usesA, usesB, evidenceOnly: boolean }[],
   findingCount: number,
@@ -146,7 +147,7 @@ Enums (`packages/schema/src/enums.ts`), every one with a Zod enum and a label ma
 }
 ```
 
-`ProposedColor = { name, value, group, absorbs: string[], contrastKept: boolean }`. `ProposedType = { name, role, family, size, lineHeight, weight, letterSpacing, absorbs: string[] }`. The headline `kind` is null when nothing drifts (the nothing-to-collapse sentence). `findingCount` counts every finding before the 40-row evidence cap.
+`ProposedColor = { name, value, group, absorbs: string[], contrastKept: boolean }`. `ProposedType = { name, role, family, size, lineHeight, weight, letterSpacing, absorbs: string[] }`. `ProposedDuration = { name, ms, role?, absorbs: string[] }` and `ProposedEasing = { name, value, absorbs: string[] }` carry drift's motion proposal (`drift.md`, The proposed set). The headline `kind` is null when nothing drifts (the nothing-to-collapse sentence). `findingCount` counts every finding before the 40-row evidence cap.
 
 ### Cost and stats
 

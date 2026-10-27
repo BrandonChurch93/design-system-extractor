@@ -2,6 +2,8 @@ import type { ColorToken, Drift, ProposedColor, ProposedType, Tokens } from '@ds
 import { contrastRatio, type Rgba } from '../color/contrast';
 import { deltaE, hexOf, oklabToOklch, oklabToRgb, oklchToOklab, parseCssColor, rgbToOklab } from '../color/parse';
 import { CLUSTER_DELTA_E, lightnessStep } from '../tokens/constants';
+import { nearEasing } from '../tokens/easing-table';
+import { durationRoles } from '../tokens/motion';
 import type { Findings } from './findings';
 
 // The proposed clean set (docs/specs/drift.md, The proposed set). Contrast never drops below a
@@ -164,7 +166,34 @@ export function proposeType(tokens: Tokens, f: Findings): ProposedType[] {
     .map((t) => ({ name: t.name, role: t.role, family: t.family, size: t.size, lineHeight: t.lineHeight, weight: t.weight, letterSpacing: t.letterSpacing, absorbs: [t.name, ...tokens.type.filter((x) => x.id !== t.id && root(x.id) === t.id).map((x) => x.name)] }));
 }
 
+/** A duration under 1% of all uses that sits within 20 ms of a neighbor merges into it; the raw set keeps it. */
+export function proposeDurations(tokens: Pick<Tokens, 'duration'>): Drift['proposal']['durations'] {
+  const list = [...(tokens.duration ?? [])].sort((a, b) => a.ms - b.ms);
+  const total = list.reduce((s, d) => s + d.usage, 0);
+  const into = new Map<string, string>();
+  for (const d of list) {
+    if (!total || d.usage / total >= 0.01) continue;
+    const near = list.filter((n) => n !== d && !into.has(n.id) && Math.abs(n.ms - d.ms) <= 20).sort((a, b) => Math.abs(a.ms - d.ms) - Math.abs(b.ms - d.ms) || b.usage - a.usage)[0];
+    if (near) into.set(d.id, near.id);
+  }
+  const kept = list.filter((d) => !into.has(d.id));
+  const roles = durationRoles(kept);
+  return kept.map((d) => ({ name: d.name, ms: d.ms, ...(roles.get(d.ms) ? { role: roles.get(d.ms) } : {}), absorbs: [d.name, ...list.filter((x) => into.get(x.id) === d.id).map((x) => x.name)] }));
+}
+
+/** Near-identical easings (every control point within 0.05) map to the most used one. */
+export function proposeEasings(tokens: Pick<Tokens, 'easing'>): Drift['proposal']['easings'] {
+  const list = [...(tokens.easing ?? [])].sort((a, b) => b.usage - a.usage || a.name.localeCompare(b.name));
+  const kept: { name: string; value: string; absorbs: string[] }[] = [];
+  for (const e of list) {
+    const home = kept.find((k) => nearEasing(k.value, e.value));
+    if (home) home.absorbs.push(e.name);
+    else kept.push({ name: e.name, value: e.value, absorbs: [e.name] });
+  }
+  return kept;
+}
+
 export function propose(tokens: Tokens, f: Findings): { proposal: Drift['proposal']; grays: ColorPlan['grays'] } {
   const c = proposeColors(tokens.colors);
-  return { proposal: { colors: c.colors, spacing: proposeSpacing(tokens, f), type: proposeType(tokens, f), contrastKept: c.contrastKept }, grays: c.grays };
+  return { proposal: { colors: c.colors, spacing: proposeSpacing(tokens, f), type: proposeType(tokens, f), durations: proposeDurations(tokens), easings: proposeEasings(tokens), contrastKept: c.contrastKept }, grays: c.grays };
 }

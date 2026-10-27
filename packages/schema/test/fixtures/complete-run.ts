@@ -274,6 +274,8 @@ export const completeRun: RunDocumentComplete = {
       colors: [{ name: 'navy-900', value: '#0B1F3A', group: 'brand', absorbs: [], contrastKept: true }],
       spacing: [8, 16],
       type: [],
+      durations: [{ name: 'duration-160', ms: 160, role: 'base', absorbs: ['duration-160'] }],
+      easings: [{ name: 'ease-out-quart', value: 'cubic-bezier(0.25, 1, 0.5, 1)', absorbs: ['ease-out-quart'] }],
       contrastKept: true,
     },
     variantCollapses: [],
