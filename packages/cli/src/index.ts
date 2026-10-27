@@ -17,7 +17,7 @@ import { FolderStorage, serveFolder } from './folder';
 
 // The dse command (docs/specs/exports-and-mcp.md, The CLI): extract, export, serve.
 
-export const VERSION = '1.0.0';
+export const VERSION = '1.1.0';
 export const SERVE_PORT = 4300;
 const USER_AGENT = 'DesignSystemExtractorBot/1.0 (+https://design-system-extractor.vercel.app/how-it-works)';
 const TEXT_FORMATS = ['tokens.css', 'tokens.json', 'tailwind.tokens.js', 'tokens.w3c.json', 'motion.css', 'motion.json', 'design-system.md', 'prompt.md'] as const;

@@ -8,7 +8,7 @@ import { oklabToOklch, parseCssColor, rgbToOklab } from '../src/color/parse';
 import { LocalStorage, MemoryRunContext } from '../src/context';
 import { collapseDelta, EVIDENCE_CAP, evidenceRows, nearDuplicateColors, rawSpread, spacingFindings, sprawlEvidence, typeNearDuplicates, type Findings } from '../src/drift/findings';
 import { factNumbers, fallbackIntro, fallbackNarrative, rejectReason, writeNarrative } from '../src/drift/narrative';
-import { proposeColors, proposeSpacing, proposeType } from '../src/drift/proposal';
+import { proposeColors, proposeDurations, proposeEasings, proposeSpacing, proposeType } from '../src/drift/proposal';
 import { headlineAndSupport, inWords, joinAnd, numbersOf, type Facts } from '../src/drift/report';
 import { ModelClient, type ModelClientOptions } from '../src/models/client';
 import { drift } from '../src/stages/drift';
@@ -83,6 +83,31 @@ describe('findings', () => {
       ['sprawl', '7 shadows', 'merged into 3', '7 shadows merged into 3', 9, false],
     ]);
     expect(sprawlEvidence(tokens([4, 8, 12, 9999], 3))).toEqual([]);
+  });
+});
+
+describe('motion sprawl', () => {
+  const dur = (ms: number, usage: number) => ({ id: `d${ms}`, name: `duration-${ms}`, ms, usage, pages: [], rawValues: [`${ms}ms`] });
+  const ease = (name: string, value: string, usage: number) => ({ id: `e${name}`, name, value, usage, pages: [] });
+  const nine = [100, 120, 150, 160, 200, 250, 300, 400, 500].map((ms) => dur(ms, ms === 160 ? 400 : ms === 150 ? 2 : 40));
+  const seven = [ease('ease-out-quad', 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', 90), ease('ease-custom-1', 'cubic-bezier(0.25, 0.45, 0.45, 0.95)', 4), ease('ease-custom-2', 'cubic-bezier(0.26, 0.47, 0.44, 0.93)', 3), ease('ease-custom-3', 'cubic-bezier(0.24, 0.46, 0.46, 0.94)', 2), ease('ease', 'ease', 30), ease('linear', 'linear', 20), ease('ease-in-out', 'ease-in-out', 10)];
+
+  it('reports more than six durations and more than five easings as sprawl, never more', () => {
+    const rows = sprawlEvidence({ radius: [], shadow: [], rawCounts: { shadows: 0 }, duration: nine, easing: seven } as unknown as Tokens);
+    expect(rows.map((e) => [e.kind, e.delta])).toEqual([
+      ['sprawl', '9 durations: 100, 120, 150, 160, 200, 250, 300, 400, 500 ms'],
+      ['sprawl', '7 easings, 3 within 0.05 of ease-out-quad'],
+    ]);
+    expect(sprawlEvidence({ radius: [], shadow: [], rawCounts: { shadows: 0 }, duration: nine.slice(0, 6), easing: seven.slice(0, 5) } as unknown as Tokens)).toEqual([]);
+  });
+
+  it('proposes the durations without the rare near ones and the easings folded into the most used', () => {
+    const d = proposeDurations({ duration: nine });
+    expect(d.map((x) => x.ms)).toEqual([100, 120, 160, 200, 250, 300, 400, 500]);
+    expect(d.find((x) => x.ms === 160)).toMatchObject({ role: 'base', absorbs: ['duration-160', 'duration-150'] });
+    const e = proposeEasings({ easing: seven });
+    expect(e.map((x) => x.name)).toEqual(['ease-out-quad', 'ease', 'linear', 'ease-in-out']);
+    expect(e[0]!.absorbs).toEqual(['ease-out-quad', 'ease-custom-1', 'ease-custom-2', 'ease-custom-3']);
   });
 });
 

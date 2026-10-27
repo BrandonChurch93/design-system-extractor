@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.1.0 · 2026-10-27
+
+Fidelity: what a rebuild needs to feel like the original, not only look like it.
+
+- Motion: durations, easings (named against a table of known curves), `@keyframes`, and runtime patterns (entrances, scroll reveals, scroll progress, the scrolled header, loops, staggers) read through the Web Animations API and inline-style sampling; observed patterns are labeled as observed. Hover, focus and open transitions are attached to each component's state changes with their timing.
+- The site's own names: tokens take the names of the custom properties the site declares, hashed and framework-internal variables excepted, and every export keeps the site's variables beside its own.
+- Overlays: translucent colors leave the palette and become overlay tokens with a base and an alpha.
+- Naming: type roles named with words (`body-sm`, `heading-lg`), never numbers; components named with their context when a name repeats; variant third words (`rounded`, `outline`); core and page-specific tiers; no component or variant name ends in a digit. Notices that differ only in tone are one component; badge and tag follow the rule's reading of the text.
+- Previews and code: reset filtering keeps what a component depends on and drops the rest; component code names the export's own tokens.
+- Exports: `motion.css` and `motion.json`; a Motion section in design-system.md and the prompt, and a Motion line and a Default line for every component; core components first; a check that no file uses a custom property it does not declare. MCP `get_motion` and a `motion.css` resource; `dse export --format motion.css`.
+- Drift: motion sprawl and a proposed set of durations and easings.
+- The run page: a Motion section with a duration scale, easing curves with Replay, keyframes and patterns; an eighth ring on the stage rail; an overlays strip; the site's names in token provenance; core and page-specific component grids with a Core only filter; a Motion block in the component panel; a Motion table in Compare. Replay respects reduced motion.
+- Evals: motion, naming and export-integrity rows on every fixture.
+
 ## 1.0.0 · 2026-10-26
 
 The first release: paste a URL, get its design system back.

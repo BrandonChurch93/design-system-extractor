@@ -1,6 +1,6 @@
 {
   "name": "@design-system-extractor/cli",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "The dse command: run the Design System Extractor pipeline on your machine.",
   "license": "MIT",
   "type": "module",

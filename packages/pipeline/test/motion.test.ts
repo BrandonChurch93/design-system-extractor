@@ -161,6 +161,13 @@ describe('classification into patterns', () => {
     expect(new Set(out.map((x) => x.id)).size).toBe(80);
   });
 
+  it('keeps one pattern, the desktop reading, for one element seen moving at both viewports', () => {
+    const at = (viewport: 'desktop' | 'mobile', start: string, fingerprint: string, value: number): BuiltPattern => ({ kind: 'scroll-reveal', elementKey: 'div|1.0.3.0', selector: 'div.testimonial', pageId: 'page0000', pageIds: ['page0000'], viewport, instances: 1, trigger: { type: 'in-view', value }, start: { opacity: start }, end: { opacity: '1' }, durationMs: 400, delayMs: 0, easing: null, iterations: 1, source: 'inline-style', observed: true, targets: [{ pageId: 'page0000', viewport, d: viewport === 'desktop' ? 'e1' : 'e9' }], fingerprint, parent: '', at: 0 });
+    const out = finalizePatterns([at('mobile', '0.04', 'div|small', 0.4), at('desktop', '0.03', 'div|large', 0.25)]);
+    expect(out.map((p) => [p.viewport, p.trigger.value, p.instances])).toEqual([['desktop', 0.25, 1]]);
+    expect(out[0]!.targets.map((t) => t.d)).toEqual(['e1', 'e9']);
+  });
+
   it('reads a root margin bottom as a fraction of the viewport', () => {
     expect(rootMarginBottom('0px 0px -15% 0px', 900)).toBe(0.15);
     expect(rootMarginBottom('-90px', 900)).toBe(0.1);

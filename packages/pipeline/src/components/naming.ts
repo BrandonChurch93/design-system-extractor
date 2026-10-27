@@ -12,7 +12,10 @@ const roleLandmarks: Record<string, string> = { banner: 'header', contentinfo: '
 export function pageSegment(path: string): string {
   const seg = decodeURIComponent(path.replace(/\/+$/, '').split('/').pop() ?? '')
     .replace(/\.[a-z0-9]+$/i, '')
-    .toLowerCase();
+    .toLowerCase()
+    // A name carries no dash of any kind, so a slug's separators read as spaces (D-090).
+    .replace(/[-_]+/g, ' ')
+    .trim();
   return seg && seg !== 'index' ? seg : 'home';
 }
 

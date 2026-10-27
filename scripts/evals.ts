@@ -133,7 +133,8 @@ const body = { mode, through: through ?? 'done', pipelineVersion: PIPELINE_VERSI
 // The same numbers keep their date, so a gate run leaves the tree clean. The published numbers come
 // from the final live run (docs/plan.md P15); a replay scores against the thresholds and keeps them.
 const same = JSON.stringify(body) === JSON.stringify({ mode: previous.mode, through: previous.through, pipelineVersion: previous.pipelineVersion, fixtures: previous.fixtures });
-const keepLive = mode === 'replay' && previous.mode === 'live';
+// A record run calls the model live too, so its numbers are as published as a live run's.
+const keepLive = mode === 'replay' && (previous.mode === 'live' || previous.mode === 'record');
 if (!same && !keepLive) writeFileSync(resultsFile, `${JSON.stringify({ generatedAt: new Date().toISOString(), ...body }, null, 2)}\n`);
 console.log(`\n${failed ? 'evals failed' : 'evals passed'} · fixtures/results.json${same ? ' unchanged' : keepLive ? ' keeps the live run' : ''}`);
 process.exitCode = failed ? 1 : 0;

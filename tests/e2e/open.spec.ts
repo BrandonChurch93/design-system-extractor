@@ -12,7 +12,7 @@ test('a dropped run.json renders every section and downloads an export', async (
   await page.goto('/open');
   await page.locator('input[type=file]').setInputFiles({ name: 'run.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(doc)) });
   await expect(page.getByText('Local run')).toBeVisible();
-  for (const id of ['tokens', 'components', 'checks', 'drift', 'exports']) await expect(page.locator(`#${id}`)).toBeVisible();
+  for (const id of ['tokens', 'motion', 'components', 'checks', 'drift', 'exports']) await expect(page.locator(`#${id}`)).toBeVisible();
   await expect(page.getByText('Captured image not available locally. Run dse serve to show it.').first()).toBeAttached();
   await expect(page.getByRole('button', { name: 'Share' })).toHaveCount(0);
   const download = page.waitForEvent('download');

@@ -275,8 +275,16 @@ export function stagger(patterns: BuiltPattern[]): BuiltPattern[] {
 /** Deduplicates across the run, orders by kind then instances, caps at 80, and gives each an id. */
 export function finalizePatterns(all: BuiltPattern[]): (MotionPattern & { targets: PatternTarget[] })[] {
   const merged: BuiltPattern[] = [];
-  for (const p of all) {
-    const hit = merged.find((m) => m.fingerprint === p.fingerprint && (m.keyframesName ?? '') === (p.keyframesName ?? '') && sameMotion(m, p));
+  // Desktop readings first, so one element's motion seen at both viewports keeps the desktop one (D-090).
+  const byViewport = [...all].sort((a, b) => Number(a.viewport !== 'desktop') - Number(b.viewport !== 'desktop'));
+  for (const p of byViewport) {
+    const kf = (m: BuiltPattern) => (m.keyframesName ?? '') === (p.keyframesName ?? '');
+    const same = merged.find((m) => m.elementKey === p.elementKey && m.pageId === p.pageId && m.viewport !== p.viewport && m.kind === p.kind && m.source === p.source && kf(m));
+    if (same) {
+      same.targets.push(...p.targets);
+      continue;
+    }
+    const hit = merged.find((m) => m.fingerprint === p.fingerprint && kf(m) && sameMotion(m, p));
     if (!hit) {
       merged.push({ ...p, pageIds: [...p.pageIds], targets: [...p.targets] });
       continue;

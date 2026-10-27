@@ -5,7 +5,7 @@ import { join, resolve } from 'node:path';
 import Ajv from 'ajv';
 import { describe, expect, it } from 'vitest';
 import { RunDocumentPartial, TokensJson, type ExportFormat } from '@dse/schema';
-import { allZip, crc32, generateExport, w3cShadow, zip } from '../src/exports';
+import { allZip, byTier, crc32, exportTokens, generateExport, undeclaredVars, w3cShadow, withTokenVars, zip } from '../src/exports';
 import { PROMPT_CODE_BUDGET, shorten, SNIPPET_CAP } from '../src/exports/documents';
 
 // Golden files for every format from two fixture runs (docs/specs/exports-and-mcp.md, Tests).
@@ -13,7 +13,7 @@ import { PROMPT_CODE_BUDGET, shorten, SNIPPET_CAP } from '../src/exports/documen
 
 const here = import.meta.dirname;
 const runs = ['clean', 'messy'] as const;
-const formats: Exclude<ExportFormat, 'all.zip'>[] = ['tokens.css', 'tokens.json', 'tailwind.tokens.js', 'tokens.w3c.json', 'design-system.md', 'prompt.md'];
+const formats: Exclude<ExportFormat, 'all.zip'>[] = ['tokens.css', 'tokens.json', 'tailwind.tokens.js', 'tokens.w3c.json', 'motion.css', 'motion.json', 'design-system.md', 'prompt.md'];
 const load = (name: string) => RunDocumentPartial.parse(JSON.parse(readFileSync(join(here, 'fixtures/runs', `${name}.json`), 'utf8')));
 const runUrl = (doc: RunDocumentPartial) => `https://design-system-extractor.vercel.app/r/${doc.id}`;
 const goldens = join(here, 'goldens/exports');
@@ -51,6 +51,24 @@ describe.each(runs)('exports of the %s fixture run', (name) => {
     TokensJson.parse(JSON.parse(generateExport(doc, 'tokens.json', { runUrl: runUrl(doc) }).body));
     expect(generateExport(doc, 'tokens.css', { runUrl: runUrl(doc) }).body.split('\n')[0]).toBe(`/* Design System Extractor · localhost:4100 · run ${doc.id} · proposed set · 2026-10-12 */`);
     expect(generateExport(doc, 'prompt.md', { runUrl: runUrl(doc) }).body.startsWith('You are building an interface that must match this design system exactly.')).toBe(true);
+  });
+
+  it('writes a Motion section and a Motion line for every component that moves', () => {
+    for (const f of ['design-system.md', 'prompt.md'] as const) {
+      const body = generateExport(doc, f, { runUrl: runUrl(doc) }).body;
+      expect(body).toMatch(/^## Motion$/m);
+      for (const c of doc.components!.filter((x) => x.motion?.transitions.length)) {
+        const start = body.indexOf(`### ${c.name}\n`);
+        const next = body.indexOf('\n### ', start + 4);
+        expect(start, `${f} ${c.name}`).toBeGreaterThanOrEqual(0);
+        expect(body.slice(start, next < 0 ? undefined : next), `${f} ${c.name}`).toMatch(/^Motion: /m);
+      }
+    }
+    expect(generateExport(doc, 'prompt.md', { runUrl: runUrl(doc) }).body).toContain('Use only these durations and easings.');
+  });
+
+  it('declares every custom property it uses, in every format, both sets', () => {
+    for (const set of ['proposed', 'raw'] as const) for (const f of formats) expect(undeclaredVars(generateExport(doc, f, { set, runUrl: runUrl(doc) }).body), `${f} ${set}`).toEqual([]);
   });
 
   it('validates tokens.w3c.json against the vendored DTCG schema, both sets', () => {
@@ -153,9 +171,11 @@ describe('code in the whole-system documents (D-069)', () => {
     const doc = structuredClone(load('clean'));
     const c = doc.components![0]!;
     c.code.css = css(120);
-    expect(generateExport(doc, 'design-system.md', { runUrl: runUrl(doc) }).body).toContain(`/* shortened · ${shorten(c.code.css, 'css').split('\n/* ')[0]!.length.toLocaleString('en-US')} of ${c.code.css.length.toLocaleString('en-US')} characters`);
+    // Exports write the component's CSS with the export's token variables.
+    const written = withTokenVars(c.code.css, exportTokens(doc, 'proposed'));
+    expect(generateExport(doc, 'design-system.md', { runUrl: runUrl(doc) }).body).toContain(`/* shortened · ${shorten(written, 'css').split('\n/* ')[0]!.length.toLocaleString('en-US')} of ${written.length.toLocaleString('en-US')} characters`);
     const own = generateExport(doc, 'component-prompt.md', { runUrl: runUrl(doc), componentId: c.id }).body;
-    expect(own).toContain(c.code.css);
+    expect(own).toContain(written);
     expect(own).not.toContain('shortened');
   });
 
@@ -164,12 +184,32 @@ describe('code in the whole-system documents (D-069)', () => {
     const block = css(105);
     for (const c of doc.components!) c.code.css = block;
     const body = generateExport(doc, 'prompt.md', { runUrl: runUrl(doc) }).body;
-    const blocks = body.split('## Components')[1]!.match(/```css\n[\s\S]*?\n```/g) ?? [];
-    const fit = Math.floor(PROMPT_CODE_BUDGET / block.length);
+    const components = body.split('## Core components')[1]!;
+    const blocks = components.match(/```css\n[\s\S]*?\n```/g) ?? [];
+    const fit = Math.floor(PROMPT_CODE_BUDGET / shorten(withTokenVars(block, exportTokens(doc, 'proposed')), 'css').length);
     expect(blocks).toHaveLength(fit);
     expect(blocks.reduce((n, b) => n + b.length - '```css\n\n```'.length, 0)).toBeLessThanOrEqual(PROMPT_CODE_BUDGET);
-    const sections = body.split('\n### ').slice(1);
-    expect(sections.map((sec) => sec.includes('```css'))).toEqual(doc.components!.map((_, i) => i < fit));
+    // Core components first, in order; page-specific ones are contract lines only past 12 components.
+    const { core, page } = byTier(doc.components!);
+    expect(components.split('\n### ').slice(1).map((sec) => sec.includes('```css'))).toEqual([...core.map((_, i) => i < fit), ...page.map(() => false)]);
     expect(body).toContain("Code for the components above without a CSS block is in each component's own prompt.");
+  });
+});
+
+describe('exports of the clean run as it stood after each stage (the frozen in-progress documents)', () => {
+  const doc = load('clean');
+  const partials: [string, RunDocumentPartial][] = [
+    ['select', { ...doc, tokens: undefined, motion: undefined, components: undefined, checks: undefined, drift: undefined, exports: undefined, stats: undefined }],
+    ['tokens', { ...doc, components: undefined, checks: undefined, drift: undefined, exports: undefined, stats: undefined }],
+    ['components', { ...doc, checks: undefined, drift: undefined, exports: undefined, stats: undefined }],
+  ];
+  it.each(partials)('after %s, every file it can make declares every custom property it uses', (stage, partial) => {
+    for (const f of formats) {
+      if (!partial.tokens) {
+        expect(() => generateExport(partial, f, { runUrl: runUrl(partial) }), `${stage} ${f}`).toThrow(/no tokens/);
+        continue;
+      }
+      for (const set of ['proposed', 'raw'] as const) expect(undeclaredVars(generateExport(partial, f, { set, runUrl: runUrl(partial) }).body), `${stage} ${f} ${set}`).toEqual([]);
+    }
   });
 });

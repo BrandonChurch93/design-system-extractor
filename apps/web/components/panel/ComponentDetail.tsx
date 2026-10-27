@@ -1,6 +1,6 @@
 'use client';
 import { Copy } from 'lucide-react';
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useMemo, useState } from 'react';
 import type * as ExportsModule from '@dse/pipeline/exports';
 import type { Component, RunDocumentPartial, State } from '@dse/schema';
 import { capturedReasonLabels, fill, motionKindLabels, stateLabels } from '@dse/schema/labels';
@@ -100,7 +100,7 @@ export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel 
   const tokens = [...new Map(c.tokensUsed.map((u) => [u.tokenId, u])).values()];
   const variantName = (id: string) => c.variants.find((v) => v.id === id)?.name;
   // The CSS names tokens as tokens.css does; until the exporters load it shows the resolved rules.
-  const css = exporters && doc.tokens?.colors ? exporters.componentCss(c, exporters.exportTokens(doc, 'proposed')) : c.code.css;
+  const css = useMemo(() => (exporters && doc.tokens?.colors ? exporters.componentCss(c, exporters.exportTokens(doc, 'proposed')) : c.code.css), [exporters, doc, c]);
   const patterns = (c.motion?.patternIds ?? []).map((id) => doc.motion?.patterns.find((p) => p.id === id)).filter((p) => p !== undefined);
   const tabs = [
     { value: 'html' as const, label: runPage.codeTabs.html, panel: <CodeBlock code={c.code.html} label={runPage.codeTabs.html} /> },

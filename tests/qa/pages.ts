@@ -144,7 +144,22 @@ export const qaPages: QaPage[] = [
       { name: 'invalid', path: '/state/invalid?url=http%3A%2F%2F10.0.0.1%2F', before: withBlocked({ reason: 'address 10.0.0.1' }) },
     ],
   },
-  { name: 'open', path: '/open', states: [{ name: 'empty' }] },
+  {
+    name: 'open',
+    path: '/open',
+    states: [
+      { name: 'empty' },
+      {
+        name: 'loaded',
+        setup: async (page) => {
+          const doc = (await (await page.request.get('/api/runs/seedclean0')).json()).document;
+          await page.locator('input[type=file]').setInputFiles({ name: 'run.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(doc)) });
+          await page.locator('#motion').waitFor();
+          await settle(page);
+        },
+      },
+    ],
+  },
   { name: 'how-it-works', path: '/how-it-works', states: [{ name: 'default' }] },
   { name: 'about', path: '/about', states: [{ name: 'default' }] },
   { name: 'privacy', path: '/privacy', states: [{ name: 'default' }] },

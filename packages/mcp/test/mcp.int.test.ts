@@ -30,9 +30,21 @@ afterAll(async () => {
 });
 
 describe('the MCP server over stdio', () => {
-  it('lists every tool and both resources', async () => {
-    expect((await client.listTools()).tools.map((t) => t.name).sort()).toEqual(['get_checks', 'get_component', 'get_drift', 'get_prompt', 'get_tokens', 'list_components']);
-    expect((await client.listResources()).resources.map((r) => r.uri).sort()).toEqual([`dse://run/${doc.id}/design-system.md`, `dse://run/${doc.id}/tokens.css`]);
+  it('lists every tool and the three resources', async () => {
+    expect((await client.listTools()).tools.map((t) => t.name).sort()).toEqual(['get_checks', 'get_component', 'get_drift', 'get_motion', 'get_prompt', 'get_tokens', 'list_components']);
+    expect((await client.listResources()).resources.map((r) => r.uri).sort()).toEqual([`dse://run/${doc.id}/design-system.md`, `dse://run/${doc.id}/motion.css`, `dse://run/${doc.id}/tokens.css`]);
+  });
+
+  it('get_motion returns motion.json for the run, or one component with its patterns, and get_component carries motion', async () => {
+    const all = jsonOf(await client.callTool({ name: 'get_motion', arguments: {} }));
+    expect(all.durations.length).toBeGreaterThan(0);
+    expect(all.durations.length).toBeLessThanOrEqual(doc.tokens!.duration!.length);
+    expect(all.patterns.length).toBe(doc.motion!.patterns.length);
+    const moving = doc.components!.find((c) => c.motion?.transitions.length)!;
+    const one = jsonOf(await client.callTool({ name: 'get_motion', arguments: { componentId: moving.id } }));
+    expect(one.motion.transitions).toEqual(moving.motion!.transitions);
+    expect(jsonOf(await client.callTool({ name: 'get_component', arguments: { id: moving.id } })).motion).toEqual(moving.motion);
+    expect((await client.callTool({ name: 'get_motion', arguments: { componentId: 'nope' } })).isError).toBe(true);
   });
 
   it('get_tokens returns tokens.json, both sets, or one kind', async () => {
@@ -68,11 +80,13 @@ describe('the MCP server over stdio', () => {
     expect(one.match(/^### /gm)).toHaveLength(1);
   });
 
-  it('serves design-system.md and tokens.css as resources', async () => {
+  it('serves design-system.md, tokens.css and motion.css as resources', async () => {
     const md = await client.readResource({ uri: `dse://run/${doc.id}/design-system.md` });
     expect((md.contents[0] as { text: string }).text.startsWith('# localhost:4100 design system')).toBe(true);
     const css = await client.readResource({ uri: `dse://run/${doc.id}/tokens.css` });
     expect((css.contents[0] as { text: string }).text).toContain(':root {');
+    const motion = await client.readResource({ uri: `dse://run/${doc.id}/motion.css` });
+    expect((motion.contents[0] as { text: string }).text).toMatch(/@keyframes|transition/);
   });
 });
 

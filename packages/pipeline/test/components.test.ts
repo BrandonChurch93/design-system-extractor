@@ -9,7 +9,7 @@ import { classify } from '../src/components/classify';
 import { classesAllowMerge, clusterItems, structureSimilarity } from '../src/components/cluster';
 import { baseTokens, itemsFrom } from '../src/components/items';
 import { fallbackNames, validName } from '../src/components/model';
-import { endsInDigit, ordinal, slugsOf, uniqueNames } from '../src/components/naming';
+import { endsInDigit, ordinal, pageSegment, slugsOf, uniqueNames } from '../src/components/naming';
 import { LocalStorage, MemoryRunContext } from '../src/context';
 import { ModelClient, type ModelClientOptions } from '../src/models/client';
 import { nameVariants, splitVariants } from '../src/components/variants';
@@ -166,6 +166,8 @@ describe('fallback names', () => {
     expect(list.map((x) => x.name)).toEqual(['Button', 'Button (footer)', 'Button (pricing for)', 'Button (start)', 'Button (footer, home)', 'Button (home)', 'Step (home)']);
     expect(renamed).toEqual([{ from: 'Step 2', to: 'Step (home)' }]);
     expect(list.every((x) => !endsInDigit(x.name))).toBe(true);
+    expect(pageSegment('/docs/getting-started/')).toBe('getting started');
+    expect(pageSegment('/blog/release_notes.html')).toBe('release notes');
     expect(ordinal(2)).toBe('second');
     expect(ordinal(21)).toBe('twenty first');
     expect(ordinal(140)).toBe('one hundred fortieth');

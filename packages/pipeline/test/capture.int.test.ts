@@ -9,7 +9,8 @@ import { launchBrowser } from '../src/crawl/browser';
 import { ModelClient } from '../src/models/client';
 import { runPipeline } from '../src/run';
 import { takeSnapshot } from '../src/capture/snapshot-script';
-import { pageGuards, type CaptureOutput, type PageCapture, type ViewportCapture } from '../src/stages/capture';
+import { endScriptAnimations, motionInit, motionReadout } from '../src/capture/motion-script';
+import { freezeCss, pageGuards, type CaptureOutput, type PageCapture, type ViewportCapture } from '../src/stages/capture';
 import { startFixtureServer } from '../../../scripts/fixtures-serve';
 
 const recordingsDir = resolve(import.meta.dirname, '../../../fixtures/recordings');
@@ -140,6 +141,32 @@ describe('capture on the clean fixture', () => {
     expect(rules).toEqual(expect.arrayContaining(['.btn', '.btn-secondary']));
     expect(vc.sheets.media).toEqual(expect.arrayContaining(['(min-width: 1024px)', '(max-width: 640px)']));
     expect(vc.sheets.fonts.some((f) => f.family === 'Inter' && f.status === 'loaded')).toBe(true);
+  });
+
+  it('records the planted entrance and loop at runtime, and the hover transition with its timing', () => {
+    const home = page(clean.captured, '/').viewports.desktop!;
+    const anims = home.motion?.anims ?? [];
+    expect(anims.some((a) => a.source === 'css-animation' && a.name === 'fade-up')).toBe(true);
+    expect(anims.some((a) => a.source === 'css-animation' && a.name === 'pulse' && a.iterations === 'infinite')).toBe(true);
+    const hover = Object.values(home.states).flatMap((s) => s.filter((r) => r.state === 'hover')).find((r) => r.delta.some((d) => d.property === 'transform'));
+    expect(hover?.delta.find((d) => d.property === 'transform')?.transition?.durationMs).toBeGreaterThan(0);
+  });
+
+  it('reads the motion records out before the freeze, after which nothing runs, Web Animations included', async () => {
+    const ctx = await browser.newContext();
+    const p = await ctx.newPage();
+    await p.addInitScript(motionInit);
+    await p.goto('http://localhost:4100/sites/clean/');
+    await p.evaluate(() => document.body.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 5000, iterations: Infinity }));
+    await p.waitForTimeout(400);
+    const records = (await p.evaluate(motionReadout))!;
+    expect(records.anims.some((a) => a.source === 'waapi')).toBe(true);
+    expect(records.anims.length).toBeGreaterThan(1);
+    await p.addStyleTag({ content: freezeCss });
+    await p.evaluate(endScriptAnimations);
+    await p.waitForTimeout(50);
+    expect(await p.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length)).toBe(0);
+    await ctx.close();
   });
 
   it('measures motion under reduced motion with the probe', () => {

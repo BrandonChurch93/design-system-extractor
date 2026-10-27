@@ -94,3 +94,46 @@ test('the run page control: swatches, bars and cards do move without the prefere
   expect((await exerciseRun(page)).length).toBeGreaterThan(0);
   await context.close();
 });
+
+// docs/design/components.md, ReplayButton: under reduced motion the dot shows the end state still.
+async function motionSection(page: Page) {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/r/seedclean0');
+  await page.locator('#motion').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(600);
+  return page.locator('#motion');
+}
+
+test('Replay under reduced motion: the dot stays at its end, the buttons are off, one caption says why', async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  const motion = await motionSection(page);
+  const dot = motion.getByTestId('easing-dot').first();
+  const before = await dot.evaluate((el) => getComputedStyle(el).transform);
+  const replay = motion.getByRole('button', { name: 'Replay' }).first();
+  await expect(replay).toBeDisabled();
+  await replay.click({ force: true });
+  await page.waitForTimeout(400);
+  expect(await dot.evaluate((el) => getComputedStyle(el).transform)).toBe(before);
+  await expect(dot).toHaveAttribute('data-at', 'end');
+  await expect(motion.getByTestId('replay-reduced')).toHaveCount(1);
+  await expect(motion.getByTestId('replay-reduced')).toBeVisible();
+  await context.close();
+});
+
+test('Replay control: without the preference the dot runs the curve and comes to rest at the end', async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: 'no-preference' });
+  const page = await context.newPage();
+  const motion = await motionSection(page);
+  const dot = motion.getByTestId('easing-dot').first();
+  await expect(dot).toHaveAttribute('data-at', 'start');
+  await motion.getByRole('button', { name: 'Replay' }).first().click();
+  await page.waitForTimeout(60);
+  const mid = await dot.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).m41);
+  await page.waitForTimeout(1500);
+  const end = await dot.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).m41);
+  expect(end).toBe(112);
+  expect(mid).toBeLessThan(end);
+  await expect(motion.getByTestId('replay-reduced')).toHaveCount(0);
+  await context.close();
+});

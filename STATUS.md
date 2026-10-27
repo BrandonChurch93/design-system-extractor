@@ -258,6 +258,13 @@ Model calls
 - The model's `variantHint` describes what sets variants apart but never renames one; variant names come only from the deterministic rules (D-076).
 - Naming batches go in first-seen order across pages, four at a time, not one page group at a time (D-066, D-076).
 
+Motion and naming (v1.1)
+- Animations on pseudo-elements (`::before`, `::after`) are not read: the static read and the snapshot see elements (D-090).
+- An inline-style pattern (GSAP, hand-written requestAnimationFrame) has no readable easing; it is labeled observed, its duration reads "about {n} ms" and the nearest token is suggested (motion-capture.md, Honesty rules).
+- Motion on elements a page never shows during the crawl (a closed menu's items) is never in a snapshot, so it is not captured (D-090).
+- The tab walk's focus is not waited for, so a focus transition longer than the hover wait is read mid-way; hover and open states wait for their transitions (D-090).
+- Component names come from a model and can differ in wording between two runs of one site; what decides structure (tone variants, badge or tag, the merge across pages by style) is held by rules (D-090), and the evals replay recorded answers.
+
 Large and real sites
 - A site that needs more than its timeout's shares takes the lighter paths: later pages without states, names from the rules, previews captured instead of checked, the narrative from its template. Each cut is logged and shown honestly (D-066, D-078). On stripe.com in P13 about 30% of previews were live; the color names fell back to the rules there.
 - Showcase runs get 15 minutes; a visitor's run gets 6 (D-071).
@@ -286,6 +293,7 @@ Interface
 - Dev helpers: `pnpm exec tsx scripts/shot.ts <url> <out.png> [w] [h]`, `scripts/tile.ts` to cut tall screenshots for review and `scripts/montage.ts` to set several side by side.
 - Fixture authoring aids (need `pnpm fixtures:serve` or start the server themselves through the pipeline): `pnpm exec tsx scripts/fixtures-inventory.ts <site> [--where=10,18] [--color=#HEX,...]` prints every raw token value, the ΔE 2.3 clusters and the drift near-duplicate pairs; `scripts/fixtures-candidates.ts <site> [desktop|mobile]` prints every element candidate with its rules, box and states. Re-run both after any fixture change and keep `expected.json` in step (D-046, D-047).
 
+- v1.1 helpers: `pnpm exec tsx scripts/expected-draft.ts <fixture> <run.json>` prints the expected.json fields a run shows, beside what the file says, for checking by hand against the fixture source (it never writes). `pnpm fixtures:runs` copies the last `pnpm evals` run of clean and messy into `packages/pipeline/test/fixtures/runs/` with fixed times; then `env DSE_UPDATE_GOLDENS=1 pnpm test:unit packages/pipeline/test/exports.test.ts` rewrites the export goldens.
 - jsdom is 29.1.1: jsdom 30 needs Node 22.22 (D-053). `pnpm exec tsx scripts/previews-inspect.ts <fixture> <outDir>` renders a fixture run's previews beside their crops after `pnpm evals --through previews`.
 - Node 22.14, pnpm 9.15.9, TypeScript 5.9.3 (the native 7.x compiler is not yet supported by Next.js tooling), ESLint 9 (ESLint 10 is not supported by the React, jsx-a11y and import plugins that `eslint-config-next` uses), Next.js 16.4, React 19.3, Zod 4.6, Vitest 5, Playwright 1.64 with its Chromium.
 - Queue and API (P10): tests use Redis logical database 15 and `dse_test`; the API route handlers are plain `Request`/`Response` functions, so integration tests call them directly with the harness in `apps/web/test/helpers/harness.ts`. `pnpm db:seed:fixtures` takes about ten minutes (six runs, concurrency 1) and refuses to run while a worker heartbeat is live: stop `pnpm dev` first. `pnpm db:seed:check` seeds only when the seed is missing. Sites outside the eval fixtures are recorded with `env DSE_MODEL_MODE=record pnpm exec node scripts/run.mjs tsx scripts/record-extra.ts messy-after walled` (listed in `fixtures/recordings/extra.json`, kept by prune). Next 16 rejects unknown exports from `route.ts` files: keep helpers in `lib/`.

@@ -316,7 +316,8 @@ export function scoreNaming(expected: ExpectedFixture, doc: RunDocumentPartial, 
     ...typeMiss.map((x) => `type ${x}`),
     ...variantMiss.map((v) => `variant names on ${v}`),
     ...numeric.map((n) => `numeric name ${n}`),
-    ...tierMiss.map((x) => `tier ${x}`),
+    // Tiers follow the merge across pages, which a fallback run does not make; the replay run scores them (D-090).
+    ...(fallback ? [] : tierMiss.map((x) => `tier ${x}`)),
     ...fallbackMiss.map((x) => `fallback name ${x}`),
   ];
   const v = {

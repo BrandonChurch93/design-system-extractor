@@ -107,6 +107,14 @@ describe('the components stage on the clean fixture', () => {
     expect(button.tokensUsed.map((t) => t.property)).toEqual(expect.arrayContaining(['color', 'border-radius', 'padding-left', 'font']));
   });
 
+  it('attaches the planted hover transition: on the hover delta with its timing, and in motion with the easing token', () => {
+    const button = ctx.document.components!.find((c) => c.name === 'Button')!;
+    const lift = button.states.find((s) => s.state === 'hover')!.delta.find((d) => d.property === 'transform')!;
+    expect(lift).toMatchObject({ to: 'translateY(-1px)', transition: { durationMs: 160 } });
+    const easing = ctx.document.tokens!.easing!.find((e) => e.value === 'cubic-bezier(0.25, 0.46, 0.45, 0.94)')!;
+    expect(button.motion!.transitions).toEqual(expect.arrayContaining([expect.objectContaining({ state: 'hover', property: 'transform', durationMs: 160, easingTokenId: easing.id })]));
+  });
+
   it('logs the component count and the model use', () => {
     const lines = ctx.events.filter((e) => e.stage === 'components').map((e) => e.message);
     expect(lines[0]).toMatch(/^components · 27 found from [\d,]+ element candidates · 27 by model$/);

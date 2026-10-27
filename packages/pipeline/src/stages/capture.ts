@@ -150,7 +150,7 @@ export type CaptureOutput = {
   loginWall?: { redirectedTo?: string; pageId: string };
 };
 
-const freezeCss = `*, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; } html { scrollbar-width: none !important; } ::-webkit-scrollbar { display: none !important; }`;
+export const freezeCss = `*, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; } html { scrollbar-width: none !important; } ::-webkit-scrollbar { display: none !important; }`;
 
 // Never submit a form or let a dialog block the page (docs/specs/capture-and-states.md, Never).
 export const pageGuards = () => {

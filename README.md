@@ -2,15 +2,15 @@
 
 Paste a URL. Get its design system back.
 
-Tokens, components with every state, automated checks, and a drift report that shows where the system is leaking. Exports to CSS variables, JSON, Tailwind, W3C design tokens, a design-system.md, a prompt for any model, an MCP server and a CLI.
+Tokens under the site's own names, its motion (durations, easings, keyframes, and the entrances, reveals and loops it runs), components with every state, automated checks, and a drift report that shows where the system is leaking. Exports to CSS variables, JSON, Tailwind, W3C design tokens, motion CSS and JSON, a design-system.md, a prompt for any model, an MCP server and a CLI.
 
 ![A complete run of a fixture site: the stats, the palette, the drift headline and the tokens](docs/images/run-page.png)
 
 ## How it works
 
 1. A headless Chromium reads the site's sitemap and navigation, and a short model pass picks up to 12 pages that cover the most components.
-2. Each page is captured at 1440 and 390 px: the DOM with computed styles, screenshots, and every control hovered, focused, tabbed and opened.
-3. Raw values cluster into tokens; elements cluster into components with variants, states and the page they were first seen on.
+2. Each page is captured at 1440 and 390 px: the DOM with computed styles, screenshots, every control hovered, focused, tabbed and opened, and the motion that runs while it loads and scrolls, read through the Web Animations API and inline-style sampling.
+3. Raw values cluster into tokens, named by the site's own custom properties where it declares them; elements cluster into components with variants, states, their transitions and the page they were first seen on, core components apart from page-specific ones.
 4. Each component gets a sandboxed live preview when it renders faithfully, measured checks (contrast, focus, tap targets, names, reduced motion), and the drift report proposes a cleaner set that keeps every contrast ratio.
 5. Everything exports as files, a prompt, an MCP server and a CLI. The details are on the How it works page and in `docs/specs/`.
 
