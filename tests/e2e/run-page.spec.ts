@@ -150,7 +150,8 @@ test('RegionSkeleton: every region before its stage lands has the documented sha
       type: shape(tokens[0]!),
       spacing: shape(tokens[1]!),
       componentsParts: roots(document.getElementById('components')!)[0]!.children.length,
-      components: shape(roots(document.getElementById('components')!)[0]!.children[1]!),
+      components: shape(roots(document.getElementById('components')!)[0]!.children[2]!),
+      motion: (([m]) => ({ parts: m!.children.length, easings: m!.children[1]!.children.length, rows: m!.children[2]!.children.length }))(roots(document.getElementById('motion')!)),
       checks: { summary: Math.round(box(checks!.children[0]!).height), rows: checks!.children[1]!.children.length },
       drift: { numbers: drift!.children[0]!.children.length },
       exports: { cards: exportsRoot!.children[1]!.children.length, grid: Math.round(box(exportsRoot!.children[1]!).width), mcp: Math.round(box(exportsRoot!.children[2]!).width), parts: exportsRoot!.children.length },
@@ -163,16 +164,18 @@ test('RegionSkeleton: every region before its stage lands has the documented sha
   expect(shapes.type.height).toBe(580);
   expect(shapes.spacing.rows).toBe(9);
   expect(shapes.spacing.height).toBe(446);
-  // The filter row, the six cards, Show all.
-  expect(shapes.componentsParts).toBe(3);
+  // The duration strip, two easing cards, four pattern rows.
+  expect(shapes.motion).toEqual({ parts: 3, easings: 2, rows: 4 });
+  // The filter row, the tier heading, the six cards, Show all.
+  expect(shapes.componentsParts).toBe(4);
   expect(shapes.components.rows).toBe(6);
   expect(shapes.components.tops).toHaveLength(2);
   expect(shapes.components.heights.every((h) => h === 152)).toBe(true);
   expect(shapes.checks.summary).toBeGreaterThan(0);
   expect(shapes.checks.rows).toBe(5);
   expect(shapes.drift.numbers).toBe(3);
-  // The download row, the six cards, the MCP card.
-  expect(shapes.exports).toMatchObject({ cards: 6, parts: 3 });
+  // The download row, the eight cards, the MCP card.
+  expect(shapes.exports).toMatchObject({ cards: 8, parts: 3 });
   expect(shapes.exports.mcp).toBe(shapes.exports.grid);
 });
 
