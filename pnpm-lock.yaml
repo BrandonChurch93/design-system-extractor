@@ -36,13 +36,13 @@ importers:
         specifier: 22.20.5
         version: 22.20.5
       '@types/pngjs':
-        specifier: ^6.0.5
+        specifier: 6.0.5
         version: 6.0.5
       axe-core:
         specifier: 4.14.0
         version: 4.14.0
       chrome-launcher:
-        specifier: ^1.2.2
+        specifier: 1.2.2
         version: 1.2.2
       drizzle-orm:
         specifier: 0.45.4
@@ -105,7 +105,7 @@ importers:
         specifier: workspace:*
         version: link:../../packages/schema
       '@floating-ui/react-dom':
-        specifier: ^2.1.9
+        specifier: 2.1.9
         version: 2.1.9(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       bullmq:
         specifier: 6.3.12
@@ -135,7 +135,7 @@ importers:
         specifier: 19.3.1
         version: 19.3.1(react@19.3.1)
       server-only:
-        specifier: ^0.0.1
+        specifier: 0.0.1
         version: 0.0.1
     devDependencies:
       '@types/react':
