@@ -156,6 +156,8 @@ export async function previews(ctx: RunContext, capture: CaptureOutput, comps: C
   const refused = sessions.flatMap((s) => s.refused);
   const live = out.filter((c) => c.preview.mode === 'live').length;
   const median = diffs.length ? [...diffs].sort((a, b) => a - b)[Math.floor(diffs.length / 2)]! : 0;
+  const unchecked = out.filter((c) => c.preview.capturedReason === 'not-checked').length;
+  if (unchecked) await ctx.emit({ stage: 'previews', level: 'warn', message: `time budget for render checks reached · ${unchecked} previews not checked` });
   await ctx.emit({
     stage: 'previews',
     message: `${out.length} built · ${live} live · ${out.length - live} captured (median diff ${median.toFixed(1)} %)`,

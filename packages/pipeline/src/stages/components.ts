@@ -219,6 +219,8 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
 
   const byModel = list.filter((w) => w.naming!.by !== 'fallback').length;
   await ctx.emit({ stage: 'components', message: `${out.length} found from ${items.length.toLocaleString('en-US')} element candidates · ${byModel} by model`, data: { calls: named.calls, collisions: collisions.by }, patch: { components: out } });
+  const cut = named.calls.filter((c) => c === 'by fallback (time budget)').length;
+  if (cut) await ctx.emit({ stage: 'components', level: 'warn', message: `time budget for naming reached · ${cut} of ${named.calls.length} batches named by the rules` });
   if (mergedByStyle + mergedCount > 0) await ctx.emit({ stage: 'components', message: `merged ${mergedCount} across pages` });
   if (noise + dropped > 0) await ctx.emit({ stage: 'components', message: `${noise + dropped} noise cluster${noise + dropped > 1 ? 's' : ''} dropped` });
   return { components: out, sources };
