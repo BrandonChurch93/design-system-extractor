@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import { ComponentGroup, type ColorToken, type RunConfig } from '@dse/schema';
 import type { StyleMap } from '../src/capture/snapshot';
 import { classify } from '../src/components/classify';
-import { classesAllowMerge, clusterItems, structureSimilarity } from '../src/components/cluster';
+import { classesAllowMerge, clusterItems, structureSimilarity, toneOnly } from '../src/components/cluster';
 import { baseTokens, itemsFrom } from '../src/components/items';
 import { fallbackNames, validName } from '../src/components/model';
 import { endsInDigit, ordinal, pageSegment, slugsOf, uniqueNames } from '../src/components/naming';
@@ -113,6 +113,13 @@ describe('clustering', () => {
     expect(classesAllowMerge(['pagination-link'], ['pagination-previous'])).toBe(true);
     expect(classesAllowMerge(['nav-links'], ['footer-links'])).toBe(false);
     expect(structureSimilarity('h3:1 p:1 span:2 svg:1', 'h3:1 p:1 span:1 svg:1')).toBeCloseTo(0.8);
+  });
+
+  it('calls two notice boxes one tone apart when only their colors differ', () => {
+    const box = { background: '#FFF7E6', borderWidth: 1, borderStyle: 'solid', borderColor: '#E8A317', radius: 8, padding: [12, 16, 12, 16], fontSize: 14, fontWeight: 400, display: 'flex', shadow: false, textTransform: 'none' };
+    expect(toneOnly(box, { ...box, background: '#E7F6EC', borderColor: '#1F9D55' })).toBe(true);
+    expect(toneOnly(box, { ...box, padding: [16, 20, 16, 20] })).toBe(false);
+    expect(toneOnly(box, { ...box, radius: 12 })).toBe(false);
   });
 });
 

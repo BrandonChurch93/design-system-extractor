@@ -5,19 +5,24 @@ module.exports = {
       "colors": {
         "gray": {
           "50": "#FFFFFF",
-          "200": "#E2E8F0"
+          "200": "#E2E8F0",
+          "600": "#5F6368"
+        },
+        "text": {
+          "primary": "#0B1F3A",
+          "primary/12": "rgb(11 31 58 / 12%)",
+          "primary/60": "rgb(11 31 58 / 60%)"
         },
         "blue": {
-          "600": "#2458E6",
-          "ink": "#0B1F3A",
-          "ink-tint": "#0B1F3A1F"
+          "600": "#2458E6"
         },
         "teal": {
           "500": "#0F8A8A"
         },
         "success": "#15803D",
         "warning": "#B45309",
-        "danger": "#DC2626"
+        "danger": "#DC2626",
+        "white/8": "rgb(255 255 255 / 8%)"
       },
       "fontFamily": {
         "sans": [
@@ -40,21 +45,21 @@ module.exports = {
             "fontWeight": "700"
           }
         ],
-        "h1": [
+        "title": [
           "36px",
           {
             "lineHeight": "44px",
             "fontWeight": "700"
           }
         ],
-        "h2": [
+        "title-sm": [
           "28px",
           {
             "lineHeight": "36px",
             "fontWeight": "700"
           }
         ],
-        "h3": [
+        "subheading": [
           "20px",
           {
             "lineHeight": "28px",
@@ -68,14 +73,14 @@ module.exports = {
             "fontWeight": "400"
           }
         ],
-        "label": [
+        "text-14": [
           "14px",
           {
             "lineHeight": "20px",
             "fontWeight": "600"
           }
         ],
-        "body-sm": [
+        "text-small": [
           "14px",
           {
             "lineHeight": "22px",
@@ -113,15 +118,55 @@ module.exports = {
       "borderRadius": {
         "sm": "8px",
         "md": "12px",
-        "pill": "9999px"
+        "rounded": "9999px"
       },
       "boxShadow": {
-        "sm": "0px 1px 2px 0px #0B1F3A1F",
+        "stack-low": "0px 1px 2px 0px #0B1F3A1F",
         "md": "0px 12px 32px 0px #0B1F3A1F"
+      },
+      "transitionDuration": {
+        "120": "120ms",
+        "160": "160ms",
+        "240": "240ms",
+        "480": "480ms",
+        "1600": "1600ms",
+        "fast": "120ms",
+        "base": "160ms",
+        "slow": "240ms",
+        "slower": "480ms"
+      },
+      "transitionTimingFunction": {
+        "out-quad": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        "out-quart": "cubic-bezier(0.25, 1, 0.5, 1)"
+      },
+      "keyframes": {
+        "fade-up": {
+          "0%": {
+            "opacity": "0",
+            "transform": "translateY(12px)"
+          },
+          "100%": {
+            "opacity": "1",
+            "transform": "none"
+          }
+        },
+        "pulse": {
+          "0%, 100%": {
+            "opacity": "1"
+          },
+          "50%": {
+            "opacity": "0.4"
+          }
+        }
+      },
+      "animation": {
+        "fade-up": "fade-up 480ms cubic-bezier(0.25, 1, 0.5, 1)",
+        "pulse": "pulse 1600ms cubic-bezier(0.25, 1, 0.5, 1) infinite"
       },
       "screens": {
         "sm": "640px",
-        "md": "1024px"
+        "md": "1024px",
+        "lg": "1280px"
       }
     }
   }

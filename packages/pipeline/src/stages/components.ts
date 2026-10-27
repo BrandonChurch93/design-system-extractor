@@ -3,7 +3,7 @@ import { ComponentGroup, componentGroupOf, viewportSize, type Component, type Co
 import { deltaE, parseCssColor } from '../color/parse';
 import { px, radiusOf } from '../capture/snapshot';
 import { classify, type Guess } from '../components/classify';
-import { classesAllowMerge, clusterItems, exactKey, representative, structureSimilarity, toneOnly, type Cluster } from '../components/cluster';
+import { classesAllowMerge, clusterItems, exactKey, representative, toneOnly, type Cluster } from '../components/cluster';
 import { cropShot, downscale, padded, sourceRegion } from '../components/crop';
 import { itemsFrom, type Item } from '../components/items';
 import { nameComponents, resolveCollisions, stylesAgree, type CollisionPair, type Draft, type Naming } from '../components/model';
@@ -120,6 +120,28 @@ export function tokensUsedBy(it: Item, tokens: Tokens): Pick<Component, 'tokensU
 /** The capture items behind each component and each of its variants, for the previews stage. */
 export type ComponentSources = Map<string, { first: Item; variants: Map<string, Item>; items: Item[]; variantOf: Map<Item, string> }>;
 
+/** Merges, in place, clusters of a toned type whose looks differ only in color; returns how many it merged. */
+function toneMerge(list: Working[], typeOf: (w: Working) => ComponentType, tokens: ExtractedTokens): number {
+  let merged = 0;
+  for (let i = 0; i < list.length; i++) {
+    for (let j = list.length - 1; j > i; j--) {
+      const a = list[i]!;
+      const b = list[j]!;
+      if (typeOf(a) !== typeOf(b) || !TONED.has(typeOf(a))) continue;
+      const ra = representative(a.items).fp;
+      const rb = representative(b.items).fp;
+      if (ra.tag !== rb.tag || ra.role !== rb.role || ra.iconOnly !== rb.iconOnly || ra.trigger !== rb.trigger || !classesAllowMerge(ra.baseTokens, rb.baseTokens)) continue;
+      // A notice holds what it says, with or without an action, so its box decides, not its children.
+      if (!toneOnly(ra.style, rb.style)) continue;
+      a.items.push(...b.items);
+      list.splice(j, 1);
+      rebuild(a, tokens);
+      merged++;
+    }
+  }
+  return merged;
+}
+
 export async function components(ctx: RunContext, capture: CaptureOutput, tokens: ExtractedTokens): Promise<{ components: Component[]; sources: ComponentSources }> {
   const items = itemsFrom(capture);
   for (const it of items) {
@@ -158,20 +180,7 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
     }
   }
   // Notices that differ only in color are one component in several tones (D-090).
-  for (let i = 0; i < working.length; i++) {
-    for (let j = working.length - 1; j > i; j--) {
-      const a = working[i]!;
-      const b = working[j]!;
-      if (a.guess.type !== b.guess.type || !TONED.has(a.guess.type)) continue;
-      const ra = representative(a.items).fp;
-      const rb = representative(b.items).fp;
-      if (ra.tag !== rb.tag || ra.role !== rb.role || ra.iconOnly !== rb.iconOnly || ra.trigger !== rb.trigger || !classesAllowMerge(ra.baseTokens, rb.baseTokens)) continue;
-      if (structureSimilarity(ra.structure, rb.structure) < 0.7 || !toneOnly(ra.style, rb.style)) continue;
-      a.items.push(...b.items);
-      working.splice(j, 1);
-      rebuild(a, tokens);
-    }
-  }
+  toneMerge(working, (w) => w.guess.type, tokens);
   working.forEach((w, i) => (w.id = `c${i + 1}`));
 
   const drafts: Draft[] = working.map((w) => {
@@ -226,6 +235,8 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
   }
   const mergedCount = list.length - roots.length;
   list = roots;
+  // Again by the final types: a notice the rules could not type is typed by the model (D-090).
+  const toned = toneMerge(list, (w) => w.naming!.type, tokens);
   for (const w of list) rebuild(w, tokens);
   // Names still shared after merging take their context, never a number; a name ending in one is renamed (D-084).
   const finalNames = list.map((w) => ({ name: w.naming!.name, first: firstSeen(w.items) }));
@@ -278,7 +289,7 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
   await ctx.emit({ stage: 'components', message: `motion attached to ${out.filter((c) => c.motion).length} components · ${owned.size} patterns` });
   const cut = named.calls.filter((c) => c === 'by fallback (time budget)').length;
   if (cut) await ctx.emit({ stage: 'components', level: 'warn', message: `time budget for naming reached · ${cut} of ${named.calls.length} batches named by the rules` });
-  if (mergedByStyle + mergedCount > 0) await ctx.emit({ stage: 'components', message: `merged ${mergedCount} across pages` });
+  if (mergedByStyle + mergedCount + toned > 0) await ctx.emit({ stage: 'components', message: `merged ${mergedCount + toned} across pages` });
   if (noise + dropped > 0) await ctx.emit({ stage: 'components', message: `${noise + dropped} noise cluster${noise + dropped > 1 ? 's' : ''} dropped` });
   return { components: out, sources };
 }

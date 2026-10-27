@@ -1,0 +1,40 @@
+/* Design System Extractor · localhost:4100 · run evalclean0 · raw set · 2026-10-12 */
+
+:root {
+  --duration-120: 120ms;
+  --duration-160: 160ms;
+  --duration-240: 240ms;
+  --duration-480: 480ms;
+  --duration-1600: 1600ms;
+  --duration-fast: var(--duration-120);
+  --duration-base: var(--duration-160);
+  --duration-slow: var(--duration-240);
+  --duration-slower: var(--duration-480);
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes fade-up { 0% { opacity: 0; transform: translateY(12px); } 100% { opacity: 1; transform: none; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+.c-button { transition: background-color var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad); }
+.c-site-header { transition: box-shadow var(--duration-160) var(--ease-out-quad); }
+
+/* add .m-fade-up-end on load */
+.m-fade-up-start { opacity: 0; transform: translateY(12px); }
+.m-fade-up-end { opacity: 1; transform: none; transition: opacity var(--duration-480) var(--ease-out-quart), transform var(--duration-480) var(--ease-out-quart); }
+
+/* add .m-feature-card-scroll-reveal-end when it enters the viewport at 15% from the bottom · 3 items · 60 ms apart */
+.m-feature-card-scroll-reveal-start { opacity: 0; transform: translateY(16px); }
+.m-feature-card-scroll-reveal-end { opacity: 1; transform: none; transition: opacity var(--duration-240) var(--ease-out-quart), transform var(--duration-240) var(--ease-out-quart); }
+
+/* add .m-scroll-reveal-end when it enters the viewport at 30% from the bottom · observed · easing not recorded, nearest token suggested: ease-out-quad · about 398 ms */
+.m-scroll-reveal-start { opacity: 0.03; transform: translateY(15.5px); }
+.m-scroll-reveal-end { opacity: 1; transform: translateY(0px); transition: opacity 398ms var(--ease-out-quad), transform 398ms var(--ease-out-quad); }
+
+/* add .m-site-header-scrolled-header-end after 400 px of scrolling */
+.m-site-header-scrolled-header-start { box-shadow: none; }
+.m-site-header-scrolled-header-end { box-shadow: 0px 12px 32px 0px #0B1F3A1F; transition: box-shadow var(--duration-160) var(--ease-out-quad); }
+
+/* loops every 1,600 ms */
+.m-pulse { animation: pulse var(--duration-1600) var(--ease-out-quart) infinite; }

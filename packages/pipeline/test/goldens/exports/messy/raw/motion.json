@@ -1,0 +1,221 @@
+{
+  "$meta": {
+    "tool": "Design System Extractor",
+    "host": "localhost:4100",
+    "runId": "evalmessy0",
+    "set": "raw",
+    "date": "2026-10-12"
+  },
+  "durations": [
+    {
+      "name": "duration-100",
+      "ms": 100
+    },
+    {
+      "name": "duration-120",
+      "ms": 120,
+      "role": "faster"
+    },
+    {
+      "name": "duration-150",
+      "ms": 150,
+      "role": "fast"
+    },
+    {
+      "name": "duration-160",
+      "ms": 160,
+      "role": "base"
+    },
+    {
+      "name": "duration-200",
+      "ms": 200,
+      "role": "slow"
+    },
+    {
+      "name": "duration-250",
+      "ms": 250,
+      "role": "slower"
+    },
+    {
+      "name": "duration-300",
+      "ms": 300
+    },
+    {
+      "name": "duration-400",
+      "ms": 400
+    },
+    {
+      "name": "duration-1600",
+      "ms": 1600
+    }
+  ],
+  "easings": [
+    {
+      "name": "ease-out-quad",
+      "value": "cubic-bezier(0.25, 0.46, 0.45, 0.94)"
+    },
+    {
+      "name": "ease-out",
+      "value": "ease-out"
+    },
+    {
+      "name": "ease",
+      "value": "ease"
+    },
+    {
+      "name": "linear",
+      "value": "linear"
+    },
+    {
+      "name": "ease-custom-1",
+      "value": "cubic-bezier(0.4, 0, 0.2, 1)"
+    },
+    {
+      "name": "ease-custom-2",
+      "value": "cubic-bezier(0.25, 0.5, 0.45, 0.95)"
+    },
+    {
+      "name": "ease-in-out",
+      "value": "ease-in-out"
+    }
+  ],
+  "keyframes": [
+    {
+      "name": "pulse",
+      "css": "@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }",
+      "used": true,
+      "usage": 2,
+      "pages": [
+        {
+          "pageId": "kgk2jn1g",
+          "count": 2
+        }
+      ],
+      "unresolved": []
+    }
+  ],
+  "patterns": [
+    {
+      "id": "2b6if8md",
+      "kind": "scrolled-header",
+      "elementKey": "header|e1",
+      "selector": "header.site-header",
+      "componentId": "oyicb4ht",
+      "pageId": "u18bpkgs",
+      "pageIds": [
+        "u18bpkgs",
+        "oigqwsuo",
+        "lww1k5gm",
+        "aued7wl1",
+        "ugf0jllh",
+        "prtpbx95",
+        "dh5bcnfc",
+        "kgk2jn1g",
+        "qpoue356",
+        "r6anqd3a"
+      ],
+      "viewport": "desktop",
+      "instances": 14,
+      "trigger": {
+        "type": "scroll",
+        "value": 400
+      },
+      "start": {
+        "box-shadow": "none"
+      },
+      "end": {
+        "box-shadow": "0px 12px 32px 0px #0B1F3A1F"
+      },
+      "durationMs": 160,
+      "delayMs": 0,
+      "easing": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+      "easingTokenId": "5onc3vt1",
+      "iterations": 1,
+      "source": "css-transition",
+      "observed": false
+    },
+    {
+      "id": "3qhoxpyw",
+      "kind": "loop",
+      "elementKey": "span|1.0.0.2.0.0",
+      "selector": "span.live-dot",
+      "componentId": "ytssiwz6",
+      "pageId": "kgk2jn1g",
+      "pageIds": [
+        "kgk2jn1g"
+      ],
+      "viewport": "desktop",
+      "instances": 1,
+      "trigger": {
+        "type": "load"
+      },
+      "start": {
+        "opacity": "1"
+      },
+      "end": {
+        "opacity": "0.3"
+      },
+      "durationMs": 1600,
+      "delayMs": 0,
+      "easing": "ease-in-out",
+      "easingTokenId": "v5tl3av3",
+      "iterations": "infinite",
+      "keyframesName": "pulse",
+      "source": "css-animation",
+      "observed": false
+    }
+  ],
+  "components": [
+    {
+      "id": "j3poeqhk",
+      "name": "Button",
+      "slug": "button",
+      "transitions": [
+        {
+          "state": "hover",
+          "property": "background-color",
+          "durationMs": 160,
+          "delayMs": 0,
+          "easingTokenId": "5onc3vt1"
+        },
+        {
+          "state": "active",
+          "property": "background-color",
+          "durationMs": 160,
+          "delayMs": 0,
+          "easingTokenId": "5onc3vt1"
+        }
+      ],
+      "animations": [],
+      "patternIds": []
+    },
+    {
+      "id": "oyicb4ht",
+      "name": "Site header",
+      "slug": "site-header",
+      "transitions": [
+        {
+          "state": "scrolled",
+          "property": "box-shadow",
+          "durationMs": 160,
+          "delayMs": 0,
+          "easingTokenId": "5onc3vt1"
+        }
+      ],
+      "animations": [],
+      "patternIds": [
+        "2b6if8md"
+      ]
+    },
+    {
+      "id": "ytssiwz6",
+      "name": "Status badge",
+      "slug": "status-badge",
+      "transitions": [],
+      "animations": [],
+      "patternIds": [
+        "3qhoxpyw"
+      ]
+    }
+  ]
+}

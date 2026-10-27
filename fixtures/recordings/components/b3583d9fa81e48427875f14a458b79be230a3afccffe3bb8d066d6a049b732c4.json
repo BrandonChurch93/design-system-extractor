@@ -1,0 +1,24 @@
+{
+  "purpose": "components",
+  "size": "small",
+  "model": "claude-haiku-5-5",
+  "text": "{\"items\": [{\"id\": \"c17\", \"type\": \"select\", \"name\": \"Plan select\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c18\", \"type\": \"checkbox\", \"name\": \"Checkbox\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c19\", \"type\": \"button\", \"name\": \"Copy button\", \"isComponent\": true, \"variantHint\": \"icon-only, default\"}, {\"id\": \"c20\", \"type\": \"textarea\", \"name\": \"Message field\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c21\", \"type\": \"pagination\", \"name\": \"Pagination\", \"isComponent\": true, \"variantHint\": \"active page highlighted\"}, {\"id\": \"c22\", \"type\": \"button\", \"name\": \"Previous next button\", \"isComponent\": true, \"variantHint\": \"outlined, wide or tight width\"}]}",
+  "usage": {
+    "input_tokens": 416,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1564,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 280,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-27T19:18:16.725Z",
+  "request": "Items:\nc17 guess select 0.98, select, no class names, no children, in create your, text \"Solo Studio\", 2 instances on 1 page (/signup), variants Default, no picture\nc18 guess checkbox 0.98, input, no class names, no children, in create your, text \"\", 2 instances on 1 page (/signup), variants Default, no picture\nc19 guess button 0.95, button, classes button is-info, inside span:1, in contact, text \"⧉\", 2 instances on 1 page (/contact), variants Default, no picture\nc20 guess textarea 0.98, textarea, classes textarea, no children, in contact, text \"\", 2 instances on 1 page (/contact), variants Default, no picture\nc21 guess pagination 0.8, nav, classes pagination, inside a:2 li:2 ul:1, in api, text \"Previous Next 1 2\", 2 instances on 1 page (/docs/api), variants Default, picture below\nc22 guess link 0.9, a, classes pagination-previous, no children, in nav, text \"Previous\", 8 instances on 1 page (/docs/api), variants Outlined wide, Outlined tight, no picture\nPicture of c21:\n[image]"
+}

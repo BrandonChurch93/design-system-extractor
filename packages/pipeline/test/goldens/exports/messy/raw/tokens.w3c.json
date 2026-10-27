@@ -10,40 +10,35 @@
     }
   },
   "color": {
-    "blue-ink": {
+    "blue-900": {
       "$type": "color",
       "$value": "#0B1F3A",
-      "$description": "blue-ink · 168 uses"
+      "$description": "blue-900 · 168 uses"
     },
     "blue-600": {
       "$type": "color",
       "$value": "#2458E6",
       "$description": "blue-600 · 89 uses"
     },
-    "blue-600-alt": {
+    "blue-link": {
       "$type": "color",
       "$value": "#1C4EDB",
-      "$description": "blue-600-alt · 70 uses"
+      "$description": "blue-link · 70 uses"
     },
     "teal-500": {
       "$type": "color",
       "$value": "#0F8A8A",
       "$description": "teal-500 · 44 uses"
     },
-    "blue-ink-tint": {
-      "$type": "color",
-      "$value": "#0B1F3A1F",
-      "$description": "blue-ink-tint · 17 uses"
-    },
     "blue-500": {
       "$type": "color",
       "$value": "#2E63ED",
       "$description": "blue-500 · 2 uses"
     },
-    "gray-ink": {
+    "gray-900": {
       "$type": "color",
       "$value": "#1F1F1F",
-      "$description": "gray-ink · 684 uses"
+      "$description": "gray-900 · 684 uses"
     },
     "gray-50": {
       "$type": "color",
@@ -53,7 +48,7 @@
     "gray-300": {
       "$type": "color",
       "$value": "#D1D1D1",
-      "$description": "gray-300 · 152 uses"
+      "$description": "gray-300 · 144 uses"
     },
     "gray-600": {
       "$type": "color",
@@ -68,7 +63,7 @@
     "gray-200": {
       "$type": "color",
       "$value": "#E1E1E1",
-      "$description": "gray-200 · 88 uses"
+      "$description": "gray-200 · 80 uses"
     },
     "gray-800": {
       "$type": "color",
@@ -90,25 +85,25 @@
       "$value": "#868686",
       "$description": "gray-500-border · 25 uses"
     },
-    "gray-50-alt": {
+    "gray-50-tint": {
       "$type": "color",
       "$value": "#F5F5F5",
-      "$description": "gray-50-alt · 6 uses"
+      "$description": "gray-50-tint · 6 uses"
     },
     "gray-400": {
       "$type": "color",
       "$value": "#B1B1B1",
       "$description": "gray-400 · 8 uses"
     },
-    "gray-300-alt": {
+    "gray-300-border": {
       "$type": "color",
       "$value": "#C4C4C4",
-      "$description": "gray-300-alt · 4 uses"
+      "$description": "gray-300-border · 4 uses"
     },
-    "gray-400-alt": {
+    "gray-400-border": {
       "$type": "color",
       "$value": "#9E9E9E",
-      "$description": "gray-400-alt · 2 uses"
+      "$description": "gray-400-border · 2 uses"
     },
     "success": {
       "$type": "color",
@@ -124,6 +119,28 @@
       "$type": "color",
       "$value": "#F59E0B",
       "$description": "warning · 2 uses"
+    }
+  },
+  "overlay": {
+    "blue-900-12": {
+      "$type": "color",
+      "$value": "#0B1F3A1F",
+      "$description": "zh3ek8iz at 12%"
+    },
+    "black-4": {
+      "$type": "color",
+      "$value": "#0000000A",
+      "$description": "black at 4%"
+    },
+    "gray-700-30": {
+      "$type": "color",
+      "$value": "#5050504D",
+      "$description": "bd9c4pw8 at 30%"
+    },
+    "gray-800-20": {
+      "$type": "color",
+      "$value": "#35353533",
+      "$description": "54bndii3 at 20%"
     }
   },
   "fontFamily": {
@@ -147,7 +164,7 @@
         "letterSpacing": "0px"
       }
     },
-    "h1": {
+    "title": {
       "$type": "typography",
       "$value": {
         "fontFamily": "Inter",
@@ -157,7 +174,7 @@
         "letterSpacing": "0px"
       }
     },
-    "h2": {
+    "title-sm": {
       "$type": "typography",
       "$value": {
         "fontFamily": "Inter",
@@ -167,7 +184,7 @@
         "letterSpacing": "0px"
       }
     },
-    "h3": {
+    "subheading": {
       "$type": "typography",
       "$value": {
         "fontFamily": "Inter",
@@ -187,7 +204,7 @@
         "letterSpacing": "0px"
       }
     },
-    "body-sm-2": {
+    "body-sm": {
       "$type": "typography",
       "$value": {
         "fontFamily": "Inter",
@@ -197,7 +214,7 @@
         "letterSpacing": "0px"
       }
     },
-    "label": {
+    "text-14": {
       "$type": "typography",
       "$value": {
         "fontFamily": "Inter",
@@ -207,7 +224,7 @@
         "letterSpacing": "0px"
       }
     },
-    "body-sm": {
+    "body-xs": {
       "$type": "typography",
       "$value": {
         "fontFamily": "Inter",
@@ -320,6 +337,141 @@
         "blur": "32px",
         "spread": "0px"
       }
+    }
+  },
+  "duration": {
+    "duration-100": {
+      "$type": "duration",
+      "$value": {
+        "value": 100,
+        "unit": "ms"
+      }
+    },
+    "duration-120": {
+      "$type": "duration",
+      "$value": {
+        "value": 120,
+        "unit": "ms"
+      },
+      "$description": "faster"
+    },
+    "duration-150": {
+      "$type": "duration",
+      "$value": {
+        "value": 150,
+        "unit": "ms"
+      },
+      "$description": "fast"
+    },
+    "duration-160": {
+      "$type": "duration",
+      "$value": {
+        "value": 160,
+        "unit": "ms"
+      },
+      "$description": "base"
+    },
+    "duration-200": {
+      "$type": "duration",
+      "$value": {
+        "value": 200,
+        "unit": "ms"
+      },
+      "$description": "slow"
+    },
+    "duration-250": {
+      "$type": "duration",
+      "$value": {
+        "value": 250,
+        "unit": "ms"
+      },
+      "$description": "slower"
+    },
+    "duration-300": {
+      "$type": "duration",
+      "$value": {
+        "value": 300,
+        "unit": "ms"
+      }
+    },
+    "duration-400": {
+      "$type": "duration",
+      "$value": {
+        "value": 400,
+        "unit": "ms"
+      }
+    },
+    "duration-1600": {
+      "$type": "duration",
+      "$value": {
+        "value": 1600,
+        "unit": "ms"
+      }
+    }
+  },
+  "easing": {
+    "ease-out-quad": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.25,
+        0.46,
+        0.45,
+        0.94
+      ]
+    },
+    "ease-out": {
+      "$type": "cubicBezier",
+      "$value": [
+        0,
+        0,
+        0.58,
+        1
+      ]
+    },
+    "ease": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.25,
+        0.1,
+        0.25,
+        1
+      ]
+    },
+    "linear": {
+      "$type": "cubicBezier",
+      "$value": [
+        0,
+        0,
+        1,
+        1
+      ]
+    },
+    "ease-custom-1": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.4,
+        0,
+        0.2,
+        1
+      ]
+    },
+    "ease-custom-2": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.25,
+        0.5,
+        0.45,
+        0.95
+      ]
+    },
+    "ease-in-out": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.42,
+        0,
+        0.58,
+        1
+      ]
     }
   },
   "breakpoint": {

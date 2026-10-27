@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-10-27T03:38:03.027Z",
-  "mode": "live",
+  "generatedAt": "2026-10-27T19:18:23.063Z",
+  "mode": "record",
   "through": "done",
-  "pipelineVersion": "1.0.0",
+  "pipelineVersion": "1.1.0",
   "fixtures": [
     {
       "name": "clean",
@@ -55,9 +55,9 @@
               "extras": []
             },
             "breakpoints": {
-              "predicted": 2,
-              "expected": 2,
-              "matched": 2,
+              "predicted": 3,
+              "expected": 3,
+              "matched": 3,
               "misses": [],
               "extras": []
             },
@@ -80,10 +80,10 @@
         "components": {
           "precision": 1,
           "recall": 1,
-          "predicted": 27,
-          "expected": 27,
-          "matched": 27,
-          "nameAgreement": 0.815,
+          "predicted": 28,
+          "expected": 28,
+          "matched": 28,
+          "nameAgreement": 0.679,
           "namesValid": true,
           "misses": [],
           "extras": []
@@ -94,14 +94,36 @@
         },
         "states": {
           "rate": 1,
-          "captured": 63,
-          "expected": 63,
+          "captured": 67,
+          "expected": 67,
           "misses": []
         },
+        "motion": {
+          "durations": 1,
+          "easings": 1,
+          "keyframes": 1,
+          "patterns": 1,
+          "hover": 1,
+          "outlineNoise": 0,
+          "collapsedBorder": 1,
+          "missed": []
+        },
+        "naming": {
+          "siteNaming": 1,
+          "hashedNames": 0,
+          "overlaySplit": 1,
+          "typeNames": 1,
+          "roleOther": 0,
+          "variantNames": 1,
+          "numericNames": 0,
+          "tiers": 1,
+          "fallbackNames": 1,
+          "missed": []
+        },
         "liveRate": {
-          "rate": 0.963,
-          "live": 26,
-          "total": 27,
+          "rate": 0.964,
+          "live": 27,
+          "total": 28,
           "captured": [
             "Avatar (diff 6.2 %)"
           ]
@@ -110,10 +132,10 @@
           "failures": 1,
           "passes": 1,
           "summary": {
-            "passed": 43,
+            "passed": 47,
             "failed": 2,
-            "total": 135,
-            "applicable": 45
+            "total": 140,
+            "applicable": 49
           },
           "missedFailures": [],
           "flaggedPasses": []
@@ -122,6 +144,10 @@
           "falseFindings": 0,
           "contrastKept": true,
           "headline": "Nothing to collapse. 9 colors, 11 spacing steps, all on the grid."
+        },
+        "exports": {
+          "files": 66,
+          "undeclared": []
         }
       }
     },
@@ -141,9 +167,9 @@
           "namesValid": true,
           "kinds": {
             "colors": {
-              "predicted": 23,
-              "expected": 23,
-              "matched": 23,
+              "predicted": 22,
+              "expected": 22,
+              "matched": 22,
               "misses": [],
               "extras": []
             },
@@ -204,7 +230,7 @@
           "predicted": 31,
           "expected": 31,
           "matched": 31,
-          "nameAgreement": 0.839,
+          "nameAgreement": 0.71,
           "namesValid": true,
           "misses": [],
           "extras": []
@@ -219,6 +245,28 @@
           "expected": 73,
           "misses": []
         },
+        "motion": {
+          "durations": 1,
+          "easings": 1,
+          "keyframes": 1,
+          "patterns": 1,
+          "hover": 1,
+          "outlineNoise": 0,
+          "collapsedBorder": 1,
+          "missed": []
+        },
+        "naming": {
+          "siteNaming": 1,
+          "hashedNames": 0,
+          "overlaySplit": 1,
+          "typeNames": 1,
+          "roleOther": 0,
+          "variantNames": 1,
+          "numericNames": 0,
+          "tiers": 1,
+          "fallbackNames": 1,
+          "missed": []
+        },
         "liveRate": {
           "rate": 0.935,
           "live": 29,
@@ -232,10 +280,10 @@
           "failures": 1,
           "passes": 1,
           "summary": {
-            "passed": 47,
-            "failed": 8,
+            "passed": 48,
+            "failed": 9,
             "total": 155,
-            "applicable": 55
+            "applicable": 57
           },
           "missedFailures": [],
           "flaggedPasses": []
@@ -244,10 +292,14 @@
           "recall": 1,
           "found": 16,
           "planted": 16,
-          "findings": 16,
+          "findings": 18,
           "contrastKept": true,
           "missed": [],
           "headline": "14 grays across 12 pages. 9 would do."
+        },
+        "exports": {
+          "files": 72,
+          "undeclared": []
         }
       }
     },
@@ -302,9 +354,9 @@
               "extras": []
             },
             "breakpoints": {
-              "predicted": 2,
-              "expected": 2,
-              "matched": 2,
+              "predicted": 3,
+              "expected": 3,
+              "matched": 3,
               "misses": [],
               "extras": []
             },
@@ -325,29 +377,47 @@
           }
         },
         "components": {
-          "precision": 0.964,
+          "precision": 1,
           "recall": 1,
           "predicted": 28,
-          "expected": 27,
-          "matched": 27,
-          "nameAgreement": 0.593,
+          "expected": 28,
+          "matched": 28,
+          "nameAgreement": 0.643,
           "namesValid": true,
           "misses": [],
-          "extras": [
-            "Warning notice (alert) /docs/getting-started"
-          ]
+          "extras": []
         },
         "variants": {
-          "accuracy": 0.963,
-          "misses": [
-            "Alert 1 of 2"
-          ]
+          "accuracy": 1,
+          "misses": []
         },
         "states": {
           "rate": 1,
-          "captured": 63,
-          "expected": 63,
+          "captured": 67,
+          "expected": 67,
           "misses": []
+        },
+        "motion": {
+          "durations": 1,
+          "easings": 1,
+          "keyframes": 1,
+          "patterns": 1,
+          "hover": 1,
+          "outlineNoise": 0,
+          "collapsedBorder": 1,
+          "missed": []
+        },
+        "naming": {
+          "siteNaming": 1,
+          "hashedNames": 0,
+          "overlaySplit": 1,
+          "typeNames": 1,
+          "roleOther": 0,
+          "variantNames": 1,
+          "numericNames": 0,
+          "tiers": 1,
+          "fallbackNames": 1,
+          "missed": []
         },
         "liveRate": {
           "rate": 0.964,
@@ -361,10 +431,10 @@
           "failures": 1,
           "passes": 1,
           "summary": {
-            "passed": 44,
+            "passed": 47,
             "failed": 2,
             "total": 140,
-            "applicable": 46
+            "applicable": 49
           },
           "missedFailures": [],
           "flaggedPasses": []
@@ -373,6 +443,10 @@
           "falseFindings": 0,
           "contrastKept": true,
           "headline": "Nothing to collapse. 9 colors, 11 spacing steps, all on the grid."
+        },
+        "exports": {
+          "files": 66,
+          "undeclared": []
         }
       }
     },
@@ -427,9 +501,9 @@
               "extras": []
             },
             "breakpoints": {
-              "predicted": 2,
-              "expected": 2,
-              "matched": 2,
+              "predicted": 3,
+              "expected": 3,
+              "matched": 3,
               "misses": [],
               "extras": []
             },
@@ -450,34 +524,58 @@
           }
         },
         "components": {
-          "precision": 0.964,
+          "precision": 0.966,
           "recall": 1,
-          "predicted": 28,
-          "expected": 27,
-          "matched": 27,
-          "nameAgreement": 0.667,
+          "predicted": 29,
+          "expected": 28,
+          "matched": 28,
+          "nameAgreement": 0.607,
           "namesValid": true,
           "misses": [],
           "extras": [
-            "Warning notice (alert) /docs/getting-started"
+            "Info notice (alert) /docs/getting-started"
           ]
         },
         "variants": {
-          "accuracy": 0.963,
+          "accuracy": 0.964,
           "misses": [
             "Alert 1 of 2"
           ]
         },
         "states": {
           "rate": 1,
-          "captured": 63,
-          "expected": 63,
+          "captured": 67,
+          "expected": 67,
           "misses": []
         },
+        "motion": {
+          "durations": 1,
+          "easings": 1,
+          "keyframes": 1,
+          "patterns": 1,
+          "hover": 1,
+          "outlineNoise": 0,
+          "collapsedBorder": 1,
+          "missed": []
+        },
+        "naming": {
+          "siteNaming": 1,
+          "hashedNames": 0,
+          "overlaySplit": 1,
+          "typeNames": 1,
+          "roleOther": 0,
+          "variantNames": 1,
+          "numericNames": 0,
+          "tiers": 0.9642857142857143,
+          "fallbackNames": 1,
+          "missed": [
+            "tier Alert page not core"
+          ]
+        },
         "liveRate": {
-          "rate": 0.964,
-          "live": 27,
-          "total": 28,
+          "rate": 0.966,
+          "live": 28,
+          "total": 29,
           "captured": [
             "Avatar (diff 6.2 %)"
           ]
@@ -486,10 +584,10 @@
           "failures": 1,
           "passes": 1,
           "summary": {
-            "passed": 44,
+            "passed": 48,
             "failed": 2,
-            "total": 140,
-            "applicable": 46
+            "total": 145,
+            "applicable": 50
           },
           "missedFailures": [],
           "flaggedPasses": []
@@ -498,6 +596,10 @@
           "falseFindings": 0,
           "contrastKept": true,
           "headline": "Nothing to collapse. 9 colors, 11 spacing steps, all on the grid."
+        },
+        "exports": {
+          "files": 68,
+          "undeclared": []
         }
       }
     },
@@ -517,16 +619,16 @@
           "namesValid": true,
           "kinds": {
             "colors": {
-              "predicted": 23,
-              "expected": 23,
-              "matched": 23,
+              "predicted": 21,
+              "expected": 21,
+              "matched": 21,
               "misses": [],
               "extras": []
             },
             "type": {
-              "predicted": 11,
-              "expected": 11,
-              "matched": 11,
+              "predicted": 10,
+              "expected": 10,
+              "matched": 10,
               "misses": [],
               "extras": []
             },
@@ -552,9 +654,9 @@
               "extras": []
             },
             "breakpoints": {
-              "predicted": 6,
-              "expected": 6,
-              "matched": 6,
+              "predicted": 4,
+              "expected": 4,
+              "matched": 4,
               "misses": [],
               "extras": []
             },
@@ -580,7 +682,7 @@
           "predicted": 22,
           "expected": 22,
           "matched": 22,
-          "nameAgreement": 0.318,
+          "nameAgreement": 0.364,
           "namesValid": true,
           "misses": [],
           "extras": []
@@ -594,6 +696,28 @@
           "captured": 54,
           "expected": 54,
           "misses": []
+        },
+        "motion": {
+          "durations": 1,
+          "easings": 1,
+          "keyframes": 1,
+          "patterns": 1,
+          "hover": 1,
+          "outlineNoise": 0,
+          "collapsedBorder": 1,
+          "missed": []
+        },
+        "naming": {
+          "siteNaming": 1,
+          "hashedNames": 0,
+          "overlaySplit": 1,
+          "typeNames": 1,
+          "roleOther": 0,
+          "variantNames": 1,
+          "numericNames": 0,
+          "tiers": 1,
+          "fallbackNames": 1,
+          "missed": []
         },
         "liveRate": {
           "rate": 1,
@@ -616,7 +740,11 @@
         "drift": {
           "falseFindings": 0,
           "contrastKept": true,
-          "headline": "Nothing to collapse. 23 colors, 7 spacing steps, all on the grid."
+          "headline": "Nothing to collapse. 21 colors, 7 spacing steps, all on the grid."
+        },
+        "exports": {
+          "files": 54,
+          "undeclared": []
         }
       }
     }

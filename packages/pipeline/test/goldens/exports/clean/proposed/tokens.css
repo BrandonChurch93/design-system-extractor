@@ -2,13 +2,17 @@
 :root {
   --color-gray-50: #FFFFFF;
   --color-gray-200: #E2E8F0;
-  --color-blue-ink: #0B1F3A;
+  --color-gray-600: #5F6368;
+  --color-text-primary: #0B1F3A;
   --color-blue-600: #2458E6;
   --color-teal-500: #0F8A8A;
-  --color-blue-ink-tint: #0B1F3A1F;
   --color-success: #15803D;
   --color-warning: #B45309;
   --color-danger: #DC2626;
+
+  --overlay-text-primary-12: rgb(11 31 58 / 12%);
+  --overlay-text-primary-60: rgb(11 31 58 / 60%);
+  --overlay-white-8: rgb(255 255 255 / 8%);
 
   --font-sans: Inter, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -16,24 +20,24 @@
   --type-display-size: 48px;
   --type-display-line: 56px;
   --type-display-weight: 700;
-  --type-h1-size: 36px;
-  --type-h1-line: 44px;
-  --type-h1-weight: 700;
-  --type-h2-size: 28px;
-  --type-h2-line: 36px;
-  --type-h2-weight: 700;
-  --type-h3-size: 20px;
-  --type-h3-line: 28px;
-  --type-h3-weight: 600;
+  --type-title-size: 36px;
+  --type-title-line: 44px;
+  --type-title-weight: 700;
+  --type-title-sm-size: 28px;
+  --type-title-sm-line: 36px;
+  --type-title-sm-weight: 700;
+  --type-subheading-size: 20px;
+  --type-subheading-line: 28px;
+  --type-subheading-weight: 600;
   --type-body-size: 16px;
   --type-body-line: 26px;
   --type-body-weight: 400;
-  --type-label-size: 14px;
-  --type-label-line: 20px;
-  --type-label-weight: 600;
-  --type-body-sm-size: 14px;
-  --type-body-sm-line: 22px;
-  --type-body-sm-weight: 400;
+  --type-text-14-size: 14px;
+  --type-text-14-line: 20px;
+  --type-text-14-weight: 600;
+  --type-text-small-size: 14px;
+  --type-text-small-line: 22px;
+  --type-text-small-weight: 400;
   --type-code-size: 14px;
   --type-code-line: 22px;
   --type-code-weight: 400;
@@ -55,11 +59,31 @@
 
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-pill: 9999px;
+  --radius-rounded: 9999px;
 
-  --shadow-sm: 0px 1px 2px 0px #0B1F3A1F;
+  --shadow-stack-low: 0px 1px 2px 0px #0B1F3A1F;
   --shadow-md: 0px 12px 32px 0px #0B1F3A1F;
+
+  --duration-120: 120ms;
+  --duration-160: 160ms;
+  --duration-240: 240ms;
+  --duration-480: 480ms;
+  --duration-1600: 1600ms;
+  --duration-fast: var(--duration-120);
+  --duration-base: var(--duration-160);
+  --duration-slow: var(--duration-240);
+  --duration-slower: var(--duration-480);
+
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 
   --breakpoint-sm: 640px;
   --breakpoint-md: 1024px;
+  --breakpoint-lg: 1280px;
+}
+
+/* Site variables, resolved */
+:root {
+  --color-text-secondary: #5F6368;
+  --text-small-size: 14px;
 }

@@ -1,0 +1,36 @@
+/* Design System Extractor · localhost:4100 · run evalmessy0 · proposed set · 2026-10-12 */
+
+:root {
+  --duration-100: 100ms;
+  --duration-120: 120ms;
+  --duration-150: 150ms;
+  --duration-160: 160ms;
+  --duration-200: 200ms;
+  --duration-250: 250ms;
+  --duration-300: 300ms;
+  --duration-400: 400ms;
+  --duration-1600: 1600ms;
+  --duration-faster: var(--duration-120);
+  --duration-fast: var(--duration-150);
+  --duration-base: var(--duration-160);
+  --duration-slow: var(--duration-200);
+  --duration-slower: var(--duration-250);
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out: ease-out;
+  --ease: ease;
+  --ease-linear: linear;
+  --ease-custom-1: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in-out: ease-in-out;
+}
+
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.c-button { transition: background-color var(--duration-160) var(--ease-out-quad); }
+.c-site-header { transition: box-shadow var(--duration-160) var(--ease-out-quad); }
+
+/* add .m-site-header-scrolled-header-end after 400 px of scrolling */
+.m-site-header-scrolled-header-start { box-shadow: none; }
+.m-site-header-scrolled-header-end { box-shadow: 0px 12px 32px 0px #0B1F3A1F; transition: box-shadow var(--duration-160) var(--ease-out-quad); }
+
+/* loops every 1,600 ms */
+.m-pulse { animation: pulse var(--duration-1600) var(--ease-in-out) infinite; }

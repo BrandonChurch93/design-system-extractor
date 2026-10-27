@@ -1,0 +1,24 @@
+{
+  "purpose": "components",
+  "size": "small",
+  "model": "claude-haiku-5-5",
+  "text": "{\"items\": [{\"id\": \"c9\", \"type\": \"footer\", \"name\": \"Site footer\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c10\", \"type\": \"nav\", \"name\": \"Footer links\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c11\", \"type\": \"dropdown\", \"name\": \"Mobile menu\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c12\", \"type\": \"button\", \"name\": \"Menu toggle\", \"isComponent\": true, \"variantHint\": \"icon only\"}, {\"id\": \"c13\", \"type\": \"toggle\", \"name\": \"Toggle switch\", \"isComponent\": true, \"variantHint\": \"on and off state\"}, {\"id\": \"c14\", \"type\": \"card\", \"name\": \"Pricing card\", \"isComponent\": true, \"variantHint\": \"primary and secondary emphasis\"}, {\"id\": \"c15\", \"type\": \"table\", \"name\": \"Plan comparison table\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c16\", \"type\": \"button\", \"name\": \"Footer button\", \"isComponent\": true, \"variantHint\": null}]}",
+  "usage": {
+    "input_tokens": 1309,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1564,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 364,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-27T19:17:09.853Z",
+  "request": "Items:\nc9 guess footer 0.95, footer, no class names, inside div:2, in home, text \"Tidewater Calm release notes for busy teams. Product Pricing Docs Contact\", 18 instances on 9 pages (/, /pricing, /docs, /login), variants Default, no picture\nc10 guess nav 0.95, nav, no class names, inside a:4, in footer, text \"Product Pricing Docs Contact\", 18 instances on 9 pages (/, /pricing, /docs, /login), variants Default, no picture\nc11 guess dropdown 0.85, nav role revealed:, no class names, inside a:5, in home, text \"Product Pricing Docs Contact Sign in\", 1 instances on 1 page (/), variants Default, picture below\nc12 guess button 0.95, button, no class names, inside svg:1, in header, text \"\", 9 instances on 9 pages (/, /pricing, /docs, /login), variants Default, no picture\nc13 guess toggle 0.85, button role switch, no class names, no children, in pricing, text \"\", 2 instances on 1 page (/pricing), variants Default, picture below\nc14 guess card 0.6, article, no class names, inside a:1 h3:1 li:3 p:1 ul:1, in team, text \"Starter $0 One public changelog Weekly digest Three integrations Start free\", 4 instances on 1 page (/pricing), variants Primary, Secondary, picture below\nc15 guess table 0.98, table, no class names, inside tbody:1 thead:1 tr:4, in pricing, text \"Feature Starter Team Changelogs 1 Unlimited Digests Weekly Daily or weekly Custo\", 4 instances on 2 pages (/pricing, /docs/getting-started), variants Default, no picture\nc16 guess button 0.95, button, no class names, inside svg:1, in footer, text \"Talk to sales\", 2 instances on 1 page (/pricing), variants Default, no picture\nPicture of c11:\n[image]\nPicture of c13:\n[image]\nPicture of c14:\n[image]"
+}

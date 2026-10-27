@@ -18,7 +18,7 @@ export type QaPage = { name: string; path: string; states: QaState[]; mask?: str
 const dynamic = ['[data-qa-mask="elapsed"]', '[data-qa-mask="runs-left"]', '[data-qa-mask="hours"]'];
 
 const recentList = [
-  { id: 'seedclean0', host: 'localhost:4100', createdAt: '2026-10-12T15:04:00.000Z', status: 'complete', stats: { colors: 9, typeStyles: 9, spacingSteps: 11, components: 27, checksPassed: 43, checksApplicable: 45 }, palette: [{ value: '#0B1F3A', share: 0.6 }, { value: '#E2E8F0', share: 0.15 }, { value: '#2458E6', share: 0.09 }, { value: '#FFFFFF', share: 0.08 }] },
+  { id: 'seedclean0', host: 'localhost:4100', createdAt: '2026-10-12T15:04:00.000Z', status: 'complete', stats: { colors: 9, typeStyles: 9, spacingSteps: 11, components: 28, checksPassed: 43, checksApplicable: 45 }, palette: [{ value: '#0B1F3A', share: 0.6 }, { value: '#E2E8F0', share: 0.15 }, { value: '#2458E6', share: 0.09 }, { value: '#FFFFFF', share: 0.08 }] },
   { id: 'seedmessy0', host: 'localhost:4100', createdAt: '2026-10-05T17:20:00.000Z', status: 'complete', stats: { colors: 23, typeStyles: 9, spacingSteps: 11, components: 31, checksPassed: 47, checksApplicable: 55 }, palette: [{ value: '#1E1E1E', share: 0.4 }, { value: '#0B1F3A', share: 0.2 }, { value: '#2458E6', share: 0.1 }] },
   { id: 'seedlogin0', host: 'localhost:4198', createdAt: '2026-10-20T15:30:00.000Z', status: 'blocked', blockedReason: 'login' },
   { id: 'seedprog02', host: 'localhost:4100', createdAt: '2026-10-26T15:00:00.000Z', status: 'running' },

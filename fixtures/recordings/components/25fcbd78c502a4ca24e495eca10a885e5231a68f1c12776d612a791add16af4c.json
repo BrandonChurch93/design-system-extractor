@@ -1,0 +1,24 @@
+{
+  "purpose": "components",
+  "size": "small",
+  "model": "claude-haiku-5-5",
+  "text": "{\"items\": [{\"id\": \"c1\", \"type\": \"dropdown\", \"name\": \"Resources menu\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c2\", \"type\": \"header\", \"name\": \"Site header\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c3\", \"type\": \"nav\", \"name\": \"Main navigation\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c4\", \"type\": \"button\", \"name\": \"Resources trigger\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c5\", \"type\": \"button\", \"name\": \"Button\", \"isComponent\": true, \"variantHint\": \"fill style (primary, secondary, ghost), size and corner radius\"}, {\"id\": \"c6\", \"type\": \"card\", \"name\": \"Feature card\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c7\", \"type\": \"tag\", \"name\": \"New tag\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c8\", \"type\": \"avatar\", \"name\": \"Avatar\", \"isComponent\": true, \"variantHint\": null}]}",
+  "usage": {
+    "input_tokens": 1194,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1564,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 356,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-27T19:17:10.182Z",
+  "request": "Items:\nc1 guess dropdown 0.85, div role revealed:menu, no class names, inside a:3, in home, text \"Guides API reference Support\", 1 instances on 1 page (/), variants Default, picture below\nc2 guess header 0.95, header, no class names, inside div:2 nav:1, in home, text \"Tidewater Product Pricing Docs Contact Resources Sign in Start free\", 18 instances on 9 pages (/, /pricing, /docs, /login), variants Default, no picture\nc3 guess nav 0.95, nav, no class names, inside a:4 button:1 div:2, in header, text \"Product Pricing Docs Contact Resources\", 9 instances on 9 pages (/, /pricing, /docs, /login), variants Default, no picture\nc4 guess button 0.95, button, no class names, inside svg:1, in nav, text \"Resources\", 9 instances on 9 pages (/, /pricing, /docs, /login), variants Default, no picture\nc5 guess button 0.95, a, no class names, no children, in header, text \"Sign in\", 48 instances on 9 pages (/, /pricing, /docs, /login), variants Primary, Ghost, Secondary, Ghost rounded, Secondary small, Primary small, Ghost small, no picture\nc6 guess card 0.6, article, no class names, inside h3:1 p:1 span:2 svg:1, in public pages, text \"New Weekly digests One email every Friday with what shipped, grouped by team.\", 12 instances on 2 pages (/, /features), variants Default, picture below\nc7 guess tag 0.7, span, no class names, no children, in public pages, text \"New\", 2 instances on 1 page (/), variants Default, picture below\nc8 guess avatar 0.9, img, no class names, no children, in home, text \"\", 2 instances on 1 page (/), variants Default, no picture\nPicture of c1:\n[image]\nPicture of c6:\n[image]\nPicture of c7:\n[image]"
+}

@@ -18,27 +18,27 @@
     "gray-200": {
       "$type": "color",
       "$value": "#E2E8F0",
-      "$description": "gray-200 · 207 uses"
+      "$description": "gray-200 · 209 uses"
     },
-    "blue-ink": {
+    "gray-600": {
+      "$type": "color",
+      "$value": "#5F6368",
+      "$description": "gray-600 · 20 uses"
+    },
+    "text-primary": {
       "$type": "color",
       "$value": "#0B1F3A",
-      "$description": "blue-ink · 904 uses"
+      "$description": "text-primary · 896 uses"
     },
     "blue-600": {
       "$type": "color",
       "$value": "#2458E6",
-      "$description": "blue-600 · 100 uses"
+      "$description": "blue-600 · 104 uses"
     },
     "teal-500": {
       "$type": "color",
       "$value": "#0F8A8A",
       "$description": "teal-500 · 44 uses"
-    },
-    "blue-ink-tint": {
-      "$type": "color",
-      "$value": "#0B1F3A1F",
-      "$description": "blue-ink-tint · 17 uses"
     },
     "success": {
       "$type": "color",
@@ -54,6 +54,23 @@
       "$type": "color",
       "$value": "#DC2626",
       "$description": "danger · 12 uses"
+    }
+  },
+  "overlay": {
+    "text-primary-12": {
+      "$type": "color",
+      "$value": "#0B1F3A1F",
+      "$description": "zh3ek8iz at 12%"
+    },
+    "text-primary-60": {
+      "$type": "color",
+      "$value": "#0B1F3A99",
+      "$description": "zh3ek8iz at 60%"
+    },
+    "white-8": {
+      "$type": "color",
+      "$value": "#FFFFFF14",
+      "$description": "white at 8%"
     }
   },
   "fontFamily": {
@@ -86,7 +103,7 @@
         "letterSpacing": "0px"
       }
     },
-    "h1": {
+    "title": {
       "$type": "typography",
       "$value": {
         "fontFamily": "Inter",
@@ -96,7 +113,7 @@
         "letterSpacing": "0px"
       }
     },
-    "h2": {
+    "title-sm": {
       "$type": "typography",
       "$value": {
         "fontFamily": "Inter",
@@ -106,7 +123,7 @@
         "letterSpacing": "0px"
       }
     },
-    "h3": {
+    "subheading": {
       "$type": "typography",
       "$value": {
         "fontFamily": "Inter",
@@ -126,7 +143,7 @@
         "letterSpacing": "0px"
       }
     },
-    "label": {
+    "text-14": {
       "$type": "typography",
       "$value": {
         "fontFamily": "Inter",
@@ -136,7 +153,7 @@
         "letterSpacing": "0px"
       }
     },
-    "body-sm": {
+    "text-small": {
       "$type": "typography",
       "$value": {
         "fontFamily": "Inter",
@@ -222,13 +239,13 @@
       "$type": "dimension",
       "$value": "12px"
     },
-    "radius-pill": {
+    "radius-rounded": {
       "$type": "dimension",
       "$value": "9999px"
     }
   },
   "shadow": {
-    "shadow-sm": {
+    "shadow-stack-low": {
       "$type": "shadow",
       "$value": {
         "color": "#0B1F3A1F",
@@ -249,6 +266,67 @@
       }
     }
   },
+  "duration": {
+    "duration-120": {
+      "$type": "duration",
+      "$value": {
+        "value": 120,
+        "unit": "ms"
+      },
+      "$description": "fast"
+    },
+    "duration-160": {
+      "$type": "duration",
+      "$value": {
+        "value": 160,
+        "unit": "ms"
+      },
+      "$description": "base"
+    },
+    "duration-240": {
+      "$type": "duration",
+      "$value": {
+        "value": 240,
+        "unit": "ms"
+      },
+      "$description": "slow"
+    },
+    "duration-480": {
+      "$type": "duration",
+      "$value": {
+        "value": 480,
+        "unit": "ms"
+      },
+      "$description": "slower"
+    },
+    "duration-1600": {
+      "$type": "duration",
+      "$value": {
+        "value": 1600,
+        "unit": "ms"
+      }
+    }
+  },
+  "easing": {
+    "ease-out-quad": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.25,
+        0.46,
+        0.45,
+        0.94
+      ]
+    },
+    "ease-out-quart": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.25,
+        1,
+        0.5,
+        1
+      ]
+    }
+  },
   "breakpoint": {
     "breakpoint-sm": {
       "$type": "dimension",
@@ -257,6 +335,10 @@
     "breakpoint-md": {
       "$type": "dimension",
       "$value": "1024px"
+    },
+    "breakpoint-lg": {
+      "$type": "dimension",
+      "$value": "1280px"
     }
   }
 }

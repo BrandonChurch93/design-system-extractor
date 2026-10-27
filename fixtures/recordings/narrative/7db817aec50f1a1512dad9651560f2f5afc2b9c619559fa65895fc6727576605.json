@@ -1,0 +1,24 @@
+{
+  "purpose": "narrative",
+  "size": "large",
+  "model": "claude-sonnet-5-5",
+  "text": "{\"narrative\": \"Nothing drifts in this system. It is already tight. It is built from nine colors, nine type styles and 11 spacing steps, all on the grid. No colors sit near a neighbor, no type styles overlap and no components need collapsing. The proposed set keeps the same three grays, nine type styles and 11 spacing steps, and every pair of text and background keeps its contrast ratio.\", \"designSystemIntro\": \"This design system was extracted from localhost:4100 across nine pages. It holds nine colors, nine type styles, 11 spacing steps and 28 components.\"}",
+  "usage": {
+    "input_tokens": 192,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1161,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 193,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-27T19:16:10.217Z",
+  "request": "{\"host\":\"localhost:4100\",\"colors\":9,\"typeStyles\":9,\"spacingSteps\":11,\"components\":28,\"pages\":9,\"headline\":\"Nothing to collapse. 9 colors, 11 spacing steps, all on the grid.\",\"supporting\":[],\"numbers\":[],\"findings\":{\"nearDuplicateColors\":0,\"offGrid\":[],\"variantCollapses\":0,\"typeNearDuplicates\":0},\"proposal\":{\"grays\":3,\"spacingSteps\":11,\"typeStyles\":9,\"contrastKept\":true}}"
+}

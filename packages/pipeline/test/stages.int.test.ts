@@ -83,7 +83,7 @@ describe('the tokens stage on the clean fixture', () => {
 describe('the components stage on the clean fixture', () => {
   it('writes components that validate, with complete provenance and stored crops', async () => {
     const comps = Component.array().parse(ctx.document.components);
-    expect(comps.length).toBe(27);
+    expect(comps.length).toBe(28);
     for (const c of comps) {
       const f = c.provenance.firstSeen;
       expect(f.selector, c.name).not.toBe('');
@@ -117,7 +117,7 @@ describe('the components stage on the clean fixture', () => {
 
   it('logs the component count and the model use', () => {
     const lines = ctx.events.filter((e) => e.stage === 'components').map((e) => e.message);
-    expect(lines[0]).toMatch(/^components · 27 found from [\d,]+ element candidates · 27 by model$/);
+    expect(lines[0]).toMatch(/^components · 28 found from [\d,]+ element candidates · 28 by model$/);
   });
 });
 

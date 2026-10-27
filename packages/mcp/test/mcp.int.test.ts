@@ -73,7 +73,7 @@ describe('the MCP server over stdio', () => {
   it('get_drift and get_prompt return the report and the prompts', async () => {
     const d = jsonOf(await client.callTool({ name: 'get_drift', arguments: {} }));
     Drift.pick({ headline: true, numbers: true, proposal: true, evidence: true, findingCount: true, narrative: true }).parse(d);
-    expect(d.findingCount).toBe(16);
+    expect(d.findingCount).toBe(18);
     const prompt = textOf(await client.callTool({ name: 'get_prompt', arguments: {} }));
     expect(prompt.startsWith('You are building an interface that must match this design system exactly.')).toBe(true);
     const one = textOf(await client.callTool({ name: 'get_prompt', arguments: { componentId: doc.components![0]!.id } }));

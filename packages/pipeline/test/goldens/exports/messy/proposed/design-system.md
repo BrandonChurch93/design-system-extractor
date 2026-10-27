@@ -1,13 +1,13 @@
 # localhost:4100 design system
 
-This design system was extracted from localhost:4100 across 12 pages. It holds 23 colors, nine type styles, 11 spacing steps and 31 components.
+This design system was extracted from localhost:4100 across 12 pages. It holds 22 colors, nine type styles, 11 spacing steps and 31 components.
 
 ## Palette
 
 | Name | Value | Group | Uses |
 | --- | --- | --- | --- |
 | gray-50 | #FFFFFF | neutral | 197 |
-| gray-300 | #D1D1D1 | neutral | 274 |
+| gray-300 | #D1D1D1 | neutral | 258 |
 | gray-300b | #C4C4C4 | neutral | 4 |
 | gray-400 | #B1B1B1 | neutral | 10 |
 | gray-500 | #868686 | neutral | 25 |
@@ -15,26 +15,34 @@ This design system was extracted from localhost:4100 across 12 pages. It holds 2
 | gray-700 | #505050 | neutral | 94 |
 | gray-800 | #353535 | neutral | 72 |
 | gray-900 | #1F1F1F | neutral | 684 |
-| blue-ink | #0B1F3A | brand | 168 |
+| blue-900 | #0B1F3A | brand | 168 |
 | blue-600 | #2458E6 | brand | 91 |
-| blue-600-alt | #1C4EDB | brand | 70 |
+| blue-link | #1C4EDB | brand | 70 |
 | teal-500 | #0F8A8A | brand | 44 |
-| blue-ink-tint | #0B1F3A1F | brand | 17 |
 | success | #15803D | semantic | 18 |
 | danger | #DC2626 | semantic | 12 |
 | warning | #F59E0B | semantic | 2 |
+
+## Overlays
+
+| Name | Base | Alpha | Value |
+| --- | --- | --- | --- |
+| blue-900-12 | zh3ek8iz | 12% | rgb(11 31 58 / 12%) |
+| black-4 | black | 4% | rgb(0 0 0 / 4%) |
+| gray-700-30 | bd9c4pw8 | 30% | rgb(80 80 80 / 30%) |
+| gray-800-20 | 54bndii3 | 20% | rgb(53 53 53 / 20%) |
 
 ## Type
 
 | Name | Role | Family | Size | Line height | Weight |
 | --- | --- | --- | --- | --- | --- |
 | display | display | Inter | 48px | 56px | 700 |
-| h1 | h1 | Inter | 36px | 44px | 700 |
-| h2 | h2 | Inter | 28px | 36px | 700 |
-| h3 | h3 | Inter | 20px | 28px | 600 |
+| title | title | Inter | 36px | 44px | 700 |
+| title-sm | title | Inter | 28px | 36px | 700 |
+| subheading | subheading | Inter | 20px | 28px | 600 |
 | body | body | Inter | 16px | 26px | 400 |
-| label | label | Inter | 14px | 20px | 600 |
-| body-sm | body-sm | Inter | 14px | 22px | 400 |
+| text-14 | text | Inter | 14px | 20px | 600 |
+| body-xs | body-sm | Inter | 14px | 22px | 400 |
 | caption | caption | Inter | 12px | 16px | 400 |
 
 ## Spacing
@@ -53,19 +61,162 @@ This design system was extracted from localhost:4100 across 12 pages. It holds 2
 - shadow-sm: 0px 1px 2px 0px #0B1F3A1F
 - shadow-md: 0px 12px 32px 0px #0B1F3A1F
 
+## Motion
+
+### Durations
+
+| Name | Value | Role |
+| --- | --- | --- |
+| duration-100 | 100 ms |  |
+| duration-120 | 120 ms | Faster |
+| duration-150 | 150 ms | Fast |
+| duration-160 | 160 ms | Base |
+| duration-200 | 200 ms | Slow |
+| duration-250 | 250 ms | Slower |
+| duration-300 | 300 ms |  |
+| duration-400 | 400 ms |  |
+| duration-1600 | 1600 ms |  |
+
+### Easings
+
+| Name | Value |
+| --- | --- |
+| ease-out-quad | cubic-bezier(0.25, 0.46, 0.45, 0.94) |
+| ease-out | ease-out |
+| ease | ease |
+| linear | linear |
+| ease-custom-1 | cubic-bezier(0.4, 0, 0.2, 1) |
+| ease-in-out | ease-in-out |
+
+### Keyframes
+
+```css
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+```
+
+### Patterns
+
+- Scrolled header · Site header · after 400 px of scrolling · box-shadow none → 0px 12px 32px 0px #0B1F3A1F · 160 ms · ease-out-quad
+- Loop · Status badge · loops every 1,600 ms · opacity 1 → 0.3 · 1,600 ms · ease-in-out
+
 ## Breakpoints
 
 - breakpoint-sm: 640px
 - breakpoint-md: 1024px
 
-## Components
+## Tokens as CSS
+
+```css
+:root {
+  --color-gray-50: #FFFFFF;
+  --color-gray-300: #D1D1D1;
+  --color-gray-300b: #C4C4C4;
+  --color-gray-400: #B1B1B1;
+  --color-gray-500: #868686;
+  --color-gray-600: #676767;
+  --color-gray-700: #505050;
+  --color-gray-800: #353535;
+  --color-gray-900: #1F1F1F;
+  --color-blue-900: #0B1F3A;
+  --color-blue-600: #2458E6;
+  --color-blue-link: #1C4EDB;
+  --color-teal-500: #0F8A8A;
+  --color-success: #15803D;
+  --color-danger: #DC2626;
+  --color-warning: #F59E0B;
+
+  --overlay-blue-900-12: rgb(11 31 58 / 12%);
+  --overlay-black-4: rgb(0 0 0 / 4%);
+  --overlay-gray-700-30: rgb(80 80 80 / 30%);
+  --overlay-gray-800-20: rgb(53 53 53 / 20%);
+
+  --font-sans: Inter, system-ui, sans-serif;
+
+  --type-display-size: 48px;
+  --type-display-line: 56px;
+  --type-display-weight: 700;
+  --type-title-size: 36px;
+  --type-title-line: 44px;
+  --type-title-weight: 700;
+  --type-title-sm-size: 28px;
+  --type-title-sm-line: 36px;
+  --type-title-sm-weight: 700;
+  --type-subheading-size: 20px;
+  --type-subheading-line: 28px;
+  --type-subheading-weight: 600;
+  --type-body-size: 16px;
+  --type-body-line: 26px;
+  --type-body-weight: 400;
+  --type-text-14-size: 14px;
+  --type-text-14-line: 20px;
+  --type-text-14-weight: 600;
+  --type-body-xs-size: 14px;
+  --type-body-xs-line: 22px;
+  --type-body-xs-weight: 400;
+  --type-caption-size: 12px;
+  --type-caption-line: 16px;
+  --type-caption-weight: 400;
+
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-64: 64px;
+  --space-96: 96px;
+
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-pill: 9999px;
+
+  --shadow-sm: 0px 1px 2px 0px #0B1F3A1F;
+  --shadow-md: 0px 12px 32px 0px #0B1F3A1F;
+
+  --duration-100: 100ms;
+  --duration-120: 120ms;
+  --duration-150: 150ms;
+  --duration-160: 160ms;
+  --duration-200: 200ms;
+  --duration-250: 250ms;
+  --duration-300: 300ms;
+  --duration-400: 400ms;
+  --duration-1600: 1600ms;
+  --duration-faster: var(--duration-120);
+  --duration-fast: var(--duration-150);
+  --duration-base: var(--duration-160);
+  --duration-slow: var(--duration-200);
+  --duration-slower: var(--duration-250);
+
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out: ease-out;
+  --ease: ease;
+  --ease-linear: linear;
+  --ease-custom-1: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-in-out: ease-in-out;
+
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 1024px;
+}
+```
+
+## Site variables
+
+The site declares no variables beyond the tokens.
+
+## Core components
 
 ### Button
 
-Button · 7 variants: Primary, Ghost, Primary small, Secondary, Primary 2, Secondary small, Ghost small
+Button · 7 variants: Primary small, Primary, Ghost, Secondary, Primary rounded, Secondary small, Ghost small
 States captured: Default, Hover, Focus, Active, Disabled
-Tokens used: blue-ink (color), radius 8px (border-radius), space-20 (padding-right), space-20 (padding-left), label (font)
+Tokens used: color-blue-900 (color), radius-sm (border-radius), space-20 (padding-right), space-20 (padding-left), type-text-14 (font), duration-160 (transition-duration), ease-out-quad (transition-timing-function)
 Unmapped: border-color rgba(0, 0, 0, 0)
+Motion: hover · background-color · 160 ms · ease-out-quad; active · background-color · 160 ms · ease-out-quad
 Checks: 4 of 4
 - Contrast AA · pass · 16.5:1 on gray-50
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
@@ -79,19 +230,17 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-a { color: var(--color-blue-600-alt); text-decoration: none; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms, color 160ms; }
-.btn-ghost { background: transparent; color: var(--color-blue-ink); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+a { color: var(--color-blue-link); text-decoration: none; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
+.btn-ghost { background: transparent; color: var(--color-blue-900); }
 ```
 
 ### Dropdown trigger
 
 Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Open
-Tokens used: blue-ink (color), radius 8px (border-radius), space-12 (padding-right), space-12 (padding-left), label (font)
+Tokens used: color-blue-900 (color), radius-sm (border-radius), space-12 (padding-right), space-12 (padding-left), type-text-14 (font)
+Motion: none
 Checks: 2 of 2
 - Contrast AA · pass · 16.5:1 on gray-50
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
@@ -103,19 +252,18 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
+button { padding: 0px; padding: 0px; padding: 0px; }
 button { font: inherit; color: inherit; }
-.dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-ink); cursor: pointer; }
+.dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 svg { display: block; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Menu button
 
 Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Open
-Tokens used: radius 8px (border-radius)
+Tokens used: radius-sm (border-radius)
+Motion: none
 Checks: 3 of 3
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 44 × 44 at 390 px
@@ -128,24 +276,24 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
+button { padding: 0px; padding: 0px; padding: 0px; }
 button { font: inherit; color: inherit; }
-.menu-button { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0px; border-radius: var(--radius-sm); background: transparent; color: var(--color-blue-ink); cursor: pointer; }
+.menu-button { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0px; border-radius: var(--radius-sm); background: transparent; color: var(--color-blue-900); cursor: pointer; }
 .menu-button { display: inline-flex; }
 svg { display: block; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
-### Tab
+### Tab button
 
 Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Selected
-Tokens used: blue-600 (color), space-16 (padding-right), space-16 (padding-left), label (font)
-Checks: 3 of 3
+Tokens used: color-blue-600 (color), space-16 (padding-right), space-16 (padding-left), type-text-14 (font), duration-250 (transition-duration), ease-custom-1 (transition-timing-function)
+Motion: none
+Checks: 4 of 4
 - Contrast AA · pass · 5.8:1 on gray-50
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 69 × 44 at 390 px
+- Reduced motion · pass · Stops under reduced motion
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -154,12 +302,11 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
+button { padding: 0px; padding: 0px; padding: 0px; }
 button { font: inherit; color: inherit; }
-.tab { height: 44px; padding: 0px var(--space-16); border-width: 0px 0px 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: none; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-ink); cursor: pointer; }
+.tab { height: 44px; padding: 0px var(--space-16); border-width: 0px 0px 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: none; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 .tab[aria-selected="true"] { color: var(--color-blue-600); border-bottom-color: var(--color-blue-600); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+.tab { transition: color var(--duration-250) var(--ease-custom-1); }
 ```
 
 ### Share button
@@ -168,6 +315,7 @@ Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active
 Tokens used: none
 Unmapped: border-radius 6px
+Motion: none
 Checks: 2 of 3
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · fail · 36 px tall, 8 short
@@ -180,23 +328,23 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
+button { padding: 0px; padding: 0px; padding: 0px; }
 button { font: inherit; color: inherit; }
-.share-button { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 0px; border-radius: 6px; background: transparent; color: var(--color-gray-ink); cursor: pointer; }
+.share-button { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 0px; border-radius: 6px; background: transparent; color: var(--color-gray-900); cursor: pointer; }
 svg { display: block; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Pill link
 
 Link · 1 variant: Default
 States captured: Default, Hover, Focus, Active
-Tokens used: gray-ink (color), gray-300 (border-color), radius-pill (border-radius), space-16 (padding-right), space-16 (padding-left), label (font)
-Checks: 2 of 3
+Tokens used: color-gray-900 (color), overlay-gray-700-30 (border-color), radius-pill (border-radius), space-16 (padding-right), space-16 (padding-left), type-text-14 (font), duration-300 (transition-duration), ease (transition-timing-function)
+Motion: none
+Checks: 3 of 4
 - Contrast AA · pass · 16.4:1 on gray-50
 - Focus visible · fail · No visible change on focus
 - Tap target · pass · 200 × 44 at 390 px
+- Reduced motion · pass · Stops under reduced motion
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -205,43 +353,18 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-a { color: var(--color-blue-600-alt); text-decoration: none; }
-.link-pill { display: inline-flex; align-items: center; height: 44px; padding: 0px var(--space-16); border: 1px solid var(--color-gray-300); border-radius: 999px; color: var(--color-gray-ink); font-size: 14px; line-height: 20px; font-weight: 600; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
-```
-
-### Icon button
-
-Button · 1 variant: Default
-States captured: Default, Hover, Focus, Active
-Tokens used: gray-50 (background-color), gray-400 (border-color), radius 8px (border-radius)
-Checks: 2 of 3
-- Focus visible · pass · 2 px ring, 5.8:1 against gray-50
-- Tap target · pass · 44 × 44 at 390 px
-- Label present · fail · No name found
-
-The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
-
-```html
-<button type="button" class="icon-button"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg></button>
-```
-
-```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-button { font: inherit; color: inherit; }
-.icon-button { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--color-gray-400); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-ink); cursor: pointer; }
-svg { display: block; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+a { color: var(--color-blue-link); text-decoration: none; }
+.link-pill { display: inline-flex; align-items: center; height: 44px; padding: 0px var(--space-16); border: 1px solid var(--color-gray-300); border-radius: 999px; color: var(--color-gray-900); font-size: 14px; line-height: 20px; font-weight: 600; }
+.link-pill { transition: border-color var(--duration-300); }
+.link-pill { border-color: var(--overlay-gray-700-30); }
 ```
 
 ### Newsletter input
 
 Text input · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Error
-Tokens used: gray-50 (background-color), gray-300 (border-color), radius 8px (border-radius), space-8 (padding-top), space-12 (padding-right), space-8 (padding-bottom), space-12 (padding-left)
+Tokens used: color-gray-50 (background-color), color-gray-300 (border-color), radius-sm (border-radius), space-8 (padding-top), space-12 (padding-right), space-8 (padding-bottom), space-12 (padding-left)
+Motion: none
 Checks: 3 of 4
 - Contrast AA · pass · 4.7:1 on gray-50
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
@@ -255,13 +378,11 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
+input { padding: 0px; padding: 0px; padding: 0px; }
 input { font: inherit; color: inherit; }
-.input { width: 100%; height: 44px; padding: var(--space-8) var(--space-12); border: 1px solid var(--color-gray-300); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-ink); font-size: 16px; line-height: 26px; }
+.input { width: 100%; height: 44px; padding: var(--space-8) var(--space-12); border: 1px solid var(--color-gray-300); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-900); font-size: 16px; line-height: 26px; }
 .newsletter-input { width: 240px; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
-.newsletter-input::placeholder { color: var(--color-gray-500); }
+.newsletter-input::placeholder { color: rgb(115, 115, 115); }
 ```
 
 ### Toggle
@@ -269,6 +390,7 @@ input { font: inherit; color: inherit; }
 Toggle · 1 variant: Default
 States captured: Default, Hover, Focus, Active
 Tokens used: none
+Motion: none
 Checks: 3 of 3
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 52 × 44 at 390 px
@@ -281,20 +403,19 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
+button { padding: 0px; padding: 0px; padding: 0px; }
 button { font: inherit; color: inherit; }
 .toggle { position: relative; flex: 0 0 auto; width: 52px; height: 44px; border: 0px; background: transparent; cursor: pointer; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-.toggle::before { content: ""; position: absolute; left: 4px; top: 10px; width: 44px; height: 24px; border-radius: 999px; background: var(--color-gray-100); }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
-.toggle::after { content: ""; position: absolute; left: 8px; top: 14px; width: 16px; height: 16px; border-radius: 999px; background: var(--color-gray-50); transition: transform 160ms; }
+.toggle::before { content: ""; position: absolute; left: 4px; top: 10px; width: 44px; height: 24px; border-radius: 999px; background: rgb(235, 235, 235); }
+.toggle::after { content: ""; position: absolute; left: 8px; top: 14px; width: 16px; height: 16px; border-radius: 999px; background: var(--color-gray-50); transition: transform var(--duration-160) var(--ease-out-quad); }
 ```
 
-### Select
+### Team size select
 
 Select · 1 variant: Default
 States captured: Default, Hover, Focus, Active
-Tokens used: gray-50 (background-color), blue-ink (color), gray-300 (border-color), radius 8px (border-radius), space-8 (padding-top), space-40 (padding-right), space-8 (padding-bottom), space-12 (padding-left), body (font)
+Tokens used: color-gray-50 (background-color), color-blue-900 (color), color-gray-300 (border-color), radius-sm (border-radius), space-8 (padding-top), space-40 (padding-right), space-8 (padding-bottom), space-12 (padding-left), type-body (font)
+Motion: none
 Checks: 3 of 3
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 342 × 44 at 390 px
@@ -307,19 +428,18 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
+select { padding: 0px; padding: 0px; padding: 0px; }
 select { font: inherit; color: inherit; }
-.select { width: 100%; height: 44px; padding: var(--space-8) var(--space-12); border: 1px solid var(--color-gray-300); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-ink); font-size: 16px; line-height: 26px; }
+.select { width: 100%; height: 44px; padding: var(--space-8) var(--space-12); border: 1px solid var(--color-gray-300); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-900); font-size: 16px; line-height: 26px; }
 .select { appearance: none; padding-right: var(--space-40); background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230B1F3A' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Checkbox
 
 Checkbox · 1 variant: Default
 States captured: Default, Hover, Focus, Active
-Tokens used: radius 8px (border-radius)
+Tokens used: radius-sm (border-radius)
+Motion: none
 Checks: 3 of 3
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 44 × 44 at 390 px
@@ -332,18 +452,17 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
+input { padding: 0px; padding: 0px; padding: 0px; }
 input { font: inherit; color: inherit; }
 .checkbox { appearance: none; flex: 0 0 auto; width: 44px; height: 44px; margin: 0px -12px; border: 0px; border-radius: var(--radius-sm); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect x='0.5' y='0.5' width='19' height='19' rx='3.5' fill='%23FFFFFF' stroke='%230B1F3A'/%3E%3C/svg%3E") center center no-repeat transparent; cursor: pointer; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
-### Textarea
+### Text area
 
 Textarea · 1 variant: Default
 States captured: Default, Hover, Focus, Active
-Tokens used: gray-50 (background-color), gray-300 (border-color), radius 8px (border-radius), space-8 (padding-top), space-12 (padding-right), space-8 (padding-bottom), space-12 (padding-left)
+Tokens used: color-gray-50 (background-color), color-gray-300 (border-color), radius-sm (border-radius), space-8 (padding-top), space-12 (padding-right), space-8 (padding-bottom), space-12 (padding-left)
+Motion: none
 Checks: 3 of 3
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 342 × 128 at 390 px
@@ -356,19 +475,18 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
+textarea { padding: 0px; padding: 0px; padding: 0px; }
 textarea { font: inherit; color: inherit; }
-.textarea { width: 100%; height: 44px; padding: var(--space-8) var(--space-12); border: 1px solid var(--color-gray-300); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-ink); font-size: 16px; line-height: 26px; }
+.textarea { width: 100%; height: 44px; padding: var(--space-8) var(--space-12); border: 1px solid var(--color-gray-300); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-900); font-size: 16px; line-height: 26px; }
 .textarea { height: 128px; resize: vertical; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Site header
 
 Header · 1 variant: Default
 States captured: Default, Scrolled
-Tokens used: gray-50 (background-color), gray-ink (color), body (font)
+Tokens used: color-gray-50 (background-color), color-gray-900 (color), type-body (font), duration-160 (transition-duration), ease-out-quad (transition-timing-function)
+Motion: scrolled · box-shadow · 160 ms · ease-out-quad; 1 motion pattern in the Motion section
 Checks: 1 of 1
 - Contrast AA · pass · 12.2:1 on gray-50
 
@@ -411,34 +529,35 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-500-border); transition: box-shadow 160ms; }
+button { padding: 0px; padding: 0px; padding: 0px; }
+.site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-500); transition: box-shadow var(--duration-160) var(--ease-out-quad); }
 .container { max-width: 1120px; margin: 0px auto; padding: 0px var(--space-24); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-32); height: 72px; }
-a { color: var(--color-blue-600-alt); text-decoration: none; }
+a { color: var(--color-blue-link); text-decoration: none; }
 .logo { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--color-gray-800); }
+.logo { transition: color var(--duration-150) var(--ease-linear); }
 .nav-links { display: flex; align-items: center; gap: var(--space-24); }
 .nav-link { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-gray-700); }
+.nav-link { transition: color var(--duration-100); }
 .dropdown { position: relative; }
 button { font: inherit; color: inherit; }
-.dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-ink); cursor: pointer; }
+.dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 svg { display: block; }
-.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300-alt); border-radius: var(--radius-lg); box-shadow: var(--color-blue-ink-tint) 0px 12px 32px; }
-.header-actions { display: flex; align-items: center; gap: var(--space-10); }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms, color 160ms; }
-.btn-ghost { background: transparent; color: var(--color-blue-ink); }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
+.header-actions { display: flex; align-items: center; gap: 10px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
+.btn-ghost { background: transparent; color: var(--color-blue-900); }
 .btn-primary { background: var(--color-blue-600); color: var(--color-gray-50); }
-.menu-button { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0px; border-radius: var(--radius-sm); background: transparent; color: var(--color-blue-ink); cursor: pointer; }
-.mobile-menu { border-top: 1px solid var(--color-gray-500-border); padding: var(--space-8) 0px var(--space-16); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+.menu-button { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0px; border-radius: var(--radius-sm); background: transparent; color: var(--color-blue-900); cursor: pointer; }
+.mobile-menu { border-top: 1px solid var(--color-gray-500); padding: var(--space-8) 0px var(--space-16); }
 ```
 
 ### Site footer
 
 Footer · 1 variant: Default
 States captured: Default
-Tokens used: gray-ink (color), gray-200 (border-color), space-48 (padding-top), space-48 (padding-bottom), body (font)
+Tokens used: color-gray-900 (color), color-gray-300 (border-color), space-48 (padding-top), space-48 (padding-bottom), type-body (font)
+Motion: none
 Checks: 1 of 1
 - Contrast AA · pass · 4.7:1 on gray-50
 
@@ -459,40 +578,43 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
         <a class="footer-link" href="#">Contact</a>
       </nav>
       <form class="newsletter"><input class="input newsletter-input" type="email" placeholder="Your email" style=""><button type="submit" class="btn btn-primary btn-sm">Subscribe</button></form>
+      
     </div>
   </div>
 </footer>
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.site-footer { border-top: 1px solid var(--color-gray-200); padding: var(--space-48) 0px; }
+p { margin: 0px; margin: 0px; margin: 0px; }
+button, input { padding: 0px; padding: 0px; padding: 0px; }
+.site-footer { border-top: 1px solid rgb(225, 225, 225); padding: var(--space-48) 0px; }
 .container { max-width: 1120px; margin: 0px auto; padding: 0px var(--space-24); }
 .footer-inner { display: flex; justify-content: space-between; gap: var(--space-32); flex-wrap: wrap; }
 .stack { display: flex; flex-direction: column; gap: var(--space-16); }
 .logo { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--color-gray-800); }
+.logo { transition: color var(--duration-150) var(--ease-linear); }
 p { font-size: 16px; line-height: 26px; }
-.caption { font-size: 12px; line-height: 16px; color: var(--color-gray-500); }
+.caption { font-size: 12px; line-height: 16px; color: rgb(115, 115, 115); }
 .footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
-a { color: var(--color-blue-600-alt); text-decoration: none; }
+a { color: var(--color-blue-link); text-decoration: none; }
 .footer-link { font-size: 14px; line-height: 22px; color: var(--color-gray-600); }
+.footer-link { transition: color var(--duration-120) var(--ease-out); }
 .newsletter { display: flex; gap: var(--space-8); align-items: center; }
 input, button { font: inherit; color: inherit; }
-.input { width: 100%; height: 44px; padding: var(--space-8) var(--space-12); border: 1px solid var(--color-gray-300); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-ink); font-size: 16px; line-height: 26px; }
+.input { width: 100%; height: 44px; padding: var(--space-8) var(--space-12); border: 1px solid var(--color-gray-300); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-900); font-size: 16px; line-height: 26px; }
 .newsletter-input { width: 240px; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms, color 160ms; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-sm { height: 36px; padding: 0px var(--space-16); }
 .btn-primary { background: var(--color-blue-600); color: var(--color-gray-50); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
-.newsletter-input::placeholder { color: var(--color-gray-500); }
+.newsletter-input::placeholder { color: rgb(115, 115, 115); }
 ```
 
 ### Footer links
 
 Nav bar · 1 variant: Default
 States captured: Default
-Tokens used: gray-ink (color), body (font)
+Tokens used: color-gray-900 (color), type-body (font)
+Motion: none
 Checks: 1 of 1
 - Contrast AA · pass · 5.6:1 on gray-50
 
@@ -508,19 +630,18 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
 .footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
-a { color: var(--color-blue-600-alt); text-decoration: none; }
+a { color: var(--color-blue-link); text-decoration: none; }
 .footer-link { font-size: 14px; line-height: 22px; color: var(--color-gray-600); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+.footer-link { transition: color var(--duration-120) var(--ease-out); }
 ```
 
 ### Main navigation
 
 Nav bar · 1 variant: Default
 States captured: Default
-Tokens used: gray-ink (color), body (font)
+Tokens used: color-gray-900 (color), type-body (font)
+Motion: none
 Checks: 1 of 1
 - Contrast AA · pass · 8.0:1 on gray-50
 
@@ -544,76 +665,24 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
+button { padding: 0px; padding: 0px; padding: 0px; }
 .nav-links { display: flex; align-items: center; gap: var(--space-24); }
-a { color: var(--color-blue-600-alt); text-decoration: none; }
+a { color: var(--color-blue-link); text-decoration: none; }
 .nav-link { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-gray-700); }
+.nav-link { transition: color var(--duration-100); }
 .dropdown { position: relative; }
 button { font: inherit; color: inherit; }
-.dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-ink); cursor: pointer; }
+.dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 svg { display: block; }
-.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300-alt); border-radius: var(--radius-lg); box-shadow: var(--color-blue-ink-tint) 0px 12px 32px; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
-```
-
-### Breadcrumb
-
-Breadcrumb · 1 variant: Default
-States captured: Default
-Tokens used: gray-ink (color), body (font)
-Checks: 1 of 1
-- Contrast AA · pass · 5.0:1 on gray-50
-
-The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
-
-```html
-<nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a class="crumb" href="#">Home</a></li><li aria-hidden="true">/</li><li class="crumb-current" aria-current="page">Docs</li></ol></nav>
-```
-
-```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-ol { list-style: none; }
-.breadcrumb { display: flex; align-items: center; gap: var(--space-8); font-size: 14px; line-height: 22px; }
-a { color: var(--color-blue-600-alt); text-decoration: none; }
-.crumb { color: var(--color-blue-500); }
-.crumb-current { color: var(--color-blue-ink); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
-```
-
-### Tabs
-
-Tabs · 1 variant: Default
-States captured: Default
-Tokens used: gray-ink (color), body (font)
-Checks: 0 of 0
-
-The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
-
-```html
-<div class="tabs" role="tablist" aria-label="Channels">
-    <button type="button" class="tab" role="tab" id="dse-tab-digest" aria-selected="true" aria-controls="dse-panel-digest">Digests</button>
-    <button type="button" class="tab" role="tab" id="dse-tab-slack" aria-selected="false" aria-controls="dse-panel-slack">Slack</button>
-    <button type="button" class="tab" role="tab" id="dse-tab-pages" aria-selected="false" aria-controls="dse-panel-pages">Pages</button>
-  </div>
-```
-
-```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.tabs { display: flex; gap: var(--space-4); border-bottom: 1px solid var(--color-gray-400-alt); }
-button { font: inherit; color: inherit; }
-.tab { height: 44px; padding: 0px var(--space-16); border-width: 0px 0px 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: none; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-ink); cursor: pointer; }
-.tab[aria-selected="true"] { color: var(--color-blue-600); border-bottom-color: var(--color-blue-600); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
 ```
 
 ### Feature card
 
 Card · 1 variant: Default
 States captured: Default
-Tokens used: gray-50 (background-color), gray-ink (color), gray-200 (border-color), radius 12px (border-radius), space-18 (padding-top), space-18 (padding-right), space-18 (padding-bottom), space-18 (padding-left), body (font), shadow-sm (box-shadow)
+Tokens used: color-gray-50 (background-color), color-gray-900 (color), color-gray-300 (border-color), radius-lg (border-radius), space-16 (padding-top), space-16 (padding-right), space-16 (padding-bottom), space-16 (padding-left), type-body (font), shadow-sm (box-shadow), duration-400 (transition-duration), ease-out (transition-timing-function)
+Motion: none
 Checks: 1 of 1
 - Contrast AA · pass · 8.0:1 on gray-50
 
@@ -629,27 +698,27 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.card { display: flex; flex-direction: column; gap: var(--space-12); padding: var(--space-18); background: var(--color-gray-50); border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); box-shadow: var(--color-blue-ink-tint) 0px 1px 2px; }
+h3, p { margin: 0px; margin: 0px; margin: 0px; }
+.card { display: flex; flex-direction: column; gap: var(--space-12); padding: 18px; background: var(--color-gray-50); border: 1px solid rgb(225, 225, 225); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 1px 2px; }
+.card { transition: box-shadow var(--duration-400) var(--ease-out); }
 .feature-icon { width: 24px; height: 24px; color: var(--color-teal-500); }
 svg { display: block; }
-.tag-new { display: inline-flex; align-items: center; align-self: flex-start; height: 24px; padding: 0px var(--space-10); border-radius: 999px; background: var(--color-teal-500); color: var(--color-gray-50); font-size: 12px; line-height: 16px; }
+.tag-new { display: inline-flex; align-items: center; align-self: flex-start; height: 24px; padding: 0px 10px; border-radius: 999px; background: var(--color-teal-500); color: var(--color-gray-50); font-size: 12px; line-height: 16px; }
 h3 { font-size: 20px; line-height: 28px; font-weight: 600; }
 h3 { color: var(--color-gray-800); }
 p { font-size: 16px; line-height: 26px; }
 .text-sm { font-size: 14px; line-height: 22px; color: var(--color-gray-700); }
 .card .text-sm { font-size: 15px; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
 ### Changelog entry
 
 List row · 1 variant: Default
 States captured: Default
-Tokens used: gray-ink (color), space-16 (padding-left), body (font)
-Checks: 1 of 1
-- Contrast AA · pass · 4.7:1 on gray-50
+Tokens used: overlay-black-4 (background-color), color-gray-900 (color), space-16 (padding-left), type-body (font)
+Motion: none
+Checks: 0 of 1
+- Contrast AA · fail · 4.3:1 on gray-50-tint, needs 4.5:1
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -658,24 +727,161 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.release { display: flex; flex-direction: column; gap: var(--space-8); padding-left: var(--space-16); border-left: 2px solid var(--color-gray-200); }
-.caption { font-size: 12px; line-height: 16px; color: var(--color-gray-500); }
+h3, p { margin: 0px; margin: 0px; margin: 0px; }
+.release { display: flex; flex-direction: column; gap: var(--space-8); padding-left: var(--space-16); border-left: 2px solid rgb(225, 225, 225); }
+.release { background: var(--overlay-black-4); border-left-color: rgba(51, 51, 51, 0.2); }
+.caption { font-size: 12px; line-height: 16px; color: rgb(115, 115, 115); }
 h3 { font-size: 20px; line-height: 28px; font-weight: 600; }
 h3 { color: var(--color-gray-800); }
 p { font-size: 16px; line-height: 26px; }
 .text-sm { font-size: 14px; line-height: 22px; color: var(--color-gray-700); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+```
+
+### Status badge
+
+Badge · 3 variants: Success, Danger, Warning
+States captured: Default
+Tokens used: color-success (background-color), color-gray-50 (color), radius-pill (border-radius), space-8 (padding-right), space-8 (padding-left), type-caption (font)
+Motion: 1 motion pattern in the Motion section
+Checks: 0 of 2
+- Contrast AA · fail · 2.1:1 on warning, needs 4.5:1
+- Reduced motion · fail · Animation still runs under reduced motion
+
+The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
+
+```html
+<span class="badge badge-success">API operational</span>
+```
+
+```css
+.badge { display: inline-flex; align-items: center; height: 24px; padding: 0px 10px; border-radius: 999px; color: var(--color-gray-50); font-size: 12px; line-height: 16px; }
+.badge-success { background: var(--color-success); }
+```
+
+### New tag
+
+Tag · 1 variant: Default
+States captured: Default
+Tokens used: color-teal-500 (background-color), color-gray-50 (color), radius-pill (border-radius), space-8 (padding-right), space-8 (padding-left), type-caption (font)
+Motion: none
+Checks: 0 of 1
+- Contrast AA · fail · 4.1:1 on teal-500, needs 4.5:1
+
+The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
+
+```html
+<span class="tag-new">New</span>
+```
+
+```css
+.tag-new { display: inline-flex; align-items: center; align-self: flex-start; height: 24px; padding: 0px 10px; border-radius: 999px; background: var(--color-teal-500); color: var(--color-gray-50); font-size: 12px; line-height: 16px; }
+```
+
+### Avatar
+
+Avatar · 1 variant: Default
+States captured: Default
+Tokens used: color-gray-300 (background-color), radius-pill (border-radius)
+Motion: none
+Checks: 0 of 0
+
+The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
+
+```html
+<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: rgb(215, 221, 229); vertical-align: middle" class="avatar"></span>
+```
+
+```css
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: rgb(235, 235, 235); }
+```
+
+## Page-specific components
+
+### Icon button
+
+Button · 1 variant: Default
+States captured: Default, Hover, Focus, Active
+Tokens used: color-gray-50 (background-color), color-gray-400 (border-color), radius-sm (border-radius)
+Motion: none
+Checks: 2 of 3
+- Focus visible · pass · 2 px ring, 5.8:1 against gray-50
+- Tap target · pass · 44 × 44 at 390 px
+- Label present · fail · No name found
+
+The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
+
+```html
+<button type="button" class="icon-button"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"></rect><path d="M5 15V5a2 2 0 0 1 2-2h10"></path></svg></button>
+```
+
+```css
+button { padding: 0px; padding: 0px; padding: 0px; }
+button { font: inherit; color: inherit; }
+.icon-button { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: 1px solid var(--color-gray-400); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-900); cursor: pointer; }
+svg { display: block; }
+```
+
+### Breadcrumb
+
+Breadcrumb · 1 variant: Default
+States captured: Default
+Tokens used: color-gray-900 (color), type-body (font)
+Motion: none
+Checks: 1 of 1
+- Contrast AA · pass · 5.0:1 on gray-50
+
+The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
+
+```html
+<nav aria-label="Breadcrumb"><ol class="breadcrumb"><li><a class="crumb" href="#">Home</a></li><li aria-hidden="true">/</li><li class="crumb-current" aria-current="page">Docs</li></ol></nav>
+```
+
+```css
+ol { margin: 0px; margin: 0px; margin: 0px; }
+ol { padding: 0px; padding: 0px; padding: 0px; }
+ol { list-style: none; }
+.breadcrumb { display: flex; align-items: center; gap: var(--space-8); font-size: 14px; line-height: 22px; }
+a { color: var(--color-blue-link); text-decoration: none; }
+.crumb { color: rgb(46, 99, 237); }
+.crumb { transition: color var(--duration-200) cubic-bezier(0.25, 0.5, 0.45, 0.95); }
+.crumb-current { color: var(--color-blue-900); }
+```
+
+### Plan tabs
+
+Tabs · 1 variant: Default
+States captured: Default
+Tokens used: color-gray-900 (color), type-body (font)
+Motion: none
+Checks: 0 of 0
+
+The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
+
+```html
+<div class="tabs" role="tablist" aria-label="Channels">
+    <button type="button" class="tab" role="tab" id="dse-tab-digest" aria-selected="true" aria-controls="dse-panel-digest">Digests</button>
+    <button type="button" class="tab" role="tab" id="dse-tab-slack" aria-selected="false" aria-controls="dse-panel-slack">Slack</button>
+    <button type="button" class="tab" role="tab" id="dse-tab-pages" aria-selected="false" aria-controls="dse-panel-pages">Pages</button>
+  </div>
+```
+
+```css
+button { padding: 0px; padding: 0px; padding: 0px; }
+.tabs { display: flex; gap: var(--space-4); border-bottom: 1px solid rgb(158, 158, 158); }
+button { font: inherit; color: inherit; }
+.tab { height: 44px; padding: 0px var(--space-16); border-width: 0px 0px 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: none; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
+.tab[aria-selected="true"] { color: var(--color-blue-600); border-bottom-color: var(--color-blue-600); }
+.tab { transition: color var(--duration-250) var(--ease-custom-1); }
 ```
 
 ### Pricing card
 
 Card · 2 variants: Primary, Secondary
 States captured: Default
-Tokens used: gray-50 (background-color), gray-ink (color), gray-200 (border-color), radius 12px (border-radius), space-32 (padding-top), space-32 (padding-right), space-32 (padding-bottom), space-32 (padding-left), body (font), shadow-sm (box-shadow)
+Tokens used: color-gray-50 (background-color), color-gray-900 (color), color-gray-300 (border-color), radius-lg (border-radius), space-32 (padding-top), space-32 (padding-right), space-32 (padding-bottom), space-32 (padding-left), type-body (font), shadow-sm (box-shadow), duration-400 (transition-duration), ease-out (transition-timing-function)
+Motion: none
 Checks: 0 of 1
-- Contrast AA · fail · 1.3:1 on blue-ink, needs 4.5:1
+- Contrast AA · fail · 1.3:1 on blue-900, needs 4.5:1
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -693,9 +899,11 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.card { display: flex; flex-direction: column; gap: var(--space-12); padding: var(--space-18); background: var(--color-gray-50); border: 1px solid var(--color-gray-200); border-radius: var(--radius-lg); box-shadow: var(--color-blue-ink-tint) 0px 1px 2px; }
+h3, p, ul { margin: 0px; margin: 0px; margin: 0px; }
+ul { padding: 0px; padding: 0px; padding: 0px; }
+.card { display: flex; flex-direction: column; gap: var(--space-12); padding: 18px; background: var(--color-gray-50); border: 1px solid rgb(225, 225, 225); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 1px 2px; }
 .pricing-card { padding: var(--space-32); gap: var(--space-16); }
+.card { transition: box-shadow var(--duration-400) var(--ease-out); }
 h3 { font-size: 20px; line-height: 28px; font-weight: 600; }
 h3 { color: var(--color-gray-800); }
 p { font-size: 16px; line-height: 26px; }
@@ -704,18 +912,17 @@ ul { list-style: none; }
 .plan-features { display: flex; flex-direction: column; gap: var(--space-8); }
 .text-sm { font-size: 14px; line-height: 22px; color: var(--color-gray-700); }
 .card .text-sm { font-size: 15px; }
-a { color: var(--color-blue-600-alt); text-decoration: none; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms, color 160ms; }
-.btn-secondary { background: var(--color-gray-50); color: var(--color-blue-600-alt); border-color: var(--color-blue-600-alt); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+a { color: var(--color-blue-link); text-decoration: none; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
+.btn-secondary { background: var(--color-gray-50); color: var(--color-blue-link); border-color: var(--color-blue-link); }
 ```
 
 ### Promo card
 
 Card · 1 variant: Default
 States captured: Default
-Tokens used: gray-50 (color), radius 12px (border-radius), space-32 (padding-top), space-32 (padding-right), space-32 (padding-bottom), space-32 (padding-left), body (font)
+Tokens used: color-gray-50 (color), radius-lg (border-radius), space-32 (padding-top), space-32 (padding-right), space-32 (padding-bottom), space-32 (padding-left), type-body (font)
+Motion: none
 Checks: 1 of 1
 - Contrast AA · pass · 11.2:1 on #1B3A6A
 
@@ -726,64 +933,19 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
+h3, p { margin: 0px; margin: 0px; margin: 0px; }
 .promo { display: flex; flex-direction: column; gap: var(--space-12); padding: var(--space-32); border-radius: var(--radius-lg); background-size: cover; color: var(--color-gray-50); }
 h3 { font-size: 20px; line-height: 28px; font-weight: 600; }
 h3 { color: var(--color-gray-800); }
 p { font-size: 16px; line-height: 26px; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
-### Status badge
-
-Badge · 3 variants: Success, Danger, Warning
-States captured: Default
-Tokens used: success (background-color), gray-50 (color), radius-pill (border-radius), space-10 (padding-right), space-10 (padding-left), caption (font)
-Checks: 0 of 2
-- Contrast AA · fail · 2.1:1 on warning, needs 4.5:1
-- Reduced motion · fail · Animation still runs under reduced motion
-
-The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
-
-```html
-<span class="badge badge-success">API operational</span>
-```
-
-```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.badge { display: inline-flex; align-items: center; height: 24px; padding: 0px var(--space-10); border-radius: 999px; color: var(--color-gray-50); font-size: 12px; line-height: 16px; }
-.badge-success { background: var(--color-success); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
-```
-
-### New tag
-
-Tag · 1 variant: Default
-States captured: Default
-Tokens used: teal-500 (background-color), gray-50 (color), radius-pill (border-radius), space-10 (padding-right), space-10 (padding-left), caption (font)
-Checks: 0 of 1
-- Contrast AA · fail · 4.1:1 on teal-500, needs 4.5:1
-
-The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
-
-```html
-<span class="tag-new">New</span>
-```
-
-```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.tag-new { display: inline-flex; align-items: center; align-self: flex-start; height: 24px; padding: 0px var(--space-10); border-radius: 999px; background: var(--color-teal-500); color: var(--color-gray-50); font-size: 12px; line-height: 16px; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
-```
-
-### Success alert
+### Success notice
 
 Alert · 1 variant: Default
 States captured: Default
-Tokens used: gray-50 (background-color), blue-ink (color), success (border-color), radius 8px (border-radius), space-16 (padding-top), space-16 (padding-right), space-16 (padding-bottom), space-16 (padding-left), body (font)
+Tokens used: color-gray-50 (background-color), color-blue-900 (color), color-success (border-color), radius-sm (border-radius), space-16 (padding-top), space-16 (padding-right), space-16 (padding-bottom), space-16 (padding-left), type-body (font)
+Motion: none
 Checks: 1 of 1
 - Contrast AA · pass · 16.5:1 on gray-50
 
@@ -800,27 +962,26 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.alert { display: flex; align-items: flex-start; gap: var(--space-12); padding: var(--space-16); border: 1px solid var(--color-success); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-ink); }
+p { margin: 0px; margin: 0px; margin: 0px; }
+.alert { display: flex; align-items: flex-start; gap: var(--space-12); padding: var(--space-16); border: 1px solid var(--color-success); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-blue-900); }
 .alert-icon { flex: 0 0 auto; width: 24px; height: 24px; }
 .alert-icon-success { color: var(--color-success); }
 svg { display: block; }
 .stack { display: flex; flex-direction: column; gap: var(--space-16); }
 p { font-size: 16px; line-height: 26px; }
 .hero-actions { display: flex; gap: var(--space-12); flex-wrap: wrap; }
-a { color: var(--color-blue-600-alt); text-decoration: none; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms, color 160ms; }
+a { color: var(--color-blue-link); text-decoration: none; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-sm { height: 36px; padding: 0px var(--space-16); }
 .btn-primary { background: var(--color-blue-600); color: var(--color-gray-50); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
 ```
 
-### Empty state
+### Not found state
 
 Empty state · 1 variant: Default
 States captured: Default
-Tokens used: gray-ink (color), gray-100 (border-color), radius 12px (border-radius), space-96 (padding-top), space-24 (padding-right), space-96 (padding-bottom), space-24 (padding-left), body (font)
+Tokens used: color-gray-900 (color), color-gray-300 (border-color), radius-lg (border-radius), space-96 (padding-top), space-24 (padding-right), space-96 (padding-bottom), space-24 (padding-left), type-body (font)
+Motion: none
 Checks: 1 of 1
 - Contrast AA · pass · 16.4:1 on gray-50
 
@@ -836,26 +997,25 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.empty-state { display: flex; flex-direction: column; align-items: center; gap: var(--space-16); padding: var(--space-96) var(--space-24); border: 1px solid var(--color-gray-100); border-radius: var(--radius-lg); text-align: center; }
+h1, p { margin: 0px; margin: 0px; margin: 0px; }
+.empty-state { display: flex; flex-direction: column; align-items: center; gap: var(--space-16); padding: var(--space-96) var(--space-24); border: 1px solid rgb(235, 235, 235); border-radius: var(--radius-lg); text-align: center; }
 .empty-icon { width: 48px; height: 48px; color: var(--color-teal-500); }
 svg { display: block; }
 h1 { font-size: 36px; line-height: 44px; font-weight: 700; }
 p { font-size: 16px; line-height: 26px; }
-a { color: var(--color-blue-600-alt); text-decoration: none; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms, color 160ms; }
-.btn-ghost { background: transparent; color: var(--color-blue-ink); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+a { color: var(--color-blue-link); text-decoration: none; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
+.btn-ghost { background: transparent; color: var(--color-blue-900); }
 ```
 
-### Pricing table
+### Pricing comparison table
 
 Table · 1 variant: Default
 States captured: Default
-Tokens used: gray-ink (color), body-sm (font)
+Tokens used: color-gray-900 (color), type-body-xs (font)
+Motion: none
 Checks: 1 of 1
-- Contrast AA · pass · 15.1:1 on gray-50-alt
+- Contrast AA · pass · 15.1:1 on gray-50-tint
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -871,22 +1031,21 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
+td, th { padding: 0px; padding: 0px; padding: 0px; }
 .table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 22px; }
-.th { padding: var(--space-12) var(--space-16); background: var(--color-gray-50-alt); border-bottom: 1px solid var(--color-gray-100); text-align: left; font-size: 14px; line-height: 20px; font-weight: 600; }
-.td { padding: var(--space-12) var(--space-16); border-bottom: 1px solid var(--color-gray-100); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+.th { padding: var(--space-12) var(--space-16); background: rgb(245, 245, 245); border-bottom: 1px solid rgb(235, 235, 235); text-align: left; font-size: 14px; line-height: 20px; font-weight: 600; }
+.td { padding: var(--space-12) var(--space-16); border-bottom: 1px solid rgb(235, 235, 235); }
 ```
 
 ### Code block
 
 Code block · 1 variant: Default
 States captured: Default
-Tokens used: blue-ink (background-color), gray-50 (color), radius 8px (border-radius), space-16 (padding-top), space-24 (padding-right), space-16 (padding-bottom), space-24 (padding-left)
+Tokens used: color-blue-900 (background-color), color-gray-50 (color), radius-sm (border-radius), space-16 (padding-top), space-24 (padding-right), space-16 (padding-bottom), space-24 (padding-left)
 Unmapped: font 14px 400
+Motion: none
 Checks: 1 of 1
-- Contrast AA · pass · 16.5:1 on blue-ink
+- Contrast AA · pass · 16.5:1 on blue-900
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -897,18 +1056,16 @@ tidewater publish</code></pre>
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.code-block { padding: var(--space-16) var(--space-24); border-radius: var(--radius-sm); background: var(--color-blue-ink); color: var(--color-gray-50); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; line-height: 22px; overflow-x: auto; }
-pre code { font: inherit; }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+pre { margin: 0px; margin: 0px; margin: 0px; }
+.code-block { padding: var(--space-16) var(--space-24); border-radius: var(--radius-sm); background: var(--color-blue-900); color: var(--color-gray-50); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; line-height: 22px; overflow-x: auto; }
 ```
 
-### Resources dropdown
+### Resources menu
 
 Dropdown · 1 variant: Default
 States captured: Default
-Tokens used: gray-50 (background-color), gray-ink (color), gray-300-alt (border-color), radius 12px (border-radius), space-8 (padding-top), space-8 (padding-right), space-8 (padding-bottom), space-8 (padding-left), body (font), shadow-md (box-shadow)
+Tokens used: color-gray-50 (background-color), color-gray-900 (color), color-gray-300b (border-color), radius-lg (border-radius), space-8 (padding-top), space-8 (padding-right), space-8 (padding-bottom), space-8 (padding-left), type-body (font), shadow-md (box-shadow)
+Motion: none
 Checks: 1 of 1
 - Contrast AA · pass · 16.5:1 on gray-50
 
@@ -923,19 +1080,17 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300-alt); border-radius: var(--radius-lg); box-shadow: var(--color-blue-ink-tint) 0px 12px 32px; }
-a { color: var(--color-blue-600-alt); text-decoration: none; }
-.menu-item { display: flex; align-items: center; height: 44px; padding: 0px var(--space-12); border-radius: var(--radius-sm); font-size: 14px; line-height: 22px; color: var(--color-blue-ink); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
+a { color: var(--color-blue-link); text-decoration: none; }
+.menu-item { display: flex; align-items: center; height: 44px; padding: 0px var(--space-12); border-radius: var(--radius-sm); font-size: 14px; line-height: 22px; color: var(--color-blue-900); }
 ```
 
 ### Mobile menu
 
 Dropdown · 1 variant: Default
 States captured: Default
-Tokens used: gray-ink (color), gray-500-border (border-color), space-8 (padding-top), space-16 (padding-bottom), body (font)
+Tokens used: color-gray-900 (color), color-gray-500 (border-color), space-8 (padding-top), space-16 (padding-bottom), type-body (font)
+Motion: none
 Checks: 1 of 1
 - Contrast AA · pass · 16.5:1 on gray-50
 
@@ -952,32 +1107,9 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.mobile-menu { border-top: 1px solid var(--color-gray-500-border); padding: var(--space-8) 0px var(--space-16); }
-a { color: var(--color-blue-600-alt); text-decoration: none; }
-.mobile-link { display: flex; align-items: center; height: 48px; font-size: 16px; line-height: 26px; color: var(--color-blue-ink); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
-```
-
-### Avatar
-
-Avatar · 1 variant: Default
-States captured: Default
-Tokens used: gray-100 (background-color), radius-pill (border-radius)
-Checks: 0 of 0
-
-The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
-
-```html
-<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: rgb(215, 221, 229); vertical-align: middle" class="avatar"></span>
-```
-
-```css
-* { box-sizing: border-box; margin: 0px; padding: 0px; }
-.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--color-gray-100); }
-::before { box-sizing: border-box; margin: 0px; padding: 0px; }
-::after { box-sizing: border-box; margin: 0px; padding: 0px; }
+.mobile-menu { border-top: 1px solid var(--color-gray-500); padding: var(--space-8) 0px var(--space-16); }
+a { color: var(--color-blue-link); text-decoration: none; }
+.mobile-link { display: flex; align-items: center; height: 48px; font-size: 16px; line-height: 26px; color: var(--color-blue-900); }
 ```
 
 ## Drift
@@ -988,10 +1120,10 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 - 13 → 11 spacing: Two sit off the 4 px grid: 10 and 18, on 12 pages.
 - 9 → 8 type: Three differ by 1 px or less in size or line height.
 
-Proposed set: 17 colors, 11 spacing steps, 8 type styles. Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.
+Proposed set: 16 colors, 11 spacing steps, 8 type styles, 9 durations, 6 easings. Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.
 
-The palette carries 14 grays where nine would do, and nine of them sit within ΔE 6.0 of a neighbor. Two spacing values, 10 and 18, sit off the 4 px grid, on 12 pages. Nine type styles are in use, and three of them differ by 1 px or less in size or line height. The proposed set folds the grays into nine steps, maps the off-grid values to their nearest steps and merges the near-duplicate type styles into eight. Every pair of text and background keeps its contrast ratio.
+The palette carries 14 grays where nine would do, and nine of them sit within ΔE 6.0 of a neighbor. Two spacing values, 10 and 18, sit off the 4 px grid, on 12 pages. Type runs to nine styles, and three differ by 1 px or less in size or line height. The proposed set folds the grays into nine steps, maps the off-grid values to their nearest steps and merges the near-duplicate type styles into eight. Every pair of text and background keeps its contrast ratio.
 
 ## How this was made
 
-Extracted by Design System Extractor from localhost:4100 in run evalmessy0 on 2026-10-12. Tokens, components and checks are measured from the rendered pages. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the proposed set.
+Extracted by Design System Extractor from localhost:4100 in run evalmessy0 on 2026-10-12. Tokens, motion, components and checks are measured from the rendered pages; motion marked observed was measured at runtime. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the proposed set.

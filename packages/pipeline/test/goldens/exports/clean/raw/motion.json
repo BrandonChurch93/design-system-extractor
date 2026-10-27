@@ -1,0 +1,337 @@
+{
+  "$meta": {
+    "tool": "Design System Extractor",
+    "host": "localhost:4100",
+    "runId": "evalclean0",
+    "set": "raw",
+    "date": "2026-10-12"
+  },
+  "durations": [
+    {
+      "name": "duration-120",
+      "ms": 120,
+      "role": "fast"
+    },
+    {
+      "name": "duration-160",
+      "ms": 160,
+      "role": "base"
+    },
+    {
+      "name": "duration-240",
+      "ms": 240,
+      "role": "slow"
+    },
+    {
+      "name": "duration-480",
+      "ms": 480,
+      "role": "slower"
+    },
+    {
+      "name": "duration-1600",
+      "ms": 1600
+    }
+  ],
+  "easings": [
+    {
+      "name": "ease-out-quad",
+      "value": "cubic-bezier(0.25, 0.46, 0.45, 0.94)"
+    },
+    {
+      "name": "ease-out-quart",
+      "value": "cubic-bezier(0.25, 1, 0.5, 1)"
+    }
+  ],
+  "keyframes": [
+    {
+      "name": "fade-up",
+      "css": "@keyframes fade-up { 0% { opacity: 0; transform: translateY(12px); } 100% { opacity: 1; transform: none; } }",
+      "used": true,
+      "usage": 2,
+      "pages": [
+        {
+          "pageId": "ccxkgte0",
+          "count": 2
+        }
+      ],
+      "unresolved": []
+    },
+    {
+      "name": "pulse",
+      "css": "@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }",
+      "used": true,
+      "usage": 2,
+      "pages": [
+        {
+          "pageId": "dnmqve6y",
+          "count": 2
+        }
+      ],
+      "unresolved": []
+    }
+  ],
+  "patterns": [
+    {
+      "id": "1im9etpy",
+      "kind": "entrance",
+      "elementKey": "h1|1.0.0.0",
+      "selector": "h1.display",
+      "pageId": "ccxkgte0",
+      "pageIds": [
+        "ccxkgte0"
+      ],
+      "viewport": "desktop",
+      "instances": 1,
+      "trigger": {
+        "type": "load"
+      },
+      "start": {
+        "opacity": "0",
+        "transform": "translateY(12px)"
+      },
+      "end": {
+        "opacity": "1",
+        "transform": "none"
+      },
+      "durationMs": 480,
+      "delayMs": 0,
+      "easing": "cubic-bezier(0.25, 1, 0.5, 1)",
+      "easingTokenId": "ibains96",
+      "iterations": 1,
+      "keyframesName": "fade-up",
+      "source": "css-animation",
+      "observed": false
+    },
+    {
+      "id": "k1viu24s",
+      "kind": "scroll-reveal",
+      "elementKey": "article|1.0.7.0.0",
+      "selector": "div.grid > article:nth-of-type(1)",
+      "componentId": "ufnklwdg",
+      "pageId": "dnmqve6y",
+      "pageIds": [
+        "dnmqve6y"
+      ],
+      "viewport": "desktop",
+      "instances": 3,
+      "trigger": {
+        "type": "in-view",
+        "value": 0.15
+      },
+      "start": {
+        "opacity": "0",
+        "transform": "translateY(16px)"
+      },
+      "end": {
+        "opacity": "1",
+        "transform": "none"
+      },
+      "durationMs": 240,
+      "delayMs": 0,
+      "easing": "cubic-bezier(0.25, 1, 0.5, 1)",
+      "easingTokenId": "ibains96",
+      "iterations": 1,
+      "source": "css-transition",
+      "stagger": {
+        "count": 3,
+        "stepMs": 60
+      },
+      "observed": false
+    },
+    {
+      "id": "k0dkmtrj",
+      "kind": "scroll-reveal",
+      "elementKey": "div|1.0.3.0",
+      "selector": "div.testimonial",
+      "pageId": "ccxkgte0",
+      "pageIds": [
+        "ccxkgte0"
+      ],
+      "viewport": "desktop",
+      "instances": 1,
+      "trigger": {
+        "type": "in-view",
+        "value": 0.3
+      },
+      "start": {
+        "opacity": "0.03",
+        "transform": "translateY(15.5px)"
+      },
+      "end": {
+        "opacity": "1",
+        "transform": "translateY(0px)"
+      },
+      "durationMs": 398,
+      "delayMs": 0,
+      "easing": null,
+      "iterations": 1,
+      "source": "inline-style",
+      "observed": true
+    },
+    {
+      "id": "px3kmvc5",
+      "kind": "scrolled-header",
+      "elementKey": "header|e1",
+      "selector": "header.site-header",
+      "componentId": "oyicb4ht",
+      "pageId": "ccxkgte0",
+      "pageIds": [
+        "ccxkgte0",
+        "ixiugv3z",
+        "ct3f79zh",
+        "hve7otg7",
+        "dnmqve6y",
+        "coeukbz6",
+        "jmbmubu2"
+      ],
+      "viewport": "desktop",
+      "instances": 12,
+      "trigger": {
+        "type": "scroll",
+        "value": 400
+      },
+      "start": {
+        "box-shadow": "none"
+      },
+      "end": {
+        "box-shadow": "0px 12px 32px 0px #0B1F3A1F"
+      },
+      "durationMs": 160,
+      "delayMs": 0,
+      "easing": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+      "easingTokenId": "5onc3vt1",
+      "iterations": 1,
+      "source": "css-transition",
+      "observed": false
+    },
+    {
+      "id": "o5l4zcc8",
+      "kind": "loop",
+      "elementKey": "svg|1.0.5.0.0",
+      "selector": "span.alert-icon.alert-icon-success > svg",
+      "componentId": "81pp7ac5",
+      "pageId": "dnmqve6y",
+      "pageIds": [
+        "dnmqve6y"
+      ],
+      "viewport": "desktop",
+      "instances": 1,
+      "trigger": {
+        "type": "load"
+      },
+      "start": {
+        "opacity": "1"
+      },
+      "end": {
+        "opacity": "0.4"
+      },
+      "durationMs": 1600,
+      "delayMs": 0,
+      "easing": "cubic-bezier(0.25, 1, 0.5, 1)",
+      "easingTokenId": "ibains96",
+      "iterations": "infinite",
+      "keyframesName": "pulse",
+      "source": "css-animation",
+      "observed": false
+    }
+  ],
+  "components": [
+    {
+      "id": "j3poeqhk",
+      "name": "Button",
+      "slug": "button",
+      "transitions": [
+        {
+          "state": "hover",
+          "property": "background-color",
+          "durationMs": 160,
+          "delayMs": 0,
+          "easingTokenId": "5onc3vt1"
+        },
+        {
+          "state": "hover",
+          "property": "box-shadow",
+          "durationMs": 160,
+          "delayMs": 0,
+          "easingTokenId": "5onc3vt1"
+        },
+        {
+          "state": "hover",
+          "property": "transform",
+          "durationMs": 160,
+          "delayMs": 0,
+          "easingTokenId": "5onc3vt1"
+        },
+        {
+          "state": "active",
+          "property": "background-color",
+          "durationMs": 160,
+          "delayMs": 0,
+          "easingTokenId": "5onc3vt1"
+        },
+        {
+          "state": "active",
+          "property": "box-shadow",
+          "durationMs": 160,
+          "delayMs": 0,
+          "easingTokenId": "5onc3vt1"
+        },
+        {
+          "state": "active",
+          "property": "transform",
+          "durationMs": 160,
+          "delayMs": 0,
+          "easingTokenId": "5onc3vt1"
+        }
+      ],
+      "animations": [],
+      "patternIds": []
+    },
+    {
+      "id": "oyicb4ht",
+      "name": "Site header",
+      "slug": "site-header",
+      "transitions": [
+        {
+          "state": "scrolled",
+          "property": "box-shadow",
+          "durationMs": 160,
+          "delayMs": 0,
+          "easingTokenId": "5onc3vt1"
+        }
+      ],
+      "animations": [],
+      "patternIds": [
+        "px3kmvc5"
+      ]
+    },
+    {
+      "id": "ufnklwdg",
+      "name": "Feature card",
+      "slug": "feature-card",
+      "transitions": [],
+      "animations": [],
+      "patternIds": [
+        "k1viu24s"
+      ]
+    },
+    {
+      "id": "81pp7ac5",
+      "name": "Notice",
+      "slug": "notice",
+      "transitions": [],
+      "animations": [
+        {
+          "keyframesName": "pulse",
+          "durationMs": 1600,
+          "easingTokenId": "ibains96",
+          "iterations": "infinite",
+          "trigger": "loop"
+        }
+      ],
+      "patternIds": [
+        "o5l4zcc8"
+      ]
+    }
+  ]
+}
