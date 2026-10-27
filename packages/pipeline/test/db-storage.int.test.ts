@@ -61,9 +61,9 @@ describe('run store', () => {
   it('applies patches as a deep merge and validates the result', async () => {
     const id = await insertRun();
     await applyPatch(db, id, { status: 'running', tokens: { colors: [] } });
-    const doc = await applyPatch(db, id, { tokens: { breakpoints: [640, 1024] } });
+    const doc = await applyPatch(db, id, { tokens: { breakpoints: [{ value: 640, usage: 3 }, { value: 1024, usage: 2 }] } });
     expect(doc.status).toBe('running');
-    expect(doc.tokens).toEqual({ colors: [], breakpoints: [640, 1024] });
+    expect(doc.tokens).toEqual({ colors: [], breakpoints: [{ value: 640, usage: 3 }, { value: 1024, usage: 2 }] });
     await expect(applyPatch(db, id, { status: 'paused' })).rejects.toThrow();
     const [row] = await db.select().from(tables.runs).where(sql`id = ${id}`);
     expect((row!.document as RunDocumentPartial).status).toBe('running');
@@ -71,9 +71,9 @@ describe('run store', () => {
 
   it('serializes concurrent patches without losing either', async () => {
     const id = await insertRun();
-    await Promise.all([applyPatch(db, id, { tokens: { colors: [] } }), applyPatch(db, id, { tokens: { breakpoints: [768] } }), applyPatch(db, id, { sparse: false })]);
+    await Promise.all([applyPatch(db, id, { tokens: { colors: [] } }), applyPatch(db, id, { tokens: { breakpoints: [{ value: 768, usage: 1 }] } }), applyPatch(db, id, { sparse: false })]);
     const row = await getRunForViewer(db, id, null);
-    expect(row!.document).toMatchObject({ tokens: { colors: [], breakpoints: [768] }, sparse: false });
+    expect(row!.document).toMatchObject({ tokens: { colors: [], breakpoints: [{ value: 768, usage: 1 }] }, sparse: false });
   });
 
   it('appends events in order', async () => {

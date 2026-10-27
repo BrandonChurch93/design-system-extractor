@@ -42,7 +42,7 @@ describe('dse extract', () => {
     const doc = RunDocumentPartial.parse(JSON.parse(readFileSync(join(dir, 'run.json'), 'utf8')));
     expect(doc.status).toBe('complete');
     expect(doc.components!.length).toBeGreaterThan(20);
-    expect(readdirSync(join(dir, 'exports')).sort()).toEqual(['all.zip', 'design-system.md', 'prompt.md', 'tailwind.tokens.js', 'tokens.css', 'tokens.json', 'tokens.w3c.json']);
+    expect(readdirSync(join(dir, 'exports')).sort()).toEqual(['all.zip', 'design-system.md', 'motion.css', 'motion.json', 'prompt.md', 'tailwind.tokens.js', 'tokens.css', 'tokens.json', 'tokens.w3c.json']);
     expect(readdirSync(join(dir, 'screenshots')).length).toBe(18);
     expect(existsSync(join(dir, 'components'))).toBe(true);
     expect(existsSync(join(dir, '.intermediate'))).toBe(false);

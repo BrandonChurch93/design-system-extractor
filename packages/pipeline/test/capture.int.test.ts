@@ -147,7 +147,8 @@ describe('capture on the clean fixture', () => {
     const home = page(clean.captured, '/').viewports.desktop!;
     const anims = home.motion?.anims ?? [];
     expect(anims.some((a) => a.source === 'css-animation' && a.name === 'fade-up')).toBe(true);
-    expect(anims.some((a) => a.source === 'css-animation' && a.name === 'pulse' && a.iterations === 'infinite')).toBe(true);
+    const features = page(clean.captured, '/features').viewports.desktop!.motion?.anims ?? [];
+    expect(features.some((a) => a.source === 'css-animation' && a.name === 'pulse' && a.iterations === 'infinite')).toBe(true);
     const hover = Object.values(home.states).flatMap((s) => s.filter((r) => r.state === 'hover')).find((r) => r.delta.some((d) => d.property === 'transform'));
     expect(hover?.delta.find((d) => d.property === 'transform')?.transition?.durationMs).toBeGreaterThan(0);
   });

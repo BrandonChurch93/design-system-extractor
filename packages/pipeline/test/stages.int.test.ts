@@ -52,7 +52,7 @@ describe('the tokens stage on the clean fixture', () => {
     expect(t.colors).toHaveLength(9);
     expect(t.spaceBase).toEqual({ value: 4, clear: true });
     expect(t.families).toEqual([expect.objectContaining({ name: 'Inter', loaded: true }), expect.objectContaining({ name: 'ui-monospace', loaded: true })]);
-    expect(t.rawCounts).toMatchObject({ colors: 9, radii: 3, shadows: 2 });
+    expect(t.rawCounts).toMatchObject({ colors: 12, radii: 3, shadows: 2 });
   });
 
   it('classifies the three state colors as semantic by their context', () => {
@@ -72,10 +72,12 @@ describe('the tokens stage on the clean fixture', () => {
   it('logs each substage in the live-log voice', () => {
     const lines = ctx.events.filter((e) => e.stage === 'tokens').map((e) => `${e.substage} ${e.message}`);
     expect(lines).toEqual([
-      'tokens:palette tokens · colors 9 clustered from 9 raw values · ΔE threshold 2.3',
-      'tokens:palette tokens · color names by model · 2 renamed',
+      'tokens:palette tokens · colors 9 clustered from 12 raw values · ΔE threshold 2.3',
+      'tokens:palette tokens · color names by model · 1 renamed',
       'tokens:type tokens · type 9 styles · Inter, ui-monospace · all loaded',
       'tokens:space tokens · spacing 11 steps · 4 px base · 3 radii · 2 shadows',
+      'tokens:motion tokens · motion 5 durations · 2 easings · 2 keyframes',
+      'tokens:motion tokens · 6 site variables named tokens · 3 overlays',
     ]);
   });
 });
@@ -98,9 +100,9 @@ describe('the components stage on the clean fixture', () => {
     expect(comps.filter((c) => !c.provenance.firstSeen.sourceCrop).map((c) => c.type)).toEqual(['dropdown', 'dropdown']);
   });
 
-  it('finds the button with its six variants, five states and links to the palette', () => {
+  it('finds the button with its seven variants, five states and links to the palette', () => {
     const button = ctx.document.components!.find((c) => c.name === 'Button')!;
-    expect(button.variants.map((v) => v.name).sort()).toEqual(['Ghost', 'Ghost small', 'Primary', 'Primary small', 'Secondary', 'Secondary small']);
+    expect(button.variants.map((v) => v.name).sort()).toEqual(['Ghost', 'Ghost rounded', 'Ghost small', 'Primary', 'Primary small', 'Secondary', 'Secondary small']);
     expect(button.states.filter((s) => s.captured).map((s) => s.state)).toEqual(['default', 'hover', 'focus', 'active', 'disabled']);
     expect(button.states.find((s) => s.state === 'focus')!.reachedByKeyboard).toBe(true);
     expect(button.provenance.pages.map((p) => p.path)).toEqual(['/', '/pricing', '/docs', '/login', '/signup', '/contact', '/features', expect.stringMatching(/-does-not-exist$/), '/docs/getting-started']);
@@ -134,14 +136,14 @@ describe('the previews stage on the clean fixture', () => {
     const button = comps.find((c) => c.name === 'Button')!;
     expect(Object.keys(button.preview.stateHtmlKeys ?? {}).sort()).toEqual(['active', 'focus', 'hover']);
     const hover = (await storage.get(button.preview.stateHtmlKeys!.hover!))!.toString('utf8');
-    expect(hover).toContain('background-color: rgb(226, 232, 240) !important');
+    expect(hover).toContain('background-color: #E2E8F0 !important');
     expect(button.variants.every((v) => v.preview.mode === 'live')).toBe(true);
     expect(comps.find((c) => c.type === 'avatar')!.preview).toMatchObject({ mode: 'captured', capturedReason: 'diff' });
   });
 
   it('logs the build in the live-log voice', () => {
     const line = ctx.events.find((e) => e.stage === 'previews')!.message;
-    expect(line).toMatch(/^previews · 27 built · 26 live · 1 captured \(median diff \d+\.\d %\)$/);
+    expect(line).toMatch(/^previews · 28 built · 27 live · 1 captured \(median diff \d+\.\d %\)$/);
   });
 });
 
@@ -158,7 +160,7 @@ describe('the checks stage on the clean fixture', () => {
     expect(failing).toEqual([expect.stringMatching(/ · label · No name found$/), expect.stringMatching(/ · contrast · 4\.1:1 on teal-500, needs 4\.5:1$/)]);
     const summary = Checks.parse(ctx.document.checks);
     expect(summary.summary.failed).toBe(2);
-    expect(summary.summary.total).toBe(27 * 5);
+    expect(summary.summary.total).toBe(28 * 5);
     expect(summary.summary.passed + summary.summary.failed).toBe(summary.summary.applicable);
     expect(ctx.events.find((e) => e.stage === 'checks')!.message).toBe(`checks · ${summary.summary.applicable} applicable · ${summary.summary.passed} passed · 2 failed`);
   });
