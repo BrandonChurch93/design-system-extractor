@@ -1,0 +1,44 @@
+# The production env template: every variable in packages/schema/src/env.ts, with placeholder values
+# of the shape each must have. The build checks it with
+#   pnpm run doctor --production --env fixtures/env/production.sample
+# Copy it to .env.production.local and replace every placeholder (docs/deploy-runbook.md, step 6).
+# These values are placeholders, not secrets: none of them reaches a real service.
+
+ANTHROPIC_API_KEY=sk-ant-api03-REPLACE_WITH_THE_dse-production_KEY_0000000000
+DSE_MODEL_SMALL=
+DSE_MODEL_LARGE=
+
+DSE_DEV_SPEND_CAP_USD=20
+DSE_DEV_SPEND_RESERVE_USD=4
+DSE_MODEL_MODE=live
+DSE_KEEP_INTERMEDIATE=0
+
+# The Session connection string (5432): the worker and the migration. Vercel gets the pooler (6543).
+DATABASE_URL=postgresql://postgres.project-ref:database-password@aws-0-us-west-1.pooler.supabase.com:5432/postgres
+REDIS_URL=rediss://default:upstash-password@example-name-00000.upstash.io:6379
+STORAGE_ENDPOINT=https://project-ref.supabase.co/storage/v1/s3
+STORAGE_REGION=us-west-1
+STORAGE_BUCKET=dse
+STORAGE_ACCESS_KEY=supabase-s3-access-key-id
+STORAGE_SECRET_KEY=supabase-s3-secret-access-key
+STORAGE_PUBLIC_BASE_URL=https://project-ref.supabase.co/storage/v1/object/public/dse
+
+DSE_GLOBAL_DAILY_BUDGET_USD=2.00
+DSE_VISITOR_RUNS_PER_DAY=2
+DSE_PAGE_CAP=12
+DSE_BYO_PAGE_CAP=40
+DSE_WORST_CASE_RUN_USD=0.60
+DSE_RUN_TIMEOUT_MS=360000
+DSE_SHOWCASE_TIMEOUT_MS=900000
+DSE_BUDGET_TIMEZONE=America/Boise
+# Empty in production; doctor --production fails if it is set.
+DSE_ALLOW_PRIVATE_HOSTS=
+
+DSE_JOB_ENCRYPTION_KEY=AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+DSE_ADMIN_TOKEN=replace-with-a-random-base64url-token-of-43-chars
+
+NEXT_PUBLIC_APP_URL=https://design-system-extractor.vercel.app
+DSE_USER_AGENT=DesignSystemExtractorBot/1.0 (+https://design-system-extractor.vercel.app/how-it-works)
+DSE_CONTACT_EMAIL=owner@example.com
+
+BILLING_ENABLED=false
