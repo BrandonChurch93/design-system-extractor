@@ -149,25 +149,30 @@ test('RegionSkeleton: every region before its stage lands has the documented sha
       palette: shape(roots(palette)[0]!),
       type: shape(tokens[0]!),
       spacing: shape(tokens[1]!),
-      components: shape(roots(document.getElementById('components')!)[0]!),
+      componentsParts: roots(document.getElementById('components')!)[0]!.children.length,
+      components: shape(roots(document.getElementById('components')!)[0]!.children[1]!),
       checks: { summary: Math.round(box(checks!.children[0]!).height), rows: checks!.children[1]!.children.length },
       drift: { numbers: drift!.children[0]!.children.length },
-      exports: { cards: exportsRoot!.children[0]!.children.length, grid: Math.round(box(exportsRoot!.children[0]!).width), mcp: Math.round(box(exportsRoot!.children[1]!).width), parts: exportsRoot!.children.length },
+      exports: { cards: exportsRoot!.children[1]!.children.length, grid: Math.round(box(exportsRoot!.children[1]!).width), mcp: Math.round(box(exportsRoot!.children[2]!).width), parts: exportsRoot!.children.length },
     };
   }, runPage.palette.label);
   expect(shapes.palette.rows).toBe(8);
   expect(new Set(shapes.palette.heights)).toEqual(new Set([96]));
   expect(shapes.type.rows).toBe(8);
-  expect(shapes.type.height).toBe(520);
+  // Heights are the typical result's at 1440 (D-080).
+  expect(shapes.type.height).toBe(580);
   expect(shapes.spacing.rows).toBe(9);
-  expect(shapes.spacing.height).toBe(300);
+  expect(shapes.spacing.height).toBe(446);
+  // The filter row, the six cards, Show all.
+  expect(shapes.componentsParts).toBe(3);
   expect(shapes.components.rows).toBe(6);
   expect(shapes.components.tops).toHaveLength(2);
   expect(shapes.components.heights.every((h) => h === 152)).toBe(true);
   expect(shapes.checks.summary).toBeGreaterThan(0);
   expect(shapes.checks.rows).toBe(5);
   expect(shapes.drift.numbers).toBe(3);
-  expect(shapes.exports).toMatchObject({ cards: 6, parts: 2 });
+  // The download row, the six cards, the MCP card.
+  expect(shapes.exports).toMatchObject({ cards: 6, parts: 3 });
   expect(shapes.exports.mcp).toBe(shapes.exports.grid);
 });
 
