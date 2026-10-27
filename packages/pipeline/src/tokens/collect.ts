@@ -24,6 +24,8 @@ export type RawTokens = {
   radius: Map<number, RawRadius>;
   shadows: Map<string, RawShadow>;
   breakpoints: Map<number, number>;
+  /** How often each width was an upper bound (`max-width`, `width <`), to tell a max-width twin from its breakpoint. */
+  breakpointMax: Map<number, number>;
   pairs: Map<string, RawPair>;
   fontDecls: number;
   families: Map<string, { loaded: boolean; fallback?: string }>;
@@ -46,7 +48,7 @@ export type CaptureSource = {
 const bump = (m: Map<string, number>, k: string, n = 1) => m.set(k, (m.get(k) ?? 0) + n);
 
 export function emptyRaw(): RawTokens {
-  return { colors: new Map(), type: new Map(), space: new Map(), radius: new Map(), shadows: new Map(), breakpoints: new Map(), pairs: new Map(), fontDecls: 0, families: new Map() };
+  return { colors: new Map(), type: new Map(), space: new Map(), radius: new Map(), shadows: new Map(), breakpoints: new Map(), breakpointMax: new Map(), pairs: new Map(), fontDecls: 0, families: new Map() };
 }
 
 function addColor(raw: RawTokens, c: Rgba, use: ColorUse, weight: number, pageId: string, semantic = false) {
@@ -152,14 +154,18 @@ function lineHeightPx(e: SnapElement): number {
   return Math.round(px(lh) * 2) / 2;
 }
 
-/** Width and comparison values of media queries in px (em and rem at 16). */
+/** Width and comparison values of media queries in px (em and rem at 16), each marked when it is an upper bound. */
+export function boundsOf(condition: string): { value: number; max: boolean }[] {
+  const out: { value: number; max: boolean }[] = [];
+  const val = (n: string, unit: string) => Math.round(unit === 'px' ? parseFloat(n) : parseFloat(n) * 16);
+  for (const m of condition.matchAll(/(min|max)-width\s*:\s*([\d.]+)(px|em|rem)/gi)) out.push({ value: val(m[2]!, m[3]!), max: m[1]!.toLowerCase() === 'max' });
+  for (const m of condition.matchAll(/width\s*(<=|>=|<|>)\s*([\d.]+)(px|em|rem)/gi)) out.push({ value: val(m[2]!, m[3]!), max: m[1]!.startsWith('<') });
+  for (const m of condition.matchAll(/([\d.]+)(px|em|rem)\s*(<=|>=|<|>)\s*width/gi)) out.push({ value: val(m[1]!, m[2]!), max: m[3]!.startsWith('>') });
+  return out;
+}
+
 export function breakpointsOf(condition: string): number[] {
-  const out: number[] = [];
-  const val = (n: string, unit: string) => (unit === 'px' ? parseFloat(n) : parseFloat(n) * 16);
-  for (const m of condition.matchAll(/(?:min|max)-width\s*:\s*([\d.]+)(px|em|rem)/gi)) out.push(val(m[1]!, m[2]!));
-  for (const m of condition.matchAll(/width\s*(?:<=|>=|<|>)\s*([\d.]+)(px|em|rem)/gi)) out.push(val(m[1]!, m[2]!));
-  for (const m of condition.matchAll(/([\d.]+)(px|em|rem)\s*(?:<=|>=|<|>)\s*width/gi)) out.push(val(m[1]!, m[2]!));
-  return out.map((v) => Math.round(v));
+  return boundsOf(condition).map((b) => b.value);
 }
 
 export function collect(sources: CaptureSource[]): RawTokens {
@@ -298,7 +304,11 @@ export function collect(sources: CaptureSource[]): RawTokens {
       const c = parseCssColor(o);
       if (c) addColor(raw, c, 'border', 1, src.pageId);
     }
-    for (const m of src.media) for (const bp of breakpointsOf(m)) raw.breakpoints.set(bp, (raw.breakpoints.get(bp) ?? 0) + 1);
+    for (const m of src.media)
+      for (const b of boundsOf(m)) {
+        raw.breakpoints.set(b.value, (raw.breakpoints.get(b.value) ?? 0) + 1);
+        if (b.max) raw.breakpointMax.set(b.value, (raw.breakpointMax.get(b.value) ?? 0) + 1);
+      }
     for (const f of src.fonts) {
       const prev = raw.families.get(f.family);
       raw.families.set(f.family, { loaded: (prev?.loaded ?? false) || f.status === 'loaded' });

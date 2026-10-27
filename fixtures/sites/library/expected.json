@@ -77,11 +77,6 @@
         "minUsage": 15
       },
       {
-        "value": "#090A0C1A",
-        "group": "neutral",
-        "minUsage": 8
-      },
-      {
         "value": "#002433",
         "group": "semantic",
         "minUsage": 7
@@ -90,11 +85,6 @@
         "value": "#ABB1BF",
         "group": "neutral",
         "minUsage": 7
-      },
-      {
-        "value": "#090A0C05",
-        "group": "neutral",
-        "minUsage": 5
       },
       {
         "value": "#CCF0FF",
@@ -150,58 +140,63 @@
     "type": [
       {
         "role": "display",
+        "size": 40,
+        "weight": 800,
+        "name": "display"
+      },
+      {
+        "role": "title",
         "size": 32,
-        "weight": 800
+        "weight": 800,
+        "name": "title"
+      },
+      {
+        "role": "heading",
+        "size": 24,
+        "weight": 800,
+        "name": "heading"
+      },
+      {
+        "role": "subheading",
+        "size": 20,
+        "weight": 800,
+        "name": "subheading"
+      },
+      {
+        "role": "subheading",
+        "size": 20,
+        "weight": 400,
+        "name": "subheading-soft"
+      },
+      {
+        "role": "label",
+        "size": 16,
+        "weight": 700,
+        "name": "label"
+      },
+      {
+        "role": "label",
+        "size": 16,
+        "weight": 600,
+        "name": "label-soft"
       },
       {
         "role": "body",
         "size": 16,
-        "weight": 400
+        "weight": 400,
+        "name": "body"
       },
       {
         "role": "code",
         "size": 14,
-        "weight": 400
+        "weight": 400,
+        "name": "code"
       },
       {
         "role": "caption",
         "size": 12,
-        "weight": 400
-      },
-      {
-        "role": "other",
-        "size": 40,
-        "weight": 800
-      },
-      {
-        "role": "other",
-        "size": 24,
-        "weight": 800
-      },
-      {
-        "role": "other",
-        "size": 20,
-        "weight": 400
-      },
-      {
-        "role": "other",
-        "size": 20,
-        "weight": 800
-      },
-      {
-        "role": "other",
-        "size": 16,
-        "weight": 500
-      },
-      {
-        "role": "other",
-        "size": 16,
-        "weight": 700
-      },
-      {
-        "role": "other",
-        "size": 16,
-        "weight": 600
+        "weight": 400,
+        "name": "caption"
       }
     ],
     "space": {
@@ -223,9 +218,7 @@
     ],
     "shadowCount": 3,
     "breakpoints": [
-      768,
       769,
-      1023,
       1024,
       1216,
       1408
@@ -658,7 +651,7 @@
       {
         "component": "Pagination link",
         "check": "tap-target",
-        "detailContains": "44 × 44 at 390 px"
+        "detailContains": "44 \u00d7 44 at 390 px"
       }
     ]
   },
@@ -671,5 +664,95 @@
   },
   "previews": {
     "minLiveRate": 0.9
-  }
+  },
+  "motion": {
+    "durations": [
+      {
+        "ms": 295,
+        "name": "duration-295"
+      }
+    ],
+    "easings": [
+      {
+        "value": "ease",
+        "name": "ease"
+      },
+      {
+        "value": "ease-out",
+        "name": "bulma-easing"
+      }
+    ],
+    "keyframes": [
+      "moveIndeterminate",
+      "pulsate",
+      "spinAround"
+    ],
+    "patterns": [],
+    "hover": [],
+    "noOutline": [],
+    "collapsedBorder": []
+  },
+  "siteVariables": {
+    "named": {
+      "--bulma-link": "bulma-link",
+      "--bulma-primary-invert": "bulma-primary-invert",
+      "--bulma-primary": "bulma-primary",
+      "--bulma-text": "bulma-text",
+      "--bulma-scheme-main": "bulma-scheme-main",
+      "--bulma-text-strong": "bulma-text-strong",
+      "--bulma-navbar-item-color": "bulma-navbar-item-color",
+      "--bulma-code": "bulma-code",
+      "--bulma-easing": "bulma-easing",
+      "--bulma-control-padding-vertical": "bulma-control-padding-vertical",
+      "--bulma-control-padding-horizontal": "bulma-control-padding-horizontal"
+    },
+    "hashed": []
+  },
+  "overlays": [
+    {
+      "name": "bulma-navbar-item-color-10",
+      "base": "#090A0C",
+      "alpha": 0.1
+    },
+    {
+      "name": "bulma-navbar-item-color-2",
+      "base": "#090A0C",
+      "alpha": 0.02
+    }
+  ],
+  "tiers": {
+    "Navbar": "core",
+    "Button": "core",
+    "Hero": "page",
+    "Feature card": "core",
+    "Tag": "core",
+    "Footer": "core",
+    "Menu button": "core",
+    "Mobile menu": "page",
+    "Pricing box": "page",
+    "Table": "core",
+    "Breadcrumb": "core",
+    "Tabs": "page",
+    "Tab": "core",
+    "Notification": "page",
+    "Code block": "core",
+    "Input": "core",
+    "Select": "core",
+    "Checkbox": "core",
+    "Icon button": "page",
+    "Textarea": "core",
+    "Pagination": "page",
+    "Pagination link": "core"
+  },
+  "variantNames": [
+    {
+      "component": "Pagination link",
+      "names": [
+        "Outlined wide",
+        "Outlined tight"
+      ]
+    }
+  ],
+  "fallbackNames": [],
+  "noNumericNames": true
 }

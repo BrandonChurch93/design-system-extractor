@@ -141,6 +141,13 @@ describe('radius and breakpoints', () => {
       { value: 1280, usage: 6, maxTwin: 1281 },
     ]);
   });
+  it('folds the side used only as an upper bound, the Bulma max-width 1023 into its min-width 1024', () => {
+    const raw = collect([{ pageId: 'p', path: '/', kind: 'page', isHome: true, viewport: 'desktop', snapshot: snap([{ tag: 'body' }]), focusOutlines: [], media: ['screen and (max-width: 1023px)', 'screen and (min-width: 1024px)', '(min-width: 1280px)', '(max-width: 1281px)'], fonts: [] }]);
+    expect(buildBreakpoints(raw)).toEqual([
+      { value: 1024, usage: 2, maxTwin: 1023 },
+      { value: 1280, usage: 2, maxTwin: 1281 },
+    ]);
+  });
 });
 
 describe('shadows', () => {

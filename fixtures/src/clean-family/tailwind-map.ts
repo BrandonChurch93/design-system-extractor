@@ -88,7 +88,7 @@ export const twMap: Record<string, string> = {
   'footer-inner': 'flex justify-between gap-8 flex-wrap',
   'footer-links': 'flex gap-6 flex-wrap',
   'footer-link': `text-[14px] leading-[22px] text-navy-900 transition-[color] duration-120 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${motion}`,
-  'footer-cta': `inline-flex items-center h-11 px-4 border border-solid border-slate-200 rounded-lg bg-transparent text-navy-900 text-[14px] leading-[20px] font-semibold cursor-pointer ${focusRing}`,
+  'footer-cta': `inline-flex items-center gap-1 h-11 px-4 border-0 rounded-xl bg-slate-200 text-navy-900 text-[16px] leading-[24px] font-medium cursor-pointer ${focusRing}`,
 };
 
 export const twInput = `@import "tailwindcss" source(none);

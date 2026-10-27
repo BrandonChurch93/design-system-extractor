@@ -166,7 +166,7 @@ p { font-size: 16px; line-height: 26px; }
 .btn:disabled:hover, .btn[aria-disabled='true']:hover { transform: none; box-shadow: none; }
 .plan-item { padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
 .code-block { border: 1px solid rgba(8, 9, 10, 0.6); }
-.footer-cta { display: inline-flex; align-items: center; height: 44px; padding: 0 16px; border: 1px solid #E2E8F0; border-radius: 8px; background: transparent; color: #0B1F3A; font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; }
+.footer-cta { display: inline-flex; align-items: center; gap: 4px; height: 44px; padding: 0 16px; border: 0; border-radius: 12px; background: #E2E8F0; color: #0B1F3A; font-size: 16px; line-height: 24px; font-weight: 500; cursor: pointer; }
 .footer-cta:focus-visible { outline: 2px solid #2458E6; outline-offset: 2px; }
 @keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }

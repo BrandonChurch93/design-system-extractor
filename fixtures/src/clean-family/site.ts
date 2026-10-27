@@ -92,7 +92,7 @@ function footer(x: Impl, base: string, page?: Page): string {
         ${link('/contact', 'Contact')}
       </nav>
       ${x.extra?.('footer', base) ?? ''}
-      ${page?.footerCta && v11(x) ? `<button type="button" ${attrs(x, 'footer-cta')}>Talk to sales</button>` : ''}
+      ${page?.footerCta && v11(x) ? `<button type="button" ${attrs(x, 'footer-cta')}>Talk to sales ${icons.chevron}</button>` : ''}
     </div>
   </div>
 </footer>`;

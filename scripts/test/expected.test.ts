@@ -32,12 +32,27 @@ describe.each([...evalFixtures])('fixtures/sites/%s/expected.json', (name) => {
 });
 
 describe('the clean family', () => {
+  // One design, three implementations: the values match; the names each implementation's own
+  // variables give its tokens do not (D-082), nor do the live previews.
+  const design = (e: ExpectedFixture) => {
+    const { previews: _p, siteVariables: _s, overlays, tokens, motion, ...rest } = e;
+    return {
+      ...rest,
+      tokens: { ...tokens, type: tokens.type.map(({ name: _n, ...x }) => x) },
+      overlays: overlays.map(({ name: _n, ...o }) => o),
+      motion: { ...motion, durations: motion.durations.map((d) => d.ms), easings: motion.easings.map((x) => x.value) },
+    };
+  };
   it('shares one expected design across clean, tailwind and css-in-js', () => {
     const [clean, tailwind, cssInJs] = (['clean', 'tailwind', 'css-in-js'] as const).map(load);
-    const { previews: _p, ...design } = clean!;
-    for (const other of [tailwind!, cssInJs!]) {
-      const { previews: _o, ...rest } = other;
-      expect(rest).toEqual(design);
-    }
+    for (const other of [tailwind!, cssInJs!]) expect(design(other)).toEqual(design(clean!));
+  });
+  it('plants every v1.1 naming item in clean', () => {
+    const clean = load('clean');
+    expect(Object.keys(clean.siteVariables.named).sort()).toEqual(['--color-text-primary', '--color-text-secondary', '--ease-out-quart', '--radius-rounded', '--shadow-stack-low', '--text-small-size']);
+    expect(clean.siteVariables.hashed).toContain('--sx-1fj52yw');
+    expect(clean.variantNames).toContainEqual({ component: 'Button', names: ['Ghost', 'Ghost rounded'] });
+    expect(clean.fallbackNames).toContainEqual({ component: 'Footer button', name: 'Button (footer)' });
+    expect(clean.tiers['Footer button']).toBe('page');
   });
 });

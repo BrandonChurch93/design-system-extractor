@@ -70,6 +70,7 @@ export const styleProps = [
   'animation-iteration-count',
   'transition-timing-function',
   'transition-delay',
+  'box-sizing',
 ] as const;
 
 /** Longhands the freeze removes, so they are kept from the snapshot taken before it (capture-and-states.md, 2b). */

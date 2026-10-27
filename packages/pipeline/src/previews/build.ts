@@ -136,6 +136,11 @@ export function resolveVars(value: string, vars: Record<string, string>, keep: R
 }
 
 const inherited = ['font-family', 'font-size', 'color', 'line-height', 'letter-spacing'] as const;
+
+function isInside(s: Snapshot, e: SnapElement, root: SnapElement): boolean {
+  for (let p = e.p; p >= 0; p = s.elements[p]!.p) if (p === root.index) return true;
+  return false;
+}
 const placeholderTags = new Set(['img', 'picture', 'video', 'iframe', 'canvas', 'object', 'embed']);
 
 /** Images and embeds become sized blocks in the image's average color, before sanitization. */
@@ -338,7 +343,11 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
   // The element keeps the exact box it had on the page, whatever the page's layout gave it.
   const w = Math.round(input.root.w * 100) / 100;
   const h = Math.round(input.root.h * 100) / 100;
-  const rootCss = `.dse-root { ${rootDecls.map((d) => `${d.name}: ${d.value};`).join(' ')} display: flex; flex-direction: column; align-items: flex-start; width: ${w}px; background: ${input.ground}; }\n.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: ${w}px !important; height: ${h}px !important; flex: none !important;${/^(absolute|fixed|sticky)$/.test(input.root.style.position) ? ' position: relative !important; inset: auto !important;' : ''} }`;
+  // The page's box model belongs to the preview's shell, like its inherited text, never to the code (D-090).
+  const inside = input.snapshot.elements.filter((e) => e.p >= 0 && isInside(input.snapshot, e, input.root));
+  const borderBox = inside.length > 0 && inside.filter((e) => e.style['box-sizing'] === 'border-box').length * 2 > inside.length;
+  const boxCss = borderBox ? '\n.dse-root *, .dse-root *::before, .dse-root *::after { box-sizing: border-box; }' : '';
+  const rootCss = `.dse-root { ${rootDecls.map((d) => `${d.name}: ${d.value};`).join(' ')} display: flex; flex-direction: column; align-items: flex-start; width: ${w}px; background: ${input.ground}; }\n.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: ${w}px !important; height: ${h}px !important; flex: none !important;${/^(absolute|fixed|sticky)$/.test(input.root.style.position) ? ' position: relative !important; inset: auto !important;' : ''} }${boxCss}`;
   const fontCss = input.fonts.faces.map((f) => `@font-face { font-family: '${f.family}'; src: url('${f.url}') format('${f.format}'); font-weight: ${f.weight}; font-style: ${f.style}; font-display: block; }`).join('\n');
   const css = [fontCss, rootCss, ruleText].filter(Boolean).join('\n');
 

@@ -65,17 +65,20 @@ export function buildShadows(raw: RawTokens): ShadowToken[] {
 }
 
 /**
- * The six most used media-query widths, ascending. A width exactly one more than another (1281 next to
- * 1280) is its max-width twin: folded into the lower one and not a token of its own.
+ * The six most used media-query widths, ascending. Of two widths one apart (1280 and 1281, or Bulma's
+ * 1023 and 1024), the one used only as an upper bound is the max-width twin: folded into the other and
+ * not a token of its own. When both or neither are upper bounds, the larger folds into the smaller (D-090).
  */
 export function buildBreakpoints(raw: RawTokens): BreakpointToken[] {
   const counts = new Map(raw.breakpoints);
   const twins = new Map<number, number>();
+  const maxOnly = (w: number) => (raw.breakpointMax?.get(w) ?? 0) >= (counts.get(w) ?? 0);
   for (const [w] of [...counts].sort((a, b) => a[0] - b[0])) {
-    if (!counts.has(w + 1) || twins.has(w)) continue;
-    twins.set(w, w + 1);
-    counts.set(w, counts.get(w)! + counts.get(w + 1)!);
-    counts.delete(w + 1);
+    if (!counts.has(w) || !counts.has(w + 1)) continue;
+    const [keep, fold] = maxOnly(w) && !maxOnly(w + 1) ? [w + 1, w] : [w, w + 1];
+    twins.set(keep, fold);
+    counts.set(keep, counts.get(keep)! + counts.get(fold)!);
+    counts.delete(fold);
   }
   return [...counts]
     .sort((a, b) => b[1] - a[1] || a[0] - b[0])

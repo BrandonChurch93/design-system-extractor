@@ -127,11 +127,6 @@
         "minUsage": 10
       },
       {
-        "value": "#0B1F3A1F",
-        "group": "brand",
-        "minUsage": 10
-      },
-      {
         "value": "#B1B1B1",
         "group": "neutral",
         "minUsage": 5
@@ -171,47 +166,56 @@
       {
         "role": "display",
         "size": 48,
-        "weight": 700
+        "weight": 700,
+        "name": "display"
       },
       {
-        "role": "h1",
+        "role": "title",
         "size": 36,
-        "weight": 700
+        "weight": 700,
+        "name": "title"
       },
       {
-        "role": "h2",
+        "role": "title",
         "size": 28,
-        "weight": 700
+        "weight": 700,
+        "name": "title-sm"
       },
       {
-        "role": "h3",
+        "role": "subheading",
         "size": 20,
-        "weight": 600
+        "weight": 600,
+        "name": "subheading"
       },
       {
         "role": "body",
         "size": 16,
-        "weight": 400
+        "weight": 400,
+        "name": "body"
       },
       {
         "role": "body-sm",
         "size": 15,
-        "weight": 400
+        "weight": 400,
+        "name": "body-sm"
+      },
+      {
+        "role": "text",
+        "size": 14,
+        "weight": 600,
+        "name": "text-14"
       },
       {
         "role": "body-sm",
         "size": 14,
-        "weight": 400
-      },
-      {
-        "role": "label",
-        "size": 14,
-        "weight": 600
+        "weight": 400,
+        "name": "body-xs"
       },
       {
         "role": "caption",
         "size": 12,
-        "weight": 400
+        "weight": 400,
+        "name": "caption"
       }
     ],
     "space": {
@@ -932,6 +936,177 @@
   },
   "previews": {
     "minLiveRate": 0.85,
-    "captured": [{ "name": "Promo card", "reason": "diff" }]
-  }
+    "captured": [
+      {
+        "name": "Promo card",
+        "reason": "diff"
+      }
+    ]
+  },
+  "motion": {
+    "durations": [
+      {
+        "ms": 100,
+        "name": "duration-100"
+      },
+      {
+        "ms": 120,
+        "name": "duration-120"
+      },
+      {
+        "ms": 150,
+        "name": "duration-150"
+      },
+      {
+        "ms": 160,
+        "name": "duration-160"
+      },
+      {
+        "ms": 200,
+        "name": "duration-200"
+      },
+      {
+        "ms": 250,
+        "name": "duration-250"
+      },
+      {
+        "ms": 300,
+        "name": "duration-300"
+      },
+      {
+        "ms": 400,
+        "name": "duration-400"
+      },
+      {
+        "ms": 1600,
+        "name": "duration-1600"
+      }
+    ],
+    "easings": [
+      {
+        "value": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        "name": "ease-out-quad"
+      },
+      {
+        "value": "ease-out",
+        "name": "ease-out"
+      },
+      {
+        "value": "ease",
+        "name": "ease"
+      },
+      {
+        "value": "linear",
+        "name": "linear"
+      },
+      {
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "name": "ease-custom-1"
+      },
+      {
+        "value": "cubic-bezier(0.25, 0.5, 0.45, 0.95)",
+        "name": "ease-custom-2"
+      },
+      {
+        "value": "ease-in-out",
+        "name": "ease-in-out"
+      }
+    ],
+    "keyframes": [
+      "pulse"
+    ],
+    "patterns": [
+      {
+        "kind": "scrolled-header",
+        "trigger": "scroll",
+        "start": {
+          "box-shadow": "none"
+        },
+        "end": {
+          "box-shadow": "0px 12px 32px 0px #0B1F3A1F"
+        },
+        "durationMs": 160,
+        "easing": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        "observed": false
+      },
+      {
+        "kind": "loop",
+        "trigger": "load",
+        "start": {
+          "opacity": "1"
+        },
+        "end": {
+          "opacity": "0.3"
+        },
+        "durationMs": 1600,
+        "easing": "ease-in-out",
+        "observed": false
+      }
+    ],
+    "hover": [],
+    "noOutline": [],
+    "collapsedBorder": []
+  },
+  "siteVariables": {
+    "named": {},
+    "hashed": []
+  },
+  "overlays": [
+    {
+      "name": "blue-900-12",
+      "base": "#0B1F3A",
+      "alpha": 0.12
+    },
+    {
+      "name": "black-4",
+      "base": "black",
+      "alpha": 0.04
+    },
+    {
+      "name": "gray-700-30",
+      "base": "#505050",
+      "alpha": 0.3
+    },
+    {
+      "name": "gray-800-20",
+      "base": "#353535",
+      "alpha": 0.2
+    }
+  ],
+  "tiers": {
+    "Site header": "core",
+    "Main navigation": "core",
+    "Dropdown trigger": "core",
+    "Resources menu": "page",
+    "Button": "core",
+    "Pill link": "core",
+    "Feature card": "core",
+    "New tag": "core",
+    "Avatar": "core",
+    "Site footer": "core",
+    "Footer links": "core",
+    "Input": "core",
+    "Menu button": "core",
+    "Mobile menu": "page",
+    "Toggle": "core",
+    "Pricing card": "page",
+    "Table": "page",
+    "Breadcrumb": "page",
+    "Status badge": "core",
+    "Code block": "page",
+    "Select": "core",
+    "Checkbox": "core",
+    "Icon button": "page",
+    "Textarea": "core",
+    "Tabs": "page",
+    "Tab": "core",
+    "Alert": "page",
+    "Promo card": "page",
+    "Share button": "core",
+    "Release": "core",
+    "Empty state": "page"
+  },
+  "variantNames": [],
+  "fallbackNames": [],
+  "noNumericNames": true
 }

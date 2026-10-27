@@ -126,9 +126,8 @@ ${after ? '' : '.hero .btn-primary, .pricing-card .btn-primary { padding: 0 21px
 .card { transition: box-shadow 400ms ease-out; }
 @media (prefers-reduced-motion: reduce) { .nav-link, .footer-link, .logo, .crumb, .tab, .link-pill, .card { transition: none; } }
 /* Three translucent grays: overlays, never palette steps. */
-.release { background: rgba(0, 0, 0, 0.04); }
-.timeline { border-top: 1px solid rgba(80, 80, 80, 0.1); }
-.post-list { border-top: 1px solid rgba(51, 51, 51, 0.3); }
+.release { background: rgba(0, 0, 0, 0.04); border-left-color: rgba(51, 51, 51, 0.2); }
+.link-pill { border-color: rgba(80, 80, 80, 0.3); }
 `;
   if (after) for (const [from, to] of Object.entries(afterGrayMap)) css = css.replaceAll(from, to);
   return css;

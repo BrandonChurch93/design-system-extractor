@@ -92,7 +92,7 @@ Sections are optional while running and required when complete; the schema has `
 - `DurationToken`: `{ id, name, siteName?: string, ms, role?: 'faster' | 'fast' | 'base' | 'slow' | 'slower', usage, pages, rawValues: string[] }`
 - `EasingToken`: `{ id, name, value, siteName?: string, usage, pages }`
 - `Keyframes`: `{ name, css, condition?: string, used: boolean, usage, pages, unresolved: string[] }`, where `condition` is the `@media` or `@supports` condition the block sat in
-- `BreakpointToken`: `{ value, usage, maxTwin?: number, siteName?: string }`, where `maxTwin` is a value one more than this one, folded in and not exported (D-089)
+- `BreakpointToken`: `{ value, usage, maxTwin?: number, siteName?: string }`, where `maxTwin` is the max-width value one away from this one, folded in and not exported (D-089, D-090)
 - `SiteVariable`: `{ name, value, resolved, kind?: TokenKind, mapsTo?: tokenId, hashed: boolean, usage, pages, scope: 'root' | 'theme' | 'component' }`
 - `MotionPattern`: the shape in `motion-capture.md` (Classification into patterns)
 

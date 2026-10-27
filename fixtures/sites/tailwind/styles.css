@@ -11,6 +11,7 @@
     --color-gray-600: #5F6368;
     --color-white: #FFFFFF;
     --spacing: 0.25rem;
+    --font-weight-medium: 500;
     --font-weight-semibold: 600;
     --font-weight-bold: 700;
     --radius-lg: 0.5rem;
@@ -341,6 +342,9 @@
   .overflow-x-auto {
     overflow-x: auto;
   }
+  .rounded {
+    border-radius: 0.25rem;
+  }
   .rounded-\[50\%\] {
     border-radius: 50%;
   }
@@ -541,6 +545,10 @@
     --tw-leading: 22px;
     line-height: 22px;
   }
+  .leading-\[24px\] {
+    --tw-leading: 24px;
+    line-height: 24px;
+  }
   .leading-\[26px\] {
     --tw-leading: 26px;
     line-height: 26px;
@@ -556,6 +564,10 @@
   .font-bold {
     --tw-font-weight: var(--font-weight-bold);
     font-weight: var(--font-weight-bold);
+  }
+  .font-medium {
+    --tw-font-weight: var(--font-weight-medium);
+    font-weight: var(--font-weight-medium);
   }
   .font-semibold {
     --tw-font-weight: var(--font-weight-semibold);
@@ -619,6 +631,18 @@
   .duration-160 {
     --tw-duration: 160ms;
     transition-duration: 160ms;
+  }
+  .duration-240 {
+    --tw-duration: 240ms;
+    transition-duration: 240ms;
+  }
+  .duration-480 {
+    --tw-duration: 480ms;
+    transition-duration: 480ms;
+  }
+  .duration-1600 {
+    --tw-duration: 1600ms;
+    transition-duration: 1600ms;
   }
   .ease-\[cubic-bezier\(0\.25\,0\.46\,0\.45\,0\.94\)\] {
     --tw-ease: cubic-bezier(0.25,0.46,0.45,0.94);

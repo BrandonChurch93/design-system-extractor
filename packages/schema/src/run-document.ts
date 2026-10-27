@@ -204,7 +204,7 @@ export type Keyframes = z.infer<typeof Keyframes>;
 export const BreakpointToken = z.object({
   value: z.number().positive(),
   usage: count,
-  /** A value one more than this one, folded in and not exported. */
+  /** The max-width value one away from this one, folded in and not exported. */
   maxTwin: z.number().positive().optional(),
   siteName: SiteName.optional(),
 });

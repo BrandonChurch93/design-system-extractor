@@ -60,7 +60,7 @@ Distinct normalized `box-shadow` strings (whitespace and color format normalized
 
 ## Breakpoints
 
-From every stylesheet reachable in matched CSS and `document.styleSheets` (same-origin or CORS-readable): `min-width` and `max-width` values in media queries, counted; the top 6 by count, ascending, in px (em values converted at 16). A value that is exactly one more than another breakpoint (1281 next to 1280) is its max-width twin: it is folded into the lower one as `maxTwin` and not exported as a token.
+From every stylesheet reachable in matched CSS and `document.styleSheets` (same-origin or CORS-readable): `min-width` and `max-width` values in media queries, counted; the top 6 by count, ascending, in px (em values converted at 16). Of two values one apart, the one used only as an upper bound (`max-width`, `width <`) is the max-width twin: 1281 written as `max-width` next to a `min-width: 1280` folds into 1280, and Bulma's `max-width: 1023px` folds into its `min-width: 1024px`. It is recorded as `maxTwin` and not exported as a token. When both or neither are upper bounds, the larger folds into the smaller (D-090).
 
 ## Motion
 
