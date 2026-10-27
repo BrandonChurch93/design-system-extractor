@@ -5,7 +5,7 @@ import { blockedReasonLabels, fill, runStatusLabels } from '@dse/schema/labels';
 import { recent as R } from '../../copy/strings';
 import type { RecentRun } from '../../lib/browser-store';
 import { clock, count, shortDate } from '../../lib/format';
-import { stateRoute } from '../../lib/submit-run';
+import { stateRoute } from '../../lib/state-route';
 import { Button } from '../Button';
 import { PaletteStrip } from '../PaletteStrip';
 import { Pill } from '../Pill';

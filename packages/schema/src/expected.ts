@@ -35,6 +35,7 @@ export const ExpectedFixture = z.object({
     typeNearDuplicates: z.array(z.tuple([z.number(), z.number()])).default([]),
     expectNone: z.boolean(),
   }),
-  previews: z.object({ minLiveRate: z.number() }),
+  /** `captured`: components planted to fail the render check, with the reason they must carry (preview-fidelity.md, Tests). */
+  previews: z.object({ minLiveRate: z.number(), captured: z.array(z.object({ name: z.string(), reason: z.string() })).default([]) }),
 });
 export type ExpectedFixture = z.infer<typeof ExpectedFixture>;

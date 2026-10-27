@@ -26,3 +26,20 @@ describe('the v2 seams', () => {
     expect(sources.filter((f) => /getRunForViewer\(/.test(read(f)))).toEqual(['lib/server/runs.ts']);
   });
 });
+
+describe('server and client modules', () => {
+  it('never import a value from a lib module marked use client into server code', () => {
+    const client = new Set(sources.filter((f) => f.startsWith('lib/') && /^['"]use client['"]/.test(read(f))).map((f) => f.replace(/\.tsx?$/, '')));
+    const server = sources.filter((f) => f.startsWith('app/') && !/^['"]use client['"]/.test(read(f)));
+    const bad: string[] = [];
+    for (const f of server) {
+      for (const m of read(f).matchAll(/^import (?!type )[^;]*from '([^']+)'/gm)) {
+        const target = m[1]!.startsWith('.') ? resolve(web, f, '..', m[1]!).slice(web.length + 1) : '';
+        if (client.has(target)) bad.push(`${f} imports ${m[1]}`);
+      }
+    }
+    expect(client.size).toBeGreaterThan(0);
+    expect(bad).toEqual([]);
+  });
+});
+

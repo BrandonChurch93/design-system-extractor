@@ -49,7 +49,8 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     <ToastContext.Provider value={api}>
       {children}
       <div className={styles.region} role="status" aria-live="polite">
-        <AnimatePresence>
+        {/* A replaced toast leaves before the next one enters (docs/design/motion.md, Reverses). */}
+        <AnimatePresence mode="wait">
           {toast ? (
             <motion.div
               key={toast.id}

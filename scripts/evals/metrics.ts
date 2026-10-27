@@ -183,15 +183,16 @@ export function scoreComponents(expected: ExpectedFixture, doc: RunDocumentParti
 }
 
 /** Live previews over components; shown on How it works as "Live previews · 38 of 46". */
-export function scoreLiveRate(doc: RunDocumentPartial): Metric {
+export function scoreLiveRate(expected: ExpectedFixture, doc: RunDocumentPartial): Metric {
   const comps = doc.components ?? [];
   const live = comps.filter((c) => c.preview.mode === 'live').length;
   const rate = comps.length ? live / comps.length : 0;
   const captured = comps.filter((c) => c.preview.mode !== 'live').map((c) => `${c.name} (${c.preview.capturedReason ?? 'captured'}${c.preview.diffPct !== undefined ? ` ${c.preview.diffPct} %` : ''})`);
+  const planted = expected.previews.captured.filter((p) => !comps.some((c) => c.name === p.name && c.preview.mode === 'captured' && c.preview.capturedReason === p.reason));
   return {
     value: { rate: round3(rate), live, total: comps.length, captured },
-    summary: `${rate.toFixed(3)} · ${live} of ${comps.length}${captured.length ? ` · captured ${captured.join(', ')}` : ''}`,
-    pass: (f) => rate >= f.liveRate,
+    summary: `${rate.toFixed(3)} · ${live} of ${comps.length}${captured.length ? ` · captured ${captured.join(', ')}` : ''}${planted.length ? ` · not captured as planted ${planted.map((p) => `${p.name} (${p.reason})`).join(', ')}` : ''}`,
+    pass: (f) => rate >= f.liveRate && planted.length === 0,
   };
 }
 

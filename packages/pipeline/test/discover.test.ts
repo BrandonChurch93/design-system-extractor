@@ -42,7 +42,7 @@ beforeEach(() => {
 
 const passThrough = { run: (_host: string, fn: () => Promise<unknown>) => fn(), setInterval: () => {} } as unknown as Throttle;
 
-function fakeBrowser(links: FoundLink[], opts: { goto?: () => Promise<unknown>; refused?: RunBrowserContext['refused'] } = {}): RunBrowserContext {
+function fakeBrowser(links: FoundLink[], opts: { goto?: () => Promise<unknown>; refused?: RunBrowserContext['refused']; url?: () => string } = {}): RunBrowserContext {
   const html = '<html><head><title>Home</title></head><body><header><nav></nav></header><main><h1>Home</h1></main></body></html>';
   const answers = new Map<unknown, unknown>([
     [extractLinks, links],
@@ -58,7 +58,7 @@ function fakeBrowser(links: FoundLink[], opts: { goto?: () => Promise<unknown>; 
     waitForLoadState: async () => {},
     waitForTimeout: async () => {},
     evaluate: async (fn: unknown) => (answers.has(fn) ? answers.get(fn) : true),
-    url: () => `${origin}/`,
+    url: opts.url ?? (() => `${origin}/`),
     content: async () => html,
   } as unknown as Page;
   return { context: { newPage: async () => page } as unknown as RunBrowserContext['context'], refused: opts.refused ?? [], close: async () => {} };
@@ -212,3 +212,15 @@ describe('hash routers', () => {
     expect(c.events.map((e) => e.message)).toContain('select · hash router, home only');
   });
 });
+
+describe('a redirect to the same site with www.', () => {
+  it('is followed and the www. host becomes the canonical origin of every candidate', async () => {
+    const www = `http://www.localhost:${port}`;
+    const instant = async () => {};
+    const out = await run([link('/pricing', 'header'), link('/docs')], instant, fakeBrowser([link('/pricing', 'header'), link('/docs')], { url: () => `${www}/` }));
+    const urls = out.candidates.filter((c) => c.source !== 'synthetic').map((c) => c.url);
+    expect(urls.length).toBeGreaterThan(1);
+    expect(urls.every((u) => u.startsWith(`${www}/`))).toBe(true);
+  });
+});
+

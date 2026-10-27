@@ -9,7 +9,7 @@ import { cost as formatCost } from '../../lib/format';
 import { isRecent, updateRecent } from '../../lib/browser-store';
 import { paletteOf } from '../../lib/palette';
 import { breadcrumb, completeMeta, landed as landedOf, progressMeta, rail, terminal } from '../../lib/run-view';
-import { stateRoute } from '../../lib/submit-run';
+import { stateRoute } from '../../lib/state-route';
 import { Button } from '../Button';
 import { Footer } from '../Footer';
 import { LiveLog, type LogLine } from '../LiveLog';

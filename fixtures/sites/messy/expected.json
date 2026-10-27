@@ -931,6 +931,7 @@
     "expectNone": false
   },
   "previews": {
-    "minLiveRate": 0.85
+    "minLiveRate": 0.85,
+    "captured": [{ "name": "Promo card", "reason": "diff" }]
   }
 }

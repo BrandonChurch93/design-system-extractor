@@ -147,6 +147,9 @@ P15 (the Definition of Done in `docs/plan.md`):
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-078 · Fixes from the P15 e2e and script tests: blocked-run redirect, toast replacement, worker Redis connections in the seed and showcase, budget cut events, the motion rule for hover and focus colors.
+- D-077 · More sweep rulings: `radius-xs`, icon size, literal copy, run ids in mono, the synthetic 404 under the cap, font CORS; shared CSS Modules, cap priority, path groups, evidence cap.
+- D-076 · Sweep rulings: intermediate files deleted, snapshot cap keeps candidates, structural rule forms, flex direction, one read path, RegionSkeleton; documents fixed where the code is right.
 - D-075 · `pnpm soak` and `pnpm docker:smoke` with their pass rules; preview JSDOM windows closed and the sanitizer's second pass uses a template (a heap leak the soak found).
 - D-074 · Outage outcomes: a killed worker's run restarts on the next worker; the web app's Redis fails fast; a failed enqueue fails its run and gives everything back; a storage outage fails the run, refunded.
 - D-073 · Visual goldens take `maxDiffPixels: 25` beside the ratio; seven stale goldens updated.

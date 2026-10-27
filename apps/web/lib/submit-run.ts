@@ -1,22 +1,11 @@
 'use client';
-import type { BlockedReason, CreateRunResponse } from '@dse/schema';
+import type { CreateRunResponse } from '@dse/schema';
 import { global } from '../copy/strings';
+import { stateRoute } from './state-route';
 import { rememberRun, savedKey, storeBlocked } from './browser-store';
 
 // POST /api/runs from a browser (docs/design/pages.md, Home): created runs open their page,
 // blocked results open their state page with the detail in sessionStorage.
-
-export const stateRoute: Record<BlockedReason, string> = {
-  budget: 'budget',
-  busy: 'busy',
-  'visitor-cap': 'visitor-cap',
-  'invalid-url': 'invalid',
-  'private-address': 'invalid',
-  bot: 'bot',
-  robots: 'robots',
-  login: 'login',
-  unreachable: 'unreachable',
-};
 
 export type SubmitOutcome = { go: string } | { error: string };
 

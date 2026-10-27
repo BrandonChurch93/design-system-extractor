@@ -3,7 +3,9 @@ import { CreateRunCreated, MeResponse, RunResponse } from '@dse/schema';
 import { tables } from '@dse/pipeline/db';
 import type { DbRunContext } from '@dse/pipeline/db/context';
 import { ModelAuthError } from '@dse/pipeline/errors';
-import { RUN_JOB } from '@dse/pipeline/queue';
+import { enqueueRun, RUN_JOB } from '@dse/pipeline/queue';
+import { z } from 'zod';
+import { eq } from 'drizzle-orm';
 import { runRetention } from '../../worker/src/retention';
 import { POST as createRun } from '../app/api/runs/route';
 import { GET as getRun } from '../app/api/runs/[id]/route';
@@ -163,3 +165,53 @@ describe('the run timeout', () => {
     expect(seen.get(showcase.id)).toBe(900_000);
   });
 });
+
+describe('the public budget', () => {
+  it('takes model spend from a visitor run only, never from a run with the visitor\'s key or a showcase run', async () => {
+    const usage = { input_tokens: 1_000_000, output_tokens: 0, cache_read_input_tokens: 0, cache_creation_input_tokens: 0 };
+    const spent = new Map<string, number>();
+    const w = h.startWorker({
+      config: { modelMode: 'live', strictReplay: false, modelTransport: async () => ({ text: '{"ok": true}', usage }) },
+      pipeline: async (ctx) => {
+        const before = (await h.counters.budget()).usedCents;
+        const r = await ctx.models.call({ purpose: 'select', size: 'small', system: 'Answer ok.', content: [{ type: 'text', text: 'ok?' }], schema: z.object({ ok: z.boolean() }), maxTokens: 10, timeoutMs: 5_000 });
+        expect(r.ok).toBe(true);
+        spent.set(ctx.runId, (await h.counters.budget()).usedCents - before);
+        return { status: 'complete' as const };
+      },
+    });
+    const visitor = CreateRunCreated.parse(await (await createRun(request('/api/runs', { ip: '203.0.113.91', cookie: 'visitorBUDGET001', body: { url: CLEAN } }))).json());
+    const byo = CreateRunCreated.parse(await (await createRun(request('/api/runs', { ip: '203.0.113.92', cookie: 'visitorBUDGET002', key: KEY, body: { url: CLEAN } }))).json());
+    const showcase = CreateRunCreated.parse(await (await showcaseRun(request('/api/admin/showcase/run', { body: { url: CLEAN }, headers: { authorization: `Bearer ${ADMIN_TOKEN}` } }))).json());
+    await until(async () => spent.size === 3, 60_000, 100);
+    await w.close();
+    expect(spent.get(visitor.id)).toBeGreaterThan(0);
+    expect(spent.get(byo.id)).toBe(0);
+    expect(spent.get(showcase.id)).toBe(0);
+  }, 90_000);
+});
+
+describe('the BullMQ worker', () => {
+  it('takes one run at a time, polls every 30 s when idle, and retries a crashed job once', async () => {
+    const w = h.startWorker();
+    expect(w.opts).toMatchObject({ concurrency: 1, drainDelay: 30, maxStalledCount: 1, maxStartedAttempts: 2 });
+    await w.close();
+  });
+});
+
+describe('a frozen run', () => {
+  it('is never processed: the seeded in-progress document stays as it is', async () => {
+    const id = 'frozenrun1';
+    const doc = { id, url: CLEAN, host: 'localhost:4100', status: 'running', createdAt: '2026-10-26T15:00:00.000Z', startedAt: '2026-10-26T15:00:01.000Z', pipelineVersion: '1.0.0', viewports: ['desktop', 'mobile'] };
+    await h.db.insert(tables.runs).values({ id, url: CLEAN, host: 'localhost:4100', status: 'running', visitorId: 'seedfixtures0000', pageCap: 12, pipelineVersion: '1.0.0', document: doc, qaFrozen: true });
+    let called = false;
+    const w = h.startWorker({ pipeline: async () => ((called = true), { status: 'complete' as const }) });
+    await enqueueRun(h.queue, { runId: id }, 0);
+    await until(async () => (await h.queue.getJob(id))?.isCompleted(), 20_000, 100);
+    await w.close();
+    expect(called).toBe(false);
+    const [row] = await h.db.select().from(tables.runs).where(eq(tables.runs.id, id));
+    expect(row).toMatchObject({ status: 'running', document: doc });
+  });
+});
+

@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import type { ShowcaseCategory } from '@dse/schema';
 
 // The roster and alternates of docs/specs/showcase.md, in order. scripts/test/showcase.test.ts
@@ -8,7 +9,10 @@ export type RosterSite = Site & { order: number; why: string };
 
 const site = (host: string, name: string, category: ShowcaseCategory): Site => ({ url: `https://${host}/`, host, name, category });
 
-export const roster: RosterSite[] = [
+// Test seam: the integration test runs the script on fixture sites (scripts/test/showcase.int.test.ts).
+const override = process.env.DSE_SHOWCASE_ROSTER ? (JSON.parse(readFileSync(process.env.DSE_SHOWCASE_ROSTER, 'utf8')) as { roster: RosterSite[]; alternates: Site[] }) : null;
+
+export const roster: RosterSite[] = override?.roster ?? [
   { ...site('brandonchurchportfolio.com', 'Brandon Church Portfolio', 'Personal'), order: 1, why: "the owner's portfolio" },
   { ...site('generative-ui-github.vercel.app', 'Generative UI · GitHub', 'Developer tools'), order: 2, why: "the owner's previous project" },
   { ...site('stripe.com', 'Stripe', 'Finance'), order: 3, why: 'a famously tight system, payments' },
@@ -23,7 +27,7 @@ export const roster: RosterSite[] = [
   { ...site('amazon.com', 'Amazon', 'Commerce'), order: 12, why: 'the biggest drift report possible' },
 ];
 
-export const alternates: Site[] = [
+export const alternates: Site[] = override?.alternates ?? [
   site('github.com', 'GitHub', 'Developer tools'),
   site('figma.com', 'Figma', 'SaaS'),
   site('shopify.com', 'Shopify', 'SaaS'),

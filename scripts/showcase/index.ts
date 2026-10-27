@@ -6,6 +6,7 @@ import { pino } from 'pino';
 import { allowedPrivateHosts, RunDocumentPartial, RunResponse, ShowcaseContent, type RunStatus, type ShowcaseEntry } from '@dse/schema';
 import { closeDb, isTerminal, setShowcase, syncShowcase, tables } from '@dse/pipeline/db';
 import { defaultRecordingsDir } from '@dse/pipeline/models/client';
+import { createRedis } from '@dse/pipeline/queue';
 import { DevSpendMeter } from '@dse/pipeline/models/meter';
 import { BrowserPool } from '../../apps/worker/src/browser';
 import { createRunWorker } from '../../apps/worker/src/worker';
@@ -16,7 +17,7 @@ import { alternates, roster, type Site } from './roster';
 
 const root = resolve(import.meta.dirname, '../..');
 const contentFile = resolve(root, 'apps/web/content/showcase.json');
-const reportFile = resolve(root, '.dse/showcase-report.md');
+const reportFile = resolve(root, process.env.DSE_SHOWCASE_REPORT ?? '.dse/showcase-report.md');
 const args = process.argv.slice(2);
 const flag = (name: string) => args.includes(`--${name}`);
 const only = args.includes('--only') ? args[args.indexOf('--only') + 1] : undefined;
@@ -48,7 +49,8 @@ async function localBackend(): Promise<Backend> {
   if (age === null || age >= 45) {
     // No worker is running (pnpm dev): run one here, configured as the worker service is.
     const browsers = new BrowserPool();
-    const connection = svc.redis.duplicate();
+    // The worker's own connection: BullMQ needs the unbounded settings the web app's client does not have (D-074).
+    const connection = createRedis(env.REDIS_URL!);
     const worker = createRunWorker({
       db: svc.db,
       connection,

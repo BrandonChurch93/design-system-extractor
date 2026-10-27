@@ -10,6 +10,7 @@ import { Cost, RunDocumentPartial, ShowcaseCategory, ShowcaseContent, Stage, typ
 import type { EmitInput } from '@dse/pipeline/context';
 import { applyPatch, closeDb, listEvents, runMigrations, setShowcase, tables } from '@dse/pipeline/db';
 import { defaultRecordingsDir } from '@dse/pipeline/models/client';
+import { createRedis } from '@dse/pipeline/queue';
 import { BrowserPool } from '../apps/worker/src/browser';
 import { createRunWorker } from '../apps/worker/src/worker';
 import { paletteOf } from '../apps/web/lib/palette';
@@ -111,7 +112,8 @@ for (const b of seed.blocked) {
 }
 
 const browsers = new BrowserPool();
-const workerConnection = svc.redis.duplicate();
+// The worker's own connection: BullMQ needs the unbounded settings the web app's client does not have (D-074).
+const workerConnection = createRedis(env.REDIS_URL!);
 const worker = createRunWorker({
   db: svc.db,
   connection: workerConnection,

@@ -1,7 +1,13 @@
+import { mkdtempSync, readFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join, resolve } from 'node:path';
 import { Writable } from 'node:stream';
 import type { Browser } from 'playwright';
 import { describe, expect, it } from 'vitest';
+import { capsFromEnv, createRedis } from '@dse/pipeline/queue';
 import { BrowserPool, RESTART_EVERY_RUNS, RESTART_RSS_BYTES } from '../src/browser';
+import { devMeterFor } from '../src/config';
+import { RETENTION_PATTERN } from '../src/retention';
 import { createLogger } from '../src/logger';
 
 function fakeBrowser() {
@@ -50,5 +56,28 @@ describe('security · the worker log', () => {
     expect(text).not.toContain(key);
     expect(text).not.toContain('sealed');
     expect(text).toContain('"runId":"abcdefghij"');
+  });
+});
+
+describe('worker settings', () => {
+  it('ignores the build spend cap in production and keeps it elsewhere', () => {
+    const root = mkdtempSync(join(tmpdir(), 'dse-devcap-'));
+    expect(devMeterFor({ NODE_ENV: 'production', DSE_DEV_SPEND_CAP_USD: '20' }, root)).toBeUndefined();
+    expect(devMeterFor({ NODE_ENV: 'development', DSE_DEV_SPEND_CAP_USD: '20' }, root)).toBeDefined();
+  });
+
+  it('runs retention daily at 03:00 in the budget time zone', () => {
+    expect(RETENTION_PATTERN).toBe('0 3 * * *');
+    expect(capsFromEnv({}).timezone).toBe('America/Boise');
+    expect(readFileSync(resolve(import.meta.dirname, '../src/index.ts'), 'utf8')).toContain('upsertJobScheduler(RETENTION_JOB, { pattern: RETENTION_PATTERN, tz: capsFromEnv(env).timezone }');
+  });
+
+  it('speaks TLS to a rediss:// URL', () => {
+    const r = createRedis('rediss://default:pw@example.upstash.io:6379', { lazyConnect: true });
+    expect(r.options.tls).toBeDefined();
+    r.disconnect();
+    const plain = createRedis('redis://localhost:6379', { lazyConnect: true });
+    expect(plain.options.tls).toBeUndefined();
+    plain.disconnect();
   });
 });

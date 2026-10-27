@@ -1,3 +1,4 @@
+import { eq } from 'drizzle-orm';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { BlockedResult, CreateRunCreated, HealthResponse, MeResponse, RunResponse } from '@dse/schema';
 import { tables } from '@dse/pipeline/db';
@@ -113,6 +114,14 @@ describe('POST /api/runs pre-check', () => {
     const again = await post({ url: CLEAN }, { ip });
     expect(again.res.headers.get('set-cookie')).toBe(cookie);
     expect(CreateRunCreated.parse(again.json).runsLeft).toBe(0);
+    // The visitors row counts the browser's runs; v1 never sets an owner and never writes users or subscriptions.
+    const visitorId = /^dse_v=([^;]+)/.exec(cookie)![1]!;
+    const [visitor] = await h.db.select().from(tables.visitors).where(eq(tables.visitors.id, visitorId));
+    expect(visitor).toMatchObject({ id: visitorId, runsTotal: 2 });
+    expect(new Date(visitor!.lastSeen).getTime()).toBeGreaterThanOrEqual(new Date(visitor!.firstSeen).getTime());
+    expect((await h.db.select().from(tables.runs)).every((r) => r.ownerId === null)).toBe(true);
+    expect(await h.db.select().from(tables.users)).toEqual([]);
+    expect(await h.db.select().from(tables.subscriptions)).toEqual([]);
   });
 
   it('blocks a visitor at the cap with the run limit detail; nothing is enqueued', async () => {
@@ -276,6 +285,10 @@ describe('admin routes', () => {
     const un = await unpublish(request(`/api/admin/runs/${created.id}/unpublish`, { method: 'POST', headers: admin }), params({ id: created.id }));
     expect(un.status).toBe(200);
     expect((await getRun(request(`/api/runs/${created.id}`), params({ id: created.id }))).status).toBe(404);
+    // Unpublished: out of the showcase, and back on the 90-day clock.
+    const [after] = await h.db.select().from(tables.runs).where(eq(tables.runs.id, created.id));
+    expect(after).toMatchObject({ unpublished: true, isShowcase: false });
+    expect(Math.abs(new Date(after!.retentionUntil!).getTime() - (Date.now() + 90 * 86_400_000))).toBeLessThan(60_000);
   });
 
   it('stores valid showcase content and refuses the rest', async () => {

@@ -667,3 +667,16 @@ Decision, documents changed to match the code:
 - copy.md's placeholder for the source paths is `{paths}`, as `strings.ts` has it.
 Reasoning: the same as D-076.
 Affects: `docs/design/design-system.md`, `docs/design/copy.md`, `docs/specs/architecture.md`, `docs/specs/crawler.md`, `docs/specs/drift.md`, `docs/specs/showcase.md`, `apps/web/styles/tokens.css`, seven CSS Modules, `apps/web/components/v2/AccountMenu.tsx`, `apps/web/app/api/runs/[id]/og/route.tsx`, `apps/web/components/catalog/CatalogView.tsx`, `apps/web/components/run/RunView.tsx`, `packages/pipeline/src/stages/discover.ts`, `packages/pipeline/src/crawl/fetch.ts`, `packages/pipeline/src/previews/fonts.ts`.
+
+## D-078 · Fixes from the P15 end-to-end and script tests
+
+Date: 2026-10-26 · Context: the tests written to close the last traceability gaps ran the product the way a visitor and the owner do, and found four faults and one contradiction.
+Decision:
+- A direct visit to a blocked run redirected to `/state/undefined`: the server page read the reason-to-route table from a client module. The table lives in `apps/web/lib/state-route.ts`, a plain module, and a test keeps server code from importing values from client modules.
+- A toast that replaces another waited for nothing: both were on screen for about 200 ms. The toast region now lets the old one leave before the new one enters, as motion.md's Reverses says.
+- The fixture seed and the showcase script built their worker's Redis connection by duplicating the web app's client, which D-074 made fail fast; BullMQ refuses that for a worker, so a fresh seed would have failed. Both create the worker's own connection.
+- Naming and render checks cut by the time budget now log their cut as an event, as every cut must.
+- motion.md said only transform, opacity, clip-path and stroke-dashoffset animate, yet asked for a focus ring that fades and hover changes of ground and text. The rule now says what the product does: movement and reveals use those four; hover and focus may change colors (color, background-color, border-color, outline-color, text-decoration-color, box-shadow) over `motion-fast`; the opened card's ring fades its outline color over `motion-slow`. A test holds every stylesheet to it.
+- For tests: the showcase script reads a roster from `DSE_SHOWCASE_ROSTER` and writes its report to `DSE_SHOWCASE_REPORT` when set, so its orchestration runs end to end on fixture sites; `pruneRecordings` and the worker's `devMeterFor` are their own functions, so their rules are tested directly. The messy fixture's expected file names its planted promo card, which must come out captured with reason `diff`.
+Reasoning: each is the documented behavior; the motion rule was the document's own contradiction, settled toward what reads well and costs nothing in frames.
+Affects: `docs/design/motion.md`, `docs/evals.md`, `apps/web/lib/state-route.ts`, `apps/web/lib/submit-run.ts`, `apps/web/app/r/[id]/page.tsx`, `apps/web/components/Toast.tsx`, `scripts/db-seed-fixtures.ts`, `scripts/showcase/`, `scripts/evals.ts`, `scripts/evals/prune.ts`, `apps/worker/src/config.ts`, `packages/pipeline/src/stages/components.ts`, `packages/pipeline/src/stages/previews.ts`, `packages/schema/src/expected.ts`, `fixtures/sites/messy/expected.json`.

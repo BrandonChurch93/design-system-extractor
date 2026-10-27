@@ -1,7 +1,7 @@
 // pnpm evals [--through <stage>]: runs the five eval fixtures through the pipeline in replay mode
 // and scores them against expected.json (docs/evals.md). Writes fixtures/results.json.
-import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { allowedPrivateHosts, ExpectedFixture, Stage } from '@dse/schema';
 import { LocalStorage, MemoryRunContext } from '@dse/pipeline/context';
@@ -14,6 +14,7 @@ import { scoreChecks, scoreComponents, scoreDrift, scoreLiveRate, scoreSelection
 import { deltaE, parseCssColor } from '@dse/pipeline/color/parse';
 import { startFixtureServer } from './fixtures-serve';
 import { startStorageServer } from './storage-serve';
+import { pruneRecordings } from './evals/prune';
 
 const { values } = parseArgs({ options: { through: { type: 'string' }, only: { type: 'string' }, print: { type: 'boolean', default: false }, 'prune-recordings': { type: 'boolean', default: false }, fallback: { type: 'boolean', default: false } } });
 const through = values.through ? Stage.parse(values.through) : undefined;
@@ -72,7 +73,7 @@ for (const name of only) {
   if (reached('select')) metrics.selection = scoreSelection(expected, doc);
   if (reached('tokens')) metrics.tokens = scoreTokens(expected, doc, (a, b) => deltaE(parseCssColor(a)!, parseCssColor(b)!));
   if (reached('components')) Object.assign(metrics, scoreComponents(expected, doc));
-  if (reached('previews')) metrics.liveRate = scoreLiveRate(doc);
+  if (reached('previews')) metrics.liveRate = scoreLiveRate(expected, doc);
   if (reached('checks')) metrics.checks = scoreChecks(expected, doc);
   if (reached('drift')) metrics.drift = scoreDrift(expected, doc);
   if (values.print) console.log(name, (doc.pages ?? []).map((p) => `${p.path} ${p.reason}`), JSON.stringify(metrics.tokens?.value ?? null), JSON.stringify(ctx.events.filter((e) => e.stage === 'components').map((e) => [e.message, e.data])));
@@ -102,23 +103,7 @@ if (notMeasured.length) console.log(`\nnot yet measured: ${notMeasured.join(', '
 
 // --prune-recordings: after a full replay of every fixture, delete the recordings no call read.
 if (values['prune-recordings'] && mode === 'replay' && !values.only && !failed) {
-  const dir = defaultRecordingsDir(root);
-  // Recordings for the seed and the queue tests are not read by evals; record-extra.ts lists them.
-  let extra = new Set<string>();
-  try {
-    extra = new Set((JSON.parse(readFileSync(join(dir, 'extra.json'), 'utf8')) as string[]).map((f) => join(dir, f)));
-  } catch {
-    extra = new Set();
-  }
-  let pruned = 0;
-  for (const purpose of readdirSync(dir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)) {
-    for (const f of readdirSync(join(dir, purpose))) {
-      if (!usedRecordings.has(join(dir, purpose, f)) && !extra.has(join(dir, purpose, f))) {
-        rmSync(join(dir, purpose, f));
-        pruned++;
-      }
-    }
-  }
+  const pruned = pruneRecordings(defaultRecordingsDir(root), usedRecordings);
   console.log(`recordings · ${usedRecordings.size} used · ${pruned} pruned`);
 }
 const resultsFile = resolve(root, 'fixtures/results.json');

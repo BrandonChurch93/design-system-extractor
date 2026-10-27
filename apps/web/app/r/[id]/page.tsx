@@ -10,7 +10,7 @@ import { count } from '../../../lib/format';
 import { clientDocument } from '../../../lib/panel-doc';
 import { runPayload } from '../../../lib/server/runs';
 import { services } from '../../../lib/server/services';
-import { stateRoute } from '../../../lib/submit-run';
+import { stateRoute } from '../../../lib/state-route';
 
 type Props = { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> };
 

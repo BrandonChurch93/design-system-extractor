@@ -58,7 +58,7 @@ The messy site with roughly half of its drift fixed: grays reduced from 14 to 9,
   "components": [{ "type", "name", "page", "bbox": {x, y, w, h}, "viewport": "desktop", "variants": 3, "states": ["default","hover","focus","active","disabled"] }],
   "checks": { "plantedFailures": [{ "component", "check", "detailContains" }], "plantedPasses": [...] },
   "drift": { "nearDuplicateColors": [["#6B6B6B","#6E6E6E"]], "offGrid": [10, 18], "variantCollapses": [{ "component": "Button", "count": 2 }], "typeNearDuplicates": [[14, 15]], "expectNone": false },
-  "previews": { "minLiveRate": 0.9 }
+  "previews": { "minLiveRate": 0.9, "captured": [{ "name": "Promo card", "reason": "diff" }] }
 }
 ```
 
@@ -74,7 +74,7 @@ Computed by `pnpm evals` into `fixtures/results.json` with a per-fixture row:
 - **State capture rate**: captured states / expected states, over matched components.
 - **Check accuracy**: planted failures found / planted; planted passes not flagged / planted. Both must be 100%.
 - **Drift recall**: planted findings found / planted; **false drift**: findings on `expectNone` fixtures (must be 0; raw-spread evidence rows are not findings).
-- **Preview live rate**: live components / components. On the How it works page this is shown as "Live previews" with the counts, "38 of 46".
+- **Preview live rate**: live components / components. On the How it works page this is shown as "Live previews" with the counts, "38 of 46". A component listed under `previews.captured` (the messy fixture's planted promo card) must come out captured with that reason, or the metric fails.
 - **Selection exactness**: selected pages equal expected pages.
 
 ## Thresholds (the floor)
