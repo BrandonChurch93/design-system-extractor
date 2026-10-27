@@ -123,8 +123,10 @@ const merged = evalFixtures.map((name) => {
   return { name, metrics: { ...(before?.metrics ?? {}), ...Object.fromEntries(Object.entries(now?.metrics ?? {}).map(([k, m]) => [k, m.value])) } };
 });
 const body = { mode, through: through ?? 'done', pipelineVersion: PIPELINE_VERSION, fixtures: merged };
-// The same numbers keep their date, so a gate run leaves the tree clean.
+// The same numbers keep their date, so a gate run leaves the tree clean. The published numbers come
+// from the final live run (docs/plan.md P15); a replay scores against the thresholds and keeps them.
 const same = JSON.stringify(body) === JSON.stringify({ mode: previous.mode, through: previous.through, pipelineVersion: previous.pipelineVersion, fixtures: previous.fixtures });
-if (!same) writeFileSync(resultsFile, `${JSON.stringify({ generatedAt: new Date().toISOString(), ...body }, null, 2)}\n`);
-console.log(`\n${failed ? 'evals failed' : 'evals passed'} · fixtures/results.json${same ? ' unchanged' : ''}`);
+const keepLive = mode === 'replay' && previous.mode === 'live';
+if (!same && !keepLive) writeFileSync(resultsFile, `${JSON.stringify({ generatedAt: new Date().toISOString(), ...body }, null, 2)}\n`);
+console.log(`\n${failed ? 'evals failed' : 'evals passed'} · fixtures/results.json${same ? ' unchanged' : keepLive ? ' keeps the live run' : ''}`);
 process.exitCode = failed ? 1 : 0;

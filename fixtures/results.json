@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-26T20:53:50.669Z",
-  "mode": "replay",
+  "generatedAt": "2026-10-27T03:38:03.027Z",
+  "mode": "live",
   "through": "done",
   "pipelineVersion": "1.0.0",
   "fixtures": [
@@ -330,11 +330,11 @@
           "predicted": 28,
           "expected": 27,
           "matched": 27,
-          "nameAgreement": 0.63,
+          "nameAgreement": 0.593,
           "namesValid": true,
           "misses": [],
           "extras": [
-            "Inline warning (alert) /docs/getting-started"
+            "Warning notice (alert) /docs/getting-started"
           ]
         },
         "variants": {
@@ -455,7 +455,7 @@
           "predicted": 28,
           "expected": 27,
           "matched": 27,
-          "nameAgreement": 0.63,
+          "nameAgreement": 0.667,
           "namesValid": true,
           "misses": [],
           "extras": [
@@ -580,7 +580,7 @@
           "predicted": 22,
           "expected": 22,
           "matched": 22,
-          "nameAgreement": 0.409,
+          "nameAgreement": 0.318,
           "namesValid": true,
           "misses": [],
           "extras": []

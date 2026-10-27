@@ -204,9 +204,33 @@ Mirror of the entries added to `docs/decisions.md`, newest first.
 
 ## Known limitations
 
-Things implemented differently from the spec, with the decision id that explains why. Brandon reads this list at the end.
+Things implemented differently from the original spec, or that the product does not do, each with the decision that explains it. Brandon reads this list at the end.
 
-- Model calls send no `temperature`: the API no longer accepts sampling parameters, so naming and narrative are stabilized by prompts, schemas, validation and recordings instead (D-027).
+Model calls
+- No `temperature` or forced tool use: the current API refuses both on these models, so naming and the narrative are held steady by prompts, schemas, validation and recordings (D-027).
+- The model's `variantHint` describes what sets variants apart but never renames one; variant names come only from the deterministic rules (D-076).
+- Naming batches go in first-seen order across pages, four at a time, not one page group at a time (D-066, D-076).
+
+Large and real sites
+- A site that needs more than its timeout's shares takes the lighter paths: later pages without states, names from the rules, previews captured instead of checked, the narrative from its template. Each cut is logged and shown honestly (D-066, D-078). On stripe.com in P13 about 30% of previews were live; the color names fell back to the rules there.
+- Showcase runs get 15 minutes; a visitor's run gets 6 (D-071).
+- A page that answers 403, 429 or 503 without a known challenge marker is a failed page, not a bot block; a site whose start page does that comes back sparse (modernsoftworks.com in P13). An interstitial that never settles is caught only through its marker or as unreachable (D-076).
+- A font served from another origin without CORS is not copied; its preview uses the fallback stack and may be captured as fonts unavailable (D-077).
+- Drift evidence keeps 40 rows in the document; the numbers count every finding (D-077).
+
+Detection
+- The fingerprint has no box-size buckets and a card's structure lists child tags, not child clusters; size enters through the variant split (D-076).
+- Component ids are a hash of the cluster's group key, stable across repeated runs, not numbers in run order (D-076).
+
+Storage and platform
+- Stored objects cannot carry `X-Content-Type-Options: nosniff` (S3 metadata); every upload has the right Content-Type instead (D-035).
+- `pnpm audit` reports one moderate advisory, GHSA-67mh-4wv8-2f99 (esbuild's dev server, reached only through drizzle-kit's dev tooling, never in the app or the worker); no high (P14).
+- jsdom stays at 29.1.1 because jsdom 30 needs Node 22.22 (D-053).
+
+Interface
+- The row hover is on the recent runs list only; table rows are read, not clicked, and stay still (D-079).
+- `/open` loads a local run's files only from `http://localhost:4300`, the port `dse serve` uses (by design, `docs/specs/preview-fidelity.md`, Serving).
+- The MCP install line in Claude Code is the one check the build could not run itself; the runbook's step 12 has Brandon run it once (by design, `docs/specs/exports-and-mcp.md`, The MCP server).
 
 ## Toolchain notes
 
@@ -226,7 +250,7 @@ Things implemented differently from the spec, with the decision id that explains
 Keep this list current. It is the only hands-on work he will do.
 
 1. Follow `docs/deploy-runbook.md`.
-2. modernsoftworks.com answers every request with Hostinger's "403 Forbidden" page (seen 2026-10-26, from a browser user agent too). Until it serves pages, the showcase replaces it with an alternate; once it does, `pnpm showcase --only modernsoftworks.com` restores it.
+2. modernsoftworks.com answers every request with Hostinger's "403 Forbidden" page (seen 2026-10-26, from a browser user agent too). Until it serves pages, the showcase replaces it with an alternate; once it does, the runbook's step 11 has the one command that restores it.
 
 ## Session log
 

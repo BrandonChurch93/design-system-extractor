@@ -2,7 +2,7 @@
 
 For Brandon, at the end of the build. This is the only hands-on work (D-012). Every command runs in the VS Code integrated terminal, opened at the repository root (View → Terminal in VS Code, or Ctrl+backtick). The build verifies this document in P15 and corrects any name or command that changed; if something here does not match the repository, the repository is right and STATUS will say so.
 
-Expected time: about 30 minutes plus the showcase run, which takes 15 to 30 minutes on its own.
+Expected time: about 30 minutes plus the showcase run, which takes about an hour and a half on its own: twelve real sites, each up to 15 minutes (the build's dry run of the roster took 95 minutes in all).
 
 ## 0 · Before you start
 
@@ -65,7 +65,7 @@ Copy `.env.example` to `.env.production.local` at the repository root and fill i
 - `NEXT_PUBLIC_APP_URL` · `https://design-system-extractor.vercel.app` (change if you add a domain)
 - `DSE_USER_AGENT` · `DesignSystemExtractorBot/1.0 (+https://design-system-extractor.vercel.app/how-it-works)`
 - `DSE_CONTACT_EMAIL` · your email
-- `DSE_MODEL_MODE=live`, `BILLING_ENABLED=false`, the caps at their defaults
+- `DSE_MODEL_MODE=live`, `BILLING_ENABLED=false`, the caps at their defaults (including `DSE_SHOWCASE_TIMEOUT_MS=900000`, the showcase runs' 15 minutes)
 - `DSE_ALLOW_PRIVATE_HOSTS` · leave it out or empty (`pnpm run doctor --production` fails if it is set)
 
 Then:
@@ -120,6 +120,12 @@ git push
 ```
 
 Open the home page; the showcase is live. Read through two or three runs on your phone.
+
+When the build checked the roster (STATUS, P13 dry run), modernsoftworks.com answered every request with Hostinger's 403 page, so the script replaced it with an alternate. Once the site serves pages again, put it back without re-running the rest:
+
+```
+env DOTENV_FILE=.env.production.local pnpm showcase --remote --only modernsoftworks.com
+```
 
 ## 12 · Publish the packages
 
