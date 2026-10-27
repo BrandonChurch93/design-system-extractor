@@ -25,7 +25,8 @@ export const CANDIDATE_CAP = 300;
 export const FINGERPRINT_CAP = 60;
 export const SITEMAP_URL_CAP = 2000;
 
-const sourcePriority: CandidateSource[] = ['start', 'include', 'header', 'nav', 'footer', 'sitemap', 'body', 'synthetic'];
+// The synthetic missing page is one candidate the spec always adds, so a large site keeps it (D-077).
+const sourcePriority: CandidateSource[] = ['start', 'include', 'synthetic', 'header', 'nav', 'footer', 'sitemap', 'body'];
 
 export type DiscoverDeps = {
   browser: RunBrowserContext;

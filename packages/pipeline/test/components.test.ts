@@ -1,12 +1,19 @@
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { PNG } from 'pngjs';
 import { describe, expect, it } from 'vitest';
-import type { ColorToken } from '@dse/schema';
+import { ComponentGroup, type ColorToken, type RunConfig, type Tokens } from '@dse/schema';
 import type { StyleMap } from '../src/capture/snapshot';
 import { classify } from '../src/components/classify';
 import { classesAllowMerge, clusterItems, structureSimilarity } from '../src/components/cluster';
 import { baseTokens, itemsFrom } from '../src/components/items';
 import { fallbackNames, validName } from '../src/components/model';
+import { LocalStorage, MemoryRunContext } from '../src/context';
+import { ModelClient, type ModelClientOptions } from '../src/models/client';
 import { nameVariants, splitVariants } from '../src/components/variants';
-import { firstSeen } from '../src/stages/components';
+import type { CaptureOutput } from '../src/stages/capture';
+import { COMPONENT_CAP, components, firstSeen } from '../src/stages/components';
 import { fakeCapture } from './helpers/capture';
 import { snap, type El } from './helpers/snap';
 
@@ -139,5 +146,74 @@ describe('fallback names', () => {
   it('accepts sentence-case names of one to three words and nothing else', () => {
     for (const ok of ['Button', 'Pricing card', 'Status badge', 'Site header']) expect(validName(ok), ok).toBe(true);
     for (const bad of ['', 'primary button', 'A very long name here', 'Card\u2014big', 'Card - big', 'Accessible button']) expect(validName(bad), bad).toBe(false);
+  });
+});
+
+describe('the components stage', () => {
+  const config: RunConfig = { url: 'https://t.app/', include: [], pageCap: 12, viewports: ['desktop'], userAgent: 'DesignSystemExtractorBot/1.0', allowPrivateHosts: [], timeoutMs: 360_000, keepIntermediate: false, byo: false };
+  const stageTokens = { colors: tokens, type: [], space: [], spaceBase: { value: 4, clear: true }, radius: [], shadow: [], breakpoints: [], rawCounts: { colors: 0, fontDecls: 0, spacingValues: 0, radii: 0, shadows: 0 }, families: [] } as unknown as Tokens;
+  const png = PNG.sync.write(new PNG({ width: 144, height: 300 }));
+  const usage = { input_tokens: 100, output_tokens: 10, cache_creation_input_tokens: 0, cache_read_input_tokens: 0 };
+
+  /** Names every item `Item {id}` unless `name` says otherwise; types unsure guesses as `retype` says. */
+  function namer(name: (line: string) => string | undefined, retype: (guess: string) => string = (g) => g): ModelClientOptions['transport'] {
+    return async (req) => {
+      const text = req.content.map((b) => (b.type === 'text' ? b.text : '')).join('\n');
+      if (text.startsWith('Pairs:')) return { text: JSON.stringify({ pairs: [] }), usage };
+      const items = [...text.matchAll(/^(c\d+) guess (\S+) .*$/gm)].map((m) => ({ id: m[1]!, type: retype(m[2]!), name: name(m[0]) ?? `Item ${m[1]!.slice(1)}`, isComponent: true, variantHint: null }));
+      return { text: JSON.stringify({ items }), usage };
+    };
+  }
+
+  async function run(capture: CaptureOutput, transport: ModelClientOptions['transport']) {
+    for (const p of capture.pages) for (const vc of Object.values(p.viewports)) vc!.screenshot = { key: 'x.png', width: 1440, height: 3000, cut: false, png };
+    const dir = mkdtempSync(join(tmpdir(), 'dse-components-'));
+    const ctx = new MemoryRunContext('comptest01', config, new ModelClient({ mode: 'live', recordingsDir: dir, transport }), new LocalStorage(dir), { id: 'comptest01', url: config.url, host: 't.app', status: 'running', createdAt: new Date().toISOString(), pipelineVersion: '1.0.0', viewports: ['desktop'] });
+    const out = await components(ctx, capture, stageTokens);
+    return { out: out.components, messages: ctx.events.map((e) => e.message) };
+  }
+
+  it('logs the clusters merged across pages and the noise dropped', async () => {
+    const wrapper: El = { tag: 'div', parent: 0, box: [184, 900, 400, 200], style: border('rgb(226, 232, 240)') };
+    const home: El[] = [body, button(['btn'], 'Start', 100, 'md', 'primary'), button(['btn'], 'Try', 200, 'md', 'primary'), wrapper, { tag: 'div', parent: 3, box: [200, 920, 100, 40] }, { tag: 'div', parent: 3, box: [200, 980, 100, 40] }];
+    const pricing: El[] = [body, button(['cta'], 'Buy', 100, 'md', 'primary'), button(['cta'], 'Upgrade', 200, 'md', 'primary')];
+    const capture = fakeCapture([
+      { path: '/', desktop: snap(home) },
+      { path: '/pricing', desktop: snap(pricing) },
+    ]);
+    const { out, messages } = await run(capture, namer((line) => (/classes (btn|cta)/.test(line) ? 'Primary button' : undefined)));
+    expect(out.filter((c) => c.name === 'Primary button')).toHaveLength(1);
+    expect(out.find((c) => c.name === 'Primary button')!.provenance.pages.map((p) => p.path)).toEqual(['/', '/pricing']);
+    expect(messages).toContain('components · merged 1 across pages');
+    expect(messages).toContain('components · 1 noise cluster dropped');
+  });
+
+  it('caps at 120, dropping other first and then the fewest instances, ordered by group then instance count', async () => {
+    const letters = 'ghijklmnopqrstuvwxyz';
+    const cls = (i: number) => `w${letters[Math.floor(i / 20)]}${letters[i % 20]}`;
+    const els: El[] = [body];
+    // Three buttons with three instances each, 120 with one.
+    for (let i = 0; i < 123; i++) for (let n = 0; n < (i < 3 ? 3 : 1); n++) els.push(button([cls(i)], `Go ${i}`, 100 + els.length * 18, 'md', 'primary'));
+    els.push({ tag: 'nav', parent: 0, cls: ['site-nav'], box: [400, 14, 400, 44], style: { display: 'flex' } });
+    const navIndex = els.length - 1;
+    for (const [i, t] of ['Product', 'Pricing', 'Docs'].entries()) els.push({ tag: 'a', parent: navIndex, text: t, own: t, box: [400 + i * 100, 24, 80, 22] });
+    // Two cards the model types as other, with more instances than any button.
+    for (const name of ['gcard', 'hcard']) {
+      for (let n = 0; n < 5; n++) {
+        const at = els.length;
+        els.push({ tag: 'article', parent: 0, cls: [name], text: 'Weekly digests Every Friday.', box: [700, 100 + at * 4, 340, 200], style: { ...border('rgb(226, 232, 240)'), ...radius(12) } });
+        els.push({ tag: 'h3', parent: at, own: 'Weekly digests', text: 'Weekly digests', box: [720, 120 + at * 4, 200, 28] });
+        els.push({ tag: 'p', parent: at, own: 'Every Friday.', text: 'Every Friday.', box: [720, 160 + at * 4, 200, 26] });
+      }
+    }
+    const { out } = await run(fakeCapture([{ path: '/', desktop: snap(els) }]), namer(() => undefined, (g) => (g === 'card' ? 'other' : g)));
+    expect(out).toHaveLength(COMPONENT_CAP);
+    expect(out.some((c) => c.type === 'other')).toBe(false);
+    expect(out.filter((c) => c.instances.length === 3)).toHaveLength(3);
+    const ranks = out.map((c) => ComponentGroup.options.indexOf(c.group));
+    expect(ranks).toEqual([...ranks].sort((a, b) => a - b));
+    expect(out.at(-1)!.group).toBe('navigation');
+    const buttons = out.filter((c) => c.group === 'buttons').map((c) => c.instances.length);
+    expect(buttons).toEqual([...buttons].sort((a, b) => b - a));
   });
 });

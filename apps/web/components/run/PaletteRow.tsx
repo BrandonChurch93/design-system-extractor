@@ -4,7 +4,7 @@ import type { RunDocumentPartial } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
 import { count } from '../../lib/format';
-import { Skeleton } from '../Skeleton';
+import { RegionSkeleton } from './RegionSkeleton';
 import { Swatch } from '../Swatch';
 import { Enter } from '../motion/Enter';
 import { TokenPopover, tokenInfo } from './TokenPopover';
@@ -19,24 +19,20 @@ export function PaletteRow({ doc }: { doc: RunDocumentPartial }) {
       <p id={labelId} className={styles.label}>
         {runPage.palette.label}
       </p>
-      <ul className={styles.swatches}>
-        {doc.tokens?.colors
-          ? colors.map((c, i) => {
-              const info = tokenInfo(doc, c.id)!;
-              return (
-                <Enter as="li" key={c.id} move="extend" index={i} className={styles.item}>
-                  <TokenPopover info={info} trigger={(t) => <Swatch value={c.value} size="xl" caption={fill(runPage.palette.caption, { name: c.name, uses: count(c.usage) })} {...t} />} />
-                </Enter>
-              );
-            })
-          : Array.from({ length: 8 }, (_, i) => (
-              <li key={i} className={styles.item} aria-hidden="true">
-                <Skeleton height={96} radius="md" />
-                <Skeleton height={12} width="60%" />
-                <Skeleton height={12} width="80%" />
-              </li>
-            ))}
-      </ul>
+      {doc.tokens?.colors ? (
+        <ul className={styles.swatches}>
+          {colors.map((c, i) => {
+            const info = tokenInfo(doc, c.id)!;
+            return (
+              <Enter as="li" key={c.id} move="extend" index={i} className={styles.item}>
+                <TokenPopover info={info} trigger={(t) => <Swatch value={c.value} size="xl" caption={fill(runPage.palette.caption, { name: c.name, uses: count(c.usage) })} {...t} />} />
+              </Enter>
+            );
+          })}
+        </ul>
+      ) : (
+        <RegionSkeleton region="palette" />
+      )}
     </section>
   );
 }

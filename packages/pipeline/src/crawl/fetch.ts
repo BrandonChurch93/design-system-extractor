@@ -4,7 +4,7 @@ import { isPrivateAddress, validateUrlShape } from '../net/private-ranges';
 import { classifyNetworkError, type NetworkFailure } from './blocked';
 import type { Throttle } from './throttle';
 
-export type FetchOk = { ok: true; status: number; url: string; contentType: string; body: Buffer; redirects: string[] };
+export type FetchOk = { ok: true; status: number; url: string; contentType: string; body: Buffer; redirects: string[]; allowOrigin?: string };
 export type FetchFail = { ok: false; error: 'private-address' | 'invalid-url' | 'network' | 'too-many-redirects'; detail: string; network?: NetworkFailure };
 export type FetchResult = FetchOk | FetchFail;
 
@@ -14,6 +14,8 @@ export type FetchOptions = {
   throttle?: Throttle;
   timeoutMs?: number;
   maxBytes?: number;
+  /** Sent as `Origin`, so a server that grants cross-origin use says so in `allowOrigin`. */
+  origin?: string;
   /** Backoff before each retry on network errors; never on an HTTP status. */
   retryDelays?: number[];
   sleep?: (ms: number) => Promise<void>;
@@ -78,7 +80,7 @@ async function fetchOnce(raw: string, opts: FetchOptions): Promise<FetchResult> 
     const doFetch = () =>
       undiciFetch(url, {
         redirect: 'manual',
-        headers: { 'user-agent': opts.userAgent, accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' },
+        headers: { 'user-agent': opts.userAgent, accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8', ...(opts.origin ? { origin: opts.origin } : {}) },
         signal: AbortSignal.timeout(opts.timeoutMs ?? 8000),
         dispatcher: agentFor(opts.allow),
       });
@@ -107,7 +109,8 @@ async function fetchOnce(raw: string, opts: FetchOptions): Promise<FetchResult> 
         chunks.push(Buffer.from(chunk));
       }
     }
-    return { ok: true, status: res.status, url: url.toString(), contentType: res.headers.get('content-type') ?? '', body: Buffer.concat(chunks), redirects };
+    const allowOrigin = res.headers.get('access-control-allow-origin') ?? undefined;
+    return { ok: true, status: res.status, url: url.toString(), contentType: res.headers.get('content-type') ?? '', body: Buffer.concat(chunks), redirects, ...(allowOrigin ? { allowOrigin } : {}) };
   }
   return { ok: false, error: 'too-many-redirects', detail: 'more than 5 redirects' };
 }

@@ -11,7 +11,7 @@ describe('security · sanitized previews', () => {
   it.each(hostileCases.map((h) => [h.name, h] as const))('%s leaves nothing that runs or loads off the allowlist', (_name, h) => {
     const doc = hostilePreview(h, storageBase);
     const body = doc.html.slice(doc.html.indexOf('<body>'));
-    expect(body).not.toMatch(/<script|<iframe|<object|<embed|<meta|<base|<foreignobject|<animate|<link/i);
+    expect(body).not.toMatch(/<script|<iframe|<object|<embed|<meta|<base|<foreignobject|<animate|<set\b|<link/i);
     expect(body).not.toMatch(/\son[a-z]+=/i);
     expect(body).not.toMatch(/javascript:|vbscript:|data:text|srcdoc|formaction|action=|expression\(|@import/i);
     expect(doc.html).not.toContain(BEACON);

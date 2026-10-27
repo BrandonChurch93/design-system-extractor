@@ -266,7 +266,7 @@ async function openStates(page: PwPage, snapshot: Snapshot, cands: ElementCandid
     }, t.d);
     if (revealedSel) {
       n++;
-      const raw = await page.evaluate(takeSnapshot, { props: [...styleProps], cap: 500, keep: [], root: revealedSel, prefix: `o${viewport[0]}${n}-` });
+      const raw = await page.evaluate(takeSnapshot, { props: [...styleProps], cap: 500, root: revealedSel, prefix: `o${viewport[0]}${n}-` });
       const sub = buildSnapshot(raw);
       const root = sub.elements[0];
       if (root) {
@@ -308,7 +308,7 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     const sheets = await p.evaluate(scanSheets);
 
     // Header styles at scroll 0 and 400 must be read before the freeze.
-    const pre = buildSnapshot(await p.evaluate(takeSnapshot, { props: [...styleProps], cap: SNAPSHOT_CAP, keep: [] }));
+    const pre = buildSnapshot(await p.evaluate(takeSnapshot, { props: [...styleProps], cap: SNAPSHOT_CAP }));
     const headerIds = pre.elements.filter((e) => e.vis && (e.tag === 'header' || e.role === 'banner' || (e.tag === 'nav' && e.y < 10)) && e.y < 10).map((e) => e.d);
     const scrolled = new Map<string, StateRecord>();
     for (const d of headerIds.slice(0, 2)) {
@@ -327,7 +327,7 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     const shotKey = keys.pageScreenshot(ctx.runId, page.id, viewport);
     await ctx.files.put(shotKey, png, { contentType: 'image/png' });
     if (cut) await ctx.emit({ stage: 'capture', message: `${page.path} · cut at ${SCREENSHOT_MAX_HEIGHT} px` });
-    const snapshot = buildSnapshot(await p.evaluate(takeSnapshot, { props: [...styleProps], cap: SNAPSHOT_CAP, keep: [] }));
+    const snapshot = buildSnapshot(await p.evaluate(takeSnapshot, { props: [...styleProps], cap: SNAPSHOT_CAP }));
     const candidates = capCandidates(findCandidates(snapshot, viewport), CANDIDATE_CAP);
     const selectors = await p.evaluate(buildSelectors, candidates.map((c) => c.dse));
 

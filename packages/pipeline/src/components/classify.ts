@@ -1,6 +1,6 @@
 import type { ComponentType } from '@dse/schema';
 import { viewportSize } from '@dse/schema';
-import { ancestors, descendants, px, wordCount, type SnapElement, type Snapshot } from '../capture/snapshot';
+import { ancestors, descendants, px, radiusOf, wordCount, type SnapElement, type Snapshot } from '../capture/snapshot';
 import { representative } from './cluster';
 import type { Item } from './items';
 
@@ -34,6 +34,37 @@ function stackedRows(items: Item[]): boolean {
   return false;
 }
 
+const fieldTags = new Set(['select', 'textarea']);
+const isField = (e: SnapElement) => fieldTags.has(e.tag) || (e.tag === 'input' && !['hidden', 'submit', 'button', 'reset', 'image'].includes(e.type ?? 'text'));
+const separator = /^[/›>»|·•→\\-]$/;
+
+/** A checkbox inside a label beside a track: wider than tall, fully rounded (a switch built from a checkbox). */
+function switchTrack(s: Snapshot, el: SnapElement): boolean {
+  const label = el.tag === 'label' ? el : ancestors(s, el).slice(0, 3).find((a) => a.tag === 'label');
+  if (!label) return false;
+  const inside = descendants(s, label);
+  if (!inside.some((d) => d.tag === 'input' && d.type === 'checkbox')) return false;
+  return inside.some((d) => d.tag !== 'input' && d.h >= 10 && d.h <= 40 && d.w >= d.h * 1.5 && d.w <= d.h * 3 && radiusOf(d) >= d.h / 2 - 1);
+}
+
+/** An ordered list of up to six links with separators between them. */
+function crumbList(s: Snapshot, el: SnapElement): boolean {
+  if (el.tag !== 'ol') return false;
+  const items = el.kids.map((i) => s.elements[i]!).filter((k) => k.tag === 'li');
+  if (items.length < 2 || items.length > 6) return false;
+  const links = descendants(s, el).filter((d) => d.tag === 'a' && d.href);
+  if (links.length < 1 || links.length > 6) return false;
+  const marks = descendants(s, el).filter((d) => separator.test(d.own.trim()) || (d.tag === 'svg' && d.aria['aria-hidden'] === 'true'));
+  return marks.length >= items.length - 1 || items.filter((li) => separator.test(li.own.trim())).length >= items.length - 1;
+}
+
+/** A list or nav of numbered links (or buttons): 1, 2, 3. */
+function numberedLinks(s: Snapshot, el: SnapElement): boolean {
+  if (!['ul', 'ol', 'nav'].includes(el.tag)) return false;
+  const numbered = descendants(s, el).filter((d) => ((d.tag === 'a' && d.href) || d.tag === 'button') && /^\d{1,4}$/.test(d.text.trim()));
+  return numbered.length >= 2;
+}
+
 function containerFacts(s: Snapshot, el: SnapElement) {
   const desc = descendants(s, el);
   return {
@@ -53,7 +84,7 @@ export function classify(items: Item[]): Guess {
   const cls = el.cls.join(' ').toLowerCase();
 
   if (it.revealed) return { type: 'dropdown', confidence: 0.85 };
-  if (role === 'switch') return { type: 'toggle', confidence: 0.85 };
+  if (role === 'switch' || ((el.tag === 'label' || (el.tag === 'input' && el.type === 'checkbox')) && switchTrack(it.snapshot, el))) return { type: 'toggle', confidence: 0.85 };
   if (el.tag === 'input' && el.type === 'checkbox') return { type: 'checkbox', confidence: 0.98 };
   if (el.tag === 'input' && el.type === 'radio') return { type: 'radio', confidence: 0.98 };
   if (el.tag === 'input' && !['submit', 'button', 'reset', 'image'].includes(el.type ?? 'text')) return { type: 'input', confidence: 0.98 };
@@ -65,9 +96,9 @@ export function classify(items: Item[]): Guess {
     const navItem = role === 'tab' || /pagination/.test(cls) || ancestors(it.snapshot, el).some((a) => a.role === 'tablist' || /pagination/i.test(a.cls.join(' ')) || /pagination/i.test(a.aria['aria-label'] ?? ''));
     return wordCount(el.text) <= 3 && !inPageHref(it) && !navItem ? { type: 'button', confidence: 0.95 } : { type: 'link', confidence: 0.9 };
   }
-  if (el.tag === 'form') return { type: 'form', confidence: 0.95 };
-  if (label.includes('breadcrumb') || cls.includes('breadcrumb')) return { type: 'breadcrumb', confidence: 0.8 };
-  if (label.includes('pagination') || cls.includes('pagination')) return { type: 'pagination', confidence: 0.8 };
+  if (el.tag === 'form' && descendants(it.snapshot, el).filter(isField).length >= 2) return { type: 'form', confidence: 0.95 };
+  if (label.includes('breadcrumb') || cls.includes('breadcrumb') || crumbList(it.snapshot, el)) return { type: 'breadcrumb', confidence: 0.8 };
+  if (label.includes('pagination') || cls.includes('pagination') || numberedLinks(it.snapshot, el)) return { type: 'pagination', confidence: 0.8 };
   if (role === 'tablist') return { type: 'tabs', confidence: 0.95 };
   if (el.tag === 'nav' || role === 'navigation') return { type: 'nav', confidence: 0.95 };
   if ((el.tag === 'header' || role === 'banner') && el.y < 10) return { type: 'header', confidence: 0.95 };

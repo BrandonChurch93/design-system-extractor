@@ -61,6 +61,18 @@ function LiveMeta({ run }: { run: RunResponse }) {
 const logLines = (events: RunEvent[]): LogLine[] => events.map((e) => ({ id: e.id, ts: e.ts, text: e.message, level: e.level }));
 
 /** The run page, both faces: the in-progress page filling stage by stage, and the complete page. */
+/** A template with its run id set in mono (docs/design/copy.md, rule 11). */
+function withRunId(template: string, id: string) {
+  const [before, after = ''] = template.split('{id}');
+  return (
+    <>
+      {before}
+      <span className={styles.runId}>{id}</span>
+      {after}
+    </>
+  );
+}
+
 export function RunView({ initial, storageBase, appUrl, contactEmail, partial, local, onOpenComponent }: Props) {
   const router = useRouter();
   const params = useSearchParams();
@@ -150,10 +162,7 @@ export function RunView({ initial, storageBase, appUrl, contactEmail, partial, l
   ) : local ? undefined : (
     <>
       <p>
-        {runPage.footer.cost
-          .replace('{id}', id)
-          .replace('{cost}', formatCost(doc.cost?.usd ?? 0))
-          .replace(` · ${runPage.footer.howItWorks}`, ' · ')}
+        {withRunId(runPage.footer.cost.replace('{cost}', formatCost(doc.cost?.usd ?? 0)).replace(` · ${runPage.footer.howItWorks}`, ' · '), id)}
         <Link href="/how-it-works" className={styles.footerLink}>
           {runPage.footer.howItWorks}
         </Link>
@@ -194,7 +203,7 @@ export function RunView({ initial, storageBase, appUrl, contactEmail, partial, l
             <StateCard
               level={2}
               title={run.status === 'failed' ? runPage.failed.title : runPage.cancelled.title}
-              body={fill(run.status === 'failed' ? runPage.failed.body : runPage.cancelled.body, { id })}
+              body={withRunId(run.status === 'failed' ? runPage.failed.body : runPage.cancelled.body, id)}
               detail={run.status === 'failed' && doc.failedDetail ? <p className={styles.detail}>{doc.failedDetail}</p> : undefined}
               primary={
                 <Button variant="primary" href={`/?url=${encodeURIComponent(doc.url ?? '')}`}>

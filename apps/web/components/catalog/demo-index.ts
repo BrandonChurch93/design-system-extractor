@@ -41,6 +41,7 @@ export const demoIndex: { slug: string; name: string }[] = [
   { slug: 'drift-section', name: 'DriftNumbers, DriftProposal, VariantCollapseList and EvidenceTable' },
   { slug: 'exports-section', name: 'ExportCard' },
   { slug: 'stage-rail', name: 'StageRail' },
+  { slug: 'region-skeleton', name: 'RegionSkeleton' },
   { slug: 'component-panel', name: 'ComponentPanel and ComponentPage' },
   { slug: 'compare', name: 'CompareModeToggle, CompareColumns, DeltaStrip, TokenDiff and ChangeTable' },
   { slug: 'recent-run-row', name: 'RecentRunRow' },

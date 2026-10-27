@@ -1,14 +1,17 @@
 import { mkdtempSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { PNG } from 'pngjs';
 import { describe, expect, it } from 'vitest';
-import type { RunConfig } from '@dse/schema';
+import type { RunConfig, Tokens } from '@dse/schema';
 import { LocalStorage, MemoryRunContext } from '../src/context';
 import { classify } from '../src/components/classify';
 import { clusterItems } from '../src/components/cluster';
+import { downscale } from '../src/components/crop';
 import { itemsFrom } from '../src/components/items';
-import { nameComponents, resolveCollisions, type Draft } from '../src/components/model';
-import { ModelClient, type ModelClientOptions } from '../src/models/client';
+import { IMAGE_BELOW_CONFIDENCE, nameComponents, resolveCollisions, type Draft } from '../src/components/model';
+import { ModelClient, type ContentBlock, type ModelClientOptions } from '../src/models/client';
+import { components } from '../src/stages/components';
 import { fakeCapture } from './helpers/capture';
 import { snap, type El } from './helpers/snap';
 
@@ -73,6 +76,33 @@ describe('the component naming call', () => {
   });
 });
 
+const png = (width: number, height: number) => PNG.sync.write(new PNG({ width, height }));
+const size = (buf: Buffer) => [buf.readUInt32BE(16), buf.readUInt32BE(20)];
+
+describe('images for the naming call', () => {
+  it('downscales a crop so its longer side is at most 512 px, and leaves a small one as it is', () => {
+    expect(size(downscale(png(1024, 300)))).toEqual([512, 150]);
+    expect(size(downscale(png(300, 900)))).toEqual([171, 512]);
+    const small = png(400, 200);
+    expect(downscale(small)).toBe(small);
+  });
+
+  it('sends a picture only for items the rules were less than 0.9 sure of', async () => {
+    const ds = drafts().map((d) => ({ ...d, crop: png(40, 20) }));
+    expect(ds.map((d) => d.guess.confidence >= IMAGE_BELOW_CONFIDENCE)).toEqual([true, false]);
+    let content: ContentBlock[] = [];
+    const ctx = ctxWith({
+      transport: async (req) => {
+        content = req.content;
+        return { text: JSON.stringify({ items: [] }), usage };
+      },
+    });
+    await nameComponents(ctx, ds);
+    expect(content.map((b) => (b.type === 'text' ? b.text.split('\n')[0] : 'image'))).toEqual(['Items:', 'Picture of c2:', 'image']);
+    expect((content[0] as { text: string }).text.split('\n').map((l) => l.endsWith('picture below'))).toEqual([false, false, true]);
+  });
+});
+
 describe('the collision call', () => {
   it('merges what the model calls the same, and keeps both apart on failure', async () => {
     const [a, b] = drafts();
@@ -82,5 +112,47 @@ describe('the collision call', () => {
     const broken = ctxWith({ transport: async () => ({ text: 'nope', usage }) });
     expect(await resolveCollisions(broken, pairs)).toEqual({ same: new Set(), by: 'by fallback (invalid)' });
     expect(await resolveCollisions(broken, [])).toEqual({ same: new Set(), by: 'none' });
+  });
+
+  it('keeps both apart on an answer outside the schema and on a timeout', async () => {
+    const [a, b] = drafts();
+    const pairs = [{ id: 'p1', a: a!, b: b!, name: 'Button' }];
+    const wrong = ctxWith({ transport: async () => ({ text: JSON.stringify({ pairs: [{ id: 'p1', same: 'maybe' }] }), usage }) });
+    expect(await resolveCollisions(wrong, pairs)).toEqual({ same: new Set(), by: 'by fallback (invalid)' });
+    const slow = ctxWith({
+      transport: async () => {
+        throw Object.assign(new Error('Request timed out.'), { name: 'APIConnectionTimeoutError' });
+      },
+    });
+    expect(await resolveCollisions(slow, pairs)).toEqual({ same: new Set(), by: 'by fallback (timeout)' });
+  });
+
+  it('gives the later cluster a numeric suffix when the call falls back', async () => {
+    // The second button carries an icon, so the two never cluster; the model names both Button.
+    const page = (style: El['style'], box: [number, number, number, number], icon = false) => snap([{ tag: 'body', box: [0, 0, 1440, 900] }, { tag: 'button', parent: 0, own: 'Send', text: 'Send', box, style }, ...(icon ? [{ tag: 'svg', parent: 1, box: [104, 107, 16, 16] } as El] : [])]);
+    const capture = fakeCapture([
+      { path: '/', desktop: page({ 'background-color': 'rgb(36, 88, 230)', color: 'rgb(255, 255, 255)', 'padding-left': '20px', 'padding-right': '20px', 'border-top-left-radius': '8px' }, [100, 100, 120, 44]) },
+      { path: '/pricing', desktop: page({ 'background-color': 'rgb(255, 255, 255)', 'border-top-width': '1px', 'border-top-style': 'solid', 'padding-left': '8px', 'padding-right': '8px', 'font-size': '13px', 'font-weight': '600' }, [100, 100, 80, 30], true) },
+    ]);
+    const shot = png(1440, 900);
+    for (const p of capture.pages) for (const vc of Object.values(p.viewports)) vc!.screenshot.png = shot;
+    const asked: string[] = [];
+    const ctx = ctxWith({
+      transport: async (req) => {
+        const text = (req.content[0] as { text: string }).text;
+        asked.push(text.split(':')[0]!);
+        if (text.startsWith('Pairs:')) throw Object.assign(new Error('Request timed out.'), { name: 'APIConnectionTimeoutError' });
+        const ids = [...text.matchAll(/^(c\d+) guess/gm)].map((m) => m[1]);
+        return { text: JSON.stringify({ items: ids.map((id) => ({ id, type: 'button', name: 'Button', isComponent: true, variantHint: null })) }), usage };
+      },
+    });
+    const tokens = { colors: [], type: [], space: [], radius: [], shadow: [] } as unknown as Tokens;
+    const out = await components(ctx, capture, tokens);
+    expect(asked).toEqual(['Items', 'Pairs']);
+    expect(out.components.map((c) => [c.name, c.provenance.firstSeen.path])).toEqual([
+      ['Button', '/'],
+      ['Button 2', '/pricing'],
+    ]);
+    expect(ctx.events[0]!.data).toMatchObject({ collisions: 'by fallback (timeout)' });
   });
 });

@@ -37,7 +37,7 @@
   bottom: -1px;
   height: 2px;
   background: var(--dse-ink);
-  border-radius: 2px;
+  border-radius: var(--dse-radius-xs);
 }
 
 .panel {

@@ -8,6 +8,7 @@ import { LocalStorage, MemoryRunContext } from '../src/context';
 import { launchBrowser } from '../src/crawl/browser';
 import { ModelClient } from '../src/models/client';
 import { runPipeline } from '../src/run';
+import { takeSnapshot } from '../src/capture/snapshot-script';
 import { pageGuards, type CaptureOutput, type PageCapture, type ViewportCapture } from '../src/stages/capture';
 import { startFixtureServer } from '../../../scripts/fixtures-serve';
 
@@ -313,5 +314,24 @@ describe('matched CSS from the CSSOM (D-068)', () => {
     expect(JSON.stringify(m)).not.toContain('animation');
     expect(asked).toEqual(['http://cdn.test/site.css']);
     await context.close();
+  });
+});
+
+describe('the snapshot cap', () => {
+  it('records only element candidates and their ancestors past the cap', async () => {
+    const ctx = await browser.newContext();
+    const p = await ctx.newPage();
+    await p.addInitScript({ content: 'window.__name = function (f) { return f; };' });
+    const filler = (n: number, cls: string) => Array.from({ length: n }, () => `<div class="${cls}">text</div>`).join('');
+    await p.setContent(`<body>${filler(20, 'early')}<section id="late"><div class="wrap"><button>Go</button></div>${filler(5, 'late-plain')}</section>${filler(5, 'tail')}</body>`);
+    const r = await p.evaluate(takeSnapshot, { props: ['display'], cap: 10 });
+    const tags = r.elements.map((e) => `${e.tag}${e.cls[0] ? `.${e.cls[0]}` : ''}`);
+    expect(r.truncated).toBe(true);
+    expect(tags).toContain('button');
+    expect(tags).toEqual(expect.arrayContaining(['section', 'div.wrap']));
+    expect(tags.filter((t) => t === 'div.late-plain' || t === 'div.tail')).toEqual([]);
+    const button = r.elements.find((e) => e.tag === 'button')!;
+    expect(r.elements[button.p]?.cls).toEqual(['wrap']);
+    await ctx.close();
   });
 });

@@ -6,6 +6,7 @@ import Ajv from 'ajv';
 import { describe, expect, it } from 'vitest';
 import { RunDocumentPartial, TokensJson, type ExportFormat } from '@dse/schema';
 import { allZip, crc32, generateExport, w3cShadow, zip } from '../src/exports';
+import { PROMPT_CODE_BUDGET, shorten, SNIPPET_CAP } from '../src/exports/documents';
 
 // Golden files for every format from two fixture runs (docs/specs/exports-and-mcp.md, Tests).
 // `env DSE_UPDATE_GOLDENS=1 pnpm test` rewrites them; a change is a decision to review.
@@ -123,5 +124,52 @@ describe('component CSS with token variables (D-069)', () => {
     expect(withTokenVars(css, t)).toBe(
       '.tag { background: var(--color-teal-500); color: #fff; padding: 0 var(--space-8); border-radius: var(--radius-md); width: 8px; box-shadow: var(--shadow-sm); --x: 8px; }\n@media (min-width: 8px) { .a { margin: var(--space-16) 12px; } }',
     );
+  });
+});
+
+describe('code in the whole-system documents (D-069)', () => {
+  const css = (rules: number) => Array.from({ length: rules }, (_, i) => `.c${i} { color: #0B1F3A; padding: 4px; }`).join('\n');
+  const note = /^shortened · ([\d,]+) of ([\d,]+) characters · the component's own prompt has all of it$/;
+
+  it('cuts CSS past 4,000 and HTML past 3,000 characters at a boundary, with a comment saying so', () => {
+    const long = css(120);
+    const cut = shorten(long, 'css');
+    const [kept, comment] = cut.split('\n/* ');
+    expect(long.startsWith(kept!)).toBe(true);
+    expect(kept!.length).toBeLessThanOrEqual(SNIPPET_CAP.css);
+    expect(kept).toMatch(/[;}]$/);
+    const [, k, total] = note.exec(comment!.replace(/ \*\/$/, ''))!;
+    expect([k, total]).toEqual([kept!.length.toLocaleString('en-US'), long.length.toLocaleString('en-US')]);
+
+    const html = `<ul>${Array.from({ length: 200 }, (_, i) => `<li class="item">Item ${i}</li>`).join('')}</ul>`;
+    const [keptHtml, commentHtml] = shorten(html, 'html').split('\n<!-- ');
+    expect(keptHtml!.length).toBeLessThanOrEqual(SNIPPET_CAP.html);
+    expect(keptHtml!.endsWith('>')).toBe(true);
+    expect(commentHtml).toMatch(/^shortened · [\d,]+ of [\d,]+ characters · the component's own prompt has all of it -->$/);
+    expect(shorten(css(10), 'css')).toBe(css(10));
+  });
+
+  it('shortens a long snippet in design-system.md while the component prompt keeps all of it', () => {
+    const doc = structuredClone(load('clean'));
+    const c = doc.components![0]!;
+    c.code.css = css(120);
+    expect(generateExport(doc, 'design-system.md', { runUrl: runUrl(doc) }).body).toContain(`/* shortened · ${shorten(c.code.css, 'css').split('\n/* ')[0]!.length.toLocaleString('en-US')} of ${c.code.css.length.toLocaleString('en-US')} characters`);
+    const own = generateExport(doc, 'component-prompt.md', { runUrl: runUrl(doc), componentId: c.id }).body;
+    expect(own).toContain(c.code.css);
+    expect(own).not.toContain('shortened');
+  });
+
+  it('keeps component CSS in prompt.md within 48,000 characters, in order, and says where the rest is', () => {
+    const doc = structuredClone(load('clean'));
+    const block = css(105);
+    for (const c of doc.components!) c.code.css = block;
+    const body = generateExport(doc, 'prompt.md', { runUrl: runUrl(doc) }).body;
+    const blocks = body.split('## Components')[1]!.match(/```css\n[\s\S]*?\n```/g) ?? [];
+    const fit = Math.floor(PROMPT_CODE_BUDGET / block.length);
+    expect(blocks).toHaveLength(fit);
+    expect(blocks.reduce((n, b) => n + b.length - '```css\n\n```'.length, 0)).toBeLessThanOrEqual(PROMPT_CODE_BUDGET);
+    const sections = body.split('\n### ').slice(1);
+    expect(sections.map((sec) => sec.includes('```css'))).toEqual(doc.components!.map((_, i) => i < fit));
+    expect(body).toContain("Code for the components above without a CSS block is in each component's own prompt.");
   });
 });

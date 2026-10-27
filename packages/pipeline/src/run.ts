@@ -14,6 +14,7 @@ import { previews } from './stages/previews';
 import { checks } from './stages/checks';
 import { drift } from './stages/drift';
 import { exportsStage } from './stages/exports';
+import { isIntermediateKey, keys } from './storage/keys';
 
 export { PIPELINE_VERSION } from './version';
 
@@ -144,7 +145,14 @@ export async function runPipeline(ctx: RunContext, deps: RunDeps): Promise<RunOu
   } else {
     await ctx.emit({ stage: 'done', level: 'error', message: outcome.detail, patch: { ...patch, status: 'failed', failedDetail: outcome.detail } });
   }
+  if (!ctx.config.keepIntermediate) await dropIntermediate(ctx).catch((e: Error) => ctx.log.warn({ err: e.message }, 'intermediate files not deleted'));
   return outcome;
+}
+
+/** Snapshots and matched CSS serve the run only; they go once it is done (docs/specs/data-model.md, Storage keys). */
+async function dropIntermediate(ctx: RunContext): Promise<void> {
+  const found = (await ctx.files.list(`${keys.runPrefix(ctx.runId)}pages/`)).filter(isIntermediateKey);
+  await Promise.all(found.map((k) => ctx.files.delete(k)));
 }
 
 /** The stat strip's numbers, once tokens exist (the `stats` column, docs/specs/data-model.md). */

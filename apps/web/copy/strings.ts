@@ -453,6 +453,7 @@ export const catalog = {
   devLine: 'Design QA · build spend {used} of {cap}',
   indexLabel: 'Catalog index',
   frameTitle: '{name} at 390 px',
+  frameLabel: '{viewport} · 390 px',
   replay: 'Replay',
 } as const;
 

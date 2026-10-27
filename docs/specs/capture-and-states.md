@@ -48,7 +48,7 @@ Caps: 40 interactive element candidates per page per viewport for state capture,
 
 ## What is written
 
-Per page and viewport: the screenshot key, the snapshot (stored as `runs/{id}/pages/{pageId}/{viewport}.snapshot.json.gz`), the matched CSS map (`.css.json.gz`), the state captures index. The run document's `pages` gains the capture refs; the rest is intermediate data consumed by later stages and deleted after `done` unless `DSE_KEEP_INTERMEDIATE=1`.
+Per page and viewport: the screenshot key, the snapshot (stored as `runs/{id}/pages/{pageId}/{viewport}.snapshot.json.gz`), the matched CSS map (`.css.json.gz`). State captures stay in the stage's output and reach storage as component crops (D-076). The run document's `pages` gains the capture refs; the rest is intermediate data consumed by later stages and deleted after `done` unless `DSE_KEEP_INTERMEDIATE=1`.
 
 ## Mobile viewport differences
 

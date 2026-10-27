@@ -72,6 +72,6 @@
 .outline {
   position: absolute;
   border: 2px solid var(--dse-ink);
-  border-radius: 2px;
+  border-radius: var(--dse-radius-xs);
   box-sizing: border-box;
 }

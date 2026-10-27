@@ -9,6 +9,9 @@ import type { FontFaceOut, PreviewFonts } from './build';
 // Fonts for previews (docs/specs/preview-fidelity.md, step 3): Google Fonts by link, same-origin or
 // CORS files under 300 KB copied to storage, else the fallback stack.
 
+const bare = (host: string) => host.replace(/^www\./, '');
+const sameSite = (a: URL, b: URL) => a.protocol === b.protocol && bare(a.host) === bare(b.host);
+
 const formats: Record<string, string> = { woff2: 'woff2', woff: 'woff', ttf: 'truetype', otf: 'opentype' };
 
 export class FontCopier {
@@ -28,8 +31,11 @@ export class FontCopier {
   private async fetchAndStore(src: string): Promise<string | null> {
     const ext = /\.(woff2|woff|ttf|otf)(\?|#|$)/i.exec(src)?.[1]?.toLowerCase();
     if (!ext) return null;
-    const res = await guardedFetch(src, { userAgent: this.ctx.config.userAgent, allow: this.ctx.config.allowPrivateHosts, retryDelays: [] }).catch(() => null);
+    const site = new URL(this.ctx.config.url);
+    const res = await guardedFetch(src, { userAgent: this.ctx.config.userAgent, allow: this.ctx.config.allowPrivateHosts, retryDelays: [], origin: site.origin }).catch(() => null);
     if (!res?.ok || res.body.length === 0 || res.body.length > FONT_CAP_BYTES) return null;
+    // Only a font the site serves itself, or one its server lets other origins use, is copied.
+    if (!sameSite(new URL(res.url), site) && res.allowOrigin !== '*' && res.allowOrigin !== site.origin) return null;
     const key = keys.componentFont(this.ctx.runId, `${createHash('sha1').update(src).digest('hex').slice(0, 16)}.${ext}`);
     await this.ctx.files.put(key, res.body);
     return this.ctx.files.publicUrl(key);

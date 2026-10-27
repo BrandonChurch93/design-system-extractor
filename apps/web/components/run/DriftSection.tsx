@@ -6,7 +6,7 @@ import { runPage } from '../../copy/strings';
 import { count } from '../../lib/format';
 import { Card } from '../Card';
 import { FitPreview } from '../FitPreview';
-import { Skeleton } from '../Skeleton';
+import { RegionSkeleton } from './RegionSkeleton';
 import { Swatch } from '../Swatch';
 import { CountUp } from '../motion/CountUp';
 import { Enter } from '../motion/Enter';
@@ -158,10 +158,7 @@ export function DriftSection({ doc, base }: { doc: RunDocumentPartial; base?: st
           <Evidence doc={doc} />
         </>
       ) : (
-        <>
-          <Skeleton height={150} radius="lg" />
-          <Skeleton height={260} radius="lg" />
-        </>
+        <RegionSkeleton region="drift" />
       )}
     </Section>
   );

@@ -5,7 +5,7 @@ import { runPage } from '../../copy/strings';
 import { count } from '../../lib/format';
 import { Card } from '../Card';
 import { Popover } from '../Popover';
-import { Skeleton } from '../Skeleton';
+import { RegionSkeleton } from './RegionSkeleton';
 import { Enter } from '../motion/Enter';
 import { Section } from './Section';
 import { StatStrip } from './StatStrip';
@@ -90,10 +90,7 @@ export function ChecksSection({ doc }: { doc: RunDocumentPartial }) {
           </Card>
         </>
       ) : (
-        <>
-          <Skeleton height={112} radius="lg" />
-          <Skeleton height={320} radius="lg" />
-        </>
+        <RegionSkeleton region="checks" />
       )}
     </Section>
   );

@@ -1,13 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import type { ColorToken } from '@dse/schema';
 import { parseCssColor } from '../src/color/parse';
-import { buildColors, classify, clusterColors, deterministicNames } from '../src/tokens/colors';
-import { emptyRaw, semanticContext, type RawColor, type RawShadow, type RawSpace, type RawType } from '../src/tokens/collect';
-import { hueWord } from '../src/tokens/constants';
+import type { MatchedStyles } from '../src/capture/matched-css';
+import { siteShadowNames } from '../src/stages/tokens';
+import { buildColors, capClusters, classify, clusterColors, deterministicNames } from '../src/tokens/colors';
+import { collect, emptyRaw, normalizeShadow, semanticContext, type RawColor, type RawRadius, type RawShadow, type RawSpace, type RawType } from '../src/tokens/collect';
+import { COLOR_CAP, hueWord } from '../src/tokens/constants';
 import { applyNames } from '../src/tokens/naming';
-import { buildShadows, buildSpace, inferBase } from '../src/tokens/space';
-import { assignRoles } from '../src/tokens/type';
-import { snap } from './helpers/snap';
+import { buildBreakpoints, buildRadius, buildShadows, buildSpace, inferBase } from '../src/tokens/space';
+import { assignRoles, buildType } from '../src/tokens/type';
+import { fakeCapture } from './helpers/capture';
+import { snap, type El } from './helpers/snap';
 
 const color = (hex: string, weight: number, semantic = 0): RawColor => ({ hex, rgba: parseCssColor(hex)!, weight, uses: { text: weight, background: 0, border: 0, other: 0 }, semantic, pages: new Map([['page0000', weight]]) });
 
@@ -24,6 +27,19 @@ describe('color clustering', () => {
 
   it('never merges a translucent color into its opaque base', () => {
     expect(clusterColors([color('#0B1F3A', 10), color('#0B1F3A1F', 5)])).toHaveLength(2);
+  });
+});
+
+describe('the color cap', () => {
+  const one = (hex: string, weight: number) => ({ rep: color(hex, weight), members: [color(hex, weight)] });
+  it('keeps 80 clusters and merges the lightest into their nearest neighbors', () => {
+    const blues = Array.from({ length: COLOR_CAP - 1 }, (_, i) => one(`#00${(i * 3).toString(16).padStart(2, '0').toUpperCase()}FF`, 100 + i));
+    const { clusters, merged } = capClusters([one('#0000FE', 2), ...blues, one('#FF0000', 1000), one('#FE0202', 1)]);
+    expect(merged).toBe(2);
+    expect(clusters).toHaveLength(COLOR_CAP);
+    expect(clusters.find((k) => k.rep.hex === '#FF0000')!.members.map((m) => m.hex)).toEqual(['#FF0000', '#FE0202']);
+    expect(clusters.find((k) => k.rep.hex === '#0000FF')!.members.map((m) => m.hex)).toEqual(['#0000FF', '#0000FE']);
+    expect(capClusters(blues).merged).toBe(0);
   });
 });
 
@@ -106,6 +122,22 @@ describe('spacing', () => {
   });
 });
 
+describe('radius and breakpoints', () => {
+  const r = (value: number, count: number): RawRadius => ({ value, isPill: value === 999, count, pages: new Map([['page0000', count]]) });
+  it('keeps the six most used radii, ascending', () => {
+    const raw = emptyRaw();
+    for (const x of [r(2, 1), r(4, 9), r(6, 3), r(8, 20), r(12, 7), r(16, 2), r(24, 5), r(999, 4)]) raw.radius.set(x.value, x);
+    const radius = buildRadius(raw);
+    expect(radius.map((t) => t.value)).toEqual([4, 6, 8, 12, 24, 999]);
+    expect(radius.find((t) => t.value === 999)!.isPill).toBe(true);
+  });
+  it('keeps the six most used breakpoints, ascending, the smaller width first on a tie', () => {
+    const raw = emptyRaw();
+    for (const [w, n] of [[640, 3], [768, 9], [1024, 9], [1280, 5], [1536, 1], [480, 2], [960, 2], [1440, 4]] as const) raw.breakpoints.set(w, n);
+    expect(buildBreakpoints(raw)).toEqual([480, 640, 768, 1024, 1280, 1440]);
+  });
+});
+
 describe('shadows', () => {
   const sh = (value: string, maxBlur: number, count: number): RawShadow => ({ value, maxBlur, count, pages: new Map([['page0000', count]]) });
   it('buckets more than three shadows by blur, merging the least used, and names them by blur', () => {
@@ -119,6 +151,23 @@ describe('shadows', () => {
     ]);
     expect(buildShadows(raw, new Map([['0px 8px 16px 0px #0000001F', 'raised']])).map((t) => t.name)).toEqual(['sm', 'raised', 'lg']);
   });
+  it('takes a name only from a box-shadow that is exactly one custom property ending in shadow-{name}, last in the cascade', () => {
+    const shadows = ['0px 1px 2px 0px', '0px 2px 4px 0px', '0px 3px 6px 0px', '0px 4px 8px 0px', '0px 5px 10px 0px', '0px 6px 12px 0px'].map((l) => `rgba(0, 0, 0, 0.1) ${l}`);
+    const cap = fakeCapture([{ path: '/', desktop: snap([{ tag: 'body' }, ...shadows.map((v): El => ({ tag: 'div', parent: 0, style: { 'box-shadow': v } }))]) }]);
+    const rule = (value: string) => ({ selector: '.x', matched: ['.x'], origin: 'regular', media: [], supports: [], declarations: [{ name: 'box-shadow', value, important: false }] });
+    const plain = rule('0 1px 2px black');
+    const matched: Record<string, MatchedStyles> = {
+      e1: { rules: [rule('var(--shadow-sm)')], inline: [], pseudo: [] },
+      e2: { rules: [rule('var(--ds-shadow-lg, 0 4px 8px red)')], inline: [], pseudo: [] },
+      e3: { rules: [rule('var(--shadow-md), 0 0 0 1px red')], inline: [], pseudo: [] },
+      e4: { rules: [rule('var(--elevation-2)')], inline: [], pseudo: [] },
+      e5: { rules: [rule('var(--shadow-xl)'), plain], inline: [], pseudo: [] },
+      e6: { rules: [plain], inline: [{ name: 'box-shadow', value: 'var(--shadow-card)', important: false }], pseudo: [] },
+    };
+    cap.pages[0]!.viewports.desktop!.matched = matched;
+    const names = siteShadowNames(cap);
+    expect(names).toEqual(new Map([[normalizeShadow(shadows[0]!), 'sm'], [normalizeShadow(shadows[1]!), 'lg'], [normalizeShadow(shadows[5]!), 'card']]));
+  });
 });
 
 describe('type roles', () => {
@@ -127,5 +176,30 @@ describe('type roles', () => {
     const types = [t(48, 700, { h1: 1, p: 3 }, { homeLargest: true }), t(36, 700, { h1: 9 }), t(20, 600, { h3: 5, a: 9 }), t(16, 400, { p: 40 }), t(14, 400, { li: 10, td: 9 }), t(14, 600, { label: 8, button: 6 }), t(12, 400, { span: 9 }), t(14, 400, { code: 3 }, { family: 'ui-monospace', fallbackStack: 'ui-monospace, monospace' }), t(16, 500, { a: 12 })];
     const roles = assignRoles(types);
     expect(types.map((x) => roles.get(x))).toEqual(['display', 'h1', 'h3', 'body', 'body-sm', 'label', 'caption', 'code', 'other']);
+  });
+  it('keeps the 24 tuples with the most elements', () => {
+    const raw = emptyRaw();
+    for (let i = 0; i < 30; i++) {
+      const x = t(10 + i, 400, { span: 3 + i });
+      raw.type.set(x.key, x);
+    }
+    const usage = buildType(raw).tokens.map((x) => x.usage);
+    expect(usage).toHaveLength(24);
+    expect(Math.min(...usage)).toBe(9);
+  });
+  it('drops tuples under 3 elements unless a heading or the largest size on a page, never a menu', () => {
+    const own = (tag: string, size: number, y: number): El => ({ tag, parent: 0, own: 'Text', box: [0, y, 300, 30], style: { 'font-size': `${size}px`, 'line-height': `${size * 1.5}px` } });
+    const page = snap([{ tag: 'body', box: [0, 0, 1440, 3000] }, own('p', 16, 0), own('p', 16, 40), own('p', 16, 80), own('span', 14, 120), own('span', 14, 160), own('h5', 18, 200), own('div', 40, 240)]);
+    const menu = snap([{ tag: 'body', box: [0, 0, 1440, 900] }, own('a', 60, 0)]);
+    const base = { pageId: 'page0000', path: '/', isHome: true, viewport: 'desktop' as const, focusOutlines: [], media: [], fonts: [] };
+    const raw = collect([
+      { ...base, kind: 'page', snapshot: page },
+      { ...base, kind: 'open', snapshot: menu },
+    ]);
+    expect(buildType(raw).tokens.map((x) => [x.size, x.usage])).toEqual([
+      [40, 1],
+      [18, 1],
+      [16, 3],
+    ]);
   });
 });

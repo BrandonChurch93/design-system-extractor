@@ -10,6 +10,7 @@ import { Button } from '../Button';
 import { Card } from '../Card';
 import { Popover } from '../Popover';
 import { Skeleton } from '../Skeleton';
+import { RegionSkeleton } from './RegionSkeleton';
 import { Swatch } from '../Swatch';
 import { Enter } from '../motion/Enter';
 import { CardHead, Section } from './Section';
@@ -204,9 +205,9 @@ export function TokensSection({ doc }: { doc: RunDocumentPartial }) {
       {t?.colors ? <ColorCard doc={doc} /> : <Skeleton height={300} radius="lg" />}
       {doc.darkThemeDetected ? <p className={styles.note}>{T.darkTheme}</p> : null}
       <div className={styles.split}>
-        {t?.type ? <TypeCard doc={doc} /> : <Skeleton height={520} radius="lg" />}
+        {t?.type ? <TypeCard doc={doc} /> : <RegionSkeleton region="type" />}
         <div className={styles.stack}>
-          {t?.space ? <SpacingCard doc={doc} /> : <Skeleton height={300} radius="lg" />}
+          {t?.space ? <SpacingCard doc={doc} /> : <RegionSkeleton region="spacing" />}
           {t?.radius?.length === 0 && t.shadow?.length === 0 ? null : (
             <div className={styles.pair}>
               {t?.radius ? t.radius.length ? <RadiusCard doc={doc} /> : null : <Skeleton height={140} radius="lg" />}

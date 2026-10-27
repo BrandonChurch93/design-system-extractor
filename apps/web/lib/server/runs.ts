@@ -1,6 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { CreateRunBody, newRunId, RunDocumentPartial, RunEvent, SHOWCASE_PRIORITY, stageLabels, type BlockedResult, type CreateRunCreated, type RunResponse } from '@dse/schema';
-import { appendEvent, finishOpenRun, getRun, getRunForViewer, insertRun, isTerminal, listEvents, queueDepth, queuePosition, tables, type Db } from '@dse/pipeline/db';
+import { appendEvent, finishOpenRun, getRunForViewer, insertRun, isTerminal, listEvents, queueDepth, queuePosition, tables, type Db } from '@dse/pipeline/db';
 import { checkTarget, validateUrlShape } from '@dse/pipeline/net/private-ranges';
 import { encryptSecret, enqueueRun, RunJobData, type Counted } from '@dse/pipeline/queue';
 import { PIPELINE_VERSION } from '@dse/pipeline/version';
@@ -164,8 +164,8 @@ export type CancelResult = { status: 200 | 403 | 404 | 409; body: { id?: string;
  * running one gets the flag the worker reads between pages, and ends there.
  */
 export async function cancelRun(svc: Services, viewer: ResolvedViewer, runId: string): Promise<CancelResult> {
-  const row = /^[0-9a-z]{10}$/.test(runId) ? await getRun(svc.db, runId) : null;
-  if (!row || row.unpublished) return { status: 404, body: { error: 'No run with that link.' } };
+  const row = /^[0-9a-z]{10}$/.test(runId) ? await getRunForViewer(svc.db, runId, viewer) : null;
+  if (!row) return { status: 404, body: { error: 'No run with that link.' } };
   if (row.visitorId !== viewer.visitorId) return { status: 403, body: { error: 'Only the browser that started a run can cancel it.' } };
   if (isTerminal(row.status)) return { status: 409, body: { id: row.id, status: row.status } };
   await svc.counters.requestCancel(row.id);

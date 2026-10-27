@@ -91,10 +91,20 @@ export type RawElement = {
 
 export type SnapshotResult = { elements: RawElement[]; truncated: boolean; docW: number; docH: number; nodeCount: number; title: string; h1: string };
 
-export function takeSnapshot(args: { props: string[]; cap: number; keep: string[]; root?: string; prefix?: string }): SnapshotResult {
+export function takeSnapshot(args: { props: string[]; cap: number; root?: string; prefix?: string }): SnapshotResult {
   const { props, cap } = args;
   const prefix = args.prefix ?? 'e';
-  const keep = new Set(args.keep);
+  // Past the cap only element candidates and their ancestors are recorded (docs/specs/capture-and-states.md).
+  let keep: Set<Element> | null = null;
+  const pastCap = (el: Element) => {
+    if (!keep) {
+      keep = new Set();
+      for (const c of document.querySelectorAll('a[href], button, input:not([type=hidden]), select, textarea, summary, [role], [aria-haspopup]')) {
+        for (let a: Element | null = c; a && !keep.has(a); a = a.parentElement) keep.add(a);
+      }
+    }
+    return !keep.has(el);
+  };
   const out: RawElement[] = [];
   const index = new Map<Element, number>();
   let counter = 0;
@@ -137,7 +147,7 @@ export function takeSnapshot(args: { props: string[]; cap: number; keep: string[
     let me = parent;
     const isSvgChild = el.namespaceURI === 'http://www.w3.org/2000/svg' && el.tagName.toLowerCase() !== 'svg';
     if (!isSvgChild && (!zero || cs.display === 'contents' || el.children.length)) {
-      if (out.length >= cap && !keep.has(el.getAttribute('data-dse-id') ?? '')) {
+      if (out.length >= cap && pastCap(el)) {
         truncated = true;
       } else {
         let dse = el.getAttribute('data-dse-id');

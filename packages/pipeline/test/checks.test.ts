@@ -1,9 +1,11 @@
 import { PNG } from 'pngjs';
 import { describe, expect, it } from 'vitest';
-import type { ColorToken } from '@dse/schema';
+import type { CheckResult, ColorToken, Component, Tokens } from '@dse/schema';
 import { contrastRatio, formatRatio } from '../src/color/contrast';
 import { contrastOf, focusOf, groundOf, labelOf, motionOf, sampleGround, tapOf } from '../src/checks/measure';
-import { itemsFrom } from '../src/components/items';
+import { findCandidates } from '../src/capture/candidates';
+import { itemsFrom, type Item } from '../src/components/items';
+import { checkComponent, summarize } from '../src/stages/checks';
 import { fakeCapture } from './helpers/capture';
 import { snap, type El } from './helpers/snap';
 import { detailTemplates, matchesTemplate } from './helpers/templates';
@@ -136,6 +138,114 @@ describe('reduced motion', () => {
   ])('%s', (_name, main, reduced, interactive, detail) => {
     const m = keep(motionOf(main, reduced, interactive));
     expect(m?.detail ?? null).toBe(detail);
+  });
+});
+
+describe('contrast reading rules (D-054)', () => {
+  it('leaves text inside a nested component to that component', () => {
+    const els: El[] = [
+      { tag: 'body', box: [0, 0, 400, 300], style: { 'background-color': 'rgb(255, 255, 255)' } },
+      { tag: 'div', parent: 0, box: [0, 0, 300, 120] },
+      { tag: 'p', parent: 1, own: 'Plan', text: 'Plan', box: [10, 10, 100, 20], style: { color: 'rgb(11, 31, 58)' } },
+      { tag: 'span', parent: 1, own: 'New', text: 'New', box: [10, 40, 40, 20], style: { color: 'rgb(170, 170, 170)', 'font-size': '14px' } },
+    ];
+    const card = item(els);
+    expect(keep(contrastOf(card, tokens))!.status).toBe('fail');
+    card.vc.candidates.push({ dse: 'e3', rules: ['inline-mark'], interactive: false, area: 800 });
+    expect(keep(contrastOf(card, tokens))!.detail).toBe('16.5:1 on gray-50');
+  });
+
+  it('measures placeholder text at Chromium’s #757575 default and at the input’s ::placeholder color', () => {
+    const field = item([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'input', parent: 0, box: [0, 0, 240, 44] }]);
+    field.el.attrs.placeholder = 'Your email';
+    expect(keep(contrastOf(field, tokens))).toMatchObject({ status: 'pass', detail: '4.6:1 on gray-50', measured: { fg: '#757575' } });
+    expect(keep(contrastOf(field, tokens, 'rgb(170, 170, 170)'))).toMatchObject({ status: 'fail', detail: '2.3:1 on gray-50, needs 4.5:1' });
+    field.el.attrs.value = 'ada@example.com';
+    expect(contrastOf(field, tokens)).toBeNull();
+  });
+
+  it('holds bold text under 18.66 px to 4.5:1 and bold text at 18.66 px to 3:1', () => {
+    const tag = (size: string, weight: string) => item([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'span', parent: 0, own: 'New', text: 'New', box: [0, 0, 40, 24], style: { color: 'rgb(255, 255, 255)', 'background-color': 'rgb(15, 138, 138)', 'font-size': size, 'font-weight': weight } }]);
+    expect(keep(contrastOf(tag('18.66px', '700'), tokens))!.detail).toBe('4.1:1 on teal-500');
+    expect(keep(contrastOf(tag('18px', '700'), tokens))!.detail).toBe('4.1:1 on teal-500, needs 4.5:1');
+    expect(keep(contrastOf(tag('18.66px', '600'), tokens))!.detail).toBe('4.1:1 on teal-500, needs 4.5:1');
+  });
+});
+
+describe('one result per check for a component', () => {
+  const buttons = (grounds: string[], mobile = false) => {
+    const els: El[] = [{ tag: 'body', box: [0, 0, 1440, 900] }, ...grounds.map((g, i): El => ({ tag: 'button', parent: 0, own: 'Send', text: 'Send', box: [100, 100 + i * 60, 120, 44], style: { color: 'rgb(255, 255, 255)', 'background-color': g } }))];
+    const items = itemsFrom(fakeCapture([{ path: '/', desktop: snap(els), ...(mobile ? { mobile: snap(els, { w: 390, h: 2000 }) } : {}) }]));
+    return items.filter((i) => i.el.tag === 'button');
+  };
+  const sourceOf = (first: Item, variants: [string, Item][], items: Item[]) => ({ first, variants: new Map(variants), items, variantOf: new Map(variants.map(([id, it]) => [it, id])) });
+  const button = { type: 'button' } as Component;
+  const noTokens = { colors: tokens } as Tokens;
+  const results = (r: CheckResult[]) => {
+    for (const x of r) keep(x);
+    return Object.fromEntries(r.map((x) => [x.check, x]));
+  };
+
+  it('takes the worst variant and names it when it is not the first seen', () => {
+    const [blue, pale] = buttons(['rgb(36, 88, 230)', 'rgb(110, 190, 190)']);
+    const worstLater = results(checkComponent(button, sourceOf(blue!, [['vblue001', blue!], ['vpale001', pale!]], [blue!, pale!]), noTokens));
+    expect(worstLater.contrast).toMatchObject({ status: 'fail', variantId: 'vpale001' });
+    const worstFirst = results(checkComponent(button, sourceOf(pale!, [['vpale001', pale!], ['vblue001', blue!]], [pale!, blue!]), noTokens));
+    expect(worstFirst.contrast!.status).toBe('fail');
+    expect(worstFirst.contrast).not.toHaveProperty('variantId');
+  });
+
+  it('reads the ::placeholder color from the input’s matched rules', () => {
+    const els: El[] = [{ tag: 'body', box: [0, 0, 1440, 900] }, { tag: 'input', parent: 0, box: [100, 100, 240, 44] }];
+    const field = itemsFrom(fakeCapture([{ path: '/', desktop: snap(els) }])).find((i) => i.el.tag === 'input')!;
+    field.el.attrs.placeholder = 'Your email';
+    field.vc.matched[field.el.d] = { rules: [], inline: [], pseudo: [{ pseudo: 'placeholder', rules: [{ selector: 'input::placeholder', matched: ['input::placeholder'], origin: 'regular', media: [], supports: [], declarations: [{ name: 'color', value: 'rgb(170, 170, 170)', important: false }] }] }] };
+    const r = results(checkComponent({ type: 'input' } as Component, sourceOf(field, [['vfield01', field]], [field]), noTokens));
+    expect(r.contrast).toMatchObject({ status: 'fail', detail: '2.3:1 on gray-50, needs 4.5:1' });
+  });
+
+  it('is not measured without a focus capture, and not present without a phone instance', () => {
+    const [blue] = buttons(['rgb(36, 88, 230)']);
+    const r = results(checkComponent(button, sourceOf(blue!, [['vblue001', blue!]], [blue!]), noTokens));
+    expect(r['focus-visible']).toMatchObject({ status: 'na', detail: 'Not measured: capture cap' });
+    expect(r['tap-target']).toMatchObject({ status: 'na', detail: 'Not present at 390 px' });
+    const both = buttons(['rgb(36, 88, 230)'], true);
+    const phone = results(checkComponent(button, sourceOf(both[0]!, [['vblue001', both[0]!]], both), noTokens));
+    expect(phone['tap-target']).toMatchObject({ status: 'pass', detail: '120 × 44 at 390 px' });
+  });
+
+  it('exempts a link inside a sentence of prose: it never becomes a component to measure', () => {
+    const s = snap([
+      { tag: 'body', box: [0, 0, 390, 900] },
+      { tag: 'p', parent: 0, text: 'Read the pricing guide before you start.', own: 'Read the  before you start.', box: [20, 100, 350, 48] },
+      { tag: 'a', parent: 1, text: 'pricing guide', own: 'pricing guide', box: [80, 100, 96, 20], style: { display: 'inline' } },
+      { tag: 'a', parent: 0, text: 'Start', own: 'Start', box: [20, 200, 80, 30], style: { display: 'inline-block', 'background-color': 'rgb(36, 88, 230)', 'padding-left': '12px', 'padding-right': '12px' } },
+    ]);
+    expect(findCandidates(s, 'mobile').map((c) => c.dse)).toEqual(['e3']);
+  });
+
+  it('motion is not measured when the reduced-motion probe hit the capture cap', () => {
+    expect(keep(motionOf({ animation: true, transition: false }, undefined, false))).toMatchObject({ status: 'na', detail: 'Not measured: capture cap' });
+  });
+});
+
+describe('the per-run summary', () => {
+  const comp = (n: number, checks: [CheckResult['check'], CheckResult['status'], string, Record<string, number>?][]) =>
+    ({ id: `comp${String(n).padStart(4, '0')}`, name: `Component ${n}`, checks: checks.map(([check, status, detail, measured]) => ({ check, status, detail, ...(measured ? { measured } : {}) })) }) as unknown as Component;
+  it('counts applicable results only and lists the worst eight failures per check by shortfall', () => {
+    const comps = [
+      ...[40, 13, 36, 30, 20, 43, 25, 38, 42, 33].map((h, i) => comp(i, [['tap-target', 'fail', `${h} px tall, ${44 - h} short`, { w: 120, h }], ['label', 'na', 'Not applicable']])),
+      comp(10, [['tap-target', 'pass', '44 × 44 at 390 px', { w: 44, h: 44 }], ['contrast', 'fail', '2.5:1 on gray-50, needs 3:1', { ratio: 2.5 }]]),
+      comp(11, [['contrast', 'fail', '3.9:1 on gray-50, needs 4.5:1', { ratio: 3.9 }]]),
+      comp(12, [['contrast', 'fail', '2.9:1 on gray-50, needs 3:1', { ratio: 2.9 }]]),
+    ];
+    const out = summarize(comps);
+    expect(out.summary).toEqual({ passed: 1, failed: 13, applicable: 14, total: 65 });
+    const tap = out.byCheck.find((b) => b.check === 'tap-target')!;
+    expect([tap.passed, tap.applicable]).toEqual([1, 11]);
+    expect(tap.failing.map((f) => f.detail)).toEqual(['13 px tall, 31 short', '20 px tall, 24 short', '25 px tall, 19 short', '30 px tall, 14 short', '33 px tall, 11 short', '36 px tall, 8 short', '38 px tall, 6 short', '40 px tall, 4 short']);
+    expect(out.byCheck.find((b) => b.check === 'contrast')!.failing.map((f) => f.name)).toEqual(['Component 11', 'Component 10', 'Component 12']);
+    expect(out.byCheck.find((b) => b.check === 'label')).toEqual({ check: 'label', passed: 0, applicable: 0, failing: [] });
   });
 });
 

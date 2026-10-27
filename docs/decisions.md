@@ -617,3 +617,53 @@ Decision:
 - `pnpm docker:smoke` builds `apps/worker/Dockerfile` from the repository root, runs the image against the Docker services through `host.docker.internal` (test database, Redis database 15, test bucket, the fixture server), sends it the clean fixture through the same admission code as a visitor, waits for the run to complete with a valid document, live previews and checks, then stops the container with SIGTERM and requires a clean exit. The container runs with `NODE_ENV=development` because production ignores the private-host allowance that lets it reach the host, and with `fixtures/recordings` mounted for replay. The image itself is unchanged.
 Reasoning: both rules are measurements a fresh checkout can repeat; the leak would have grown without bound in a worker that only restarts its browser.
 Affects: `scripts/soak.ts`, `scripts/docker-smoke.ts`, `package.json`, `apps/worker/src/browser.ts`, `packages/pipeline/src/previews/build.ts`, `packages/pipeline/src/previews/sanitize.ts`, `docs/specs/caps-and-budget.md`.
+
+## D-076 · Rulings from the P15 traceability sweep
+
+Date: 2026-10-26 · Context: mapping every section of every spec and design document to code and tests (`docs/traceability.md`) found places where the code and the documents disagree. Each is settled here, by changing the code where the document was right and by fixing the document where the code is the better answer.
+Decision, code changed to match the documents:
+- Intermediate capture files (snapshots and matched CSS) are deleted when a run is done unless `DSE_KEEP_INTERMEDIATE=1`; they were written and never removed.
+- Past the 6,000-element snapshot cap, element candidates (controls, elements with a role or a popup) and their ancestors are still recorded; everything past the cap was dropped.
+- Rule classification gains the missing structural forms: a checkbox in a label beside a rounded track is a toggle, an ordered list of links with separators is a breadcrumb, a list or nav of numbered links is pagination, and a form needs two or more fields.
+- A responsive variant compares flex direction as well as display.
+- Cancel reads the run through `getRunForViewer`, the one read path.
+- RegionSkeleton is a component with the documented shapes per region (8 swatches, 8 type rows, 9 spacing bars, 6 cards, the checks summary and 5 rows, 3 drift numbers, 6 export cards and the MCP card) and has a catalog entry.
+Decision, documents changed to match the code:
+- The reachability check after two failed pages is a GET of the origin, since many servers refuse HEAD.
+- An interstitial that never settles is not a separate test: it either shows a challenge marker once loaded (bot) or the start page fails to load (unreachable).
+- `body` is a page reason (a link in the start page's body), as the enum, data-model.md and copy.md already had it.
+- The settings, dashboard and app row is scored by path; a page behind a login is caught at capture as a login wall.
+- The fingerprint has no box buckets and the card structure lists child tags, not child clusters. Size enters through the variant split's height bucket. Adding box buckets now would re-cluster every fixture and every recording for no measured gain: every fixture passes every threshold with component precision and recall at or above 0.926.
+- The model's `variantHint` is a description that helps the model; variant names come only from the deterministic naming, which already gives `Outlined` where it applies.
+- Naming batches go in first-seen order across pages with four calls in flight (D-066), not per page group.
+- Component ids are a hash of the group key, stable across repeated runs; the document is ordered as the spec says.
+- `@keyframes` never reach a preview, because a preview carries only the rules matched to its elements; the app's dev CSP allows `'unsafe-eval'` for the Next.js dev server only.
+- drift.md's sentence on component code follows D-069 (token variables).
+- The typed errors are `BlockedError`, `TimeoutError`, `CancelledError`, `ModelAuthError` and `ReplayMissError`; there is no `ModelError`, because every other model failure is absorbed by its fallback.
+- Allow and block decisions go through `check`; a created run's values come from `limitsFor` in the same module.
+- Server components read the session through `currentSession()`, the same auth adapter as `resolveViewer`.
+- The phone breakpoint is read in JavaScript through `useMedia`, which follows changes, for the panel and sheet, the Popover on phones and the CaptureViewer.
+- There is no state captures index file; state captures reach storage as component crops.
+Reasoning: the documents are the spec, so where the code fell short it was fixed; where the code is right for a reason the document did not foresee, the document now says what the product does and why.
+Affects: `docs/specs/crawler.md`, `docs/specs/page-selection.md`, `docs/specs/capture-and-states.md`, `docs/specs/component-detection.md`, `docs/specs/preview-fidelity.md`, `docs/specs/drift.md`, `docs/specs/architecture.md`, `docs/specs/caps-and-budget.md`, `docs/specs/v2-seams.md`, `docs/design/design-system.md`, `docs/design/components.md`, `packages/pipeline/src/run.ts`, `packages/pipeline/src/capture/snapshot-script.ts`, `packages/pipeline/src/stages/capture.ts`, `packages/pipeline/src/components/classify.ts`, `packages/pipeline/src/stages/components.ts`, `apps/web/lib/server/runs.ts`, `apps/web/components/run/RegionSkeleton.tsx` and the run sections, the catalog.
+
+## D-077 · More rulings from the P15 sweep: tokens, conventions, the 404 candidate, fonts
+
+Date: 2026-10-26 · Context: the tests written to close the traceability gaps found a second set of differences between the code and the documents.
+Decision, code changed to match the documents:
+- Seven stylesheets set a literal 2 px radius. Hairline details need it, so the design system gains `radius-xs` (2 px) and they use it; the design-rules test reads the radius tokens from `tokens.css`.
+- The account menu's icon was 18 px; it is 20, as the icon rule says.
+- The Open Graph image and the catalog's frame label held literal copy; they read `strings.ts`, and copy.md gains the frame label.
+- The run id in the run page's footer and in the failed and cancelled bodies is set in mono, as copy rule 11 says.
+- The synthetic 404 candidate ranks right after the start page and visitor includes under the 300-candidate cap, so a large site still gets its empty state; it ranked last and was always cut.
+- A font file is copied for previews only when the site serves it (same host, with or without `www.`) or its server allows cross-origin use (`Access-Control-Allow-Origin` of `*` or the site's origin, asked with an `Origin` header).
+Decision, documents changed to match the code:
+- Three CSS Modules are shared by a family of components and named after it: `Catalog`, `HowItWorks`, `v2`.
+- The 300-candidate priority names every source the crawler has: the start page, visitor includes, the synthetic 404, header links, other navigation, footer links, sitemap, body.
+- Path-pattern groups apply to every candidate, fetched or not.
+- Drift evidence is capped at 40 rows in the document, which every surface reads; the numbers count every finding.
+- The drift narrative's fallback event line carries its reason, as model-calls.md says for every fallback.
+- The home page's one-hour revalidation is set on the fetch of the showcase object.
+- copy.md's placeholder for the source paths is `{paths}`, as `strings.ts` has it.
+Reasoning: the same as D-076.
+Affects: `docs/design/design-system.md`, `docs/design/copy.md`, `docs/specs/architecture.md`, `docs/specs/crawler.md`, `docs/specs/drift.md`, `docs/specs/showcase.md`, `apps/web/styles/tokens.css`, seven CSS Modules, `apps/web/components/v2/AccountMenu.tsx`, `apps/web/app/api/runs/[id]/og/route.tsx`, `apps/web/components/catalog/CatalogView.tsx`, `apps/web/components/run/RunView.tsx`, `packages/pipeline/src/stages/discover.ts`, `packages/pipeline/src/crawl/fetch.ts`, `packages/pipeline/src/previews/fonts.ts`.

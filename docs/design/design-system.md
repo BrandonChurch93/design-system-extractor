@@ -92,6 +92,7 @@ Content width is 1160 px, centered. Gutters: 40 px at desktop and tablet, 20 px 
 
 | Token | Value | Use |
 | --- | --- | --- |
+| `radius-xs` | 2 | Hairline details: the tab indicator, capture and source outlines, spacing bars, a link's focus corners (D-077). |
 | `radius-sm` | 8 | Small swatches, code blocks, skeleton blocks, the live log. |
 | `radius-md` | 14 | Buttons, inputs, large swatches. |
 | `radius-lg` | 18 | Cards, panels, the drift headline card, the stat strip. The signature curve. |
@@ -117,7 +118,7 @@ Cards also carry a 1 px `line-soft` border so they hold an edge on `bg`.
 | `tablet` | 641 to 1023 | Two-column grids. Gutter 40. Panel is 480 wide. |
 | `desktop` | 1024 and up | Three-column grids. Panel is 560 wide. Everything in `docs/design/pages.md` at its full layout. |
 
-Implementation: CSS Modules with `@media (max-width: 640px)` and `@media (max-width: 1023px)`. No JavaScript breakpoint logic except for the panel-versus-sheet switch, which reads a `matchMedia` once.
+Implementation: CSS Modules with `@media (max-width: 640px)` and `@media (max-width: 1023px)`. JavaScript reads the phone breakpoint only through `useMedia` (`apps/web/lib/use-media.ts`, which follows `matchMedia` changes), for what CSS cannot switch: the panel versus the sheet, a Popover that becomes a Sheet on phones, and the CaptureViewer's layout (D-076).
 
 QA viewports, used by every screenshot gate: 1440 × 900 (desktop), 820 × 1180 (tablet), 390 × 844 (phone). The tablet viewport exists so the two-column layouts are seen.
 

@@ -26,6 +26,7 @@ import { ExportsSection } from '../run/ExportsSection';
 import { PageList, PageListPopover } from '../run/PageList';
 import { PagesCard } from '../run/PagesCard';
 import { PaletteRow } from '../run/PaletteRow';
+import { RegionSkeleton } from '../run/RegionSkeleton';
 import { RunHeader } from '../run/RunHeader';
 import { StageRail } from '../run/StageRail';
 import { StatStrip, runStats } from '../run/StatStrip';
@@ -238,6 +239,13 @@ export const pageDemos: Demo[] = [
       { label: runPage.eyebrow, wide: true, node: <StageRail rings={rail(progressRun.document, progressRun.events, 'running')} /> },
       { label: runPage.buttons.export, wide: true, node: <StageRail rings={done} /> },
     ],
+  },
+  {
+    slug: 'region-skeleton',
+    name: 'RegionSkeleton',
+    tokens: ['skeleton', 'surface', 'surface-tint', 'line-soft', 'radius-sm', 'radius-md', 'radius-lg'],
+    frameHeight: 2600,
+    states: () => (['palette', 'type', 'spacing', 'components', 'checks', 'drift', 'exports'] as const).map((region) => ({ label: region, wide: true, node: <RegionSkeleton region={region} /> })),
   },
   {
     slug: 'component-panel',

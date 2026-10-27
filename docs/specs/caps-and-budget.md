@@ -18,7 +18,7 @@ Anyone can run the tool. These rules are what keep that safe (D-005). All values
 
 ## Entitlements (the one module)
 
-`packages/schema/src/entitlements.ts` exports `plans` (a map of plan id to limits) and `apps/web/lib/entitlements.ts` exports `resolveViewer(request)` → `{ visitorId, userId: null, plan: 'free', byoKey: boolean }` and `check(viewer, action)` → `{ ok } | { blocked: reason, detail }`. Every limit decision in the app and worker calls `check`. v1 has one plan:
+`packages/schema/src/entitlements.ts` exports `plans` (a map of plan id to limits) and `apps/web/lib/entitlements.ts` exports `resolveViewer(request)` → `{ visitorId, userId: null, plan: 'free', byoKey: boolean }` and `check(viewer, action)` → `{ ok } | { blocked: reason, detail }`. Every decision to allow or block calls `check`; the values a created run carries (page cap, viewports, priority, retention) come from `limitsFor(viewer)` in the same module, and the worker reads them from the run row (D-076). v1 has one plan:
 
 ```
 free: { runsPerDay: 2, pageCap: 12, includeCap: 5, viewports: ['desktop','mobile'], retentionDays: 90, privateRuns: false, scheduledRuns: false, priority: 0, teamSeats: 1 }

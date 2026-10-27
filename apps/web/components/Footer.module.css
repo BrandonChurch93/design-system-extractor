@@ -35,7 +35,7 @@
   text-decoration: underline;
   text-decoration-color: var(--dse-line-strong);
   text-underline-offset: 3px;
-  border-radius: 2px;
+  border-radius: var(--dse-radius-xs);
   transition: text-decoration-color var(--dse-motion-fast) var(--dse-ease-standard);
 }
 

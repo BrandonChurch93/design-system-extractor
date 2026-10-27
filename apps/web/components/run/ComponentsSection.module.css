@@ -12,22 +12,6 @@
   justify-self: start;
 }
 
-.skeletonCard {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  background: var(--dse-surface);
-  border: 1px solid var(--dse-line-soft);
-  border-radius: var(--dse-radius-lg);
-  overflow: hidden;
-}
-
-.skeletonBody {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: var(--dse-space-2);
-  padding: var(--dse-space-5);
-  min-height: 140px;
-}
 
 @media (max-width: 1023px) {
   .grid {

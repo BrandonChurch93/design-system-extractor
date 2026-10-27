@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { buildCsp, LOCAL_SERVE_ORIGIN } from '../lib/csp';
 
@@ -14,7 +16,16 @@ describe('security · the app CSP', () => {
     expect(p['frame-ancestors']).toEqual(["'self'"]);
     expect(p['base-uri']).toEqual(["'self'"]);
     expect(p['form-action']).toEqual(["'self'"]);
+    expect(p['style-src']).toEqual(["'self'", "'unsafe-inline'"]);
+    expect(p['font-src']).toEqual(["'self'"]);
     expect(JSON.stringify(p)).not.toContain(LOCAL_SERVE_ORIGIN);
+  });
+
+  it('is the policy docs/specs/preview-fidelity.md writes out, directive for directive', () => {
+    const spec = readFileSync(resolve(import.meta.dirname, '../../../docs/specs/preview-fidelity.md'), 'utf8');
+    const written = /per-request nonce: `([^`]+)`/.exec(spec)![1]!;
+    const storage = 'https://xyz.supabase.co';
+    expect(buildCsp({ nonce: 'abc123', storage: `${storage}/storage/v1/object/public/dse` })).toBe(written.replace('{nonce}', 'abc123').replaceAll('{storage}', storage));
   });
 
   it('adds the local serve origin on /open only', () => {

@@ -88,6 +88,12 @@ describe('a fixture run through the queue', () => {
     expect([...new Set(last.events.map((e) => e.stage))]).toEqual(['queue', 'discover', 'select', 'capture', 'tokens', 'components', 'previews', 'checks', 'drift', 'exports', 'done']);
   });
 
+  it('keeps the page screenshots and deletes the intermediate snapshots and matched CSS once done', async () => {
+    const stored = await h.storage.list(`runs/${id}/pages/`);
+    expect(stored.filter((k) => k.endsWith('.png')).length).toBeGreaterThan(0);
+    expect(stored.filter((k) => /\.(snapshot|css)\.json\.gz$/.test(k))).toEqual([]);
+  });
+
   it('caches the finished run publicly and answers 304 to its ETag', async () => {
     const { res } = await poll(id);
     expect(res.headers.get('cache-control')).toBe('public, max-age=3600, stale-while-revalidate=86400');

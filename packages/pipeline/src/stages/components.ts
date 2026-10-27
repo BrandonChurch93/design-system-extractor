@@ -338,15 +338,21 @@ async function statesOf(ctx: RunContext, w: Working, id: string, first: Item, in
 }
 
 /** `Stacks at 390 px` when display changes; `Changes layout at 390 px` when it fills its container only on phones. */
+/** How the phone instance differs from the desktop one, if it does (docs/specs/component-detection.md, Responsive variants). */
+export function responsiveNote(desktop: Item, mobile: Item): 'Stacks at 390 px' | 'Changes layout at 390 px' | undefined {
+  const flow = (it: Item) => `${it.el.style.display}|${/flex/.test(it.el.style.display) ? it.el.style['flex-direction'] : ''}`;
+  if (flow(desktop) !== flow(mobile)) return 'Stacks at 390 px';
+  const parentW = (it: Item) => it.snapshot.elements[it.el.p]?.w ?? viewportSize[it.viewport].width;
+  if (mobile.el.w >= parentW(mobile) * 0.9 && desktop.el.w <= parentW(desktop) * 0.6) return 'Changes layout at 390 px';
+  return undefined;
+}
+
 async function responsiveVariantOf(ctx: RunContext, w: Working, id: string, first: Item): Promise<Component['responsiveVariant'] | undefined> {
   const desktop = w.items.find((i) => i.viewport === 'desktop' && i.page.id === first.page.id && !i.revealed);
   if (!desktop) return undefined;
   const mobile = w.items.find((i) => i.viewport === 'mobile' && i.page.id === desktop.page.id && i.selector === desktop.selector);
   if (!mobile) return undefined;
-  const parentW = (it: Item) => it.snapshot.elements[it.el.p]?.w ?? viewportSize[it.viewport].width;
-  let note: string | undefined;
-  if (desktop.el.style.display !== mobile.el.style.display) note = 'Stacks at 390 px';
-  else if (mobile.el.w >= parentW(mobile) * 0.9 && desktop.el.w <= parentW(desktop) * 0.6) note = 'Changes layout at 390 px';
+  const note = responsiveNote(desktop, mobile);
   if (!note) return undefined;
   const shot = await put(ctx, keys.componentMobile(ctx.runId, id), crop(mobile));
   if (!shot) return undefined;

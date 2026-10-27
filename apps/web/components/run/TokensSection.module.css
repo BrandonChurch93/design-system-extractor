@@ -125,7 +125,7 @@
   display: block;
   height: 12px;
   background: var(--dse-ink);
-  border-radius: 2px;
+  border-radius: var(--dse-radius-xs);
 }
 
 .alert,

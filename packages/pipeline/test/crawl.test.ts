@@ -1,11 +1,14 @@
 import { readFileSync } from 'node:fs';
+import { createServer, type Server } from 'node:http';
+import type { AddressInfo } from 'node:net';
 import { resolve } from 'node:path';
 import { gzipSync } from 'node:zlib';
-import { describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import { classifyNetworkError, isBotChallenge, isLoginWalled, looksLikeLoginPage } from '../src/crawl/blocked';
 import { isTracker } from '../src/crawl/blocklist';
 import { isExcluded, isExcludedHref } from '../src/crawl/exclusions';
 import { pageFacts } from '../src/crawl/fingerprint';
+import { guardedFetch } from '../src/crawl/fetch';
 import { frameworkHint } from '../src/crawl/framework';
 import { displayPath, inScope, normalizeUrl, scopeOf, siteHost } from '../src/crawl/normalize';
 import { crawlDelayMs, isAllowed, parseRobots } from '../src/crawl/robots';
@@ -201,5 +204,91 @@ describe('politeness', () => {
     const a = starts.filter((s) => s.host === 'a.com').map((s) => s.at);
     for (let i = 1; i < a.length; i++) expect(a[i]! - a[i - 1]!).toBeGreaterThanOrEqual(800);
     expect(peak).toBeLessThanOrEqual(2);
+  });
+});
+
+describe('the guarded fetch', () => {
+  let server: Server;
+  let origin = '';
+  let allow: string[] = [];
+  const hits = new Map<string, number>();
+  let failFirst = 0;
+
+  beforeAll(async () => {
+    server = createServer((req, res) => {
+      const url = new URL(req.url ?? '/', 'http://x');
+      const path = url.pathname;
+      hits.set(path, (hits.get(path) ?? 0) + 1);
+      const hop = /^\/(chain5|chain6)\/(\d+)$/.exec(path);
+      if (path === '/down') return req.socket.destroy();
+      if (path === '/flaky' && hits.get(path)! <= failFirst) return req.socket.destroy();
+      if (path === '/missing') return res.writeHead(404, { 'content-type': 'text/html' }).end('gone');
+      if (path === '/unavailable') return res.writeHead(503, { 'content-type': 'text/html' }).end('later');
+      if (hop) {
+        const n = Number(hop[2]);
+        const limit = hop[1] === 'chain5' ? 5 : 6;
+        if (n < limit) return res.writeHead(302, { location: `/${hop[1]}/${n + 1}` }).end();
+      }
+      const to: Record<string, string> = {
+        '/to-private': 'http://10.0.0.1/admin',
+        '/to-metadata': 'http://169.254.169.254/latest/meta-data',
+        '/to-loopback': `http://127.0.0.1:${(server.address() as AddressInfo).port}/landed`,
+        '/to-file': 'file:///etc/passwd',
+      };
+      if (to[path]) return res.writeHead(301, { location: to[path] }).end();
+      res.writeHead(200, { 'content-type': 'text/html' }).end('<p>ok</p>');
+    });
+    await new Promise<void>((r) => server.listen(0, r));
+    const port = (server.address() as AddressInfo).port;
+    origin = `http://localhost:${port}`;
+    allow = [`localhost:${port}`];
+  });
+  afterAll(() => new Promise<void>((r) => server.close(() => r())));
+
+  const recorder = () => {
+    const slept: number[] = [];
+    return { slept, sleep: async (ms: number) => void slept.push(ms) };
+  };
+
+  it('retries a network error after 1 s, 3 s and 8 s, then reports it', async () => {
+    const { slept, sleep } = recorder();
+    const r = await guardedFetch(`${origin}/down`, { userAgent: 'test', allow, sleep });
+    expect(r).toMatchObject({ ok: false, error: 'network' });
+    expect(slept).toEqual([1000, 3000, 8000]);
+    expect(hits.get('/down')).toBe(4);
+  });
+
+  it('stops retrying at the first answer', async () => {
+    failFirst = 2;
+    const { slept, sleep } = recorder();
+    const r = await guardedFetch(`${origin}/flaky`, { userAgent: 'test', allow, sleep });
+    expect(r).toMatchObject({ ok: true, status: 200 });
+    expect(slept).toEqual([1000, 3000]);
+    expect(hits.get('/flaky')).toBe(3);
+  });
+
+  it('never retries an HTTP status, 4xx or 5xx', async () => {
+    const { slept, sleep } = recorder();
+    expect(await guardedFetch(`${origin}/missing`, { userAgent: 'test', allow, sleep })).toMatchObject({ ok: true, status: 404 });
+    expect(await guardedFetch(`${origin}/unavailable`, { userAgent: 'test', allow, sleep })).toMatchObject({ ok: true, status: 503 });
+    expect(slept).toEqual([]);
+    expect([hits.get('/missing'), hits.get('/unavailable')]).toEqual([1, 1]);
+  });
+
+  it('follows five redirects and refuses a sixth', async () => {
+    const five = await guardedFetch(`${origin}/chain5/0`, { userAgent: 'test', allow });
+    expect(five).toMatchObject({ ok: true, status: 200, url: `${origin}/chain5/5` });
+    expect(five.ok && five.redirects).toHaveLength(5);
+    const six = await guardedFetch(`${origin}/chain6/0`, { userAgent: 'test', allow });
+    expect(six).toMatchObject({ ok: false, error: 'too-many-redirects' });
+    expect(hits.get('/chain6/6')).toBeUndefined();
+  });
+
+  it('re-validates every redirect target and refuses a private one before fetching it', async () => {
+    expect(await guardedFetch(`${origin}/to-private`, { userAgent: 'test', allow })).toEqual({ ok: false, error: 'private-address', detail: 'address 10.0.0.1' });
+    expect(await guardedFetch(`${origin}/to-metadata`, { userAgent: 'test', allow })).toMatchObject({ ok: false, error: 'private-address' });
+    expect(await guardedFetch(`${origin}/to-loopback`, { userAgent: 'test', allow })).toMatchObject({ ok: false, error: 'private-address' });
+    expect(await guardedFetch(`${origin}/to-file`, { userAgent: 'test', allow })).toMatchObject({ ok: false, error: 'invalid-url' });
+    expect(hits.get('/landed')).toBeUndefined();
   });
 });

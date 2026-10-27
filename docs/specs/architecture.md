@@ -114,10 +114,10 @@ The web app connects through Supabase's transaction pooler in production, so its
 
 - TypeScript strict everywhere. No `any` outside the Playwright evaluate boundary, where results are parsed through Zod immediately.
 - One Zod schema per concept in `packages/schema`; types are inferred, never duplicated by hand.
-- Errors are typed: `BlockedError(reason, detail)`, `TimeoutError`, `ModelError`. The pipeline maps them to run statuses in exactly one place.
+- Errors are typed: `BlockedError(reason, detail)`, `TimeoutError`, `CancelledError`, `ModelAuthError` (a rejected key), and `ReplayMissError` (tests and the seed only). Every other model failure takes its fallback inside the model client and never reaches the run. The pipeline maps them to run statuses in exactly one place, `classify` in `packages/pipeline/src/run.ts` (D-076).
 - Logging: structured JSON lines in the worker (`pino`), one logger per run with `runId` bound. The web app logs only API errors.
 - No comments that narrate. A short why where someone could undo something non-obvious.
-- CSS Modules named after the component; tokens only from `tokens.css`.
+- CSS Modules named after the component; tokens only from `tokens.css`. Three modules are shared by a family of components and named after the family: `catalog/Catalog.module.css` (the catalog's demos), `how/HowItWorks.module.css` (the how-it-works page) and `v2/v2.module.css` (the flagged v2 surfaces) (D-077).
 - File names: components PascalCase, everything else kebab-case.
 
 ## Security posture (summary; details in the linked specs)

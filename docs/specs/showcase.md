@@ -33,7 +33,7 @@ The showcase count stays a multiple of six so the 3- and 2-column grids never or
 
 `url` is the run's share link at generation time; `name` is the display name ("Brandon Church Portfolio", "Generative UI · GitHub", "Stripe"); `palette` is the top 8 colors by usage with their share for the PaletteStrip.
 
-Where it lives: the committed file `apps/web/content/showcase.json` is the seed and the fallback. In production the current content is the storage object `showcase/showcase.json`, written by `POST /api/admin/showcase/content`; the home page is a dynamic route with `revalidate: 3600` that reads the storage object and falls back to the committed file when it is absent. Vercel functions cannot write to the repository, which is why the content lives in storage. Locally, the committed file is what the home page reads.
+Where it lives: the committed file `apps/web/content/showcase.json` is the seed and the fallback. In production the current content is the storage object `showcase/showcase.json`, written by `POST /api/admin/showcase/content`; the home page is a dynamic route that reads the storage object with a one-hour revalidation (`revalidate: 3600` on that fetch) and falls back to the committed file when it is absent. Vercel functions cannot write to the repository, which is why the content lives in storage. Locally, the committed file is what the home page reads.
 
 Runs listed here have `is_showcase = true` and null retention.
 

@@ -26,7 +26,7 @@ Stage `drift`. Where a site's system is leaking: tokens that are too close to be
 
 **Type.** Merge near-duplicates into the more-used token.
 
-Exports use the proposed set by default (`?set=proposed`); the raw set is available (`?set=raw`). Component code always shows raw values with proposed token names in comments only where a value maps.
+Exports use the proposed set by default (`?set=proposed`); the raw set is available (`?set=raw`). Component code writes a value that equals a raw-set token as that token's variable, as `tokens.css` names it (D-069).
 
 ## Numbers and headline
 
@@ -41,7 +41,7 @@ Captions are generated from these templates with the computed facts, never free 
 
 ## Evidence
 
-Rows for every finding, in the order: color near-duplicates by ΔE ascending (kind `color`), variant collapses (`variant`), off-grid spacing (`spacing`), type near-duplicates (`type`), sprawl (`sprawl`), then raw-spread evidence (kind `color`, flagged `evidenceOnly`). Each row: `a`, `b`, `delta` (a string such as `ΔE 1.2`, `radius 8 vs 6`, `2 px`), `kind`, `pages`, `usesA`, `usesB`. Capped at 40 rows in the document; the export includes all.
+Rows for every finding, in the order: color near-duplicates by ΔE ascending (kind `color`), variant collapses (`variant`), off-grid spacing (`spacing`), type near-duplicates (`type`), sprawl (`sprawl`), then raw-spread evidence (kind `color`, flagged `evidenceOnly`). Each row: `a`, `b`, `delta` (a string such as `ΔE 1.2`, `radius 8 vs 6`, `2 px`), `kind`, `pages`, `usesA`, `usesB`. Capped at 40 rows in the document, which the run page, the exports and the MCP server's `get_drift` all read; the numbers and the headline count every finding, so the cap only shortens the list (D-077).
 
 ## Narrative and intro (Sonnet, one call)
 
@@ -49,7 +49,7 @@ One call in this stage produces two fields: `drift.narrative` (four to six sente
 
 ## Events
 
-`drift · 14 grays → 5 · 6 variants → 3 · 9 spacing → 7 · contrast kept`, `drift · narrative by model` or `drift · narrative by template`.
+`drift · 14 grays → 5 · 6 variants → 3 · 9 spacing → 7 · contrast kept`, `drift · narrative by model` or `drift · narrative by template ({reason})`, the reason as in `model-calls.md` (D-077).
 
 ## Tests
 

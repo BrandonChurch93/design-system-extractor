@@ -10,7 +10,7 @@ import { Button } from '../Button';
 import { Card } from '../Card';
 import { ChipGroup } from '../ChipGroup';
 import { CodeBlock } from '../CodeBlock';
-import { Skeleton } from '../Skeleton';
+import { RegionSkeleton } from './RegionSkeleton';
 import { useToast } from '../Toast';
 import { Enter } from '../motion/Enter';
 import { Section } from './Section';
@@ -161,13 +161,7 @@ export function ExportsSection({ doc, landed, runUrl, source }: { doc: RunDocume
           ) : null}
         </>
       ) : (
-        <ul className={styles.grid} aria-hidden="true">
-          {cards.map((c) => (
-            <li key={c.format}>
-              <Skeleton height={132} radius="lg" />
-            </li>
-          ))}
-        </ul>
+        <RegionSkeleton region="exports" />
       )}
     </Section>
   );

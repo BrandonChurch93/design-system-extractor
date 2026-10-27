@@ -11,7 +11,7 @@ import { usePrefersReducedMotion } from '../../lib/motion/reduced';
 import { useEntered } from '../../lib/motion/use-entered';
 import { Button } from '../Button';
 import { ChipGroup } from '../ChipGroup';
-import { Skeleton } from '../Skeleton';
+import { RegionSkeleton } from './RegionSkeleton';
 import { ComponentCard, cardTokens } from './ComponentCard';
 import { Section } from './Section';
 import styles from './ComponentsSection.module.css';
@@ -99,18 +99,7 @@ export function ComponentsSection({ doc, landed, base, hrefFor, opened, onOpen }
           ) : null}
         </>
       ) : (
-        <ul className={styles.grid} aria-hidden="true">
-          {Array.from({ length: 6 }, (_, i) => (
-            <li key={i} className={styles.skeletonCard}>
-              <Skeleton height={152} on="surface" />
-              <span className={styles.skeletonBody}>
-                <Skeleton height={16} width="50%" on="surface" />
-                <Skeleton height={12} width="80%" on="surface" />
-                <Skeleton height={12} width="60%" on="surface" />
-              </span>
-            </li>
-          ))}
-        </ul>
+        <RegionSkeleton region="components" />
       )}
     </Section>
   );

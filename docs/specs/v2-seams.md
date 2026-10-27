@@ -28,7 +28,7 @@ V1 fills `free` with real values and `pro` and `team` with the v2 placeholder va
 
 ## Viewer
 
-`resolveViewer(request)` is the only place identity is read. In v1 it reads the visitor cookie and the BYO header. In v2 it also reads the auth session. Nothing else in the app touches cookies or sessions.
+`resolveViewer(request)` is the only place a request's identity is read. In v1 it reads the visitor cookie and the BYO header. In v2 it also reads the auth session. Server components, which have no request object, read the session only through `currentSession()` (`apps/web/lib/server/session.ts`), which asks the same auth adapter and returns null in v1 (D-076). Nothing else in the app touches cookies or sessions.
 
 ## Owner on runs
 

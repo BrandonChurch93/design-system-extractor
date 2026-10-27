@@ -49,7 +49,7 @@
 .bar {
   display: block;
   height: 12px;
-  border-radius: 2px;
+  border-radius: var(--dse-radius-xs);
   background: var(--dse-ink);
   transform-origin: left center;
 }

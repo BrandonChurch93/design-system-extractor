@@ -152,6 +152,7 @@
   --dse-space-9: 96px;
 
   /* Radius */
+  --dse-radius-xs: 2px;
   --dse-radius-sm: 8px;
   --dse-radius-md: 14px;
   --dse-radius-lg: 18px;

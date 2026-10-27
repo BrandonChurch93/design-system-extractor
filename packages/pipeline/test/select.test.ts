@@ -9,7 +9,7 @@ import { ModelClient, ReplayMissError, type ModelClientOptions } from '../src/mo
 import { costOf } from '../src/models/cost';
 import { requestHash, stableStringify } from '../src/models/hash';
 import { DevSpendMeter } from '../src/models/meter';
-import { candidateTable, fallbackPick, orderPages, select, validatePick } from '../src/stages/select';
+import { candidateTable, fallbackPick, MODEL_TABLE_SIZE, orderPages, select, validatePick } from '../src/stages/select';
 import { finalScore, preScore } from '../src/select/score';
 
 describe('pre-score rows', () => {
@@ -78,6 +78,11 @@ describe('selection rules', () => {
     expect(validatePick(['home0000', 'incl0000', 'pric0000', 'sign0000'], table, 3)).toMatch(/more than 3/);
     expect(validatePick(['home0000', 'incl0000', 'nope0000'], table, 3)).toMatch(/not in the table/);
     expect(validatePick(['home0000', 'home0000', 'incl0000'], table, 3)).toMatch(/duplicate/);
+  });
+  it('refuses two pages from one template group', () => {
+    const withSibling = [...table, cand('blog0002', '/blog/two', 1.4, { reason: 'post-template', templateGroup: 'blog', templateSize: 12 })];
+    expect(validatePick(['home0000', 'incl0000', 'blog0001', 'blog0002'], withSibling, 4)).toBe('two pages from one template group');
+    expect(validatePick(['home0000', 'incl0000', 'blog0001', 'abou0000'], withSibling, 4)).toBeNull();
   });
   it('falls back to the top scores, mandatory pages first', () => {
     expect(fallbackPick(table, 4).map((c) => c.id)).toEqual(['home0000', 'incl0000', 'pric0000', 'sign0000']);
@@ -149,6 +154,20 @@ describe('the select model pass', () => {
     await expect(select(strict, discovered)).rejects.toBeInstanceOf(ReplayMissError);
     const lenient = ctxWith({ mode: 'replay', recordingsDir });
     expect((await select(lenient, discovered)).by).toBe('fallback');
+  });
+  it('shows the model the top 30 when a site has far more candidates', async () => {
+    let rows = 0;
+    const many = [...table, ...Array.from({ length: 293 }, (_, i) => cand(`many${String(i).padStart(4, '0')}`, `/p${i}`, 1 - i / 1000))];
+    const ctx = ctxWith({
+      transport: async (req) => {
+        const text = req.content.map((b) => (b.type === 'text' ? b.text : '')).join('');
+        rows = text.split('\n').filter((l) => / \| /.test(l)).length - 1;
+        return { text: JSON.stringify({ pageIds: ['home0000', 'incl0000', 'pric0000', 'sign0000'] }), usage };
+      },
+    });
+    const out = await select(ctx, { ...discovered, candidates: many });
+    expect(rows).toBe(MODEL_TABLE_SIZE);
+    expect(out.by).toBe('model');
   });
   it('captures every page when there are no more candidates than the cap', async () => {
     const ctx = ctxWith({ transport: async () => ({ text: '{}', usage }) });

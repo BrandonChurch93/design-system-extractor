@@ -36,6 +36,24 @@ describe('collecting raw values', () => {
     expect(body.tags.get('p')).toBe(1);
   });
 
+  it('calls a radius of 999 px or at least half the height a pill, and counts radius only on drawn boxes', () => {
+    const rad = (v: string) => ({ 'border-top-left-radius': v, 'border-top-right-radius': v, 'border-bottom-right-radius': v, 'border-bottom-left-radius': v });
+    const ground = { 'background-color': 'rgb(36, 88, 230)' };
+    const els: El[] = [
+      { tag: 'body', box: [0, 0, 1440, 900] },
+      { tag: 'span', parent: 0, box: [0, 0, 120, 40], style: { ...ground, ...rad('20px') } },
+      { tag: 'div', parent: 0, box: [0, 100, 400, 300], style: { ...ground, ...rad('9999px') } },
+      { tag: 'img', parent: 0, box: [0, 500, 40, 40], style: { ...ground, ...rad('50%') } },
+      { tag: 'a', parent: 0, box: [0, 600, 120, 40], style: { ...ground, ...rad('12px') } },
+      { tag: 'div', parent: 0, box: [0, 700, 120, 40], style: rad('6px') },
+    ];
+    const raw = collect([source(els)]);
+    expect([...raw.radius.values()].map((r) => [r.value, r.isPill, r.count])).toEqual([
+      [999, true, 3],
+      [12, false, 1],
+    ]);
+  });
+
   it('keeps hidden text at zero size or zero line height out of type', () => {
     const els: El[] = [
       { tag: 'body', box: [0, 0, 1440, 900] },

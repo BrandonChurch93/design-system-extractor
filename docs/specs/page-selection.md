@@ -4,7 +4,7 @@ Stage `select`. Turns the page-candidate list into the pages to capture, within 
 
 ## Reason keys
 
-The `PageReason` enum (`packages/schema/src/enums.ts`): `home`, `nav`, `footer`, `sitemap`, `forms`, `forms-errors`, `tables-toggles`, `code-blocks`, `list-template`, `post-template`, `badges-timeline`, `empty-state`, `about`, `careers`, `app`, `added`, `template`. The `template` reason carries `{group, size}`. Display labels are in `docs/design/copy.md`.
+The `PageReason` enum (`packages/schema/src/enums.ts`): `home`, `nav`, `footer`, `sitemap`, `body` (a link in the start page's body, D-076), `forms`, `forms-errors`, `tables-toggles`, `code-blocks`, `list-template`, `post-template`, `badges-timeline`, `empty-state`, `about`, `careers`, `app`, `added`, `template`. The `template` reason carries `{group, size}`. Display labels are in `docs/design/copy.md`.
 
 ## Scoring, two passes
 
@@ -29,7 +29,7 @@ Path patterns (first match wins within a row; rows add):
 | `/(changelog|updates|releases)\b` | +2 | `badges-timeline` |
 | `/(about|team|company)\b` | +1 | `about` |
 | `/(careers|jobs)\b` | +1 | `careers` |
-| `/(settings|dashboard|app)\b` reachable without login | +1 | `app` |
+| `/(settings|dashboard|app)\b` (scored by path; a page behind a login is caught at capture as a login wall, D-076) | +1 | `app` |
 | synthetic 404 | +2 | `empty-state` |
 | visitor include | +10 | `added` |
 

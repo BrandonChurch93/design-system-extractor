@@ -69,3 +69,7 @@
     gap: var(--dse-space-7);
   }
 }
+
+.runId {
+  font-family: var(--dse-type-meta-family);
+}

@@ -15,6 +15,7 @@ export const hostileCases: Hostile[] = [
   { name: 'javascript href', markup: `<a data-dse-id="e1" href="javascript:fetch('${BEACON}/js')">Go</a>` },
   { name: 'srcdoc iframe', markup: `<div data-dse-id="e1"><iframe srcdoc="<script>fetch('${BEACON}/srcdoc')</script>"></iframe></div>` },
   { name: 'svg with script and foreignObject', markup: `<svg data-dse-id="e1" viewBox="0 0 10 10"><script>fetch('${BEACON}/svg')</script><foreignObject><img src="${BEACON}/fo.png"></foreignObject><use href="${BEACON}/sprite.svg#a"></use><animate attributeName="href" to="javascript:alert(1)"/></svg>` },
+  { name: 'svg with set', markup: `<svg data-dse-id="e1" viewBox="0 0 10 10"><a href="#x"><set attributeName="href" to="javascript:fetch('${BEACON}/set')" begin="0s"/><circle r="4"/></a></svg>` },
   { name: 'expression in style', markup: `<div data-dse-id="e1" style="width: expression(fetch('${BEACON}/expr')); color: red">x</div>` },
   { name: 'url(javascript:) in css', markup: '<div data-dse-id="e1">x</div>', rules: [{ selector: 'div', declarations: [['background', "url(javascript:fetch('x'))"], ['color', 'blue']] }] },
   { name: '@import in css', markup: `<div data-dse-id="e1" style="@import url(${BEACON}/import.css); color: red">x</div>`, rules: [{ selector: 'div', declarations: [['background-image', `url(${BEACON}/bg.png)`]] }] },

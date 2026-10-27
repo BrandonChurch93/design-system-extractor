@@ -1,0 +1,93 @@
+import { Skeleton } from '../Skeleton';
+import styles from './RegionSkeleton.module.css';
+
+export type SkeletonRegion = 'palette' | 'type' | 'spacing' | 'components' | 'checks' | 'drift' | 'exports';
+
+const range = (n: number) => Array.from({ length: n }, (_, i) => i);
+
+/**
+ * A run page region before its stage lands, at the height of a typical result so nothing below it
+ * moves when the region fills (docs/design/components.md, RegionSkeleton; motion.md).
+ */
+export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
+  switch (region) {
+    case 'palette':
+      return (
+        <ul className={styles.swatches} aria-hidden="true">
+          {range(8).map((i) => (
+            <li key={i} className={styles.swatch}>
+              <Skeleton height={96} radius="md" />
+              <Skeleton height={12} width="60%" />
+              <Skeleton height={12} width="80%" />
+            </li>
+          ))}
+        </ul>
+      );
+    case 'type':
+      return (
+        <span className={styles.rows} style={{ height: 520 }} aria-hidden="true">
+          {range(8).map((i) => (
+            <Skeleton key={i} height={0} width={`${92 - i * 7}%`} radius="md" className={styles.row} />
+          ))}
+        </span>
+      );
+    case 'spacing':
+      return (
+        <span className={styles.rows} style={{ height: 300 }} aria-hidden="true">
+          {range(9).map((i) => (
+            <Skeleton key={i} height={0} width={`${12 + i * 11}%`} radius="sm" className={styles.row} />
+          ))}
+        </span>
+      );
+    case 'components':
+      return (
+        <ul className={styles.cards} aria-hidden="true">
+          {range(6).map((i) => (
+            <li key={i} className={styles.card}>
+              <Skeleton height={152} on="surface" />
+              <span className={styles.cardBody}>
+                <Skeleton height={16} width="50%" on="surface" />
+                <Skeleton height={12} width="80%" on="surface" />
+                <Skeleton height={12} width="60%" on="surface" />
+              </span>
+            </li>
+          ))}
+        </ul>
+      );
+    case 'checks':
+      return (
+        <span className={styles.stack} aria-hidden="true">
+          <Skeleton height={112} radius="lg" />
+          <span className={styles.rows} style={{ height: 320 }}>
+            {range(5).map((i) => (
+              <Skeleton key={i} height={0} radius="md" className={styles.row} />
+            ))}
+          </span>
+        </span>
+      );
+    case 'drift':
+      return (
+        <span className={styles.stack} aria-hidden="true">
+          <span className={styles.numbers}>
+            {range(3).map((i) => (
+              <Skeleton key={i} height={150} radius="lg" />
+            ))}
+          </span>
+          <Skeleton height={260} radius="lg" />
+        </span>
+      );
+    case 'exports':
+      return (
+        <span className={styles.stack} aria-hidden="true">
+          <ul className={styles.cards}>
+            {range(6).map((i) => (
+              <li key={i}>
+                <Skeleton height={132} radius="lg" />
+              </li>
+            ))}
+          </ul>
+          <Skeleton height={176} radius="lg" />
+        </span>
+      );
+  }
+}

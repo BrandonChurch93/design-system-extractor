@@ -1,4 +1,6 @@
 import { ImageResponse } from 'next/og';
+import { fill } from '@dse/schema/labels';
+import { global, home } from '../../../../../copy/strings';
 import { NO_STORE, TERMINAL_CACHE, error } from '../../../../../lib/server/http';
 import { ogFonts } from '../../../../../lib/og-fonts';
 import { paletteOf } from '../../../../../lib/palette';
@@ -35,9 +37,9 @@ export async function GET(_request: Request, ctx: { params: Promise<{ id: string
         <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', flexGrow: 1, padding: '56px 72px 60px' }}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', fontSize: 76, fontWeight: 700, color: INK, letterSpacing: '-0.025em', lineHeight: 1.05 }}>{doc.host ?? ''}</div>
-            {stats ? <div style={{ display: 'flex', marginTop: 20, fontSize: 32, fontWeight: 500, color: MUTED }}>{`${stats.colors} colors · ${stats.typeStyles} type styles · ${stats.components} components`}</div> : null}
+            {stats ? <div style={{ display: 'flex', marginTop: 20, fontSize: 32, fontWeight: 500, color: MUTED }}>{fill(home.cardStats, { colors: stats.colors, typeStyles: stats.typeStyles, components: stats.components })}</div> : null}
           </div>
-          <div style={{ display: 'flex', fontSize: 28, fontWeight: 700, color: INK }}>Design System Extractor</div>
+          <div style={{ display: 'flex', fontSize: 28, fontWeight: 700, color: INK }}>{global.wordmark}</div>
         </div>
       </div>
     ),

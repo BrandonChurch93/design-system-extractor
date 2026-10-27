@@ -19,7 +19,7 @@ export function AccountMenu({ session, defaultOpen }: { session: Session; defaul
         defaultOpen={defaultOpen}
         trigger={(t) => (
           <button type="button" className={styles.accountButton} aria-label={v2.account.label} {...t}>
-            <User size={18} strokeWidth={1.75} aria-hidden="true" />
+            <User size={20} strokeWidth={1.75} aria-hidden="true" />
           </button>
         )}
       >

@@ -160,7 +160,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Eyebrow: `{group} · {index} of {count}`
 - Icon labels: `Previous component` · `Next component` · `Open as page` · `Close panel`
 - Variants label: `Variants`; fidelity caption `Live render · matches crop within {pct} %` or `Captured · {reason}` with reasons `render differed by {pct} %` · `styles too large` · `fonts unavailable` · `not checked in time`
-- Source label: `Source`; lines `{path} · {viewport} px` · the selector in code · `Seen on {first four paths} and {n} more` (button) · `Show on page`
+- Source label: `Source`; lines `{path} · {viewport} px` · the selector in code · `Seen on {paths} and {n} more` (button) · `Show on page`
 - States label: `States · {n} captured`; missing line `Not captured: {names}` (each state name followed by its reason in parentheses, joined by ·) with reasons `no instance found` · `over capture cap` · `not reachable`
 - Checks label: `Checks · {passed} of {applicable} on {variant}`; result lines from `docs/specs/checks.md`
 - Tokens label: `Tokens used`; unmapped label `Unmapped`
@@ -274,7 +274,7 @@ Buttons `Read the source` · `Try it on a site`. Footer right: `Runs are never s
 
 ## Catalog
 
-Title `Catalog` · caption `Every component of the app, in every state, from sample data.` · the dev line `Design QA · build spend {used} of {cap}` (shown only when running locally) · the index landmark `Catalog index` · the frame caption `{name} at 390 px` · the motion demo button `Replay`
+Title `Catalog` · caption `Every component of the app, in every state, from sample data.` · the dev line `Design QA · build spend {used} of {cap}` (shown only when running locally) · the index landmark `Catalog index` · the frame caption `{name} at 390 px` · the frame label `{viewport} · 390 px` · the motion demo button `Replay`
 
 ## Flagged v2 surfaces (rendered only with BILLING_ENABLED, always in the catalog)
 

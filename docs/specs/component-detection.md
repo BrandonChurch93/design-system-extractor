@@ -37,7 +37,7 @@ ComponentGroup =
 - Inline mark rule: an element with a background or border, text ≤ 3 words, height ≤ 32 px, display inline or inline-flex or inline-block, or a flex or grid item narrower than half its parent (the browser blockifies an `inline-flex` child of a flex container, so its computed display reads `flex`) → badge or tag element candidate.
 - Image rule: `img` or `svg` with equal width and height ≤ 64 px and `border-radius` ≥ 50% → avatar element candidate.
 
-Element candidates inside other element candidates are kept (a button inside a card is its own component); the containing card's structure records the child's cluster id, not its markup.
+Element candidates inside other element candidates are kept (a button inside a card is its own component); the containing card's structure records the tags of its children and grandchildren with their counts; it does not reference the child's cluster (D-076).
 
 ## Fingerprint
 
@@ -47,7 +47,7 @@ For each element candidate:
 - `classTokens`: class names with hashed segments removed (`/[0-9a-f]{5,}/`, `css-…`, `sc-…`, leading `_`), lowercased, sorted, capped at 8; none on a Tailwind site, whose utilities describe values, not components. `baseTokens` are the class tokens without modifiers: a token that extends another (`btn-primary` beside `btn`, `pricing-card--featured` beside `pricing-card`), `is-*`, `has-*` and size or state words (D-052)
 - `structure`: the tag sequence of descendants to depth 2 with counts, e.g. `span:1 svg:1`
 - `styleHash`: a hash of the rounded computed values of background-color, border (width, style, color), border-radius, padding (rounded to 2 px), font-size, font-weight, display, box-shadow presence, and text-transform
-- `box`: width and height buckets (height to 4 px, width to 16 px) and aspect bucket
+- `box`: not part of the fingerprint (D-076). Size enters through the height bucket of the variant split (step 3), so the same card at two widths stays one component.
 - `interactive`: boolean
 - `textLen`: bucket of text length (0, 1 to 2 words, 3 to 5, 6 to 20, more)
 
@@ -61,7 +61,7 @@ For each element candidate:
    - Color word: by the semantic role of its background or border token when semantic (`Success`, `Warning`, `Danger`, `Info`); else by rank of usage among the cluster's brand-colored variants (`Primary`, `Secondary`, `Tertiary`); a variant with a transparent background and a border is `Outlined`; with neither background nor border, `Ghost`.
    - Size word: by height bucket relative to the most-used variant: `Small` below it, `Large` above it, nothing for the most-used size.
    - Example, the test set of 3 colors × 2 sizes where the larger size is more used: `Primary`, `Primary small`, `Secondary`, `Secondary small`, `Ghost`, `Ghost small`.
-   The model's `variantHint` may rename variants only within these words (it may pick `Outlined` over `Secondary`, never invent a word).
+   The model's `variantHint` is a description of what sets the variants apart, kept for the model's reasoning; it never renames a variant, so the names above are the only names (D-076).
 4. **Cross-page merge**: clusters from different pages merge when they share the exact group key, or when their representative fingerprints pass the style merge and their names from the model pass are equal. Same-named clusters that fail the style merge go to the collision call only when their `baseTokens` agree (as in the style merge); a site's own class names that set two clusters apart keep them apart (D-052). A trigger and an action control never merge by name, whatever the model called them (D-070).
 
 A cluster becomes a component when it has at least one instance and is not noise: noise is a container with no interactive descendant, no text, and no image (a layout wrapper), or an element candidate whose area is over 60% of the viewport.
@@ -74,7 +74,7 @@ The rules above are applied with these readings (D-052): a popup root revealed b
 
 ## The model pass (Haiku)
 
-Clusters with confidence < 0.9, plus every cluster for naming, go to the model in batches of 8 per call, per page group. Each item carries: the default-state crop (PNG, downscaled to ≤ 512 px wide), the fingerprint summary (tag, role, class tokens, structure), the text sample, the rule guess and confidence, the instance count, and the page paths. The prompt asks for, per item (the model's `type` and `isComponent` are used only for clusters below confidence 0.9; a confident rule keeps its type): `type` from the enum, `name` (1 to 3 words, sentence case, the kind of thing it is: "Primary button", "Pricing card", "Status badge"), `isComponent` (false for layout noise), and `variantHint` (a short phrase describing what distinguishes variants, or null). Output is validated with Zod; on failure for an item, the rule guess and a generated name (`{Type} {n}`) stand. Prompt caching on the rubric. Images are sent only for items whose rule confidence is below 0.9; the rest get text only.
+Clusters with confidence < 0.9, plus every cluster for naming, go to the model in batches of 8 per call, in first-seen order across pages, four calls in flight (D-066, D-076). Each item carries: the default-state crop (PNG, downscaled to ≤ 512 px wide), the fingerprint summary (tag, role, class tokens, structure), the text sample, the rule guess and confidence, the instance count, and the page paths. The prompt asks for, per item (the model's `type` and `isComponent` are used only for clusters below confidence 0.9; a confident rule keeps its type): `type` from the enum, `name` (1 to 3 words, sentence case, the kind of thing it is: "Primary button", "Pricing card", "Status badge"), `isComponent` (false for layout noise), and `variantHint` (a short phrase describing what distinguishes variants, or null). Output is validated with Zod; on failure for an item, the rule guess and a generated name (`{Type} {n}`) stand. Prompt caching on the rubric. Images are sent only for items whose rule confidence is below 0.9; the rest get text only.
 
 A second, text-only call per run (the "collision" call in `model-calls.md`) resolves naming collisions across pages: items with the same name and type but failing the style merge get the model's choice between "same component, different variant" and "different components". Its fallback, and the tie-break on an invalid answer, is to keep them separate and suffix the names (`Card 2`).
 
@@ -100,7 +100,7 @@ If a component's mobile instance differs from its desktop instance in flex direc
 
 ## Caps and order
 
-Up to 120 components per run; beyond that, drop `other` first, then the lowest instance counts. Order within the run: by group in the enum order, then by instance count descending. Component ids are assigned in that order and are stable for the run.
+Up to 120 components per run; beyond that, drop `other` first, then the lowest instance counts. Order within the run: by group in the enum order, then by instance count descending. Component ids are a hash of the cluster's group key, so the same component keeps its id when the run is repeated; the document lists components in that order (D-076).
 
 ## Events
 

@@ -64,7 +64,7 @@ function Section({ demo }: { demo: Demo }) {
         )}
         <div className={styles.frameWrap}>
           <span className={styles.stateLabel}>
-            {viewportLabels.mobile} · 390 px
+            {fill(catalog.frameLabel, { viewport: viewportLabels.mobile })}
           </span>
           <PhoneFrame slug={demo.slug} title={fill(catalog.frameTitle, { name: demo.name })} initialHeight={demo.frameHeight} />
         </div>
