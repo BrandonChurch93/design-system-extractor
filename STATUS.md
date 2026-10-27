@@ -246,14 +246,14 @@ a { text-decoration: none; }
 
 P16 gate (docs/plan.md):
 
-- [ ] `pnpm evals` passes every threshold in `docs/evals.md` including the new rows.
-- [ ] The export variable-resolution test passes on every fixture and on the three frozen partial documents.
-- [ ] No component or variant name ending in a digit in any fixture run; no type token named `other`; every component has `tier` and `slug`.
-- [ ] `motion.css` and `motion.json` goldens committed; `tokens.w3c.json` validates.
-- [ ] The Motion section screenshotted at 1440, 820 and 390 on a fixture run and reviewed; Replay works and respects reduced motion (Playwright test).
-- [ ] Panel Motion block, Compare rows and /open reviewed the same way.
-- [ ] Fresh local run on stripe.com: prompt with a Motion section, at least one observed pattern, zero undeclared `var(--`, no numeric names; prompt pasted under `P16 real-site check`.
-- [ ] `pnpm verify:all` green; goldens updated once and logged; Definition of Done re-run in full (eleven items).
+- [x] `pnpm evals` passes every threshold in `docs/evals.md` including the new rows: final live (record) run 55 of 55, replay 55 of 55, fallback 55 of 55 (2026-10-27).
+- [x] The export variable-resolution test passes on every fixture (evals, export integrity, every format, both sets, every component prompt) and on the three frozen partial documents (`exports.test.ts`).
+- [x] No component or variant name ending in a digit in any fixture run; no type token named `other`; every component has `tier` and `slug` (evals naming row; the stripe.com run too).
+- [x] `motion.css` and `motion.json` goldens committed; `tokens.w3c.json` validates.
+- [x] The Motion section screenshotted at 1440, 820 and 390 on a fixture run and reviewed (`qa:design`; the duration labels fixed after review); Replay works and respects reduced motion (`tests/e2e/reduced-motion.spec.ts`, both halves).
+- [x] Panel Motion block, Compare rows and /open reviewed the same way.
+- [x] Fresh local run on stripe.com: prompt with a Motion section, 46 observed patterns, zero undeclared `var(--`, no numeric names; under `P16 real-site check` above.
+- [ ] `pnpm verify:all` green on a fresh clone; goldens updated once and logged (D-090); Definition of Done re-run in full (eleven items).
 
 v1.0 Definition of Done (P15):
 

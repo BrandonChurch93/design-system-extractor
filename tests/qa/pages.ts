@@ -212,8 +212,18 @@ export async function withFullHeight<T>(page: Page, fn: () => Promise<T>): Promi
   if (!vp) return fn();
   const height = await page.evaluate(() => Math.ceil(document.documentElement.scrollHeight));
   await page.setViewportSize({ width: vp.width, height: Math.max(vp.height, height) });
-  // Everything below the fold enters at once on the resize; the catalog's run of entrances takes longer.
-  await page.waitForTimeout(height > 10_000 ? 3000 : 700);
+  await page.waitForTimeout(700);
+  // Everything below the fold enters at once on the resize; on a page as tall as the catalog the
+  // entrances outlast any fixed wait, so wait until two captures in a row match (bounded).
+  if (height > 10_000) {
+    let last = await page.screenshot({ animations: 'disabled' });
+    for (let i = 0; i < 12; i++) {
+      await page.waitForTimeout(500);
+      const next = await page.screenshot({ animations: 'disabled' });
+      if (next.equals(last)) break;
+      last = next;
+    }
+  }
   try {
     return await fn();
   } finally {

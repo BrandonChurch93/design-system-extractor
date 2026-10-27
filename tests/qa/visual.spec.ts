@@ -1,10 +1,11 @@
 import { expect, test } from '@playwright/test';
+import { demoIndex } from '../../apps/web/components/catalog/demo-index';
 import { freezeClock, qaPages, settle, viewports, withFullHeight } from './pages';
 
 // Visual regression against committed goldens in apps/web/test/goldens (docs/evals.md).
 
 for (const vp of viewports) {
-  for (const p of qaPages) {
+  for (const p of qaPages.filter((x) => x.name !== 'catalog')) {
     for (const st of p.states) {
       test(`${p.name} · ${vp.name} · ${st.name}`, async ({ page }) => {
         await page.setViewportSize({ width: vp.width, height: vp.height });
@@ -17,7 +18,6 @@ for (const vp of viewports) {
           expect(page).toHaveScreenshot(`${p.name}/${vp.name}/${st.name}.png`, {
             animations: 'disabled',
             caret: 'hide',
-            // The catalog at 1440 is one very tall page; two full captures to compare take longer than the default.
             timeout: 30_000,
             mask: (p.mask ?? []).map((m) => page.locator(m)),
           }),
@@ -25,6 +25,27 @@ for (const vp of viewports) {
       });
     }
   }
+}
+
+// The catalog section by section: one capture of the whole page at 1440 is a layer of 400 MB that
+// Chromium rasterizes in tiles, and a tile can be missing when the capture is taken (D-090).
+const catalog = qaPages.find((x) => x.name === 'catalog')!;
+for (const vp of viewports) {
+  test(`catalog · ${vp.name} · sections`, async ({ page }) => {
+    test.setTimeout(600_000);
+    await page.setViewportSize({ width: vp.width, height: vp.height });
+    await freezeClock(page);
+    await page.goto(catalog.path);
+    await settle(page);
+    const mask = (catalog.mask ?? []).map((m) => page.locator(m));
+    await expect.soft(page).toHaveScreenshot(`catalog/${vp.name}/top.png`, { animations: 'disabled', caret: 'hide', mask });
+    for (const d of demoIndex) {
+      const section = page.locator(`[data-catalog-section="${d.slug}"]`);
+      await section.evaluate((el) => el.scrollIntoView({ block: 'start' }));
+      await page.waitForTimeout(600);
+      await expect.soft(section).toHaveScreenshot(`catalog/${vp.name}/${d.slug}.png`, { animations: 'disabled', caret: 'hide', mask, timeout: 15_000 });
+    }
+  });
 }
 
 // Open Graph images against goldens (docs/design/pages.md, Page metadata; P13 gate).
