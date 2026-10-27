@@ -10,24 +10,21 @@ None.
 
 ## Current phase
 
-P14 · Hardening. P13 gate passed 2026-10-26.
+P15 · Final consistency, README, runbook, Definition of Done. P14 gate passed 2026-10-26.
 
 ## Next action
 
-P14, starting. Work through the P14 plan below in order; tick the checklist as each item lands, commit after each.
+P15, in progress. Work through the P15 plan below in order; tick each item as it lands, commit after each.
 
-### P14 plan
+### P15 plan
 
-Files and tests, in order:
-1. Error handling audit: every `catch` in `apps/` and `packages/*/src` classifies (a defined fallback value with a reason), logs, or rethrows; silent swallows that hide a failure get a log line (first finding: the OG route's storage put). Network timeouts: every `fetch`, Playwright navigation, S3 and Redis call has a bound; list them in a test where practical.
-2. Log review: a log capture test over a fixture run through the worker asserts no key, no `sk-ant-`, no HTML body (`<html`, `<body`) and no CSS text in any line.
-3. Dependency pinning: `@types/pngjs`, `@floating-ui/react-dom`, `server-only` to exact versions from the lockfile; a unit test that every dependency in every `package.json` is an exact version or `workspace:`.
-4. Chaos tests (`apps/web/test/chaos.int.test.ts`): worker process killed mid-run (SIGKILL) and a second worker takes the stalled job and finishes it from the beginning; Redis unavailable at enqueue (the run is not left queued, the count is refunded, the API answers the generic error); storage unavailable mid-capture (the run ends `failed` with the stopped detail, refunded).
-5. Soak (`pnpm soak`, `scripts/soak.ts`): ten fixture runs through one worker process; RSS sampled after each stays under the 1.5 GB restart threshold, browser contexts and pages return to zero, no growth trend; result written to `.dse/soak.json` and summarized here.
-6. `fixtures/env/production.sample` (every variable in `packages/schema/src/env.ts` with a placeholder of the right shape, `DSE_ALLOW_PRIVATE_HOSTS=` empty, `BILLING_ENABLED=false`, `DSE_SHOWCASE_TIMEOUT_MS`), a test that the sample names every env variable and that `pnpm run doctor --production --env fixtures/env/production.sample` passes; the web build validates env against the schema.
-7. Worker Dockerfile: `docker build -f apps/worker/Dockerfile .` and an end-to-end fixture extraction with the image against the Docker services (script `pnpm docker:smoke`).
-8. `pnpm --filter web build`; `pnpm audit --audit-level high`; the moderate advisory recorded with its id.
-9. Gate: consistency sweep against caps-and-budget.md and architecture.md, verify:all, STATUS.
+1. Traceability. Four read-only passes mapped every `##` and `###` section of the 20 spec and design documents to code and tests (198 rows, drafts in the session scratchpad, to be merged into `docs/traceability.md`). They listed about 134 gaps. Each is closed by a test, a code fix, or a document fix with a logged decision; `scripts/test/traceability.test.ts` (parked in the scratchpad until the document exists) then holds the document to every heading and every path, with no open gap.
+2. Divergences to fix in code: intermediate capture files deleted after `done` unless `DSE_KEEP_INTERMEDIATE=1`; past the 6,000-element snapshot cap, candidates and their ancestors kept; the toggle (checkbox in a label with a track), breadcrumb (list of links with separators), pagination (numbered links) and form (two or more fields) rules; the model's `variantHint`; flex direction in responsive variants; `cancelRun` through `getRunForViewer`; the RegionSkeleton component in the catalog. Evals in replay after the detection changes (re-record within the reserve if hashes change).
+3. Divergences to settle in the documents with decisions: the reachability probe is a GET; the interstitial clause; `body` in the page-selection reasons; the dashboard row's login condition (the login wall is detected at capture); fingerprint `box` buckets and the card's child cluster id; naming batches in first-seen order across pages (D-066); stable component ids by content; the dev CSP's `unsafe-eval`; keyframes never reach a preview; drift.md's code sentence (D-069); the typed error list (no `ModelError`); `limitsFor` beside `check`; the session read in `session.ts`; `use-media` beyond the panel; no state-captures index file.
+4. Missing tests, grouped: crawler and capture (context options, media block, redirects, caps, synthetic 404, path groups, challenged pages, consent close button, events); tokens and components (caps, rules table, cap and order, events); previews and checks (reasons, placeholders, caps, thresholds, exemptions, byCheck); drift (findings, proposals, numbers, evidence, events); models (request shape, images, record mode, hash); exports, MCP and CLI (shortening, app URL, exit codes, flags, `/open`); platform (doctor fail cases, redirects, BYO and showcase budget, timeout expiry, budget cut path, worker settings, visitors, owner null, frozen runs, retention schedule, unpublish retention); web (UrlForm submit, blocked navigation, `?c=`, recent cap, sitemap and robots, billing metadata, component behaviors on the catalog, PreviewFrame markup, design lint for literal values, uppercase, emoji, copy in JSX).
+5. Final live eval within the reserve (`env DSE_MODEL_MODE=live pnpm evals`), results committed.
+6. README with a screenshot; `docs/deploy-runbook.md` verified (showcase takes about 95 minutes for twelve sites; Railway variables include `DSE_SHOWCASE_TIMEOUT_MS`); CHANGELOG 1.0.0; Known limitations complete; owner's list; delete `scripts/.tmp-crop.ts`.
+7. Definition of Done, all ten items, on a clean tree; `Build complete`.
 
 ### P13 real-roster dry run (2026-10-26, `pnpm showcase --dry-run`, $0.140 for the full pass)
 
@@ -110,16 +107,22 @@ Read for P11: pages, components, copy, motion, quality-bar, design-system, expor
 
 ## Phase checklist
 
-P14 exit criteria (from `docs/plan.md`), plus the standing gate items:
+P15 (the Definition of Done in `docs/plan.md`):
 
-- [x] Soak passes (`pnpm soak`: ten of ten complete, max RSS 967 MB of 1,536, zero contexts and pages after every run, heap growth 6.2 MB from run 2 to 10 after the leak fix, D-075); chaos tests pass (`apps/web/test/chaos.int.test.ts`: killed worker restarts and completes, counted once; Redis down answers 500 in 0.2 s with no run; failed enqueue fails its run and refunds; storage outage fails the run and refunds, D-074).
-- [x] `pnpm docker:smoke`: the image builds from the root and completes the clean fixture against the Docker services (9 pages, 27 components, 26 live previews, 43 of 45 checks), then exits cleanly on SIGTERM.
-- [ ] `pnpm --filter web build` succeeds.
-- [x] `pnpm audit --audit-level high`: no high findings. One moderate, recorded: GHSA-67mh-4wv8-2f99 (esbuild ≤0.24.2 dev server, via drizzle-kit's dev tooling only, never in the app or the worker), 2026-10-26.
-- [x] Error handling audit (catch sites read; storage reads swallow only a missing file; the OG route logs a failed write; enqueue compensation steps independent), timeouts on every fetch (test) and on the web app's Redis, log review (test), pinning (test), `fixtures/env/production.sample` with doctor passing (test).
-- [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, commit naming P14, STATUS updated.
+- [ ] 1. `pnpm verify:all` green.
+- [ ] 2. Every phase gate recorded as passed with its date.
+- [ ] 3. `docs/traceability.md` maps every section of every spec and design document to code and tests with no gaps (test).
+- [ ] 4. `docs/decisions.md` records every deviation; Known limitations lists each with its decision id.
+- [ ] 5. `docker build` of the worker from the root and `pnpm --filter web build` succeed.
+- [ ] 6. The flag-off test passes.
+- [ ] 7. `pnpm qa:copy` passes.
+- [ ] 8. `pnpm run doctor --production --env fixtures/env/production.sample` passes.
+- [ ] 9. Working tree clean, committed, never pushed.
+- [ ] 10. STATUS says `Build complete` and the owner's end list is exactly what remains.
 
 ## Gates passed
+
+- P14 · Hardening · 2026-10-26 · chaos tests: killed worker restarts on the next and completes counted once, Redis down fails fast with no run, failed enqueue fails its run and refunds, storage outage fails the run refunded (D-074) · soak: ten of ten complete, max RSS 967 MB of 1,536, no context or page left open, heap growth 6.2 MB after the JSDOM leak fix (D-075) · `pnpm docker:smoke`: image built from the root completes the clean fixture against the Docker services and stops cleanly · `pnpm --filter web build` green · error handling audit, every fetch bounded (test), the web app's Redis bounded, log review (test), dependencies pinned (test), `fixtures/env/production.sample` passes doctor --production (test) · `pnpm audit`: no high, one moderate GHSA-67mh-4wv8-2f99 (esbuild dev server via drizzle-kit, dev only) · D-074, D-075 logged with documents fixed · verify:all green (451 tests, e2e 138, evals, visual 125, axe 174, billing 16, Lighthouse, copy).
 
 - P13 · Showcase, SEO and content · 2026-10-26 · showcase script with local, `--remote`, `--only`, `--alternates`, `--refresh-links`, `--dry-run` (D-063) and its tests · local six-entry showcase with no orphan rows at 3 and 2 columns (layout e2e) · real-roster dry run pasted above with per-site status, stats and cost, blocked and sparse sites noted with their alternates ($0.17 for the full pass and re-runs) · real-site fixes from the dry runs: CSSOM matched CSS, ordered novelty, time budget, parallel naming and checks, link guard, showcase timeout, hidden text (D-066 to D-072) · metadata on every route from copy.md (metadata e2e reads copy.md) · OG goldens · visual goldens with an absolute 25-pixel bound (D-073) · D-063 to D-073 logged with documents fixed · qa:design reviewed (home, how it works, catalog, run, compare, recent) · verify:all green (434 tests, e2e 138, evals, visual 125, axe 174, billing 16, Lighthouse home and run, copy) · `pnpm audit` one moderate advisory, none high.
 
@@ -225,6 +228,7 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-26 · Gate passed · P14 · chaos, soak, Docker smoke, timeouts, pinning, production sample, verify:all green.
 - 2026-10-26 · Gate passed · P13 · dry run of the real roster, metadata and OG goldens, verify:all green.
 - 2026-10-26 · Session continued (after compaction) · P13 · re-read CLAUDE.md, STATUS, decisions, plan P13, showcase, crawler, token-clustering, handoff · tree clean at 7bbb9fa · full real-roster dry run finished, two fixes (D-072).
 - 2026-10-26 · Gate passed · P12 · flag-off test, flag-on captures and axe, goldens held, verify:all green.

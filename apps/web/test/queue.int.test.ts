@@ -204,7 +204,8 @@ describe('runs that end early', () => {
   });
 });
 
-describe('security · the worker log', () => {
+// Reviews the log of every run above, so it runs with them in `pnpm test`, not alone under test:security.
+describe('the worker log', () => {
   it('carries no page markup, no stylesheet text, no key and no long dump, over every run above', () => {
     const lines = h.logLines.map((l) => JSON.parse(l) as Record<string, unknown>);
     expect(lines.length).toBeGreaterThan(20);
