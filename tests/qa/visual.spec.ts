@@ -17,6 +17,8 @@ for (const vp of viewports) {
           expect(page).toHaveScreenshot(`${p.name}/${vp.name}/${st.name}.png`, {
             animations: 'disabled',
             caret: 'hide',
+            // The catalog at 1440 is one very tall page; two full captures to compare take longer than the default.
+            timeout: 30_000,
             mask: (p.mask ?? []).map((m) => page.locator(m)),
           }),
         );

@@ -6,6 +6,8 @@ Tokens under the site's own names, its motion (durations, easings, keyframes, an
 
 ![A complete run of a fixture site: the stats, the palette, the drift headline and the tokens](docs/images/run-page.png)
 
+![The Motion section of a fixture run: the duration scale with its roles, the easing curves with Replay, the keyframes, and the patterns with their triggers](docs/images/motion.png)
+
 ## How it works
 
 1. A headless Chromium reads the site's sitemap and navigation, and a short model pass picks up to 12 pages that cover the most components.
