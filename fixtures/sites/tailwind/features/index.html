@@ -9,15 +9,15 @@
 
 </head>
 <body>
-<header class="sticky top-0 z-10 bg-white border-b border-solid border-slate-200 transition-shadow duration-160 motion-reduce:transition-none dark:bg-navy-900" data-header>
+<header class="sticky top-0 z-10 bg-white border-b border-solid border-slate-200 transition-shadow duration-160 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none dark:bg-navy-900" data-header>
   <div class="mx-auto max-w-[1120px] px-6">
     <div class="flex items-center justify-between gap-8 h-[72px]">
       <a class="text-[20px] leading-[28px] font-semibold text-navy-900 dark:text-white" href="/sites/tailwind/">Tidewater</a>
       <nav class="flex items-center gap-6 max-[640px]:hidden" aria-label="Main">
-        <a class="text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" href="/sites/tailwind/features">Product</a>
-        <a class="text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" href="/sites/tailwind/pricing">Pricing</a>
-        <a class="text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" href="/sites/tailwind/docs">Docs</a>
-        <a class="text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" href="/sites/tailwind/contact">Contact</a>
+        <a class="text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 transition-[color] duration-120 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" href="/sites/tailwind/features">Product</a>
+        <a class="text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 transition-[color] duration-120 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" href="/sites/tailwind/pricing">Pricing</a>
+        <a class="text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 transition-[color] duration-120 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" href="/sites/tailwind/docs">Docs</a>
+        <a class="text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 transition-[color] duration-120 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" href="/sites/tailwind/contact">Contact</a>
         <div class="relative" data-dropdown>
           <button type="button" class="inline-flex items-center gap-1 h-11 px-3 border-0 rounded-lg bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer hover:bg-slate-200 aria-expanded:bg-slate-200 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" aria-haspopup="menu" aria-expanded="false" aria-controls="resources-menu">Resources <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
           <div class="absolute top-12 left-0 z-20 min-w-56 p-2 bg-white border border-solid border-slate-200 rounded-xl shadow-raised" id="resources-menu" role="menu" hidden>
@@ -28,8 +28,8 @@
         </div>
       </nav>
       <div class="flex items-center gap-3 max-[640px]:hidden">
-        <a class="inline-flex items-center justify-center gap-2 h-11 px-5 border border-solid border-transparent rounded-lg text-[14px] leading-[20px] font-semibold cursor-pointer transition-colors duration-160 motion-reduce:transition-none disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2 bg-transparent text-navy-900 hover:bg-slate-200 active:bg-slate-200" href="/sites/tailwind/login">Sign in</a>
-        <a class="inline-flex items-center justify-center gap-2 h-11 px-5 border border-solid border-transparent rounded-lg text-[14px] leading-[20px] font-semibold cursor-pointer transition-colors duration-160 motion-reduce:transition-none disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2 bg-blue-600 text-white hover:bg-navy-900 active:bg-navy-900" href="/sites/tailwind/signup">Start free</a>
+        <a class="inline-flex items-center justify-center gap-2 h-11 px-5 border border-solid border-transparent rounded-lg text-[14px] leading-[20px] font-semibold cursor-pointer transition-[background-color,color,transform,box-shadow] duration-160 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none hover:[transform:translateY(-1px)] hover:shadow-card disabled:hover:[transform:none] disabled:hover:shadow-none aria-disabled:hover:[transform:none] aria-disabled:hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2 bg-transparent text-navy-900 hover:bg-slate-200 active:bg-slate-200" href="/sites/tailwind/login">Sign in</a>
+        <a class="inline-flex items-center justify-center gap-2 h-11 px-5 border border-solid border-transparent rounded-lg text-[14px] leading-[20px] font-semibold cursor-pointer transition-[background-color,color,transform,box-shadow] duration-160 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none hover:[transform:translateY(-1px)] hover:shadow-card disabled:hover:[transform:none] disabled:hover:shadow-none aria-disabled:hover:[transform:none] aria-disabled:hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2 bg-blue-600 text-white hover:bg-navy-900 active:bg-navy-900" href="/sites/tailwind/signup">Start free</a>
       </div>
       <button type="button" class="hidden max-[640px]:inline-flex items-center justify-center w-11 h-11 border-0 rounded-lg bg-transparent text-navy-900 cursor-pointer focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
     </div>
@@ -48,20 +48,21 @@
   <div class="flex flex-col gap-3 pt-12 pb-8">
     <h1>Features</h1>
     <p>Three ways your release notes reach people.</p>
+    <div class="flex gap-3 flex-wrap"><a class="inline-flex items-center justify-center gap-2 h-11 px-5 border border-solid border-transparent text-[14px] leading-[20px] font-semibold cursor-pointer transition-[background-color,color,transform,box-shadow] duration-160 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none hover:[transform:translateY(-1px)] hover:shadow-card disabled:hover:[transform:none] disabled:hover:shadow-none aria-disabled:hover:[transform:none] aria-disabled:hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2 bg-transparent text-navy-900 hover:bg-slate-200 active:bg-slate-200 rounded-full" href="/sites/tailwind/docs">Read the guide</a><a class="inline-flex items-center justify-center gap-2 h-11 px-5 border border-solid border-transparent text-[14px] leading-[20px] font-semibold cursor-pointer transition-[background-color,color,transform,box-shadow] duration-160 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none hover:[transform:translateY(-1px)] hover:shadow-card disabled:hover:[transform:none] disabled:hover:shadow-none aria-disabled:hover:[transform:none] aria-disabled:hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2 bg-transparent text-navy-900 hover:bg-slate-200 active:bg-slate-200 rounded-full" href="/sites/tailwind/contact">Book a tour</a></div>
   </div>
   <div class="flex gap-1 border-b border-solid border-slate-200" role="tablist" aria-label="Channels">
-    <button type="button" class="h-11 px-4 border-0 border-b-2 border-solid border-transparent bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer aria-selected:text-blue-600 aria-selected:border-b-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" role="tab" id="tab-digest" aria-selected="true" aria-controls="panel-digest">Digests</button>
-    <button type="button" class="h-11 px-4 border-0 border-b-2 border-solid border-transparent bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer aria-selected:text-blue-600 aria-selected:border-b-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" role="tab" id="tab-slack" aria-selected="false" aria-controls="panel-slack">Slack</button>
-    <button type="button" class="h-11 px-4 border-0 border-b-2 border-solid border-transparent bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer aria-selected:text-blue-600 aria-selected:border-b-blue-600 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2" role="tab" id="tab-pages" aria-selected="false" aria-controls="panel-pages">Pages</button>
+    <button type="button" class="h-11 px-4 border-0 border-b-2 border-solid border-transparent bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer aria-selected:text-blue-600 aria-selected:border-b-blue-600 focus-visible:outline-none focus-visible:shadow-[inset_0_-2px_0_#0B1F3A]" role="tab" id="tab-digest" aria-selected="true" aria-controls="panel-digest">Digests</button>
+    <button type="button" class="h-11 px-4 border-0 border-b-2 border-solid border-transparent bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer aria-selected:text-blue-600 aria-selected:border-b-blue-600 focus-visible:outline-none focus-visible:shadow-[inset_0_-2px_0_#0B1F3A]" role="tab" id="tab-slack" aria-selected="false" aria-controls="panel-slack">Slack</button>
+    <button type="button" class="h-11 px-4 border-0 border-b-2 border-solid border-transparent bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer aria-selected:text-blue-600 aria-selected:border-b-blue-600 focus-visible:outline-none focus-visible:shadow-[inset_0_-2px_0_#0B1F3A]" role="tab" id="tab-pages" aria-selected="false" aria-controls="panel-pages">Pages</button>
   </div>
   <div class="py-6" role="tabpanel" id="panel-digest" aria-labelledby="tab-digest"><p>A Friday email with every merged change, grouped by team and written in plain words.</p></div>
   <div class="py-6" role="tabpanel" id="panel-slack" aria-labelledby="tab-slack" hidden><p>Release threads in the channels you pick, with a link to the full note.</p></div>
   <div class="py-6" role="tabpanel" id="panel-pages" aria-labelledby="tab-pages" hidden><p>A public changelog on your own domain that updates itself.</p></div>
   <div class="flex items-start gap-3 p-4 border border-solid border-success-700 rounded-lg bg-white text-navy-900" role="status">
-    <span class="flex-none w-6 h-6 text-success-700"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></svg></span>
+    <span class="flex-none w-6 h-6 text-success-700 [&_svg]:animate-pulse-dot motion-reduce:[&_svg]:animate-none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m8 12 3 3 5-6"/></svg></span>
     <div class="flex flex-col gap-4">
       <p>Digests are included in every plan.</p>
-      <div class="flex gap-3 flex-wrap"><a class="inline-flex items-center justify-center gap-2 border border-solid border-transparent rounded-lg text-[14px] leading-[20px] font-semibold cursor-pointer transition-colors duration-160 motion-reduce:transition-none disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2 bg-blue-600 text-white hover:bg-navy-900 active:bg-navy-900 h-9 px-4 max-[640px]:h-11" href="/sites/tailwind/pricing">Compare plans</a></div>
+      <div class="flex gap-3 flex-wrap"><a class="inline-flex items-center justify-center gap-2 border border-solid border-transparent rounded-lg text-[14px] leading-[20px] font-semibold cursor-pointer transition-[background-color,color,transform,box-shadow] duration-160 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none hover:[transform:translateY(-1px)] hover:shadow-card disabled:hover:[transform:none] disabled:hover:shadow-none aria-disabled:hover:[transform:none] aria-disabled:hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-blue-600 focus-visible:outline-offset-2 bg-blue-600 text-white hover:bg-navy-900 active:bg-navy-900 h-9 px-4 max-[640px]:h-11" href="/sites/tailwind/pricing">Compare plans</a></div>
     </div>
   </div>
   <section class="py-16">
@@ -75,18 +76,18 @@
   </section>
   <section class="py-16">
 <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
-  <article class="flex flex-col gap-3 p-6 bg-white border border-solid border-slate-200 rounded-xl shadow-card dark:bg-navy-900">
+  <article class="flex flex-col gap-3 p-6 bg-white border border-solid border-slate-200 rounded-xl shadow-card dark:bg-navy-900" data-reveal>
     <span class="w-6 h-6 text-teal-600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg></span>
     
     <h3>Weekly digests</h3>
     <p class="text-[14px] leading-[22px]">One email every Friday with what shipped, grouped by team.</p>
   </article>
-  <article class="flex flex-col gap-3 p-6 bg-white border border-solid border-slate-200 rounded-xl shadow-card dark:bg-navy-900">
+  <article class="flex flex-col gap-3 p-6 bg-white border border-solid border-slate-200 rounded-xl shadow-card dark:bg-navy-900" data-reveal>
     <span class="w-6 h-6 text-teal-600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></svg></span>
     <h3>Slack threads</h3>
     <p class="text-[14px] leading-[22px]">Each release posts where the team already talks, with a link back.</p>
   </article>
-  <article class="flex flex-col gap-3 p-6 bg-white border border-solid border-slate-200 rounded-xl shadow-card dark:bg-navy-900">
+  <article class="flex flex-col gap-3 p-6 bg-white border border-solid border-slate-200 rounded-xl shadow-card dark:bg-navy-900" data-reveal>
     <span class="w-6 h-6 text-teal-600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg></span>
     <h3>Public pages</h3>
     <p class="text-[14px] leading-[22px]">A changelog page on your own domain, updated on every merge.</p>
@@ -100,14 +101,15 @@
     <div class="flex justify-between gap-8 flex-wrap">
       <div class="flex flex-col gap-4">
         <span class="text-[20px] leading-[28px] font-semibold text-navy-900 dark:text-white">Tidewater</span>
-        <p class="text-[12px] leading-[16px]">Calm release notes for busy teams.</p>
+        <p class="text-[12px] leading-[16px] text-gray-600">Calm release notes for busy teams.</p>
       </div>
       <nav class="flex gap-6 flex-wrap" aria-label="Footer">
-        <a class="text-[14px] leading-[22px] text-navy-900" href="/sites/tailwind/features">Product</a>
-        <a class="text-[14px] leading-[22px] text-navy-900" href="/sites/tailwind/pricing">Pricing</a>
-        <a class="text-[14px] leading-[22px] text-navy-900" href="/sites/tailwind/docs">Docs</a>
-        <a class="text-[14px] leading-[22px] text-navy-900" href="/sites/tailwind/contact">Contact</a>
+        <a class="text-[14px] leading-[22px] text-navy-900 transition-[color] duration-120 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none" href="/sites/tailwind/features">Product</a>
+        <a class="text-[14px] leading-[22px] text-navy-900 transition-[color] duration-120 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none" href="/sites/tailwind/pricing">Pricing</a>
+        <a class="text-[14px] leading-[22px] text-navy-900 transition-[color] duration-120 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none" href="/sites/tailwind/docs">Docs</a>
+        <a class="text-[14px] leading-[22px] text-navy-900 transition-[color] duration-120 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:transition-none" href="/sites/tailwind/contact">Contact</a>
       </nav>
+      
       
     </div>
   </div>
@@ -137,6 +139,24 @@
     }));
   });
   document.querySelectorAll('[role=switch]').forEach((sw) => sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true'))));
+  // Scroll reveals: a class toggled at 15% from the bottom, and one card moved frame by frame.
+  const reveals = document.querySelectorAll('[data-reveal]');
+  const lone = document.querySelector('[data-js-reveal]');
+  if ('IntersectionObserver' in window && (reveals.length || lone)) {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      io.unobserve(e.target);
+      if (e.target.hasAttribute('data-reveal')) { e.target.classList.add('is-visible'); return; }
+      const el = e.target;
+      if (still) { el.style.opacity = '1'; el.style.transform = 'translateY(0px)'; return; }
+      const t0 = performance.now();
+      const step = (now) => { const k = Math.min(1, (now - t0) / 400); el.style.opacity = String(Math.round(k * 100) / 100); el.style.transform = 'translateY(' + Math.round((1 - k) * 160) / 10 + 'px)'; if (k < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }), { rootMargin: '0px 0px -15% 0px' });
+    reveals.forEach((el) => io.observe(el));
+    if (lone) io.observe(lone);
+  }
 })();
 </script>
 

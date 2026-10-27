@@ -43,12 +43,59 @@ const resetValue = /^(inherit|unset|initial|revert|revert-layer)$/i;
 const resetProps = new Set(['box-sizing', '-webkit-tap-highlight-color']);
 const universal = /^(\*|\*::?before|\*::?after|::?before|::?after)$/;
 
-/** Drops what only resets: reset values, `box-sizing`, tap highlights, rules on `*` and the bare pseudo-elements. */
-export function filterResets(rule: MatchedRule): MatchedRule['declarations'] | null {
+const keepDecl = (d: MatchedRule['declarations'][number]) => !resetValue.test(d.value.trim()) && !resetProps.has(d.name.toLowerCase()) && d.name.toLowerCase() !== 'all';
+export const isUniversal = (rule: MatchedRule) => {
   const parts = splitSelectorList(rule.selector);
-  if (parts.length && parts.every((s) => universal.test(s.trim()))) return null;
-  const decls = rule.declarations.filter((d) => !resetValue.test(d.value.trim()) && !resetProps.has(d.name.toLowerCase()) && !(d.name.toLowerCase() === 'all'));
+  return parts.length > 0 && parts.every((s) => universal.test(s.trim()));
+};
+
+const controls = ['button', 'input', 'select', 'textarea', 'optgroup'];
+const fontProps = ['font', 'font-family', 'font-size', 'font-weight', 'font-style', 'line-height', 'letter-spacing', 'color', 'text-transform'];
+/** Properties a browser styles on a tag that a reset value (`a { color: inherit }`) overrides, so the page depends on it. */
+const uaStyled: Record<string, string[]> = {
+  a: ['color', 'text-decoration', 'text-decoration-line', 'text-decoration-color'],
+  ...Object.fromEntries(controls.map((t) => [t, fontProps])),
+  ...Object.fromEntries(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].map((t) => [t, ['font-size', 'font-weight']])),
+  b: ['font-weight'],
+  strong: ['font-weight'],
+  small: ['font-size'],
+  th: ['font-weight', 'text-align'],
+  ...Object.fromEntries(['code', 'kbd', 'samp', 'pre'].map((t) => [t, ['font-family', 'font-size']])),
+};
+
+/**
+ * Drops what only resets: reset values, `box-sizing`, tap highlights, rules on `*` and the bare
+ * pseudo-elements. A reset value that overrides a browser default on a tag the rule matches in the
+ * component (`a { color: inherit }`, `button { font: inherit }`) is kept: the layout depends on it (D-090).
+ */
+export function filterResets(rule: MatchedRule, matchedTags: ReadonlySet<string> = new Set()): MatchedRule['declarations'] | null {
+  if (isUniversal(rule)) return null;
+  const overrides = (name: string) => [...matchedTags].some((t) => uaStyled[t]?.includes(name.toLowerCase()));
+  const decls = rule.declarations.filter((d) => keepDecl(d) || (resetValue.test(d.value.trim()) && !resetProps.has(d.name.toLowerCase()) && overrides(d.name)));
   return decls.length ? decls : null;
+}
+
+/** Tags whose browser defaults a universal margin, padding or border reset overrides. */
+const uaDefaults: { prop: RegExp; tags: Set<string> }[] = [
+  { prop: /^margin/, tags: new Set(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'ul', 'ol', 'dl', 'dd', 'figure', 'blockquote', 'pre', 'menu', 'hr', 'fieldset']) },
+  { prop: /^padding/, tags: new Set(['ul', 'ol', 'menu', 'fieldset', 'legend', 'td', 'th', 'button', 'input', 'select', 'textarea', 'dialog']) },
+  { prop: /^border/, tags: new Set(['input', 'select', 'textarea', 'button', 'fieldset', 'hr', 'iframe']) },
+];
+
+/**
+ * A universal reset is never code, but the part of it that overrides a browser default on the
+ * component's own tags (a heading's margin, a list's padding) is kept as a plain rule on those tags,
+ * so the preview and the code keep the layout the page had (D-090).
+ */
+export function universalCarry(rules: MatchedRule[], tags: Set<string>): { selector: string; declarations: MatchedRule['declarations'] }[] {
+  const out: { selector: string; declarations: MatchedRule['declarations'] }[] = [];
+  const decls = rules.filter(isUniversal).flatMap((r) => r.declarations.filter(keepDecl));
+  for (const ua of uaDefaults) {
+    const own = [...tags].filter((t) => ua.tags.has(t)).sort();
+    const d = decls.filter((x) => ua.prop.test(x.name));
+    if (own.length && d.length) out.push({ selector: own.join(', '), declarations: d });
+  }
+  return out;
 }
 
 /** The end of a `var(` call, nested parentheses included. */
@@ -251,7 +298,25 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
       .filter(Boolean)
       .join(' ');
   const keep = input.siteVars ?? new Set<string>();
-  const filtered = rules.map((p) => ({ p, decls: filterResets(p.rule) })).filter((x): x is { p: Placed; decls: MatchedRule['declarations'] } => x.decls !== null);
+  const tags = new Set([...doc.querySelectorAll('.dse-root *')].map((e) => e.localName));
+  const carried = universalCarry(
+    rules.map((p) => p.rule),
+    tags,
+  ).map((c) => ({ p: { key: `carry|${c.selector}`, rule: { selector: c.selector, matched: [c.selector], origin: 'regular', media: [], supports: [], declarations: c.declarations }, selectors: [c.selector] } as Placed, decls: c.declarations }));
+  const root = doc.querySelector('.dse-root')!;
+  const tagsOf = (p: Placed) => {
+    const out = new Set<string>();
+    for (const sel of p.selectors) {
+      try {
+        for (const el of root.querySelectorAll(sel.replace(pseudoElement, '') || '*')) out.add(el.localName);
+        if (root.firstElementChild?.matches(sel.replace(pseudoElement, '') || '*')) out.add(root.firstElementChild.localName);
+      } catch {
+        // a selector jsdom cannot read
+      }
+    }
+    return out;
+  };
+  const filtered = [...carried, ...rules.map((p) => ({ p, decls: filterResets(p.rule, tagsOf(p)) })).filter((x): x is { p: Placed; decls: MatchedRule['declarations'] } => x.decls !== null)];
   const textOf = (code: boolean) =>
     filtered
       .map(({ p, decls }) => {

@@ -12,8 +12,13 @@
   --color-danger-600: #DC2626;
   --color-white: #FFFFFF;
   --color-slate-200: #E2E8F0;
+  --color-gray-600: #5F6368;
   --shadow-card: 0 1px 2px rgba(11, 31, 58, 0.12);
   --shadow-raised: 0 12px 32px rgba(11, 31, 58, 0.12);
+  --animate-fade-up: fade-up 480ms var(--ease-out-quart) both;
+  --animate-pulse-dot: pulse 1600ms var(--ease-out-quart) infinite;
+  @keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 }
 
 @utility select-chevron {
@@ -38,6 +43,17 @@
   img, svg { display: block; }
   pre code { font: inherit; }
 }
+
+/* v1.1 · the motion the site writes by hand, beside its utilities. */
+:root { --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1); }
+[data-reveal] { opacity: 0; transform: translateY(16px); transition: opacity 240ms var(--ease-out-quart), transform 240ms var(--ease-out-quart); }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+[data-reveal]:nth-child(2) { transition-delay: 60ms; }
+[data-reveal]:nth-child(3) { transition-delay: 120ms; }
+[data-js-reveal] { opacity: 0; transform: translateY(16px); }
+@media (min-width: 1280px) { .mx-auto { padding-left: 24px; } }
+@media (max-width: 1281px) { .mx-auto { padding-right: 24px; } }
+@media (prefers-reduced-motion: reduce) { [data-reveal] { transition: none; } }
 
 @media (prefers-color-scheme: dark) {
   body { background: #0B1F3A; color: #FFFFFF; }

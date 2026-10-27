@@ -79,8 +79,21 @@ describe('the preview builder', () => {
     expect(unset.map(([n, v]) => `${n}: ${v};`).join(' ').length).toBeGreaterThanOrEqual(7000);
     const out = buildPreview({ markup: '<button class="btn reset" data-dse-id="e1"><span data-dse-id="e2">Go</span></button>', vars: {}, snapshot, root: snapshot.elements[1]!, matched, ground: 'rgb(255, 255, 255)', imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy });
     expect(out.rules.length).toBeLessThan(1500);
-    expect(out.rules).toBe('.btn { background-color: rgb(36, 88, 230); padding: 12px 20px; border-radius: 8px; }\nspan { font-weight: 600; }');
+    // What a button's browser styles depend on stays (D-090); span { font-size: inherit } and the dump go.
+    expect(out.rules).toBe(
+      ".reset { color: unset; font: unset; letter-spacing: unset; line-height: unset; }\nbutton { font-size: inherit; }\n.btn { background-color: rgb(36, 88, 230); padding: 12px 20px; border-radius: 8px; color: inherit; }\nspan { font-weight: 600; }",
+    );
     expect(out.code).toBe(out.rules);
+  });
+
+  it('carries the part of a universal reset that overrides a browser default onto the tags the component has', () => {
+    const snapshot = snap([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'article', parent: 0, box: [10, 10, 300, 200] }, { tag: 'h3', parent: 1 }, { tag: 'p', parent: 1 }, { tag: 'a', parent: 1 }]);
+    const rule = (selector: string, declarations: [string, string][]) => ({ selector, matched: [selector], origin: 'regular', media: [], supports: [], declarations: declarations.map(([name, value]) => ({ name, value, important: false })) });
+    const star = rule('*, *::before, *::after', [['box-sizing', 'border-box'], ['margin', '0'], ['padding', '0']]);
+    const link = rule('a', [['color', 'inherit'], ['text-decoration', 'inherit']]);
+    const matched: Record<string, MatchedStyles> = { e1: { rules: [star, rule('.card', [['padding', '24px']])], inline: [], pseudo: [] }, e2: { rules: [star], inline: [], pseudo: [] }, e3: { rules: [star], inline: [], pseudo: [] }, e4: { rules: [star, link], inline: [], pseudo: [] } };
+    const out = buildPreview({ markup: '<article class="card" data-dse-id="e1"><h3 data-dse-id="e2">Digests</h3><p data-dse-id="e3">Weekly.</p><a data-dse-id="e4" href="#">More</a></article>', vars: {}, snapshot, root: snapshot.elements[1]!, matched, ground: 'rgb(255, 255, 255)', imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy });
+    expect(out.rules).toBe('h3, p { margin: 0; }\n.card { padding: 24px; }\na { color: inherit; text-decoration: inherit; }');
   });
 
   it('writes the code with every variable resolved but the site variables the exports declare', () => {

@@ -28,7 +28,10 @@ const icons = {
   search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
 };
 
-export type Page = { path: string; file: string; title: string; body: (x: Impl, base: string) => string };
+export type Page = { path: string; file: string; title: string; body: (x: Impl, base: string) => string; /** A button that only this page's footer carries (v1.1). */ footerCta?: boolean };
+
+/** The motion, site-variable and naming layer of v1.1 belongs to the clean family only (docs/evals.md). */
+export const v11 = (x: Impl) => x.name === 'clean' || x.name === 'tailwind' || x.name === 'css-in-js';
 
 function attrs(x: Impl, name: string, ...more: string[]): string {
   // Inline styles only on single-class elements, so a modifier class still wins as in clean.
@@ -73,7 +76,7 @@ function header(x: Impl, base: string): string {
 </header>`;
 }
 
-function footer(x: Impl, base: string): string {
+function footer(x: Impl, base: string, page?: Page): string {
   const link = (href: string, label: string) => `<a ${attrs(x, 'footer-link')} href="${base}${href}">${label}</a>`;
   return `<footer ${attrs(x, 'site-footer')}>
   <div ${attrs(x, 'container')}>
@@ -89,6 +92,7 @@ function footer(x: Impl, base: string): string {
         ${link('/contact', 'Contact')}
       </nav>
       ${x.extra?.('footer', base) ?? ''}
+      ${page?.footerCta && v11(x) ? `<button type="button" ${attrs(x, 'footer-cta')}>Talk to sales</button>` : ''}
     </div>
   </div>
 </footer>`;
@@ -119,10 +123,28 @@ const script = `<script>
     }));
   });
   document.querySelectorAll('[role=switch]').forEach((sw) => sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true'))));
+  // Scroll reveals: a class toggled at 15% from the bottom, and one card moved frame by frame.
+  const reveals = document.querySelectorAll('[data-reveal]');
+  const lone = document.querySelector('[data-js-reveal]');
+  if ('IntersectionObserver' in window && (reveals.length || lone)) {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      io.unobserve(e.target);
+      if (e.target.hasAttribute('data-reveal')) { e.target.classList.add('${'{{visible}}'}'); return; }
+      const el = e.target;
+      if (still) { el.style.opacity = '1'; el.style.transform = 'translateY(0px)'; return; }
+      const t0 = performance.now();
+      const step = (now) => { const k = Math.min(1, (now - t0) / 400); el.style.opacity = String(Math.round(k * 100) / 100); el.style.transform = 'translateY(' + Math.round((1 - k) * 160) / 10 + 'px)'; if (k < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }), { rootMargin: '0px 0px -15% 0px' });
+    reveals.forEach((el) => io.observe(el));
+    if (lone) io.observe(lone);
+  }
 })();
 </script>`;
 
-export function documentFor(x: Impl, page: Page, base: string, scrolledClass: string): string {
+export function documentFor(x: Impl, page: Page, base: string, scrolledClass: string, visibleClass = 'is-visible'): string {
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -137,33 +159,36 @@ ${header(x, base)}
 <main>
 ${page.body(x, base)}
 </main>
-${footer(x, base)}
-${script.replace('{{scrolled}}', scrolledClass)}
+${footer(x, base, page)}
+${script.replace('{{scrolled}}', scrolledClass).replace('{{visible}}', visibleClass)}
 ${x.extra?.('body-end', base) ?? ''}
 </body>
 </html>
 `;
 }
 
-const featureCards = (x: Impl, withTag: boolean) => `
+const featureCards = (x: Impl, withTag: boolean, reveal = false) => {
+  const r = reveal && v11(x) ? ' data-reveal' : '';
+  return `
 <div ${attrs(x, 'grid')}>
-  <article ${attrs(x, 'card')}>
+  <article ${attrs(x, 'card')}${r}>
     <span ${attrs(x, 'feature-icon')}>${icons.zap}</span>
     ${withTag ? `<span ${attrs(x, 'tag-new')}>New</span>` : ''}
     <h3>Weekly digests</h3>
     <p ${attrs(x, 'text-sm')}>One email every Friday with what shipped, grouped by team.</p>
   </article>
-  <article ${attrs(x, 'card')}>
+  <article ${attrs(x, 'card')}${r}>
     <span ${attrs(x, 'feature-icon')}>${icons.layers}</span>
     <h3>Slack threads</h3>
     <p ${attrs(x, 'text-sm')}>Each release posts where the team already talks, with a link back.</p>
   </article>
-  <article ${attrs(x, 'card')}>
+  <article ${attrs(x, 'card')}${r}>
     <span ${attrs(x, 'feature-icon')}>${icons.globe}</span>
     <h3>Public pages</h3>
     <p ${attrs(x, 'text-sm')}>A changelog page on your own domain, updated on every merge.</p>
   </article>
 </div>`;
+};
 
 export const featureCardsFor = featureCards;
 export const attrsFor = attrs;
@@ -201,7 +226,7 @@ export const pages: Page[] = [
     </div>
   </section>
   <section ${attrs(x, 'section')}>
-    <div ${attrs(x, 'testimonial')}>
+    <div ${attrs(x, 'testimonial')}${v11(x) ? ' data-js-reveal' : ''}>
       <img ${attrs(x, 'avatar')} src="${base}/assets/avatar.svg" width="40" height="40" alt="Mara Ellis">
       <div>
         <p>“We stopped writing release emails by hand.”</p>
@@ -216,6 +241,7 @@ export const pages: Page[] = [
     path: '/pricing',
     file: 'pricing/index.html',
     title: 'Pricing · Tidewater',
+    footerCta: true,
     body: (x, base) => `
 <div ${attrs(x, 'container')}>
   <div ${attrs(x, 'page-head')}>
@@ -232,9 +258,9 @@ export const pages: Page[] = [
         <h3>Starter</h3>
         <p ${attrs(x, 'price')}>$0</p>
         <ul ${attrs(x, 'plan-features')}>
-          <li ${attrs(x, 'text-sm')}>One public changelog</li>
-          <li ${attrs(x, 'text-sm')}>Weekly digest</li>
-          <li ${attrs(x, 'text-sm')}>Three integrations</li>
+          <li ${v11(x) ? attrs(x, 'text-sm', 'plan-item') : attrs(x, 'text-sm')}>One public changelog</li>
+          <li ${v11(x) ? attrs(x, 'text-sm', 'plan-item') : attrs(x, 'text-sm')}>Weekly digest</li>
+          <li ${v11(x) ? attrs(x, 'text-sm', 'plan-item') : attrs(x, 'text-sm')}>Three integrations</li>
         </ul>
         <a ${attrs(x, 'btn', 'btn-secondary')} href="${base}/signup">Start free</a>
       </article>
@@ -242,9 +268,9 @@ export const pages: Page[] = [
         <h3>Team</h3>
         <p ${attrs(x, 'price')}>$24</p>
         <ul ${attrs(x, 'plan-features')}>
-          <li ${attrs(x, 'text-sm')}>Unlimited changelogs</li>
-          <li ${attrs(x, 'text-sm')}>Slack and email digests</li>
-          <li ${attrs(x, 'text-sm')}>Custom domain</li>
+          <li ${v11(x) ? attrs(x, 'text-sm', 'plan-item') : attrs(x, 'text-sm')}>Unlimited changelogs</li>
+          <li ${v11(x) ? attrs(x, 'text-sm', 'plan-item') : attrs(x, 'text-sm')}>Slack and email digests</li>
+          <li ${v11(x) ? attrs(x, 'text-sm', 'plan-item') : attrs(x, 'text-sm')}>Custom domain</li>
         </ul>
         <a ${attrs(x, 'btn', 'btn-primary', 'btn-on-dark')} href="${base}/signup">Start trial</a>
       </article>
@@ -281,6 +307,7 @@ export const pages: Page[] = [
   <div ${attrs(x, 'page-head')}>
     <h1>Features</h1>
     <p>Three ways your release notes reach people.</p>
+    ${v11(x) ? `<div ${attrs(x, 'hero-actions')}><a ${attrs(x, 'btn', 'btn-ghost', 'btn-pill')} href="${base}/docs">Read the guide</a><a ${attrs(x, 'btn', 'btn-ghost', 'btn-pill')} href="${base}/contact">Book a tour</a></div>` : ''}
   </div>
   <div ${attrs(x, 'tabs')} role="tablist" aria-label="Channels">
     <button type="button" ${attrs(x, 'tab')} role="tab" id="tab-digest" aria-selected="true" aria-controls="panel-digest">Digests</button>
@@ -306,7 +333,7 @@ export const pages: Page[] = [
       <p>The digest goes out on Friday morning, before the weekend, while the work is still fresh.</p>
     </div>
   </section>
-  <section ${attrs(x, 'section')}>${featureCards(x, false)}</section>
+  <section ${attrs(x, 'section')}>${featureCards(x, false, true)}</section>
   ${x.extra?.('features', base) ?? ''}
 </div>`,
   },

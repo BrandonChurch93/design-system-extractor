@@ -21,9 +21,39 @@ const afterGrayMap: Record<string, string> = { '#F5F5F5': '#FFFFFF', '#EBEBEB': 
 // Three blues within ΔE 3 of a neighbor.
 export const blues = ['#2458E6', '#1C4EDB', '#2E63ED'];
 
+/** Longhands a reset dump would list; none of them changes how the share button looks. */
+const resetProps = [
+  'accent-color', 'animation-composition', 'animation-delay', 'animation-direction', 'animation-duration', 'animation-fill-mode', 'animation-iteration-count', 'animation-name', 'animation-play-state', 'animation-timing-function',
+  'aspect-ratio', 'backdrop-filter', 'backface-visibility', 'background-attachment', 'background-blend-mode', 'background-clip', 'background-origin', 'background-position-x', 'background-position-y', 'background-repeat', 'background-size',
+  'border-image-outset', 'border-image-repeat', 'border-image-slice', 'border-image-source', 'border-image-width', 'box-decoration-break', 'break-after', 'break-before', 'break-inside', 'caption-side', 'clear', 'clip-path',
+  'column-count', 'column-fill', 'column-rule-color', 'column-rule-style', 'column-rule-width', 'column-span', 'column-width', 'contain', 'contain-intrinsic-block-size', 'contain-intrinsic-height', 'contain-intrinsic-inline-size', 'contain-intrinsic-width',
+  'container-name', 'container-type', 'content-visibility', 'counter-increment', 'counter-reset', 'counter-set', 'empty-cells', 'filter', 'flex-basis', 'flex-grow', 'flex-shrink', 'float',
+  'font-feature-settings', 'font-kerning', 'font-optical-sizing', 'font-palette', 'font-stretch', 'font-synthesis-small-caps', 'font-synthesis-style', 'font-synthesis-weight', 'font-variant-alternates', 'font-variant-caps', 'font-variant-east-asian', 'font-variant-ligatures', 'font-variant-numeric', 'font-variant-position', 'font-variation-settings',
+  'grid-auto-columns', 'grid-auto-flow', 'grid-auto-rows', 'grid-column-end', 'grid-column-start', 'grid-row-end', 'grid-row-start', 'grid-template-areas', 'grid-template-columns', 'grid-template-rows',
+  'hyphenate-character', 'hyphens', 'image-orientation', 'image-rendering', 'inset-block-end', 'inset-block-start', 'inset-inline-end', 'inset-inline-start', 'isolation', 'line-break', 'list-style-image', 'list-style-position', 'list-style-type',
+  'mask-clip', 'mask-composite', 'mask-image', 'mask-mode', 'mask-origin', 'mask-position', 'mask-repeat', 'mask-size', 'mask-type', 'math-depth', 'math-shift', 'math-style', 'mix-blend-mode', 'object-fit', 'object-position',
+  'offset-anchor', 'offset-distance', 'offset-path', 'offset-position', 'offset-rotate', 'orphans', 'overflow-anchor', 'overflow-clip-margin', 'overflow-wrap', 'overscroll-behavior-block', 'overscroll-behavior-inline', 'overscroll-behavior-x', 'overscroll-behavior-y',
+  'page', 'perspective', 'perspective-origin', 'print-color-adjust', 'quotes', 'resize', 'rotate', 'ruby-position', 'scale', 'scroll-behavior',
+  'scroll-margin-block-end', 'scroll-margin-block-start', 'scroll-margin-bottom', 'scroll-margin-inline-end', 'scroll-margin-inline-start', 'scroll-margin-left', 'scroll-margin-right', 'scroll-margin-top',
+  'scroll-padding-block-end', 'scroll-padding-block-start', 'scroll-padding-bottom', 'scroll-padding-inline-end', 'scroll-padding-inline-start', 'scroll-padding-left', 'scroll-padding-right', 'scroll-padding-top',
+  'scroll-snap-align', 'scroll-snap-stop', 'scroll-snap-type', 'scrollbar-gutter', 'shape-image-threshold', 'shape-margin', 'shape-outside', 'tab-size', 'table-layout', 'text-align-last', 'text-combine-upright', 'text-decoration-skip-ink',
+  'text-emphasis-color', 'text-emphasis-position', 'text-emphasis-style', 'text-indent', 'text-orientation', 'text-overflow', 'text-rendering', 'text-shadow', 'text-underline-offset', 'text-underline-position',
+  'touch-action', 'transform-box', 'transform-origin', 'transform-style', 'transition-behavior', 'transition-delay', 'transition-duration', 'transition-property', 'transition-timing-function', 'translate',
+  'unicode-bidi', 'user-select', 'vertical-align', 'view-transition-name', 'white-space-collapse', 'widows', 'will-change', 'word-break', 'word-spacing', 'z-index',
+];
+
+/** At least 7,000 characters of `unset` (docs/evals.md, messy); padded with reset variables a dump also carries. */
+export function unsetReset(): string {
+  const decls = resetProps.map((p) => `${p}: unset;`);
+  for (let i = 1; decls.join(' ').length < 7000; i++) decls.push(`--reset-slot-${i}: unset;`);
+  return decls.join(' ');
+}
+
 /** The bad edits, in the order a drifting codebase would make them. */
 function messyCss(after: boolean): string {
-  let css = cleanCss;
+  // The clean family's v1.1 layer is its own; messy carries its own motion below.
+  let css = cleanCss.replace(/\n\/\* v1\.1 · [\s\S]*?\/\* end v1\.1 \*\/\n?/, '\n');
+  if (css.includes('v1.1 ·')) throw new Error('the clean v1.1 block was not removed');
   const swap = (from: string, to: string) => {
     if (!css.includes(from)) throw new Error(`messy edit did not apply: ${from}`);
     css = css.replace(from, to);
@@ -66,6 +96,8 @@ h3 { color: #353535; }
 .card .text-sm { font-size: 15px; }
 ${after ? '' : '.hero .btn-primary, .pricing-card .btn-primary { padding: 0 21px; border-radius: 10px; }\n'}.link-pill { display: inline-flex; align-items: center; height: 44px; padding: 0 16px; border: 1px solid #D1D1D1; border-radius: 999px; color: #1F1F1F; font-size: 14px; line-height: 20px; font-weight: 600; }
 .link-pill:focus, .link-pill:focus-visible { outline: none; }
+/* A reset a component library pasted in: every property unset, ahead of the button's own rule (v1.1). */
+.share-button { ${unsetReset()} }
 .share-button { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 0; border-radius: 6px; background: transparent; color: #1F1F1F; cursor: pointer; }
 .share-button:focus-visible { outline: 2px solid #2458E6; outline-offset: 2px; }
 .badge-live { background: #15803D; }
@@ -84,6 +116,19 @@ ${after ? '' : '.hero .btn-primary, .pricing-card .btn-primary { padding: 0 21px
 .step { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border: 1px solid #D1D1D1; border-radius: 999px; font-size: 14px; line-height: 22px; }
 .step[aria-current='step'] { background: #1C4EDB; border-color: #1C4EDB; color: #FFFFFF; }
 @media (max-width: 640px) { .newsletter { flex-wrap: wrap; } .newsletter-input { width: 100%; } .cookie-banner { flex-wrap: wrap; } }
+/* v1.1 · motion added by other hands: nine durations and seven easings in all (motion sprawl). */
+.nav-link { transition: color 100ms ease; }
+.footer-link { transition: color 120ms ease-out; }
+.logo { transition: color 150ms linear; }
+.crumb { transition: color 200ms cubic-bezier(0.25, 0.5, 0.45, 0.95); }
+.tab { transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1); }
+.link-pill { transition: border-color 300ms ease; }
+.card { transition: box-shadow 400ms ease-out; }
+@media (prefers-reduced-motion: reduce) { .nav-link, .footer-link, .logo, .crumb, .tab, .link-pill, .card { transition: none; } }
+/* Three translucent grays: overlays, never palette steps. */
+.release { background: rgba(0, 0, 0, 0.04); }
+.timeline { border-top: 1px solid rgba(80, 80, 80, 0.1); }
+.post-list { border-top: 1px solid rgba(51, 51, 51, 0.3); }
 `;
   if (after) for (const [from, to] of Object.entries(afterGrayMap)) css = css.replaceAll(from, to);
   return css;

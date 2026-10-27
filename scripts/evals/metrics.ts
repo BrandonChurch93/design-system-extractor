@@ -71,7 +71,8 @@ export function scoreTokens(expected: ExpectedFixture, doc: RunDocumentPartial, 
   const recall = sum((k) => k.expected) ? sum((k) => k.matched) / sum((k) => k.expected) : 0;
   const problems = kinds.filter((k) => k.misses.length || k.extras.length || k.matched < Math.max(k.predicted, k.expected));
   const names = (t.colors ?? []).map((c) => c.name);
-  const namesValid = names.every((n) => /^[a-z]+(-[a-z0-9]+)*$/.test(n)) && new Set(names).size === names.length;
+  // A site's own names may carry capitals and underscores (D-082); generated names are kebab case.
+  const namesValid = names.every((n) => /^[a-zA-Z][\w-]*$/.test(n)) && new Set(names).size === names.length;
   return {
     value: { precision: round3(precision), recall: round3(recall), namesValid, kinds: Object.fromEntries(kinds.map((k) => [k.kind, { predicted: k.predicted, expected: k.expected, matched: k.matched, misses: k.misses, extras: k.extras }])) },
     summary: `P ${precision.toFixed(3)} · R ${recall.toFixed(3)}${namesValid ? '' : ' · invalid color names'}${problems.length ? ` · off in ${problems.map((k) => k.kind).join(', ')}` : ''}`,
@@ -170,7 +171,9 @@ export function scoreComponents(expected: ExpectedFixture, doc: RunDocumentParti
   }
   const stateRate = wanted ? got / wanted : 0;
   const names = predicted.map((p) => p.name);
-  const namesValid = names.every(validName) && new Set(names.map((n) => n.toLowerCase())).size === names.length && predicted.every((p) => ComponentType.safeParse(p.type).success);
+  // A model's name, or a generated one with its context (`Button (footer)`, D-084); never a number at the end.
+  const fallbackName = /^[A-Z][\p{L}\p{N} ]*\([\p{L}\p{N} ,]+\)$/u;
+  const namesValid = names.every((n) => (validName(n) || fallbackName.test(n)) && !/\d\s*\)?$/.test(n)) && new Set(names.map((n) => n.toLowerCase())).size === names.length && predicted.every((p) => ComponentType.safeParse(p.type).success);
   return {
     components: {
       value: { precision: round3(precision), recall: round3(recall), predicted: predicted.length, expected: expected.components.length, matched: pairs.length, nameAgreement: round3(pairs.length ? agreed / pairs.length : 0), namesValid, misses, extras },
@@ -226,5 +229,132 @@ export function scoreDrift(expected: ExpectedFixture, doc: RunDocumentPartial): 
     value: { recall: round3(recall), found, planted: planted.length, findings: d.findingCount, contrastKept: kept, missed, headline: d.headline.sentence },
     summary: `recall ${recall.toFixed(3)} · ${found} of ${planted.length} · ${d.findingCount} findings · contrast ${kept ? 'kept' : 'not kept'}${missed.length ? ` · missed ${missed.join(', ')}` : ''}`,
     pass: (f) => kept && recall >= (f.drift.recall ?? 1),
+  };
+}
+
+const normEase = (v: string) => v.replace(/\s+/g, '').toLowerCase();
+const share = (hit: number, total: number) => (total ? hit / total : 1);
+
+/**
+ * Motion (docs/evals.md, Metrics, v1.1): duration, easing and keyframes recall; patterns by kind,
+ * trigger type, duration within ±40 ms and the observed flag; planted hover properties with their
+ * timing; no outline entries on a planted `outline: none` element; four equal border sides as one entry.
+ */
+export function scoreMotion(expected: ExpectedFixture, doc: RunDocumentPartial): Metric {
+  const t = doc.tokens ?? {};
+  const m = expected.motion;
+  const durations = m.durations.filter((d) => (t.duration ?? []).some((x) => x.ms === d.ms && (!d.name || x.name === d.name)));
+  const easings = m.easings.filter((e) => (t.easing ?? []).some((x) => normEase(x.value) === normEase(e.value) && (!e.name || x.name === e.name)));
+  const keyframes = m.keyframes.filter((k) => (t.keyframes ?? []).some((x) => x.name === k));
+  const patterns = doc.motion?.patterns ?? [];
+  const found = m.patterns.filter((e) => patterns.some((p) => p.kind === e.kind && p.trigger.type === e.trigger && Math.abs(p.durationMs - e.durationMs) <= 40 && p.observed === e.observed && (!e.stagger || p.stagger?.count === e.stagger.count)));
+  const byName = new Map(matchComponents(expected, doc).pairs.map(({ e, p }) => [e.name, p]));
+  const hoverMiss: string[] = [];
+  for (const h of m.hover) {
+    const delta = byName.get(h.component)?.states.find((s) => s.state === 'hover')?.delta ?? [];
+    for (const prop of h.properties) if (!delta.some((d) => d.property === prop && d.transition)) hoverMiss.push(`${h.component} ${prop}`);
+  }
+  const hoverWanted = m.hover.reduce((s, h) => s + h.properties.length, 0);
+  const outlineNoise = m.noOutline.flatMap((c) => (byName.get(c)?.states.find((s) => s.state === 'focus')?.delta ?? []).filter((d) => d.property.startsWith('outline')).map((d) => `${c} ${d.property}`));
+  const borderMiss = m.collapsedBorder.filter((c) => {
+    const delta = byName.get(c)?.states.find((s) => s.state === 'hover')?.delta ?? [];
+    return !delta.some((d) => d.property === 'border-color') || delta.some((d) => /^border-(top|right|bottom|left)-color$/.test(d.property));
+  });
+  const v = {
+    durations: share(durations.length, m.durations.length),
+    easings: share(easings.length, m.easings.length),
+    keyframes: share(keyframes.length, m.keyframes.length),
+    patterns: share(found.length, m.patterns.length),
+    hover: share(hoverWanted - hoverMiss.length, hoverWanted),
+    outlineNoise: outlineNoise.length,
+    collapsedBorder: share(m.collapsedBorder.length - borderMiss.length, m.collapsedBorder.length),
+  };
+  const missed = [
+    ...m.durations.filter((d) => !durations.includes(d)).map((d) => `duration ${d.ms}`),
+    ...m.easings.filter((e) => !easings.includes(e)).map((e) => `easing ${e.name ?? e.value}`),
+    ...m.keyframes.filter((k) => !keyframes.includes(k)).map((k) => `keyframes ${k}`),
+    ...m.patterns.filter((p) => !found.includes(p)).map((p) => `pattern ${p.kind} ${p.trigger} ${p.durationMs}`),
+    ...hoverMiss.map((h) => `hover ${h}`),
+    ...outlineNoise.map((o) => `outline noise ${o}`),
+    ...borderMiss.map((b) => `border not collapsed on ${b}`),
+  ];
+  return {
+    value: { ...v, missed },
+    summary: `durations ${v.durations.toFixed(2)} · easings ${v.easings.toFixed(2)} · keyframes ${v.keyframes.toFixed(2)} · patterns ${v.patterns.toFixed(2)} · hover ${v.hover.toFixed(2)} · outline noise ${v.outlineNoise}${missed.length ? ` · missed ${missed.join(', ')}` : ''}`,
+    pass: (f) => v.durations === 1 && v.easings === 1 && v.keyframes === 1 && v.patterns >= f.motion.patternRecall && v.hover === 1 && v.outlineNoise === 0 && v.collapsedBorder === 1,
+  };
+}
+
+/**
+ * Naming (docs/evals.md, Metrics, v1.1): planted site variables name their tokens, no hashed name ever
+ * does, translucent colors are overlays with their base and alpha, type names match, planted variant
+ * pairs carry their third word, no component or variant name ends in a digit, tiers match; on a
+ * fallback run, the planted fallback names.
+ */
+export function scoreNaming(expected: ExpectedFixture, doc: RunDocumentPartial, fallback = false): Metric {
+  const t = doc.tokens ?? {};
+  const named = [...(t.colors ?? []), ...(t.overlays ?? []), ...(t.type ?? []), ...(t.space ?? []), ...(t.radius ?? []), ...(t.shadow ?? []), ...(t.duration ?? []), ...(t.easing ?? []), ...(t.breakpoints ?? [])] as { siteName?: string; name?: string }[];
+  const siteMiss = Object.entries(expected.siteVariables.named).filter(([variable, name]) => !named.some((x) => x.siteName === variable && (x.name === undefined || x.name === name)));
+  const hashed = new Set([...expected.siteVariables.hashed, ...(t.siteVariables ?? []).filter((v) => v.hashed).map((v) => v.name)]);
+  const hashedNames = named.filter((x) => x.siteName && hashed.has(x.siteName)).map((x) => x.siteName!);
+  const valueOf = new Map((t.colors ?? []).map((c) => [c.id, c.value]));
+  const overlayMiss = expected.overlays.filter((o) => !(t.overlays ?? []).some((x) => Math.abs(x.alpha - o.alpha) < 0.011 && (x.base === o.base || valueOf.get(x.base) === o.base)));
+  const translucentPalette = (t.colors ?? []).filter((c) => c.value.length > 7).map((c) => c.value);
+  const typeMiss = expected.tokens.type.filter((e) => !(t.type ?? []).some((x) => x.role === e.role && Math.abs(x.size - e.size) <= 0.5 && x.weight === e.weight && x.name === e.name)).map((e) => `${e.name} ${e.role} ${e.size}/${e.weight}`);
+  const roleOther = (t.type ?? []).filter((x) => (x.role as string) === 'other').length;
+  const byName = new Map(matchComponents(expected, doc).pairs.map(({ e, p }) => [e.name, p]));
+  const variantMiss = expected.variantNames.filter((v) => !v.names.every((n) => byName.get(v.component)?.variants.some((x) => x.name === n))).map((v) => v.component);
+  const digit = /\d\s*\)?$/;
+  const numeric = (doc.components ?? []).flatMap((c) => [c.name, ...c.variants.map((v) => `${c.name} · ${v.name}`)]).filter((n) => digit.test(n.split(' · ').pop()!));
+  const tierMiss = Object.entries(expected.tiers).filter(([name, tier]) => byName.get(name)?.tier !== tier).map(([name, tier]) => `${name} ${byName.get(name)?.tier ?? 'unmatched'} not ${tier}`);
+  const fallbackMiss = fallback ? expected.fallbackNames.filter((f) => byName.get(f.component)?.name !== f.name).map((f) => `${f.component} ${byName.get(f.component)?.name ?? 'unmatched'}`) : [];
+  const missed = [
+    ...siteMiss.map(([v]) => `site variable ${v}`),
+    ...hashedNames.map((h) => `hashed name ${h}`),
+    ...overlayMiss.map((o) => `overlay ${o.name}`),
+    ...translucentPalette.map((c) => `translucent palette color ${c}`),
+    ...typeMiss.map((x) => `type ${x}`),
+    ...variantMiss.map((v) => `variant names on ${v}`),
+    ...numeric.map((n) => `numeric name ${n}`),
+    ...tierMiss.map((x) => `tier ${x}`),
+    ...fallbackMiss.map((x) => `fallback name ${x}`),
+  ];
+  const v = {
+    siteNaming: share(Object.keys(expected.siteVariables.named).length - siteMiss.length, Object.keys(expected.siteVariables.named).length),
+    hashedNames: hashedNames.length,
+    overlaySplit: share(expected.overlays.length - overlayMiss.length, expected.overlays.length) * (translucentPalette.length ? 0 : 1),
+    typeNames: share(expected.tokens.type.length - typeMiss.length, expected.tokens.type.length),
+    roleOther,
+    variantNames: share(expected.variantNames.length - variantMiss.length, expected.variantNames.length),
+    numericNames: numeric.length,
+    tiers: share(Object.keys(expected.tiers).length - tierMiss.length, Object.keys(expected.tiers).length),
+    fallbackNames: share(expected.fallbackNames.length - fallbackMiss.length, fallback ? expected.fallbackNames.length : 0),
+  };
+  return {
+    value: { ...v, missed },
+    summary: `site names ${v.siteNaming.toFixed(2)} · hashed ${v.hashedNames} · overlays ${v.overlaySplit.toFixed(2)} · type names ${v.typeNames.toFixed(2)} · variants ${v.variantNames.toFixed(2)} · numeric ${v.numericNames} · tiers ${v.tiers.toFixed(2)}${fallback ? ` · fallback ${v.fallbackNames.toFixed(2)}` : ''}${missed.length ? ` · missed ${missed.join(', ')}` : ''}`,
+    pass: () => missed.length === 0,
+  };
+}
+
+/** Export integrity (v1.1): every export of the run, in both sets, declares every custom property it names. */
+export function scoreExportIntegrity(doc: RunDocumentPartial, generate: (format: string, set: 'proposed' | 'raw', componentId?: string) => string, undeclared: (text: string) => string[]): Metric {
+  const formats = ['tokens.css', 'tailwind.tokens.js', 'motion.css', 'design-system.md', 'prompt.md'];
+  const bad: string[] = [];
+  let files = 0;
+  for (const set of ['proposed', 'raw'] as const) {
+    for (const f of formats) {
+      files++;
+      for (const v of undeclared(generate(f, set))) bad.push(`${f} ${set} ${v}`);
+    }
+    for (const c of doc.components ?? []) {
+      files++;
+      for (const v of undeclared(generate('component-prompt.md', set, c.id))) bad.push(`${c.name} prompt ${set} ${v}`);
+    }
+  }
+  return {
+    value: { files, undeclared: bad },
+    summary: `${files} files · ${bad.length} undeclared${bad.length ? ` · ${bad.slice(0, 6).join(', ')}` : ''}`,
+    pass: () => bad.length === 0,
   };
 }

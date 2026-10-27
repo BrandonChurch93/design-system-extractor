@@ -124,7 +124,11 @@ export function patternsOf(src: PatternSource): BuiltPattern[] {
     if (!kind) continue;
     const selector = selectorOf(el.d, el.own, el.tag);
     if (!selector) continue;
-    const { start, end } = diffValues(Object.assign({}, ...g.map((r) => r.start)), Object.assign({}, ...g.map((r) => r.end)));
+    const from = Object.assign({}, ...g.map((r) => r.start));
+    let to = Object.assign({}, ...g.map((r) => r.end));
+    // A loop comes back to where it began: its end is the first keyframe that differs from the start.
+    if (kind === 'loop' && !Object.keys(diffValues(from, to).start).length) to = (rec.frames ?? []).find((f) => Object.keys(diffValues(from, f).start).length) ?? to;
+    const { start, end } = diffValues(from, to);
     if (!Object.keys(start).length) continue;
     const trigger = kind === 'scroll-reveal' ? { type: 'in-view' as const, value: inViewValue(rec, records.classes, records.observers) } : kind === 'scroll-progress' ? { type: 'scroll' as const } : { type: 'load' as const };
     out.push({

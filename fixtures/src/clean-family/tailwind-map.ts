@@ -8,15 +8,15 @@ export const twMap: Record<string, string> = {
   section: 'py-16',
   stack: 'flex flex-col gap-4',
   'page-head': 'flex flex-col gap-3 pt-12 pb-8',
-  display: 'text-[48px] leading-[56px] font-bold max-[640px]:text-[36px] max-[640px]:leading-[44px]',
+  display: 'text-[48px] leading-[56px] font-bold max-[640px]:text-[36px] max-[640px]:leading-[44px] animate-fade-up motion-reduce:animate-none',
   'text-sm': 'text-[14px] leading-[22px]',
-  caption: 'text-[12px] leading-[16px]',
-  'site-header': `sticky top-0 z-10 bg-white border-b border-solid border-slate-200 transition-shadow duration-160 ${motion} dark:bg-navy-900`,
+  caption: 'text-[12px] leading-[16px] text-gray-600',
+  'site-header': `sticky top-0 z-10 bg-white border-b border-solid border-slate-200 transition-shadow duration-160 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${motion} dark:bg-navy-900`,
   'is-scrolled': 'shadow-raised',
   'header-inner': 'flex items-center justify-between gap-8 h-[72px]',
   logo: 'text-[20px] leading-[28px] font-semibold text-navy-900 dark:text-white',
   'nav-links': 'flex items-center gap-6 max-[640px]:hidden',
-  'nav-link': `text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 ${focusRing}`,
+  'nav-link': `text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 transition-[color] duration-120 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${motion} ${focusRing}`,
   'header-actions': 'flex items-center gap-3 max-[640px]:hidden',
   dropdown: 'relative',
   'dropdown-trigger': `inline-flex items-center gap-1 h-11 px-3 border-0 rounded-lg bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer hover:bg-slate-200 aria-expanded:bg-slate-200 ${focusRing}`,
@@ -25,13 +25,14 @@ export const twMap: Record<string, string> = {
   'menu-button': `hidden max-[640px]:inline-flex items-center justify-center w-11 h-11 border-0 rounded-lg bg-transparent text-navy-900 cursor-pointer ${focusRing}`,
   'mobile-menu': 'border-t border-solid border-slate-200 pt-2 pb-4',
   'mobile-link': 'flex items-center h-12 text-[16px] leading-[26px] text-navy-900',
-  btn: `inline-flex items-center justify-center gap-2 h-11 px-5 border border-solid border-transparent rounded-lg text-[14px] leading-[20px] font-semibold cursor-pointer transition-colors duration-160 ${motion} disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 ${focusRing}`,
+  btn: `inline-flex items-center justify-center gap-2 h-11 px-5 border border-solid border-transparent rounded-lg text-[14px] leading-[20px] font-semibold cursor-pointer transition-[background-color,color,transform,box-shadow] duration-160 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${motion} hover:[transform:translateY(-1px)] hover:shadow-card disabled:hover:[transform:none] disabled:hover:shadow-none aria-disabled:hover:[transform:none] aria-disabled:hover:shadow-none disabled:opacity-50 disabled:cursor-not-allowed aria-disabled:opacity-50 ${focusRing}`,
   'btn-sm': 'h-9 px-4 max-[640px]:h-11',
   'btn-primary': 'bg-blue-600 text-white hover:bg-navy-900 active:bg-navy-900',
   'btn-secondary': 'bg-white text-blue-600 border-blue-600 hover:bg-blue-600 hover:text-white active:bg-blue-600 active:text-white',
   'btn-ghost': 'bg-transparent text-navy-900 hover:bg-slate-200 active:bg-slate-200',
   'btn-on-dark': 'focus-visible:outline-white',
-  'icon-button': `inline-flex items-center justify-center w-11 h-11 border border-solid border-slate-200 rounded-lg bg-white text-navy-900 cursor-pointer hover:bg-slate-200 ${focusRing}`,
+  'btn-pill': 'rounded-full',
+  'icon-button': `inline-flex items-center justify-center w-11 h-11 border border-solid border-slate-200 rounded-lg bg-white text-navy-900 cursor-pointer hover:bg-slate-200 hover:border-navy-900 ${focusRing}`,
   hero: 'flex flex-col items-start gap-6 pt-24 pb-16 max-w-[720px] max-[640px]:pt-16 max-[640px]:pb-12',
   'hero-actions': 'flex gap-3 flex-wrap',
   grid: 'grid grid-cols-1 gap-6 lg:grid-cols-3',
@@ -43,6 +44,7 @@ export const twMap: Record<string, string> = {
   'pricing-card--featured': 'bg-navy-900 border-navy-900 text-white shadow-raised',
   price: 'text-[48px] leading-[56px] font-bold',
   'plan-features': 'flex flex-col gap-2',
+  'plan-item': 'pt-2 border-t border-solid border-[rgba(255,255,255,0.08)]',
   testimonial: 'flex items-center gap-4',
   avatar: 'w-10 h-10 rounded-[50%] bg-slate-200',
   badge: 'inline-flex items-center h-6 px-2 rounded-full text-white text-[12px] leading-[16px]',
@@ -61,23 +63,23 @@ export const twMap: Record<string, string> = {
   'check-row': 'flex items-center gap-2 text-[14px] leading-[22px]',
   checkbox: `appearance-none flex-none w-11 h-11 -mx-3 border-0 rounded-lg checkbox-box checked:checkbox-checked cursor-pointer ${focusRing}`,
   'toggle-row': 'flex items-center gap-3 text-[14px] leading-[22px]',
-  toggle: `relative flex-none w-[52px] h-11 border-0 bg-transparent cursor-pointer ${focusRing} before:content-[''] before:absolute before:left-1 before:top-2.5 before:w-11 before:h-6 before:rounded-full before:bg-slate-200 aria-checked:before:bg-blue-600 after:content-[''] after:absolute after:left-2 after:top-3.5 after:w-4 after:h-4 after:rounded-full after:bg-white after:transition-transform after:duration-160 motion-reduce:after:transition-none aria-checked:after:translate-x-5`,
+  toggle: `relative flex-none w-[52px] h-11 border-0 bg-transparent cursor-pointer ${focusRing} before:content-[''] before:absolute before:left-1 before:top-2.5 before:w-11 before:h-6 before:rounded-full before:bg-slate-200 aria-checked:before:bg-blue-600 after:content-[''] after:absolute after:left-2 after:top-3.5 after:w-4 after:h-4 after:rounded-full after:bg-white after:transition-transform after:duration-160 after:ease-[cubic-bezier(0.25,0.46,0.45,0.94)] motion-reduce:after:transition-none aria-checked:after:translate-x-5`,
   table: 'w-full border-collapse text-[14px] leading-[22px]',
   th: 'py-3 px-4 border-b border-solid border-slate-200 text-left text-[14px] leading-[20px] font-semibold',
   td: 'py-3 px-4 border-b border-solid border-slate-200',
   'table-wrap': 'overflow-x-auto',
-  'code-block': 'py-4 px-6 rounded-lg bg-navy-900 text-white font-mono text-[14px] leading-[22px] overflow-x-auto',
+  'code-block': 'py-4 px-6 rounded-lg bg-navy-900 text-white font-mono text-[14px] leading-[22px] overflow-x-auto border border-solid border-[rgba(8,9,10,0.6)]',
   breadcrumb: 'flex items-center gap-2 text-[14px] leading-[22px]',
-  crumb: `text-blue-600 ${focusRing}`,
+  crumb: `text-blue-600 transition-[color] duration-120 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${motion} ${focusRing}`,
   'crumb-current': 'text-navy-900',
   tabs: 'flex gap-1 border-b border-solid border-slate-200',
-  tab: `h-11 px-4 border-0 border-b-2 border-solid border-transparent bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer aria-selected:text-blue-600 aria-selected:border-b-blue-600 ${focusRing}`,
+  tab: `h-11 px-4 border-0 border-b-2 border-solid border-transparent bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer aria-selected:text-blue-600 aria-selected:border-b-blue-600 focus-visible:outline-none focus-visible:shadow-[inset_0_-2px_0_#0B1F3A]`,
   'tab-panel': 'py-6',
   'doc-list': 'flex flex-col gap-3',
   alert: 'flex items-start gap-3 p-4 border border-solid border-success-700 rounded-lg bg-white text-navy-900',
   'alert-warning': 'border-warning-700',
   'alert-icon': 'flex-none w-6 h-6',
-  'alert-icon-success': 'text-success-700',
+  'alert-icon-success': 'text-success-700 [&_svg]:animate-pulse-dot motion-reduce:[&_svg]:animate-none',
   'alert-icon-warning': 'text-warning-700',
   'alert-success': '',
   'empty-state': 'flex flex-col items-center gap-4 py-24 px-6 border border-solid border-slate-200 rounded-xl text-center',
@@ -85,7 +87,8 @@ export const twMap: Record<string, string> = {
   'site-footer': 'border-t border-solid border-slate-200 py-12',
   'footer-inner': 'flex justify-between gap-8 flex-wrap',
   'footer-links': 'flex gap-6 flex-wrap',
-  'footer-link': 'text-[14px] leading-[22px] text-navy-900',
+  'footer-link': `text-[14px] leading-[22px] text-navy-900 transition-[color] duration-120 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${motion}`,
+  'footer-cta': `inline-flex items-center h-11 px-4 border border-solid border-slate-200 rounded-lg bg-transparent text-navy-900 text-[14px] leading-[20px] font-semibold cursor-pointer ${focusRing}`,
 };
 
 export const twInput = `@import "tailwindcss" source(none);
@@ -102,8 +105,13 @@ export const twInput = `@import "tailwindcss" source(none);
   --color-danger-600: #DC2626;
   --color-white: #FFFFFF;
   --color-slate-200: #E2E8F0;
+  --color-gray-600: #5F6368;
   --shadow-card: 0 1px 2px rgba(11, 31, 58, 0.12);
   --shadow-raised: 0 12px 32px rgba(11, 31, 58, 0.12);
+  --animate-fade-up: fade-up 480ms var(--ease-out-quart) both;
+  --animate-pulse-dot: pulse 1600ms var(--ease-out-quart) infinite;
+  @keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 }
 
 @utility select-chevron {
@@ -128,6 +136,17 @@ export const twInput = `@import "tailwindcss" source(none);
   img, svg { display: block; }
   pre code { font: inherit; }
 }
+
+/* v1.1 · the motion the site writes by hand, beside its utilities. */
+:root { --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1); }
+[data-reveal] { opacity: 0; transform: translateY(16px); transition: opacity 240ms var(--ease-out-quart), transform 240ms var(--ease-out-quart); }
+[data-reveal].is-visible { opacity: 1; transform: none; }
+[data-reveal]:nth-child(2) { transition-delay: 60ms; }
+[data-reveal]:nth-child(3) { transition-delay: 120ms; }
+[data-js-reveal] { opacity: 0; transform: translateY(16px); }
+@media (min-width: 1280px) { .mx-auto { padding-left: 24px; } }
+@media (max-width: 1281px) { .mx-auto { padding-right: 24px; } }
+@media (prefers-reduced-motion: reduce) { [data-reveal] { transition: none; } }
 
 @media (prefers-color-scheme: dark) {
   body { background: #0B1F3A; color: #FFFFFF; }

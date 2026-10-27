@@ -44,6 +44,8 @@ export type AnimRecord = {
   iterations: number | 'infinite';
   start: Record<string, string>;
   end: Record<string, string>;
+  /** Every keyframe's tracked values, up to 12: a loop returns to where it began. */
+  frames?: Record<string, string>[];
   /** ms from navigation start */
   t: number;
   scrollY: number;
@@ -173,6 +175,7 @@ export function motionInit(): void {
         iterations: timing.iterations === Infinity ? 'infinite' : (timing.iterations ?? 1),
         start: pick((frames[0] ?? {}) as Record<string, unknown>),
         end: pick((frames[frames.length - 1] ?? {}) as Record<string, unknown>),
+        frames: frames.slice(0, 12).map((f) => pick(f as unknown as Record<string, unknown>)),
         t: typeof a.startTime === 'number' ? a.startTime : performance.now(),
         scrollY,
         inView: r.inView,

@@ -19,10 +19,10 @@ function write(file: string, content: string) {
   writeFileSync(file, content);
 }
 
-function emit(site: string, impl: Impl, scrolledClass: string) {
+function emit(site: string, impl: Impl, scrolledClass: string, visibleClass = 'is-visible') {
   const base = `/sites/${site}`;
   const dir = join(sitesDir, site);
-  for (const page of [...pages, notFoundPage]) write(join(dir, page.file), documentFor(impl, page, base, scrolledClass));
+  for (const page of [...pages, notFoundPage]) write(join(dir, page.file), documentFor(impl, page, base, scrolledClass, visibleClass));
   write(join(dir, 'sitemap.xml'), sitemap(base));
   write(join(dir, 'assets/avatar.svg'), avatarSvg);
 }
@@ -44,6 +44,7 @@ const colorVars: Record<string, string> = {
   '#DC2626': '--c-danger',
   '#FFFFFF': '--c-surface',
   '#E2E8F0': '--c-border',
+  '#5F6368': '--c-muted',
 };
 const inlineMoves: Record<string, string[]> = {
   card: ['padding'],
@@ -116,7 +117,7 @@ export function buildCssInJs() {
     // @import must stay the first rule, so the custom properties go right after it.
     head: `<style data-emotion="css">\n${css.replace(/(@import[^;]*;\n)/, `$1${root}`)}</style>`,
   };
-  emit('css-in-js', impl, hashOf('is-scrolled'));
+  emit('css-in-js', impl, hashOf('is-scrolled'), hashOf('is-visible'));
 }
 
 // tailwind · utility classes; the CSS is compiled from the generated HTML by the Tailwind CLI.

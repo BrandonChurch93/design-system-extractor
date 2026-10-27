@@ -47,6 +47,7 @@
   <div class="page-head">
     <h1>Features</h1>
     <p>Three ways your release notes reach people.</p>
+    <div class="hero-actions"><a class="btn btn-ghost btn-pill" href="/sites/clean/docs">Read the guide</a><a class="btn btn-ghost btn-pill" href="/sites/clean/contact">Book a tour</a></div>
   </div>
   <div class="tabs" role="tablist" aria-label="Channels">
     <button type="button" class="tab" role="tab" id="tab-digest" aria-selected="true" aria-controls="panel-digest">Digests</button>
@@ -74,18 +75,18 @@
   </section>
   <section class="section">
 <div class="grid">
-  <article class="card">
+  <article class="card" data-reveal>
     <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9z"/></svg></span>
     
     <h3>Weekly digests</h3>
     <p class="text-sm">One email every Friday with what shipped, grouped by team.</p>
   </article>
-  <article class="card">
+  <article class="card" data-reveal>
     <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></svg></span>
     <h3>Slack threads</h3>
     <p class="text-sm">Each release posts where the team already talks, with a link back.</p>
   </article>
-  <article class="card">
+  <article class="card" data-reveal>
     <span class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"/></svg></span>
     <h3>Public pages</h3>
     <p class="text-sm">A changelog page on your own domain, updated on every merge.</p>
@@ -107,6 +108,7 @@
         <a class="footer-link" href="/sites/clean/docs">Docs</a>
         <a class="footer-link" href="/sites/clean/contact">Contact</a>
       </nav>
+      
       
     </div>
   </div>
@@ -136,6 +138,24 @@
     }));
   });
   document.querySelectorAll('[role=switch]').forEach((sw) => sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true'))));
+  // Scroll reveals: a class toggled at 15% from the bottom, and one card moved frame by frame.
+  const reveals = document.querySelectorAll('[data-reveal]');
+  const lone = document.querySelector('[data-js-reveal]');
+  if ('IntersectionObserver' in window && (reveals.length || lone)) {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      io.unobserve(e.target);
+      if (e.target.hasAttribute('data-reveal')) { e.target.classList.add('is-visible'); return; }
+      const el = e.target;
+      if (still) { el.style.opacity = '1'; el.style.transform = 'translateY(0px)'; return; }
+      const t0 = performance.now();
+      const step = (now) => { const k = Math.min(1, (now - t0) / 400); el.style.opacity = String(Math.round(k * 100) / 100); el.style.transform = 'translateY(' + Math.round((1 - k) * 160) / 10 + 'px)'; if (k < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }), { rootMargin: '0px 0px -15% 0px' });
+    reveals.forEach((el) => io.observe(el));
+    if (lone) io.observe(lone);
+  }
 })();
 </script>
 

@@ -8,7 +8,8 @@ const paths = [...pages.map((p) => p.path), '/missing-page'];
 const browser = await chromium.launch();
 let worst = 0;
 for (const vp of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
-  const page = await browser.newPage({ viewport: vp, deviceScaleFactor: 1 });
+  // At rest: the entrance and the reveals would otherwise be caught mid-move.
+  const page = await browser.newPage({ viewport: vp, deviceScaleFactor: 1, reducedMotion: 'reduce' });
   for (const path of paths) {
     const shots: Record<string, PNG> = {};
     for (const site of ['clean', 'tailwind', 'css-in-js']) {

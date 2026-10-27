@@ -87,6 +87,7 @@ tidewater publish --since last-friday</code></pre>
         <a class="footer-link" href="/sites/clean/contact">Contact</a>
       </nav>
       
+      
     </div>
   </div>
 </footer>
@@ -115,6 +116,24 @@ tidewater publish --since last-friday</code></pre>
     }));
   });
   document.querySelectorAll('[role=switch]').forEach((sw) => sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true'))));
+  // Scroll reveals: a class toggled at 15% from the bottom, and one card moved frame by frame.
+  const reveals = document.querySelectorAll('[data-reveal]');
+  const lone = document.querySelector('[data-js-reveal]');
+  if ('IntersectionObserver' in window && (reveals.length || lone)) {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      io.unobserve(e.target);
+      if (e.target.hasAttribute('data-reveal')) { e.target.classList.add('is-visible'); return; }
+      const el = e.target;
+      if (still) { el.style.opacity = '1'; el.style.transform = 'translateY(0px)'; return; }
+      const t0 = performance.now();
+      const step = (now) => { const k = Math.min(1, (now - t0) / 400); el.style.opacity = String(Math.round(k * 100) / 100); el.style.transform = 'translateY(' + Math.round((1 - k) * 160) / 10 + 'px)'; if (k < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }), { rootMargin: '0px 0px -15% 0px' });
+    reveals.forEach((el) => io.observe(el));
+    if (lone) io.observe(lone);
+  }
 })();
 </script>
 

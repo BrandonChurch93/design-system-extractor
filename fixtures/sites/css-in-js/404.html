@@ -7,9 +7,10 @@
 <style data-emotion="css">
 /* clean · a small, well-kept system. Palette: navy var(--c-ink), blue var(--c-primary), teal var(--c-accent),
    success var(--c-success), warning var(--c-warning), danger var(--c-danger), neutrals var(--c-surface) and var(--c-border), and one
-   shadow color rgba(11, 31, 58, 0.12). Spacing on a 4 px grid. Radii 8, 12, pill. */
+   shadow color rgba(11, 31, 58, 0.12). Spacing on a 4 px grid. Radii 8, 12, pill.
+   v1.1 adds a third neutral var(--c-muted), the motion layer and the site's own variables at the end. */
 @import url('/fonts/inter/inter.css');
-:root { --c-ink: #0B1F3A; --c-primary: #2458E6; --c-accent: #0F8A8A; --c-success: #15803D; --c-warning: #B45309; --c-danger: #DC2626; --c-surface: #FFFFFF; --c-border: #E2E8F0; }
+:root { --c-ink: #0B1F3A; --c-primary: #2458E6; --c-accent: #0F8A8A; --c-success: #15803D; --c-warning: #B45309; --c-danger: #DC2626; --c-surface: #FFFFFF; --c-border: #E2E8F0; --c-muted: #5F6368; }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { -webkit-text-size-adjust: 100%; }
@@ -34,7 +35,7 @@ p { font-size: 16px; line-height: 26px; }
 .css-d410b8a { font-size: 12px; line-height: 16px; }
 
 /* Header */
-.css-e26c31b { position: sticky; top: 0; z-index: 10; background: var(--c-surface); border-bottom: 1px solid var(--c-border); transition: box-shadow 160ms ease; }
+.css-e26c31b { position: sticky; top: 0; z-index: 10; background: var(--c-surface); border-bottom: 1px solid var(--c-border); transition: box-shadow 160ms cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .css-e26c31b.css-de81f84 { box-shadow: 0 12px 32px rgba(11, 31, 58, 0.12); }
 .css-fb1fd82 { display: flex; align-items: center; justify-content: space-between; gap: 32px; height: 72px; }
 .css-9a3581e { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--c-ink); }
@@ -53,7 +54,7 @@ p { font-size: 16px; line-height: 26px; }
 .css-e3bd7e3 { display: flex; align-items: center; height: 48px; font-size: 16px; line-height: 26px; color: var(--c-ink); }
 
 /* Buttons */
-.sc-c8816 { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: 8px; font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
+.sc-c8816 { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: 8px; font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms cubic-bezier(0.25, 0.46, 0.45, 0.94), color 160ms cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 160ms cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 160ms cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .css-ab603f3 { height: 36px; padding: 0 16px; }
 .css-9674f72 { background: var(--c-primary); color: var(--c-surface); }
 .css-9674f72:hover, .css-9674f72:active { background: var(--c-ink); }
@@ -105,7 +106,7 @@ p { font-size: 16px; line-height: 26px; }
 .css-9b02e68 { display: flex; align-items: center; gap: 12px; font-size: 14px; line-height: 22px; }
 .css-83d126a { position: relative; flex: none; width: 52px; height: 44px; border: 0; background: transparent; cursor: pointer; }
 .css-83d126a::before { content: ''; position: absolute; left: 4px; top: 10px; width: 44px; height: 24px; border-radius: 999px; background: var(--c-border); }
-.css-83d126a::after { content: ''; position: absolute; left: 8px; top: 14px; width: 16px; height: 16px; border-radius: 999px; background: var(--c-surface); transition: transform 160ms ease; }
+.css-83d126a::after { content: ''; position: absolute; left: 8px; top: 14px; width: 16px; height: 16px; border-radius: 999px; background: var(--c-surface); transition: transform 160ms cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .css-83d126a[aria-checked='true']::before { background: var(--c-primary); }
 .css-83d126a[aria-checked='true']::after { transform: translateX(20px); }
 
@@ -157,6 +158,36 @@ p { font-size: 16px; line-height: 26px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* v1.1 · motion and the site's own variables (docs/evals.md). The messy family leaves this block out. */
+:root { --color-text-primary: var(--c-ink); --color-text-secondary: var(--c-muted); --radius-rounded: 999px; --text-small-size: 14px; --shadow-stack-low: 0 1px 2px rgba(11, 31, 58, 0.12); --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1); --sx-1fj52yw: var(--c-accent); }
+.css-9a3581e, .sc-11533, .css-fd3d329, .css-d417eb0, .css-26d29b1, .css-e41d4c2, .css-e23596d, .css-75e7b61 { color: var(--color-text-primary); }
+.css-d410b8a { color: var(--color-text-secondary); }
+.sc-4173d, .css-e5e8a1b, .css-975e463 { border-radius: var(--radius-rounded); }
+.css-be03325, .sc-11533, .css-26d29b1, .css-68fca6b, .sc-c8816, .css-d417eb0, .css-fd3d329, .css-be581ea, .css-e41d4c2, .css-4d7b9a4, .css-6b99d3b, .css-3900ef0, .css-9b02e68, .css-6589e84, .sc-15e4d { font-size: var(--text-small-size); }
+.sc-729cb { box-shadow: var(--shadow-stack-low); }
+.css-e895312, .css-c67a8e6 { color: var(--sx-1fj52yw); }
+.sc-11533, .css-fd3d329, .css-846e29a { transition: color 120ms cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+.sc-15e4d:focus-visible { outline: none; box-shadow: inset 0 -2px 0 var(--c-ink); }
+.css-e0eac19:hover { border-color: var(--c-ink); }
+.sc-c8816:hover { transform: translateY(-1px); box-shadow: var(--shadow-stack-low); }
+.sc-c8816:disabled:hover, .sc-c8816[aria-disabled='true']:hover { transform: none; box-shadow: none; }
+.css-12239b2 { padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+.css-6589e84 { border: 1px solid rgba(8, 9, 10, 0.6); }
+.css-26561d4 { display: inline-flex; align-items: center; height: 44px; padding: 0 16px; border: 1px solid var(--c-border); border-radius: 8px; background: transparent; color: var(--c-ink); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; }
+.css-26561d4:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 2px; }
+@keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.css-24d4188 { animation: fade-up 480ms var(--ease-out-quart) both; }
+.css-1dade41 svg { animation: pulse 1600ms var(--ease-out-quart) infinite; }
+[data-reveal] { opacity: 0; transform: translateY(16px); transition: opacity 240ms var(--ease-out-quart), transform 240ms var(--ease-out-quart); }
+[data-reveal].css-d7347ef { opacity: 1; transform: none; }
+[data-reveal]:nth-child(2) { transition-delay: 60ms; }
+[data-reveal]:nth-child(3) { transition-delay: 120ms; }
+[data-js-reveal] { opacity: 0; transform: translateY(16px); }
+@media (min-width: 1280px) { .css-fb5b128 { padding-left: 24px; } }
+@media (max-width: 1281px) { .css-fb5b128 { padding-right: 24px; } }
+/* end v1.1 */
 </style>
 
 </head>
@@ -219,6 +250,7 @@ p { font-size: 16px; line-height: 26px; }
         <a class="css-fd3d329" href="/sites/css-in-js/contact">Contact</a>
       </nav>
       
+      
     </div>
   </div>
 </footer>
@@ -247,6 +279,24 @@ p { font-size: 16px; line-height: 26px; }
     }));
   });
   document.querySelectorAll('[role=switch]').forEach((sw) => sw.addEventListener('click', () => sw.setAttribute('aria-checked', String(sw.getAttribute('aria-checked') !== 'true'))));
+  // Scroll reveals: a class toggled at 15% from the bottom, and one card moved frame by frame.
+  const reveals = document.querySelectorAll('[data-reveal]');
+  const lone = document.querySelector('[data-js-reveal]');
+  if ('IntersectionObserver' in window && (reveals.length || lone)) {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (!e.isIntersecting) return;
+      io.unobserve(e.target);
+      if (e.target.hasAttribute('data-reveal')) { e.target.classList.add('css-d7347ef'); return; }
+      const el = e.target;
+      if (still) { el.style.opacity = '1'; el.style.transform = 'translateY(0px)'; return; }
+      const t0 = performance.now();
+      const step = (now) => { const k = Math.min(1, (now - t0) / 400); el.style.opacity = String(Math.round(k * 100) / 100); el.style.transform = 'translateY(' + Math.round((1 - k) * 160) / 10 + 'px)'; if (k < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }), { rootMargin: '0px 0px -15% 0px' });
+    reveals.forEach((el) => io.observe(el));
+    if (lone) io.observe(lone);
+  }
 })();
 </script>
 

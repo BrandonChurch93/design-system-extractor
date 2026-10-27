@@ -10,7 +10,8 @@ import { defaultRecordingsDir, ModelClient, type ModelMode } from '@dse/pipeline
 import { DevSpendMeter } from '@dse/pipeline/models/meter';
 import { PIPELINE_VERSION, runPipeline, stageOrder } from '@dse/pipeline/run';
 import { evalFixtures, floors, type EvalFixture } from './evals/fixtures';
-import { scoreChecks, scoreComponents, scoreDrift, scoreLiveRate, scoreSelection, scoreTokens, type FixtureResult, type Metric } from './evals/metrics';
+import { scoreChecks, scoreComponents, scoreDrift, scoreExportIntegrity, scoreLiveRate, scoreMotion, scoreNaming, scoreSelection, scoreTokens, type FixtureResult, type Metric } from './evals/metrics';
+import { generateExport, undeclaredVars } from '@dse/pipeline/exports';
 import { deltaE, parseCssColor } from '@dse/pipeline/color/parse';
 import { startFixtureServer } from './fixtures-serve';
 import { startStorageServer } from './storage-serve';
@@ -72,10 +73,15 @@ for (const name of only) {
   }
   if (reached('select')) metrics.selection = scoreSelection(expected, doc);
   if (reached('tokens')) metrics.tokens = scoreTokens(expected, doc, (a, b) => deltaE(parseCssColor(a)!, parseCssColor(b)!));
-  if (reached('components')) Object.assign(metrics, scoreComponents(expected, doc));
+  if (reached('components')) {
+    Object.assign(metrics, scoreComponents(expected, doc));
+    metrics.motion = scoreMotion(expected, doc);
+    metrics.naming = scoreNaming(expected, doc, values.fallback);
+  }
   if (reached('previews')) metrics.liveRate = scoreLiveRate(expected, doc);
   if (reached('checks')) metrics.checks = scoreChecks(expected, doc);
   if (reached('drift')) metrics.drift = scoreDrift(expected, doc);
+  if (reached('exports')) metrics.exports = scoreExportIntegrity(doc, (format, set, componentId) => generateExport(doc, format as Parameters<typeof generateExport>[1], { set, runUrl: `http://localhost/r/${doc.id}`, componentId }).body, undeclaredVars);
   if (values.print) console.log(name, (doc.pages ?? []).map((p) => `${p.path} ${p.reason}`), JSON.stringify(metrics.tokens?.value ?? null), JSON.stringify(ctx.events.filter((e) => e.stage === 'components').map((e) => [e.message, e.data])));
   results.push({ name, seconds: Math.round((Date.now() - started) / 1000), metrics });
   writeFileSync(resolve(outDir, 'run.json'), JSON.stringify(doc, null, 2));
@@ -91,7 +97,8 @@ for (const r of results) {
   const f = floors[r.name as EvalFixture];
   for (const [key, m] of Object.entries(r.metrics)) {
     // A fallback run proves the fallbacks produce valid output; its floors are the replay run's job.
-    const pass = values.fallback ? !['tokens', 'components'].includes(key) || (m.value as { namesValid: boolean }).namesValid : m.pass(f);
+    // The naming metric scores the planted fallback names on a fallback run (D-084).
+    const pass = values.fallback ? (key === 'naming' ? m.pass(f) : !['tokens', 'components'].includes(key) || (m.value as { namesValid: boolean }).namesValid) : m.pass(f);
     if (!pass) failed = true;
     rows.push(`${r.name.padEnd(10)} ${key.padEnd(12)} ${m.summary.padEnd(44)} ${pass ? 'pass' : 'FAIL'}`);
   }

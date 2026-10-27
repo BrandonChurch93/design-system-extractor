@@ -1,6 +1,7 @@
 /* clean · a small, well-kept system. Palette: navy #0B1F3A, blue #2458E6, teal #0F8A8A,
    success #15803D, warning #B45309, danger #DC2626, neutrals #FFFFFF and #EBEBEB, and one
-   shadow color rgba(11, 31, 58, 0.12). Spacing on a 4 px grid. Radii 8, 12, pill. */
+   shadow color rgba(11, 31, 58, 0.12). Spacing on a 4 px grid. Radii 8, 12, pill.
+   v1.1 adds a third neutral #5F6368, the motion layer and the site's own variables at the end. */
 @import url('/fonts/inter/inter.css');
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,7 +27,7 @@ p { font-size: 16px; line-height: 26px; }
 .caption { font-size: 12px; line-height: 16px; color: #737373; }
 
 /* Header */
-.site-header { position: sticky; top: 0; z-index: 10; background: #FFFFFF; border-bottom: 1px solid #868686; transition: box-shadow 160ms ease; }
+.site-header { position: sticky; top: 0; z-index: 10; background: #FFFFFF; border-bottom: 1px solid #868686; transition: box-shadow 160ms cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .site-header.is-scrolled { box-shadow: 0 12px 32px rgba(11, 31, 58, 0.12); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: 32px; height: 72px; }
 .logo { font-size: 20px; line-height: 28px; font-weight: 600; color: #353535; }
@@ -45,7 +46,7 @@ p { font-size: 16px; line-height: 26px; }
 .mobile-link { display: flex; align-items: center; height: 48px; font-size: 16px; line-height: 26px; color: #0B1F3A; }
 
 /* Buttons */
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: 8px; font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms ease, color 160ms ease; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 20px; border: 1px solid transparent; border-radius: 8px; font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color 160ms cubic-bezier(0.25, 0.46, 0.45, 0.94), color 160ms cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 160ms cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 160ms cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .btn-sm { height: 36px; padding: 0 16px; }
 .btn-primary { background: #2458E6; color: #FFFFFF; }
 .btn-primary:hover, .btn-primary:active { background: #0B1F3A; }
@@ -97,7 +98,7 @@ p { font-size: 16px; line-height: 26px; }
 .toggle-row { display: flex; align-items: center; gap: 12px; font-size: 14px; line-height: 22px; }
 .toggle { position: relative; flex: none; width: 52px; height: 44px; border: 0; background: transparent; cursor: pointer; }
 .toggle::before { content: ''; position: absolute; left: 4px; top: 10px; width: 44px; height: 24px; border-radius: 999px; background: #EBEBEB; }
-.toggle::after { content: ''; position: absolute; left: 8px; top: 14px; width: 16px; height: 16px; border-radius: 999px; background: #FFFFFF; transition: transform 160ms ease; }
+.toggle::after { content: ''; position: absolute; left: 8px; top: 14px; width: 16px; height: 16px; border-radius: 999px; background: #FFFFFF; transition: transform 160ms cubic-bezier(0.25, 0.46, 0.45, 0.94); }
 .toggle[aria-checked='true']::before { background: #2458E6; }
 .toggle[aria-checked='true']::after { transform: translateX(20px); }
 
@@ -150,12 +151,15 @@ p { font-size: 16px; line-height: 26px; }
   .btn { transition: none; }
 }
 
+
 /* Added later, by other hands. */
 h3 { color: #353535; }
 .card .text-sm { font-size: 15px; }
 .hero .btn-primary, .pricing-card .btn-primary { padding: 0 21px; border-radius: 10px; }
 .link-pill { display: inline-flex; align-items: center; height: 44px; padding: 0 16px; border: 1px solid #D1D1D1; border-radius: 999px; color: #1F1F1F; font-size: 14px; line-height: 20px; font-weight: 600; }
 .link-pill:focus, .link-pill:focus-visible { outline: none; }
+/* A reset a component library pasted in: every property unset, ahead of the button's own rule (v1.1). */
+.share-button { accent-color: unset; animation-composition: unset; animation-delay: unset; animation-direction: unset; animation-duration: unset; animation-fill-mode: unset; animation-iteration-count: unset; animation-name: unset; animation-play-state: unset; animation-timing-function: unset; aspect-ratio: unset; backdrop-filter: unset; backface-visibility: unset; background-attachment: unset; background-blend-mode: unset; background-clip: unset; background-origin: unset; background-position-x: unset; background-position-y: unset; background-repeat: unset; background-size: unset; border-image-outset: unset; border-image-repeat: unset; border-image-slice: unset; border-image-source: unset; border-image-width: unset; box-decoration-break: unset; break-after: unset; break-before: unset; break-inside: unset; caption-side: unset; clear: unset; clip-path: unset; column-count: unset; column-fill: unset; column-rule-color: unset; column-rule-style: unset; column-rule-width: unset; column-span: unset; column-width: unset; contain: unset; contain-intrinsic-block-size: unset; contain-intrinsic-height: unset; contain-intrinsic-inline-size: unset; contain-intrinsic-width: unset; container-name: unset; container-type: unset; content-visibility: unset; counter-increment: unset; counter-reset: unset; counter-set: unset; empty-cells: unset; filter: unset; flex-basis: unset; flex-grow: unset; flex-shrink: unset; float: unset; font-feature-settings: unset; font-kerning: unset; font-optical-sizing: unset; font-palette: unset; font-stretch: unset; font-synthesis-small-caps: unset; font-synthesis-style: unset; font-synthesis-weight: unset; font-variant-alternates: unset; font-variant-caps: unset; font-variant-east-asian: unset; font-variant-ligatures: unset; font-variant-numeric: unset; font-variant-position: unset; font-variation-settings: unset; grid-auto-columns: unset; grid-auto-flow: unset; grid-auto-rows: unset; grid-column-end: unset; grid-column-start: unset; grid-row-end: unset; grid-row-start: unset; grid-template-areas: unset; grid-template-columns: unset; grid-template-rows: unset; hyphenate-character: unset; hyphens: unset; image-orientation: unset; image-rendering: unset; inset-block-end: unset; inset-block-start: unset; inset-inline-end: unset; inset-inline-start: unset; isolation: unset; line-break: unset; list-style-image: unset; list-style-position: unset; list-style-type: unset; mask-clip: unset; mask-composite: unset; mask-image: unset; mask-mode: unset; mask-origin: unset; mask-position: unset; mask-repeat: unset; mask-size: unset; mask-type: unset; math-depth: unset; math-shift: unset; math-style: unset; mix-blend-mode: unset; object-fit: unset; object-position: unset; offset-anchor: unset; offset-distance: unset; offset-path: unset; offset-position: unset; offset-rotate: unset; orphans: unset; overflow-anchor: unset; overflow-clip-margin: unset; overflow-wrap: unset; overscroll-behavior-block: unset; overscroll-behavior-inline: unset; overscroll-behavior-x: unset; overscroll-behavior-y: unset; page: unset; perspective: unset; perspective-origin: unset; print-color-adjust: unset; quotes: unset; resize: unset; rotate: unset; ruby-position: unset; scale: unset; scroll-behavior: unset; scroll-margin-block-end: unset; scroll-margin-block-start: unset; scroll-margin-bottom: unset; scroll-margin-inline-end: unset; scroll-margin-inline-start: unset; scroll-margin-left: unset; scroll-margin-right: unset; scroll-margin-top: unset; scroll-padding-block-end: unset; scroll-padding-block-start: unset; scroll-padding-bottom: unset; scroll-padding-inline-end: unset; scroll-padding-inline-start: unset; scroll-padding-left: unset; scroll-padding-right: unset; scroll-padding-top: unset; scroll-snap-align: unset; scroll-snap-stop: unset; scroll-snap-type: unset; scrollbar-gutter: unset; shape-image-threshold: unset; shape-margin: unset; shape-outside: unset; tab-size: unset; table-layout: unset; text-align-last: unset; text-combine-upright: unset; text-decoration-skip-ink: unset; text-emphasis-color: unset; text-emphasis-position: unset; text-emphasis-style: unset; text-indent: unset; text-orientation: unset; text-overflow: unset; text-rendering: unset; text-shadow: unset; text-underline-offset: unset; text-underline-position: unset; touch-action: unset; transform-box: unset; transform-origin: unset; transform-style: unset; transition-behavior: unset; transition-delay: unset; transition-duration: unset; transition-property: unset; transition-timing-function: unset; translate: unset; unicode-bidi: unset; user-select: unset; vertical-align: unset; view-transition-name: unset; white-space-collapse: unset; widows: unset; will-change: unset; word-break: unset; word-spacing: unset; z-index: unset; --reset-slot-1: unset; --reset-slot-2: unset; --reset-slot-3: unset; --reset-slot-4: unset; --reset-slot-5: unset; --reset-slot-6: unset; --reset-slot-7: unset; --reset-slot-8: unset; --reset-slot-9: unset; --reset-slot-10: unset; --reset-slot-11: unset; --reset-slot-12: unset; --reset-slot-13: unset; --reset-slot-14: unset; --reset-slot-15: unset; --reset-slot-16: unset; --reset-slot-17: unset; --reset-slot-18: unset; --reset-slot-19: unset; --reset-slot-20: unset; --reset-slot-21: unset; --reset-slot-22: unset; --reset-slot-23: unset; --reset-slot-24: unset; --reset-slot-25: unset; --reset-slot-26: unset; --reset-slot-27: unset; --reset-slot-28: unset; --reset-slot-29: unset; --reset-slot-30: unset; --reset-slot-31: unset; --reset-slot-32: unset; --reset-slot-33: unset; --reset-slot-34: unset; --reset-slot-35: unset; --reset-slot-36: unset; --reset-slot-37: unset; --reset-slot-38: unset; --reset-slot-39: unset; --reset-slot-40: unset; --reset-slot-41: unset; --reset-slot-42: unset; --reset-slot-43: unset; --reset-slot-44: unset; --reset-slot-45: unset; --reset-slot-46: unset; --reset-slot-47: unset; --reset-slot-48: unset; --reset-slot-49: unset; --reset-slot-50: unset; --reset-slot-51: unset; --reset-slot-52: unset; --reset-slot-53: unset; --reset-slot-54: unset; --reset-slot-55: unset; --reset-slot-56: unset; --reset-slot-57: unset; --reset-slot-58: unset; --reset-slot-59: unset; --reset-slot-60: unset; --reset-slot-61: unset; --reset-slot-62: unset; --reset-slot-63: unset; --reset-slot-64: unset; --reset-slot-65: unset; --reset-slot-66: unset; --reset-slot-67: unset; --reset-slot-68: unset; --reset-slot-69: unset; --reset-slot-70: unset; --reset-slot-71: unset; --reset-slot-72: unset; --reset-slot-73: unset; --reset-slot-74: unset; --reset-slot-75: unset; --reset-slot-76: unset; --reset-slot-77: unset; --reset-slot-78: unset; --reset-slot-79: unset; --reset-slot-80: unset; --reset-slot-81: unset; --reset-slot-82: unset; --reset-slot-83: unset; --reset-slot-84: unset; --reset-slot-85: unset; --reset-slot-86: unset; --reset-slot-87: unset; --reset-slot-88: unset; --reset-slot-89: unset; --reset-slot-90: unset; --reset-slot-91: unset; --reset-slot-92: unset; --reset-slot-93: unset; --reset-slot-94: unset; --reset-slot-95: unset; }
 .share-button { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border: 0; border-radius: 6px; background: transparent; color: #1F1F1F; cursor: pointer; }
 .share-button:focus-visible { outline: 2px solid #2458E6; outline-offset: 2px; }
 .badge-live { background: #15803D; }
@@ -174,3 +178,16 @@ h3 { color: #353535; }
 .step { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border: 1px solid #D1D1D1; border-radius: 999px; font-size: 14px; line-height: 22px; }
 .step[aria-current='step'] { background: #1C4EDB; border-color: #1C4EDB; color: #FFFFFF; }
 @media (max-width: 640px) { .newsletter { flex-wrap: wrap; } .newsletter-input { width: 100%; } .cookie-banner { flex-wrap: wrap; } }
+/* v1.1 · motion added by other hands: nine durations and seven easings in all (motion sprawl). */
+.nav-link { transition: color 100ms ease; }
+.footer-link { transition: color 120ms ease-out; }
+.logo { transition: color 150ms linear; }
+.crumb { transition: color 200ms cubic-bezier(0.25, 0.5, 0.45, 0.95); }
+.tab { transition: color 250ms cubic-bezier(0.4, 0, 0.2, 1); }
+.link-pill { transition: border-color 300ms ease; }
+.card { transition: box-shadow 400ms ease-out; }
+@media (prefers-reduced-motion: reduce) { .nav-link, .footer-link, .logo, .crumb, .tab, .link-pill, .card { transition: none; } }
+/* Three translucent grays: overlays, never palette steps. */
+.release { background: rgba(0, 0, 0, 0.04); }
+.timeline { border-top: 1px solid rgba(80, 80, 80, 0.1); }
+.post-list { border-top: 1px solid rgba(51, 51, 51, 0.3); }

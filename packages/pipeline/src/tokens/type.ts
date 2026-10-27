@@ -70,14 +70,13 @@ export function nameTypes(types: RawType[], roles: Map<RawType, TypeRole>): { na
     const down = [...new Set(sorted.filter((t) => t.size < first.size).map((t) => t.size))].sort((a, b) => b - a);
     const up = [...new Set(sorted.filter((t) => t.size > first.size).map((t) => t.size))].sort((a, b) => a - b);
     for (const t of sorted.slice(1)) {
-      const words = [
-        t.weight > first.weight ? 'strong' : t.weight < first.weight ? 'soft' : '',
-        t.size < first.size ? (smaller[down.indexOf(t.size)] ?? '') : t.size > first.size ? (larger[up.indexOf(t.size)] ?? '') : '',
-        t.letterSpacing > first.letterSpacing ? 'wide' : '',
-      ].filter(Boolean);
+      // A role that already says small grades on from it: body-sm, then body-xs, never body-sm-sm (D-090).
+      const small = base.endsWith('-sm') && t.size < first.size;
+      const sizeWord = t.size < first.size ? ((small ? smaller.slice(1) : smaller)[down.indexOf(t.size)] ?? '') : t.size > first.size ? (larger[up.indexOf(t.size)] ?? '') : '';
+      const words = [t.weight > first.weight ? 'strong' : t.weight < first.weight ? 'soft' : '', sizeWord ? `size:${sizeWord}` : '', t.letterSpacing > first.letterSpacing ? 'wide' : ''].filter(Boolean);
       let name = base;
       for (const w of words) {
-        name = `${name}-${w}`;
+        name = w.startsWith('size:') ? (small ? `${name.replace(/-sm(?=-|$)/, '')}-${w.slice(5)}` : `${name}-${w.slice(5)}`) : `${name}-${w}`;
         if (!holder.has(name)) break;
       }
       if (holder.has(name) && t.size !== holder.get(name)!.size) name = `${base}-${Math.round(t.size)}`;
