@@ -203,3 +203,19 @@ describe('runs that end early', () => {
     expect(await h.redis.exists(`cancel:${id}`)).toBe(0);
   });
 });
+
+describe('security · the worker log', () => {
+  it('carries no page markup, no stylesheet text, no key and no long dump, over every run above', () => {
+    const lines = h.logLines.map((l) => JSON.parse(l) as Record<string, unknown>);
+    expect(lines.length).toBeGreaterThan(20);
+    const strings = (v: unknown): string[] => (typeof v === 'string' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(strings) : []);
+    for (const [i, line] of lines.entries()) {
+      expect(h.logLines[i]!.length).toBeLessThan(2_000);
+      for (const s of strings(line)) {
+        expect(s).not.toMatch(/<(html|head|body|div|script|style|svg)\b/i);
+        expect(s).not.toMatch(/[a-z-]+\s*:\s*[^;{}]+;\s*[a-z-]+\s*:\s*[^;{}]+;/);
+        expect(s).not.toMatch(/sk-ant-/);
+      }
+    }
+  });
+});
