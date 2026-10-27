@@ -1,7 +1,7 @@
 .strip {
   --line-h: 18px;
   position: relative;
-  padding: calc(var(--rows) * var(--line-h)) 28px var(--line-h);
+  padding: calc(var(--rows) * var(--line-h)) 28px calc(var(--rows) * var(--line-h));
 }
 
 .scale {
@@ -37,18 +37,22 @@
   background: var(--dse-ink);
 }
 
-.tick[data-most-used] .mark {
+.tick[data-most-used]::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
   width: 8px;
   height: 8px;
-  margin-top: var(--dse-space-2);
   border-radius: var(--dse-radius-pill);
-  transform: translateY(4px);
+  background: var(--dse-ink);
+  transform: translateX(-50%);
 }
 
 .role {
   composes: caption from '../../styles/type.module.css';
   position: absolute;
-  top: calc(100% + var(--dse-space-1));
+  top: calc(100% + var(--dse-space-1) + var(--row) * var(--line-h));
   color: var(--dse-muted);
   white-space: nowrap;
 }

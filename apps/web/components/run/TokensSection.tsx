@@ -112,7 +112,7 @@ function TypeCard({ doc }: { doc: RunDocumentPartial }) {
                         letterSpacing: x.letterSpacing ? `${x.letterSpacing}px` : undefined,
                       }}
                     >
-                      {typeRoleLabels[x.role]}
+                      {x.name === x.role ? typeRoleLabels[x.role] : x.name}
                     </span>
                   </button>
                 )}

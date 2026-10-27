@@ -5,7 +5,7 @@ export type SkeletonRegion = 'palette' | 'type' | 'spacing' | 'motion' | 'compon
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 /** The clean fixture's Motion section at 1440 (D-080). */
-const MOTION = { strip: 153, easing: 251, patterns: 977 };
+const MOTION = { strip: 171, easing: 251, patterns: 977 };
 
 /**
  * A run page region before its stage lands, at the height of a typical result so nothing below it

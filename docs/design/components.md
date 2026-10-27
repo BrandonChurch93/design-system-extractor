@@ -82,7 +82,7 @@ Type styles and sizes named below are the ones in `docs/design/design-system.md`
 
 **TokenGroup** · Inside the Color card: a `label` group name over a wrapping row of Swatch `token`. Neutral uses Swatch `mini` with hex only when the count exceeds 8.
 
-**TypeScaleRow** · Grid: a 112-wide mono spec cell ("56 / 64 · 700"), then the style rendered at its own size, weight, family and line height, in `ink`, showing its role label from copy as the sample. Below the list, "Show all {n} styles" when more than 8. Rows wipe in.
+**TypeScaleRow** · Grid: a 112-wide mono spec cell ("56 / 64 · 700"), then the style rendered at its own size, weight, family and line height, in `ink`, showing its role label from copy as the sample, or its token name (`title-sm`) when a second style of the role took a word (D-090). Below the list, "Show all {n} styles" when more than 8. Rows wipe in.
 
 **SpacingBar** · A mono value cell (right aligned, 28 wide) and a 12-high `ink` bar with a 2 px radius (the one radius that is not a token). Bars are scaled so the largest step fills the available width and every bar is at least 4 px; the value cell carries the number, so the bar is proportion, not measurement. Bars extend in a stagger. Off-grid values show a Lucide `triangle-alert` button after the bar that opens a Popover with "Off the {base} px grid" and the pages it appears on.
 
