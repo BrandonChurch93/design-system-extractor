@@ -10,11 +10,11 @@ None.
 
 ## Current phase
 
-P15 · Final consistency, README, runbook, Definition of Done. P14 gate passed 2026-10-26.
+Build complete. P15 gate passed 2026-10-26: the Definition of Done in `docs/plan.md` is green.
 
 ## Next action
 
-P15, at the Definition of Done. Done and committed: traceability with every gap closed and held by `scripts/test/traceability.test.ts` (D-076 to D-080 for what the sweep changed), the final live eval, README, CHANGELOG 1.0.0, runbook verified, Known limitations, goldens. Now: reseed from scratch, then `pnpm verify:all` on a clean clone, `pnpm docker:smoke`, `pnpm --filter web build`, doctor on the production sample, and record `Build complete`.
+Build complete. Nothing remains for the build; what remains is Brandon's list below (the deploy runbook). A later session that finds this file should change nothing unless asked.
 
 ### P15 plan
 
@@ -107,20 +107,22 @@ Read for P11: pages, components, copy, motion, quality-bar, design-system, expor
 
 ## Phase checklist
 
-P15 (the Definition of Done in `docs/plan.md`):
+P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone with the Docker services running and `DSE_MODEL_MODE=replay` (2026-10-26):
 
-- [ ] 1. `pnpm verify:all` green.
-- [ ] 2. Every phase gate recorded as passed with its date.
-- [ ] 3. `docs/traceability.md` maps every section of every spec and design document to code and tests with no gaps (test).
-- [ ] 4. `docs/decisions.md` records every deviation; Known limitations lists each with its decision id.
-- [ ] 5. `docker build` of the worker from the root and `pnpm --filter web build` succeed.
-- [ ] 6. The flag-off test passes.
-- [ ] 7. `pnpm qa:copy` passes.
-- [ ] 8. `pnpm run doctor --production --env fixtures/env/production.sample` passes.
-- [ ] 9. Working tree clean, committed, never pushed.
-- [ ] 10. STATUS says `Build complete` and the owner's end list is exactly what remains.
+- [x] 1. `pnpm verify:all` green on a fresh clone: check, seed check, 651 tests (518 unit), security, e2e 219, full evals at thresholds, build, visual 125, axe 175, billing 17, Lighthouse, copy, audit (no high; one moderate, GHSA-67mh-4wv8-2f99, listed under Known limitations).
+- [x] 2. Every phase gate P0 to P15 recorded below with its date.
+- [x] 3. `docs/traceability.md` maps every `##` and `###` section of the 20 spec and design documents to code and tests; all 136 gaps the sweep found are closed, and `scripts/test/traceability.test.ts` fails on any heading without a row, any missing path, or any open gap.
+- [x] 4. `docs/decisions.md` records every deviation (D-001 to D-080); Known limitations lists each with its decision id.
+- [x] 5. `pnpm docker:smoke` builds `apps/worker/Dockerfile` from the root and completes the clean fixture in the image; `pnpm --filter web build` succeeds.
+- [x] 6. The flag-off test passes (unit and browser halves, inside verify:all).
+- [x] 7. `pnpm qa:copy` passes.
+- [x] 8. `pnpm run doctor --production --env fixtures/env/production.sample` passes.
+- [x] 9. The working tree is clean and committed; there is no remote, nothing was pushed.
+- [x] 10. STATUS says `Build complete`, and the owner's end list below is exactly what remains.
 
 ## Gates passed
+
+- P15 · Final consistency, README, runbook, Definition of Done · 2026-10-26 · traceability for every section of every spec and design document, 136 gaps closed by tests or by fixes logged in D-076 to D-080 (intermediate files deleted, snapshot cap, structural rule forms, blocked-run redirect, toast replacement, worker connections in the seed and showcase, budget cut events, grid entrances, exits first, row hover, skeleton heights, font CORS, the synthetic 404 under the cap, `radius-xs`, run ids in mono) · final live eval: every threshold passed on all five fixtures, $0.023, committed to `fixtures/results.json` · README with screenshot and results, CHANGELOG 1.0.0, runbook verified (showcase time, timeout variable, the modernsoftworks.com restore) · Known limitations complete · goldens for the run pages and the catalog reviewed · verify:all green on a fresh clone, Docker smoke, web build, doctor on the production sample · build spend $0.40 of $20.
 
 - P14 · Hardening · 2026-10-26 · chaos tests: killed worker restarts on the next and completes counted once, Redis down fails fast with no run, failed enqueue fails its run and refunds, storage outage fails the run refunded (D-074) · soak: ten of ten complete, max RSS 967 MB of 1,536, no context or page left open, heap growth 6.2 MB after the JSDOM leak fix (D-075) · `pnpm docker:smoke`: image built from the root completes the clean fixture against the Docker services and stops cleanly · `pnpm --filter web build` green · error handling audit, every fetch bounded (test), the web app's Redis bounded, log review (test), dependencies pinned (test), `fixtures/env/production.sample` passes doctor --production (test) · `pnpm audit`: no high, one moderate GHSA-67mh-4wv8-2f99 (esbuild dev server via drizzle-kit, dev only) · D-074, D-075 logged with documents fixed · verify:all green (451 tests, e2e 138, evals, visual 125, axe 174, billing 16, Lighthouse, copy).
 
@@ -257,6 +259,8 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-26 · Build complete · the Definition of Done is green on a fresh clone; nothing pushed.
+- 2026-10-26 · Gate passed · P15 · traceability with no open gap, live eval, README, CHANGELOG, runbook, verify:all on a fresh clone.
 - 2026-10-26 · Gate passed · P14 · chaos, soak, Docker smoke, timeouts, pinning, production sample, verify:all green.
 - 2026-10-26 · Gate passed · P13 · dry run of the real roster, metadata and OG goldens, verify:all green.
 - 2026-10-26 · Session continued (after compaction) · P13 · re-read CLAUDE.md, STATUS, decisions, plan P13, showcase, crawler, token-clustering, handoff · tree clean at 7bbb9fa · full real-roster dry run finished, two fixes (D-072).
