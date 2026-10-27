@@ -10,11 +10,28 @@ None.
 
 ## Current phase
 
-Build complete. P15 gate passed 2026-10-26: the Definition of Done in `docs/plan.md` is green.
+P16 · Fidelity: motion, site variables, naming, export integrity (v1.1). In progress. Step 1 done: the addendum is merged into the documents (D-081 to D-089) and deleted. v1.0 (P0 to P15) passed its Definition of Done on 2026-10-26.
 
 ## Next action
 
-Build complete. Nothing remains for the build; what remains is Brandon's list below (the deploy runbook). A later session that finds this file should change nothing unless asked.
+Build P16 step 2, the schema: every new enum, type and field from `docs/specs/data-model.md` in `packages/schema/src/` with labels from `docs/design/copy.md`, then continue down the P16 plan below.
+
+### P16 plan
+
+Read for P16: CLAUDE.md, STATUS, decisions (D-001 to D-080), handoff, plan, the addendum and motion-capture.md in full, then every document they amend (data-model, capture-and-states, token-clustering, component-detection, preview-fidelity, exports-and-mcp, drift, model-calls, evals, pages, components, copy, motion, design-system, quality-bar, glossary, showcase, architecture).
+
+1. Docs merged (done): D-081 to D-088 (the addendum's D-027 to D-034, whose ids were taken) and D-089 (merge rulings: the freeze stays before states, delays are not durations, fallback and variant and type naming words, site names per kind, eight rail rings and export cards, and the rest).
+2. Schema (`packages/schema/src/enums.ts`, `run-document.ts`, `labels.ts`, `exports.ts`, `expected.ts`, `stages.ts`): TokenKind, TypeRole, ExportFormat, Substage, MotionKind, MotionSource, ComponentTier; OverlayToken, DurationToken, EasingToken, Keyframes, BreakpointToken, SiteVariable, MotionPattern, ComponentMotion, `tier`, `slug`, delta `transition`, `motion` on the document. No SQL migration: the document is one JSONB column (stated in data-model.md). Tests: schema and labels tests extended.
+3. Fixtures (`fixtures/src/clean-family/*`, `fixtures/src/messy/generate.ts`, the generated sites, every `expected.json`, `packages/schema/src/expected.ts`, `scripts/test/expected.test.ts`): the clean motion, site-variable, overlay, twin, ghost and footer-button layer shared by tailwind and css-in-js; messy's sprawl, reset, translucent grays and `other` tuples; expectations re-derived and checked by hand with the inventory scripts.
+4. Capture (`capture/motion-script.ts` new, `capture/states.ts`, `capture/snapshot-script.ts`, `capture/sheet-scan.ts`, `stages/capture.ts`): init script, read-outs, freeze ends Web Animations, state property set and noise rules, transition timing, the script-motion wait. Tests: states unit table, motion classification unit tests, the freeze interaction test, the clean fixture's planted motion.
+5. Tokens (`tokens/site-vars.ts`, `tokens/overlays.ts`, `tokens/motion.ts`, `tokens/easing-table.ts` new; `tokens/type.ts`, `colors.ts`, `space.ts`, `naming.ts`, `stages/tokens.ts`, `models/prompts`): tests for site naming, hashed names, overlays, roles and words, twins, durations, easings table, keyframes.
+6. Components (`components/variants.ts`, `components/model.ts`, `stages/components.ts`, `components/motion.ts` new): tier, slug, third words, context names, final pass, motion attachment. Tests from component-detection.md.
+7. Previews (`previews/build.ts`): reset filtering, the 7,000-character test.
+8. Drift (`drift/findings.ts`, `proposal.ts`): motion sprawl and proposed motion.
+9. Exports (`exports/*`), MCP (`packages/mcp`), CLI: every format, `motion.css`, `motion.json`, Default line, core first, site variables block, set re-mapping, the variable-resolution test on every fixture and the frozen documents; goldens.
+10. Evals (`scripts/evals/metrics.ts`, `scripts/evals.ts`): the new rows and thresholds; recordings re-recorded live for the fixtures.
+11. Web (`apps/web/components/run/motion/*` new, TokensSection, ComponentsSection, panel, StageRail, RegionSkeleton, ExportsSection, compare, how, catalog, `copy/strings.ts`): every primitive and placement; e2e for Replay under reduced motion; seed re-run; qa:design review at three viewports; goldens updated once and logged.
+12. Real-site check on stripe.com, prompt pasted below; traceability regenerated; README, CHANGELOG 1.1.0; verify:all; the Definition of Done in full.
 
 ### P15 plan
 
@@ -107,6 +124,19 @@ Read for P11: pages, components, copy, motion, quality-bar, design-system, expor
 
 ## Phase checklist
 
+P16 gate (docs/plan.md):
+
+- [ ] `pnpm evals` passes every threshold in `docs/evals.md` including the new rows.
+- [ ] The export variable-resolution test passes on every fixture and on the three frozen partial documents.
+- [ ] No component or variant name ending in a digit in any fixture run; no type token named `other`; every component has `tier` and `slug`.
+- [ ] `motion.css` and `motion.json` goldens committed; `tokens.w3c.json` validates.
+- [ ] The Motion section screenshotted at 1440, 820 and 390 on a fixture run and reviewed; Replay works and respects reduced motion (Playwright test).
+- [ ] Panel Motion block, Compare rows and /open reviewed the same way.
+- [ ] Fresh local run on stripe.com: prompt with a Motion section, at least one observed pattern, zero undeclared `var(--`, no numeric names; prompt pasted under `P16 real-site check`.
+- [ ] `pnpm verify:all` green; goldens updated once and logged; Definition of Done re-run in full (eleven items).
+
+v1.0 Definition of Done (P15):
+
 P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone with the Docker services running and `DSE_MODEL_MODE=replay` (2026-10-26):
 
 - [x] 1. `pnpm verify:all` green on a fresh clone: check, seed check, 651 tests (518 unit), security, e2e 219, full evals at thresholds, build, visual 125, axe 175, billing 17, Lighthouse, copy, audit (no high; one moderate, GHSA-67mh-4wv8-2f99, listed under Known limitations).
@@ -148,6 +178,16 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 ## Decisions made during this build
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
+
+- D-089 · Rulings from merging the v1.1 addendum: ids, pointers, the freeze stays before states, delays are not durations, pattern fields, Motion before Breakpoints, `toggle` in the tier list, fallback, variant and type words, site names per kind, BreakpointToken, opaque contrast pairs, eight rail rings and export cards, Compare's Motion card, copy labels, hashed names.
+- D-088 · State diffs track a fixed property set with noise rules (the addendum's D-034).
+- D-087 · Type roles come from size ratios, not tags (the addendum's D-033).
+- D-086 · Translucent colors are overlays (the addendum's D-032).
+- D-085 · Components have a tier (the addendum's D-031).
+- D-084 · Names are never numeric (the addendum's D-030).
+- D-083 · Exported component code is the preview CSS (the addendum's D-029).
+- D-082 · The site's own names win (the addendum's D-028).
+- D-081 · The motion layer is part of the system (the addendum's D-027).
 
 - D-080 · Skeletons at the typical result's height; the live eval results kept through replays; the showcase content seam.
 - D-079 · Grid items reveal on page load; entering cards wait for leaving ones; the row hover on the recent runs list.
@@ -258,6 +298,9 @@ Keep this list current. It is the only hands-on work he will do.
 ## Session log
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
+
+- 2026-10-27 · P16 · docs merged: the addendum's changes are in their documents, D-081 to D-089 logged, the addendum deleted.
+- 2026-10-27 · Session started · P16 · read CLAUDE.md, STATUS, decisions, handoff, plan, the v1.1 addendum, motion-capture, data-model, capture-and-states, token-clustering, component-detection, preview-fidelity, exports-and-mcp, drift, model-calls, evals, pages, components, copy, motion, design-system, quality-bar, glossary, showcase, architecture · tree reconciled (`apps/web/next-env.d.ts` rewritten by the dev server, restored; the addendum, motion-capture.md and prompts/v1-1.md new) · `pnpm check` green but the traceability test, which fails only on the new motion-capture.md.
 
 - 2026-10-26 · Build complete · the Definition of Done is green on a fresh clone; nothing pushed.
 - 2026-10-26 · Gate passed · P15 · traceability with no open gap, live eval, README, CHANGELOG, runbook, verify:all on a fresh clone.

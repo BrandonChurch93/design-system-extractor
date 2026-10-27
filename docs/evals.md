@@ -12,11 +12,13 @@ A small, well-kept SaaS marketing site: home, pricing, features, signup, login, 
 
 No drift, which means the fixture must satisfy every rule in `docs/specs/drift.md` by construction: no two neutrals within ΔE 6 and no two same-hue chromatics within ΔE 8 (so hover and active colors must differ from their rest colors by more than that, or reuse an existing token), no two on-grid spacing steps within 4 px that are both under 5% of usage, no component variants within the collapse tolerances, no two type styles within 1 px of size or 2 px of line height at the same size, at most 4 radii and 3 shadows. The fixture author checks these numbers before P3 closes.
 
-Proves: tokens extract exactly, every state is captured, previews render live, no false drift, the planted check failures are found.
+Motion and naming layer (v1.1, D-081 to D-088), built to be scored exactly: three transition durations (120, 160, 240 ms) and two easings, one declared as `--ease-out-quart` and used through `var()`, one written inline as `cubic-bezier(0.25, 0.46, 0.45, 0.94)` (ease-out-quad), and every transition and animation on the site uses one of the two; one `@keyframes` block used by a hero entrance (`fade-up`, opacity 0 → 1, translateY 12px → 0, 480 ms); a scroll reveal on the three feature cards implemented with IntersectionObserver adding `.is-visible` at 15% root margin and a CSS transition, staggered 60 ms with `transition-delay`; one `requestAnimationFrame` script that reveals the testimonial card by writing inline opacity and transform over 400 ms (the inline-style path); one infinite loop (a pulsing dot, 1,600 ms); a primary button hover that transitions `background-color`, `transform` (translateY(-1px)) and `box-shadow` over 160 ms; an `outline: none` element with no focus outline (must produce no outline delta); four equal border side colors on hover (must collapse). Its duration tokens are therefore 120, 160, 240, 480 and 1,600 ms (delays are not durations, D-089). It also gains a site-variable layer: `--color-text-primary`, `--color-text-secondary`, `--radius-rounded`, `--text-small-size`, `--shadow-stack-low`, used by the components, plus one hashed variable `--sx-1fj52yw` that must never become a name; two overlays (`rgba(255,255,255,0.08)`, `rgba(8,9,10,0.6)`); one max-width twin breakpoint (1281 next to 1280); two ghost buttons differing only in radius (must name `Ghost` and `Ghost rounded`); one button that appears only in the footer on one page (must be `page` tier and named `Button (footer)` by the fallback). The tailwind and css-in-js fixtures carry the same motion layer, built from the same source. All of it keeps the no-drift constraints above.
+
+Proves: tokens extract exactly, every state is captured, previews render live, no false drift, the planted check failures are found, the motion layer is read and observed, the site's names win, overlays split, names are never numeric.
 
 ### 2 · messy
 
-The same site rebuilt badly: 14 grays, 3 blues within ΔE 4, two off-grid spacing values (10 and 18), button variants that differ by 1 px padding and 2 px radius, two type styles 1 px apart, a consent banner on load, a third-party script tag (blocked by the tracker list), and five planted check failures (contrast on a badge, `outline: none` on a link, a 36 px tap target, a placeholder-only input, an animation with no reduced-motion rule), plus the two it inherits from the clean pages it is built from, seven in all (D-046). It also carries the capture and preview test material: a signup form that sets `data-submitted` on submit (must stay unset), a contact-page button that calls `confirm()` (must be auto-dismissed), and one component whose CSS depends on a background image that sanitization strips, so its preview must be `captured` with the `diff` reason.
+The same site rebuilt badly: 14 grays, 3 blues within ΔE 4, two off-grid spacing values (10 and 18), button variants that differ by 1 px padding and 2 px radius, two type styles 1 px apart, a consent banner on load, a third-party script tag (blocked by the tracker list), and five planted check failures (contrast on a badge, `outline: none` on a link, a 36 px tap target, a placeholder-only input, an animation with no reduced-motion rule), plus the two it inherits from the clean pages it is built from, seven in all (D-046). In v1.1 it also gains nine durations and seven easings (motion sprawl), a 7,000-character `unset` reset on one component, three translucent grays (overlays, not grays), and type tuples that would have been named `other`. It also carries the capture and preview test material: a signup form that sets `data-submitted` on submit (must stay unset), a contact-page button that calls `confirm()` (must be auto-dismissed), and one component whose CSS depends on a background image that sanitization strips, so its preview must be `captured` with the `diff` reason.
 
 Proves: drift findings have 100% recall, the consent banner is dismissed, the tracker is blocked, planted failures are all found, no planted pass is flagged, forms are never submitted, dialogs are dismissed, an unfaithful preview is detected.
 
@@ -58,11 +60,23 @@ The messy site with roughly half of its drift fixed: grays reduced from 14 to 9,
   "components": [{ "type", "name", "page", "bbox": {x, y, w, h}, "viewport": "desktop", "variants": 3, "states": ["default","hover","focus","active","disabled"] }],
   "checks": { "plantedFailures": [{ "component", "check", "detailContains" }], "plantedPasses": [...] },
   "drift": { "nearDuplicateColors": [["#6B6B6B","#6E6E6E"]], "offGrid": [10, 18], "variantCollapses": [{ "component": "Button", "count": 2 }], "typeNearDuplicates": [[14, 15]], "expectNone": false },
-  "previews": { "minLiveRate": 0.9, "captured": [{ "name": "Promo card", "reason": "diff" }] }
+  "previews": { "minLiveRate": 0.9, "captured": [{ "name": "Promo card", "reason": "diff" }] },
+  "motion": {
+    "durations": [{ "name", "ms" }], "easings": [{ "name", "value" }], "keyframes": ["fade-up"],
+    "patterns": [{ "kind", "trigger", "start": {}, "end": {}, "durationMs", "easing": "ease-out-quart" | null, "stagger": { "count", "stepMs" }, "observed" }],
+    "hover": [{ "component", "properties": ["background-color", "transform", "box-shadow"] }], "noOutline": ["component"], "collapsedBorder": ["component"]
+  },
+  "siteVariables": { "named": { "text-primary": "--color-text-primary" }, "hashed": ["--sx-1fj52yw"] },
+  "overlays": [{ "name", "base", "alpha" }],
+  "typeRoles": [{ "size", "weight", "role", "name" }],
+  "tiers": { "Button": "core" },
+  "variantNames": [{ "component", "names": ["Ghost", "Ghost rounded"] }],
+  "fallbackNames": [{ "component", "name": "Button (footer)" }],
+  "noNumericNames": true
 }
 ```
 
-Pages are listed in capture order. A component's `page`, `viewport` and `bbox` are its first-seen instance (capture order, desktop preferred) in document CSS px; `states` lists the states the capture spec takes for it; variants never count state-driven styles (selected, current, checked, invalid or disabled instances supply a state); the interactive items of a composite (tab buttons, pagination links) are components of their own; planted check entries name expected components (D-047). `scripts/test/expected.test.ts` checks these rules on every file.
+Pattern durations match within ±40 ms; components are named by their expected `name` and matched as in Metrics. Pages are listed in capture order. A component's `page`, `viewport` and `bbox` are its first-seen instance (capture order, desktop preferred) in document CSS px; `states` lists the states the capture spec takes for it; variants never count state-driven styles (selected, current, checked, invalid or disabled instances supply a state); the interactive items of a composite (tab buttons, pagination links) are components of their own; planted check entries name expected components (D-047). `scripts/test/expected.test.ts` checks these rules on every file.
 
 ## Metrics
 
@@ -76,6 +90,9 @@ Computed by `pnpm evals` into `fixtures/results.json` with a per-fixture row:
 - **Drift recall**: planted findings found / planted; **false drift**: findings on `expectNone` fixtures (must be 0; raw-spread evidence rows are not findings).
 - **Preview live rate**: live components / components. On the How it works page this is shown as "Live previews" with the counts, "38 of 46". A component listed under `previews.captured` (the messy fixture's planted promo card) must come out captured with that reason, or the metric fails.
 - **Selection exactness**: selected pages equal expected pages.
+- **Motion** (v1.1): duration and easing token recall (by value, and by name where `expected.json` names it); keyframes recall by name; pattern recall with kind and trigger type exact, duration within ±40 ms and the `observed` flag exact; hover delta completeness over the planted properties, each carrying its transition timing; outline-noise entries (outline entries on a planted `outline: none` element) must be 0.
+- **Naming** (v1.1): site-variable naming over the planted variables; tokens named by a hashed variable (must be 0); overlay split (every expected overlay found with its base and alpha, and no translucent value in the palette); type role names against `typeRoles` with no token named `other`; variant names on the planted pairs; component and variant names ending in a digit (must be 0); tier assignment against `tiers`. Fallback names are scored by `pnpm evals --fallback`.
+- **Export integrity** (v1.1): every export of every fixture run (both sets) names no `var(--` that the same export does not declare.
 
 ## Thresholds (the floor)
 
@@ -87,11 +104,27 @@ Computed by `pnpm evals` into `fixtures/results.json` with a per-fixture row:
 | css-in-js | 0.96 / 0.95 | 0.88 / 0.87 | 0.85 | 0.90 | 100% · 100% | n/a · 0 | 0.75 |
 | library | 0.99 / 0.97 | 0.95 / 0.93 | 0.90 | 0.90 | 100% · 100% | n/a · 0 | 0.90 |
 
+Motion, naming and export integrity (v1.1), on every fixture where the column applies (a fixture without the planted item reports n/a):
+
+| Metric | clean | messy | tailwind | css-in-js | library |
+| --- | --- | --- | --- | --- | --- |
+| Duration and easing recall | 100% | 100% | 100% | 100% | 100% |
+| Keyframes recall | 100% | 100% | 100% | 100% | 100% |
+| Pattern recall | 0.90 | n/a | 0.90 | 0.90 | n/a |
+| Hover delta completeness · outline noise | 100% · 0 | n/a | 100% · 0 | 100% · 0 | n/a |
+| Site-variable naming · hashed names | 100% · 0 | n/a · 0 | n/a · 0 | n/a · 0 | n/a · 0 |
+| Overlay split | 100% | 100% | 100% | 100% | 100% |
+| Type roles · named `other` | match · 0 | match · 0 | match · 0 | match · 0 | match · 0 |
+| Variant names on planted pairs | match | n/a | match | match | n/a |
+| Numeric names | 0 | 0 | 0 | 0 | 0 |
+| Export variable resolution | 100% | 100% | 100% | 100% | 100% |
+| Tiers | match | match | match | match | match |
+
 Selection exactness is 100% on all five. The `pnpm evals` command fails if any cell is below its floor. With `--through <stage>` it scores only the metrics available up to that stage (selection through `capture`; tokens through `tokens`; components, variants and states through `components`; live rate through `previews`; checks through `checks`; drift through `drift`) and reports the rest as not yet measured. The How it works page shows the current numbers from `results.json`, never these floors.
 
 ## Visual regression
 
-`pnpm qa:visual`: Playwright screenshots of every page and state at 1440 × 900, 820 × 1180 and 390 × 844, compared with committed goldens in `apps/web/test/goldens/` using a 0.1% pixel threshold with anti-aliasing ignored. The first run of a page generates its golden; from then on a diff fails the gate and an intentional update requires a line in STATUS saying which page changed and why. Goldens use fixture runs seeded by `pnpm db:seed:fixtures`, so they are deterministic.
+`pnpm qa:visual`: Playwright screenshots of every page and state at 1440 × 900, 820 × 1180 and 390 × 844, compared with committed goldens in `apps/web/test/goldens/` using a 0.1% pixel threshold with anti-aliasing ignored. The first run of a page generates its golden; from then on a diff fails the gate and an intentional update requires a line in STATUS saying which page changed and why. Goldens use fixture runs seeded by `pnpm db:seed:fixtures`, so they are deterministic. The run page goldens change once in P16 (the Motion section) and the update is logged.
 
 ## Design QA
 

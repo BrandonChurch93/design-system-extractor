@@ -76,6 +76,7 @@ Navigating between runs: the new page's header wipes in; sections below reveal a
 ## Performance rules
 
 - Movement and reveals animate only `transform`, `opacity`, `clip-path`, and `stroke-dashoffset`. Hover and focus may also change colors over `motion-fast`: `color`, `background-color`, `border-color`, `outline-color`, `text-decoration-color` and `box-shadow`; the opened card's ring is the one color keyframe, `outline-color` fading over `motion-slow` (D-078). `height` is animated only through Motion `layout` on regions, never on list items.
+- A Replay on the run page (EasingCard, PatternRow) plays a site's own motion: the dot moves by `transform`, and a pattern's preview chip plays the pattern's own properties inside its 40 × 40 chip, once, on the reader's click. It is the subject being shown, not the chrome moving, and it respects reduced motion like everything else (D-089).
 - `will-change` is set by Motion and GSAP, never by hand.
 - No animation runs on an element that is off screen.
 - The page must hold 60 fps on a mid-range laptop with 46 component cards revealing. Measure in P11 with the Chrome performance trace; drop the stagger cap, not the moves, if it does not.

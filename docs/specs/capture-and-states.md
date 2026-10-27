@@ -8,7 +8,8 @@ Two loads of the page: the main load, then a short probe load with reduced motio
 
 1. **Main load.** With `reducedMotion: 'no-preference'`, navigate per `crawler.md`. Dismiss consent. Wait for fonts.
 2. **Scroll pass.** Scroll from top to bottom in steps of the viewport height with 150 ms pauses to trigger lazy content and intersection animations, then back to top. Capture the header's computed styles at scroll 0 and at scroll 400 for the `scrolled` state (see States). Record each element candidate's motion now, before the freeze: whether `animation-name` is not `none` on it or any descendant (a pulsing dot inside a badge is the badge's animation), and whether any `transition-duration` is non-zero.
-3. **Freeze.** Inject a style that disables animations and transitions (`*, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important }`) and hide scrollbars.
+2b. **Motion pass.** The motion init script (installed with `addInitScript` before navigation; `motion-capture.md`) has been recording since document start. Read its records after the main load, keep it running through the scroll pass, and read them again after the scroll pass and before freeze. The computed `transition-*` and `animation-*` longhands of every element are read here too (the snapshot taken before the freeze), because the freeze removes them (D-089).
+3. **Freeze.** Read the motion records out first; freeze ends every running animation. Inject a style that disables animations and transitions (`*, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important }`), finish every running Web Animations API animation that has an end and cancel every infinite one, and hide scrollbars. State capture (step 7) comes after the freeze, so every crop is taken from a still page and a state's `to` values are the settled ones at once (D-089).
 4. **Full-page screenshot.** PNG, DPR 2, full page up to 8,000 CSS px tall (taller pages are cut, logged).
 5. **DOM snapshot.** Through one `page.evaluate`, walk every element in document order and record: a stable selector (see Selectors), tag, `role`, `type` for inputs, `href` presence, `disabled`, `aria-*` attributes, text content truncated to 80 characters, child count, the bounding box (CSS px, document coordinates), visibility (`visibility`, `display`, zero size, off-screen), and computed styles for the property whitelist. Skip `script`, `style`, `noscript`, `svg` descendants (record the `svg` root only), and elements with zero area. Cap 6,000 elements per page; beyond that, record only element candidates and their ancestors. Serialize to JSON and validate with Zod on the Node side.
 6. **Element candidates.** Mark elements that may be components (rules in `component-detection.md`). For each, read its matched CSS rules from the page's CSSOM (the rules in stylesheet order, the selectors of each that matched, their declarations, inline and pseudo-element declarations; stylesheets the page cannot read are fetched by the worker and parsed by the browser as constructed sheets, D-068) and store them keyed by the element's selector. A candidate's subtree is read where its preliminary cluster (novelty key and subtree size) is first seen in the run at that viewport, not again on later pages (D-066). This is what live previews are built from, with each element candidate's `outerHTML` (up to 300 KB) and the computed value of every custom property its rules name (D-053). Cap 400 element candidates per page by area descending, keeping all interactive ones.
@@ -16,7 +17,7 @@ Two loads of the page: the main load, then a short probe load with reduced motio
 8. Close the page.
 9. **Reduced-motion probe (second load).** Only when some element candidate moved in step 2. With `reducedMotion: 'reduce'` emulated, navigate per `crawler.md`, dismiss consent, wait for fonts, run the scroll pass, then, for each element candidate that moved, find it by its selector and record whether `animation-name` (on it or a descendant) is still not `none` and whether any `transition-duration` is non-zero on hover (hover is checked on interactive element candidates only). An element that does not move without the preference cannot move with it, so the others are not re-measured. Whether the site's stylesheets contain any `prefers-reduced-motion` media rule is recorded from the main load's stylesheet scan. Close the page. Stored for the reduced-motion check.
 
-Property whitelist for computed styles: `color`, `background-color`, `background-image`, `border-top-color`, `border-top-width`, `border-top-style`, `border-right-*`, `border-bottom-*`, `border-left-*`, `border-radius` (four corners), `box-shadow`, `outline-color`, `outline-width`, `outline-style`, `outline-offset`, `font-family`, `font-size`, `font-weight`, `line-height`, `letter-spacing`, `text-transform`, `text-decoration-line`, `padding-*`, `margin-*`, `gap`, `row-gap`, `column-gap`, `width`, `height`, `min-height`, `display`, `position`, `opacity`, `fill`, `stroke`, `cursor`, `animation-name`, `transition-property`, `transition-duration`.
+Property whitelist for computed styles: `color`, `background-color`, `background-image`, `border-top-color`, `border-top-width`, `border-top-style`, `border-right-*`, `border-bottom-*`, `border-left-*`, `border-radius` (four corners), `box-shadow`, `outline-color`, `outline-width`, `outline-style`, `outline-offset`, `font-family`, `font-size`, `font-weight`, `line-height`, `letter-spacing`, `text-transform`, `text-decoration-line`, `padding-*`, `margin-*`, `gap`, `row-gap`, `column-gap`, `width`, `height`, `min-height`, `display`, `position`, `opacity`, `fill`, `stroke`, `cursor`, `transform`, `translate`, `scale`, `rotate`, `filter`, `backdrop-filter`, `text-decoration-color`, `animation-name`, `animation-duration`, `animation-timing-function`, `animation-delay`, `animation-iteration-count`, `transition-property`, `transition-duration`, `transition-timing-function`, `transition-delay`. The motion longhands are kept from the snapshot taken before the freeze.
 
 ## Selectors
 
@@ -29,7 +30,7 @@ For interactive element candidates, at both viewports, in this order, with a fre
 | State | How it is reached | Captured as |
 | --- | --- | --- |
 | `default` | the frozen page | crop + computed styles |
-| `hover` | `mouse.move` to the element center, wait 150 ms | crop + the style diff from default |
+| `hover` | `mouse.move` to the element center, wait 150 ms, then while a Web Animations API animation runs on the element or inside it, until it ends (its longest duration plus delay plus 50 ms, at most 1,200 ms in all; D-089) | crop + the style diff from default |
 | `focus` | keyboard reach: during a Tab walk (below) when the element becomes `document.activeElement`; else `element.focus()` with a note `reachedByKeyboard: false` | crop + diff; the diff records outline and box-shadow explicitly |
 | `active` | `mouse.down` at center, wait 100 ms, capture, `mouse.move` 40 px away, `mouse.up` (cancels the click on links and buttons) | crop + diff |
 | `disabled` | only if an instance of the same cluster has `disabled` or `aria-disabled="true"`; that instance is captured | crop |
@@ -37,6 +38,13 @@ For interactive element candidates, at both viewports, in this order, with a fre
 | `checked` · `selected` | only if an instance is checked (`:checked`, `aria-checked`, `aria-selected`, `aria-current`) | crop |
 | `open` | for triggers with `aria-haspopup`, `aria-controls`, or `aria-expanded="false"`, except `role=tab` (its `aria-controls` names a tab panel; switching it is a selection, D-044): click, wait 300 ms, capture the trigger and the revealed element as its own element candidate (with its markup, its matched CSS and a crop of it alone), press Escape, click outside. Max 3 per page. Never for elements inside forms with `type=submit`. | crop of trigger + an element candidate for the popup |
 | `scrolled` | headers and top navs: computed styles at scroll 400 vs 0 | diff |
+
+The state diff tracks this property set and nothing else (D-088): `background-color`, `background-image`, `color`, `border-color` (the four sides collapsed to one entry when equal, else listed per side), `border-width`, `border-style`, `outline-width`, `outline-style`, `outline-color`, `outline-offset`, `box-shadow`, `opacity`, `transform`, `translate`, `scale`, `rotate`, `filter`, `backdrop-filter`, `text-decoration-line`, `text-decoration-color`, `letter-spacing`, `font-weight`, `padding`, `gap`, `width`, `height`, `cursor`. Rules:
+
+- A delta entry exists only when `from` and `to` differ after normalization (colors to hex or `rgb(r g b / a%)`; transforms decomposed; lengths to px; `none` and `0px 0px 0px 0px transparent` shadows treated as equal).
+- The three `outline-*` entries are dropped when `outline-style` is `none` or `outline-width` is `0px` in both states. (This removes the `outline-color` noise that comes from `* { outline-color: transparent }` resets.)
+- Each entry carries `transition` when the element's resolved `transition-property` covers that property (`all` counts), with the resolved duration and easing, read before the freeze; script-driven motion recorded during the state adds its own timing (D-089).
+- Focus, active and `open` follow the same wait as hover: the freeze settles CSS transitions at once, and only script-driven motion is waited for.
 
 The **Tab walk**: from `body`, press Tab up to 80 times, recording `document.activeElement`'s `data-dse-id` each time; stop when it cycles. Elements reached are `reachedByKeyboard: true`. The walk happens once per page per viewport before per-element state capture.
 
@@ -56,12 +64,13 @@ At 390 px, navs are usually collapsed behind a menu button. The capture attempts
 
 ## Events
 
-`capture · /pricing · 1440 and 390 · 2 screenshots · 1,204 nodes`, `capture · /pricing · hover 14 · focus 9 · tab 23 · open 2`, `capture · /docs · cut at 8000 px`.
+`capture · /pricing · 1440 and 390 · 2 screenshots · 1,204 nodes`, `capture · /pricing · hover 14 · focus 9 · tab 23 · open 2`, `capture · /docs · cut at 8000 px`, and the motion lines in `motion-capture.md` (`capture · /pricing · motion 23 animations · 140 style samples`).
 
 ## Tests
 
 - Snapshot shape against fixtures (counts of element candidates and interactive elements are known).
 - State capture on the clean fixture: the primary button yields hover, focus, active with non-empty diffs; the disabled instance is found.
 - Tab walk reaches the expected sequence on the clean fixture.
+- A planted hover that changes `transform`, `filter`, `opacity` and `box-shadow` yields all four in the delta with their transition timing; a planted element with `outline: none` yields no outline entries on focus; four equal border side colors yield one `border-color` entry.
 - The `open` state captures the dropdown and the mobile menu on the clean and messy fixtures.
 - Dialog auto-dismiss (the messy fixture's contact page has a button that calls `confirm()`; the capture must finish and log the dismissal) and no-form-submission (the messy fixture's signup form sets a `data-submitted` marker on submit; the marker must stay unset after capture).

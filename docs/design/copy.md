@@ -63,20 +63,23 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Component groups: `Buttons` · `Inputs` · `Navigation` · `Cards` · `Feedback` · `Data` · `Overlays` · `Other`
 - Component types: `Button` · `Link` · `Text input` · `Select` · `Textarea` · `Checkbox` · `Radio` · `Toggle` · `Form` · `Nav bar` · `Header` · `Footer` · `Breadcrumb` · `Tabs` · `Pagination` · `Menu` · `Card` · `List row` · `Hero` · `Section header` · `Badge` · `Tag` · `Alert` · `Toast` · `Empty state` · `Table` · `Code block` · `Modal` · `Tooltip` · `Dropdown` · `Avatar` · `Other`
 - States: `Default` · `Hover` · `Focus` · `Active` · `Disabled` · `Error` · `Checked` · `Selected` · `Open` · `Scrolled`
-- Variant names, a color word then a size word, either left out when every variant shares it (`Primary small`, `Ghost`): color words `Primary` · `Secondary` · `Tertiary` · `Outlined` · `Ghost` · `Success` · `Warning` · `Danger` · `Info`, a fourth fill `Variant {n}`; size words `small` · `large`; a single variant `Default`; a repeated name takes a number (`Primary 2`). Generated component names (when the model is not used) are the type label, numbered from the second (`Card`, `Card 2`).
+- Variant names, a color word then a size word, either left out when every variant shares it (`Primary small`, `Ghost`): color words `Primary` · `Secondary` · `Tertiary` · `Outlined` · `Ghost` · `Success` · `Warning` · `Danger` · `Info`, a fourth fill takes its hue word (`Teal`); size words `small` · `large`; third words for variants that would share a name (D-084): `bordered` · `rounded` · `square` · `tight` · `wide` · `bold` · `muted` · `tall` · `short` · `faint` (`Ghost rounded`); a single variant `Default`. Names never carry a number. Generated component names (when the model is not used) are the type label for the first of a type and `{Type label} ({context})` after it (`Button (footer)`, `Button (footer, pricing)`, `Button (footer, second)`), the context in lowercase as the page shows it, the ordinal words `second` · `third` · `fourth` and on.
 - Checks: `Contrast AA` · `Focus visible` · `Tap target` · `Label present` · `Reduced motion`
 - Check descriptions: `Text against the background it actually sits on, at the size it is rendered` · `A visible focus style when reached by keyboard` · `44 × 44 px minimum for touch controls at the mobile viewport` · `Inputs and icon-only buttons have a name a screen reader can announce` · `Animations stop or shorten under prefers-reduced-motion`
-- Type roles (the sample text in TypeScaleRow): `Display` · `Heading 1` · `Heading 2` · `Heading 3` · `Heading 4` · `Body, the reading size` · `Body, small` · `Label` · `Caption` · `Code` · `Other`
+- Type roles (the sample text in TypeScaleRow; D-087): `Display` · `Title` · `Heading` · `Subheading` · `Body` · `Body small` · `Label` · `Eyebrow` · `Caption` · `Code` · `Text`
 - Page reasons: `home` · `nav` · `footer` · `sitemap` · `linked` (the `body` reason) · `forms` · `forms, errors` · `tables, toggles` · `code blocks` · `list template` · `post template` · `badges, timeline` · `empty state` · `about` · `careers` · `app` · `you added it` · `{group} template, 1 of {n}`
 - Framework hints: `Tailwind` · `Bootstrap` · `MUI` · `Chakra` · `CSS-in-JS`; rendered as `{Name} detected`
 - Blocked reasons (Recent runs result line): `Blocked the crawler. Nothing extracted.` · `Login wall. One page extracted.` · `Could not be reached. Nothing extracted.` · `Crawling not allowed. Nothing extracted.` · `Budget was spent. Nothing extracted.` · `Crawler was busy. Nothing extracted.` · `Run limit reached. Nothing extracted.` · `Not a crawlable address.` (shared by `invalid-url` and `private-address`)
 - Run statuses (pills): `Queued` · `Complete` · `Running` · `Blocked` · `Failed` · `Cancelled`
 - Stage display labels for the live log: `queue` · `crawl` (the `discover` stage) · `select` · `capture` · `tokens` · `components` · `previews` · `checks` · `drift` · `exports` · `done`
-- Substages (named after the rail rings they fill): `Palette` · `Type` · `Spacing`
+- Substages (named after the rail rings they fill): `Palette` · `Type` · `Spacing` · `Motion`
 - Event levels: `Info` · `Warning` · `Error`
 - Viewports: `Desktop` · `Mobile`
 - Page statuses: `Pending` · `Captured` · `Failed`
-- Token kinds: `Color` · `Type` · `Spacing` · `Radius` · `Shadow` · `Breakpoint`
+- Token kinds: `Color` · `Type` · `Spacing` · `Radius` · `Shadow` · `Breakpoint` · `Duration` · `Easing`
+- Motion kinds: `Entrance` · `Scroll reveal` · `Scroll progress` · `Scrolled header` · `Hover` · `Loop` · `Open`
+- Motion sources: `CSS transition` · `CSS animation` · `Web Animations` · `Inline style`
+- Component tiers: `Core` · `Page-specific`
 - Color groups: `Brand` · `Neutral` · `Semantic`
 - Semantic roles: `Success` · `Warning` · `Danger` · `Info`
 - Preview modes: `Live` · `Captured`
@@ -85,7 +88,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Drift kinds: `Grays` · `Variants` · `Spacing values` · `Type styles`
 - Evidence kinds: `Color` · `Variant` · `Spacing` · `Type` · `Sprawl`
 - Plans: `Free` · `Pro` · `Team`
-- Export formats: `CSS variables` · `JSON` · `Tailwind config` · `W3C design tokens` · `design-system.md` · `Prompt` · `Component prompt` · `All files`
+- Export formats: `CSS variables` · `JSON` · `Tailwind config` · `W3C design tokens` · `design-system.md` · `Prompt` · `Component prompt` · `Motion CSS` · `Motion JSON` · `All files`
 
 ## Home
 
@@ -118,13 +121,24 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Drift headline patterns, by kind: grays `{n} grays across {pages} pages. {m} would do.` · variants `{n} variants across {k} components. {m} would do.` · spacing `{n} spacing values, {k} of them off the {base} px grid.` · type `{n} type styles where {m} would do.` · nothing to collapse `Nothing to collapse. {colors} colors, {steps} spacing steps, all on the grid.`
 - Drift supporting line: the next two findings as sentences following rule 9, e.g. `Six variants across four components where three would do. Nine spacing values, two of them off the 4 px grid.` Patterns: grays `{n} grays across {pages} pages where {m} would do.` · variants `{n} variants across {k} components where {m} would do.` · spacing `{n} spacing values, {k} of them off the {base} px grid.` · type `{n} type styles where {m} would do.` (D-055)
 - Drift button: `Read the drift report`
-- Section nav: `Tokens` · `Components` · `Checks` · `Drift` · `Exports`
+- Section nav: `Tokens` · `Motion` · `Components` · `Checks` · `Drift` · `Exports`
 - Tokens caption: `Clustered from {rawColors} raw color values, {fontDecls} font declarations and {spacingValues} spacing values.`
 - Color groups: `Brand` · `Neutral · {n} found` · `Semantic`
 - Type card meta: `{families} · {n} styles` (families joined by ·); show-all `Show all {n} styles`; font not loaded caption `{family} did not load; the fallback {fallback} was measured.`
 - Spacing meta: `{n} steps · {base} px base`; breakpoints caption `Breakpoints · {list}` (values joined by ·); off-grid popover `Off the {base} px grid` followed by the page list
 - Radius and shadow labels: `Radius` · `Shadow`; shadow names `sm` · `md` · `lg`; the pill radius `pill`
 - Dark theme caption: `A dark theme was detected and not extracted.`
+- Overlays: label `Overlays` · caption `Translucent colors, as a base color and an alpha.`
+- Site names (D-082): Pill `Named by the site` · provenance line `Named by {variable}` · type tags line `Found on {tags}` (tags joined by ·)
+- Motion section (D-081): title `Motion` · caption `{durations} durations · {easings} easings · {keyframes} keyframes · {patterns} patterns` · empty `No transitions or animations found.` with caption `This site does not move, or its motion is driven by scripts the crawler could not observe.`
+- Duration role labels: `Faster` · `Fast` · `Base` · `Slow` · `Slower`
+- Easing card: value caption `{value}` · site-named caption `Named by the site`
+- Keyframes: `{n} uses` (`1 use`) · unused Pill `Unused`
+- Replay button: `Replay` · while playing `Stop` · reduced motion caption `Replay is off because your system prefers reduced motion.`
+- Pattern trigger phrases: load `On load` · in-view `When it enters the viewport at {pct}% from the bottom` · scroll `Over {range} viewport heights of scrolling` · scrolled header `After {px} px of scrolling` (D-089) · hover `On hover` · open `When it opens` · loop `Loops every {duration}`
+- Stagger phrase: `{count} items · {step} ms apart`
+- Observed tag `Observed` · observed caption `Measured at runtime. Easing not recorded; nearest token: {name}.` · inline-style duration phrase `about {ms} ms`
+- Tier headings `Core components` · `Page-specific components`; filter chip `Core only`
 - Components caption: `{n} found · grouped by type · open one for states, code and tokens`
 - Component chips: `All · {n}` then `{group} · {n}` for each group with a count
 - Component card source line: `First seen on {path} · {pages} pages · {variants} variants` (singular forms `1 page`, `1 variant`)
@@ -141,8 +155,9 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Proposal labels: `Current · {n} grays` · `Proposed · {m} grays`; spread caption `Spread across {pages} pages, {textUses} text uses and {borderUses} border uses.`; absorb line `absorbs {values}` (values joined by a comma and a space); unchanged `unchanged`; footer `Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.`
 - Evidence headers: `Near-duplicate` · `And` · `Delta` · `Seen on` · `Uses`
 - Exports heading: `Exports`; caption `Every export uses the proposed clean set by default. Switch to the raw extraction in each file.`; toggle `Proposed set` · `Raw extraction`; `Download all`
-- Export cards: `CSS variables` / `tokens.css · {size}` · `JSON` / `tokens.json · {size}` · `Tailwind config` / `tailwind.tokens.js · {size}` · `W3C design tokens` / `tokens.w3c.json · {size}` · `design-system.md` / `For a repo's CLAUDE.md or docs · {size}` · `Prompt` / `Whole system or one component, for Claude, ChatGPT or any model`; buttons `Download` · `Copy prompt`
-- MCP card: `MCP server` · caption `Claude Code and Claude Desktop read this run directly. No pasting.` · install line `claude mcp add design-system-extractor -- npx -y @design-system-extractor/mcp --run {id}` · tools caption `Tools exposed: get_tokens · list_components · get_component · get_checks · get_drift · get_prompt`
+- Export cards: `CSS variables` / `tokens.css · {size}` · `JSON` / `tokens.json · {size}` · `Tailwind config` / `tailwind.tokens.js · {size}` · `W3C design tokens` / `tokens.w3c.json · {size}` · `Motion CSS` / `motion.css · {size}` · `Motion JSON` / `motion.json · {size}` · `design-system.md` / `For a repo's CLAUDE.md or docs · {size}` · `Prompt` / `Whole system or one component, for Claude, ChatGPT or any model`; buttons `Download` · `Copy prompt`
+- Component Default line (exports only, not UI; D-083): `Default: background {token} · text {token} · border {width} {token} · radius {value} · padding {values} · font {token} · shadow {token}` with absent parts omitted
+- MCP card: `MCP server` · caption `Claude Code and Claude Desktop read this run directly. No pasting.` · install line `claude mcp add design-system-extractor -- npx -y @design-system-extractor/mcp --run {id}` · tools caption `Tools exposed: get_tokens · list_components · get_component · get_checks · get_drift · get_prompt · get_motion`
 - Footer context: `Run {id} · cost {cost} · Haiku for naming, Sonnet for the report · How it works` and `Share link: {url}` and `Report a problem with this run` and `Show log`
 - Sparse caption: `A small site. The showcase has larger systems to compare against.`
 - Login wall caption: `Only the sign-in page was public. One page, {n} components.`
@@ -151,7 +166,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Not found: `No run with that link.` / `Browse the showcase`
 - Share popover: `Share link` · `Copy` · `Copy as markdown` (copies `[{host} · Design System Extractor]({url})`)
 - Page list footer: `Picked for component coverage, not importance. Legal pages, tag archives and pagination were skipped.`
-- Stage rail labels. Pending: the bare name (`Pages` · `Palette` · `Type` · `Spacing` · `Components` · `Checks` · `Drift`). Running: `Pages · {n} found` · `Pages · capturing {n} of {total}` · `Palette · clustering` · `Type · reading {n} of {total}` (`{total}` is the page count) · `Spacing · measuring` · `Components · clustering` · `Components · naming` · `Checks · running` · `Drift · computing`. Done: `Pages · {n}` · `Palette · {n} colors` · `Type · {n} styles` · `Spacing · {n} steps` · `Components · {n}` · `Checks · {passed} of {applicable}` · `Drift · {n} findings` (`Drift · nothing to collapse` when none)
+- Stage rail labels. Pending: the bare name (`Pages` · `Palette` · `Type` · `Spacing` · `Motion` · `Components` · `Checks` · `Drift`). Running: `Pages · {n} found` · `Pages · capturing {n} of {total}` · `Palette · clustering` · `Type · reading {n} of {total}` (`{total}` is the page count) · `Spacing · measuring` · `Motion · reading` · `Components · clustering` · `Components · naming` · `Checks · running` · `Drift · computing`. Done: `Pages · {n}` · `Palette · {n} colors` · `Type · {n} styles` · `Spacing · {n} steps` · `Motion · {n} durations` (`Motion · none found` when the run has no durations, easings, keyframes or patterns) · `Components · {n}` · `Checks · {passed} of {applicable}` · `Drift · {n} findings` (`Drift · nothing to collapse` when none)
 - Live log label: `Live log` · `Collapse` · `Expand`
 - In-progress footer: `You can leave. This page keeps its link and fills in when you come back.` and `Share link ready: {url}`
 
@@ -166,6 +181,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Tokens label: `Tokens used`; unmapped label `Unmapped`
 - Responsive note: `Stacks at 390 px` · `Changes layout at 390 px`
 - Code tabs: `HTML` · `CSS` · `Tailwind`
+- Motion (D-081): label `Motion` · none `No motion found on this component.` · MotionRow `{state} · {property} · {duration} · {easing}`
 - Actions: `Copy prompt for this component` · `Copy code`
 - Footer: `Seen on {paths} and {n} more. First captured on {path} at {viewport} px.`
 - Phone sheet handle label: `Component details`
@@ -180,6 +196,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Delta captions: `Colors · {n} fewer` / `{n} more` / `unchanged` · `Grays · {n} fewer, still {k} to go` · `Components · {n} new` · `Checks passed · of {a} then {b}` · `Spacing steps · unchanged`
 - Token cards: `Added · {n}` · `Removed · {n}` · `Unchanged · {n}`
 - Change table: `Component` · `Change` · `Before` · `After` · `Checks`; pills `New` · `Changed` · `Removed`
+- Motion heading `Motion`; rows `Durations` · `Easings` · `Keyframes` · `Patterns` (D-089)
 - Buttons: `Open the {date} run`
 - Picker: `Pick a run to compare against` · `Paste another run link`
 - Footer: `Compare is desktop only. On a phone, open either run.`
@@ -228,11 +245,12 @@ Pipeline steps (name · description · who):
 2. `Select pages` · `Candidates are scored for component coverage: pricing, forms, docs, lists, empty states. Pages sharing a template are folded to one. A short text-only model pass picks the final set, within the page cap.` · `Model · Haiku`
 3. `Capture` · `Each page at 1440 and 390 px: DOM, computed styles for every element, screenshots. Controls are hovered, focused and tabbed through so states are captured, not guessed.` · `Deterministic`
 4. `Cluster tokens` · `Raw values become tokens: colors by ΔE, type by family, size, weight and line height, spacing by frequency against a base grid, radii and shadows by exact match. Usage is counted. A short model pass names the colors.` · `Model · Haiku`
-5. `Detect components` · `Elements are fingerprinted by tag, class pattern, computed style and box ratio, then clustered. Each cluster gets a crop, its signature and its states.` · `Deterministic`
-6. `Name and group` · `A model sees each cluster's crop and signature and answers one question: what is this, and which variants belong together. Batched per page, cached rubric, structured output.` · `Model · Haiku`
-7. `Run checks` · `Contrast on real foreground and background pairs, focus visibility, tap target size at the mobile viewport, names for inputs and icon buttons, reduced motion. Numbers, not opinions.` · `Deterministic`
-8. `Compute drift` · `Near-duplicate tokens, off-grid values, variants that differ by a pixel. A proposed clean set is derived that keeps every contrast ratio at or above the current one.` · `Deterministic`
-9. `Write the report and exports` · `The drift narrative and the design-system.md introduction are written from the computed facts. Token files, the prompt and the MCP server are generated directly from the data.` · `Model · Sonnet`
+5. `Motion` · `Transitions, easings, durations and keyframes are read from the stylesheets; entrances, scroll reveals and loops are observed while the page loads and scrolls.` · `Deterministic`
+6. `Detect components` · `Elements are fingerprinted by tag, class pattern, computed style and box ratio, then clustered. Each cluster gets a crop, its signature and its states.` · `Deterministic`
+7. `Name and group` · `A model sees each cluster's crop and signature and answers one question: what is this, and which variants belong together. Batched per page, cached rubric, structured output.` · `Model · Haiku`
+8. `Run checks` · `Contrast on real foreground and background pairs, focus visibility, tap target size at the mobile viewport, names for inputs and icon buttons, reduced motion. Numbers, not opinions.` · `Deterministic`
+9. `Compute drift` · `Near-duplicate tokens, off-grid values, variants that differ by a pixel. A proposed clean set is derived that keeps every contrast ratio at or above the current one.` · `Deterministic`
+10. `Write the report and exports` · `The drift narrative and the design-system.md introduction are written from the computed facts. Token files, the prompt and the MCP server are generated directly from the data.` · `Model · Sonnet`
 
 Cost and limits card: `A typical run costs well under a dollar. The site runs on a fixed daily budget and pauses when it is spent. Each visitor gets {runsPerDay} runs a day and {pageCap} pages per run.` · `Your own key lifts both limits and raises the page cap to {byoPageCap}. It stays in your browser and is sent only with your requests.` · CodeBlock:
 

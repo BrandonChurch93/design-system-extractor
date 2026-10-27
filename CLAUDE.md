@@ -55,6 +55,6 @@ If you find a contradiction, resolve it in favor of the higher document, fix the
 
 ## Stack (settled, do not revisit)
 
-pnpm workspaces monorepo · Next.js App Router with TypeScript · CSS Modules · Motion for presence and layout, GSAP for internals · Playwright with Chromium · BullMQ on Redis · Postgres with Drizzle · S3-compatible storage adapter (MinIO locally, Supabase Storage in production) · Zod schemas shared across packages · Vitest · Anthropic SDK · Vercel (web) · Railway (worker) · Supabase (Postgres, storage) · Upstash (Redis) · MIT license.
+pnpm workspaces monorepo · Next.js App Router with TypeScript · CSS Modules · Motion for presence and layout, GSAP for internals · Playwright with Chromium · BullMQ on Redis · Postgres with Drizzle · S3-compatible storage adapter (MinIO locally, Supabase Storage in production) · Zod schemas shared across packages · Vitest · Anthropic SDK · Vercel (web) · Railway (worker) · Supabase (Postgres, storage) · Upstash (Redis) · MIT license. Motion: the Web Animations API for runtime capture; no animation library is added to the pipeline.
 
 Details and the reasons are in `docs/specs/architecture.md`.

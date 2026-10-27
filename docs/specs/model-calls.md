@@ -21,9 +21,9 @@ At P0, verify the current ids and prices on https://docs.claude.com/en/docs/abou
 | Purpose | Model | Stage | Input | Output | Fallback |
 | --- | --- | --- | --- | --- | --- |
 | Select pages | small | `select` | text table of ≤ 30 page candidates, cap, rules | array of candidate ids | deterministic ranking |
-| Name and type components | small | `components` | batches of 8, four in flight, answers applied by batch (D-066): crop (only if rule confidence < 0.9), fingerprint, text, guess | `{type, name, isComponent, variantHint}[]` | rule type, generated name |
-| Resolve name collisions | small | `components` | text only: pairs of same-name, same-type clusters with their fingerprints | `{same: boolean}[]` | keep separate, suffix names |
-| Name color tokens | small | `tokens` | clustered colors with hue, role, usage contexts | names | deterministic hue-step names |
+| Name and type components | small | `components` | batches of 8, four in flight, answers applied by batch (D-066): crop (only if rule confidence < 0.9), fingerprint, text, guess | `{type, name, isComponent, variantHint}[]` | rule type, generated name (`{Type label} ({context})`, D-084) |
+| Resolve name collisions | small | `components` | text only: pairs of same-name, same-type clusters with their fingerprints | `{same: boolean}[]` | keep separate, the later one takes its context |
+| Name color tokens | small | `tokens` | clustered colors with hue, role, usage contexts; site-named tokens listed as fixed (D-082) | names | deterministic hue-step names |
 | Narrative and intro | large | `drift` | facts JSON, run stats, voice rules | `{narrative, designSystemIntro}` | template text |
 
 Select, collision, token naming and narrative run once per run each; the component call runs once per batch. A 46-component, 31-token run is roughly: select 1.5k in / 0.1k out; components 40k in / 3k out; collision 1k in / 0.1k out; token naming 2k in / 0.4k out; narrative 6k in / 0.6k out. At the small model's price that is a few cents; the narrative on the large model is under ten cents. The worst-case figure (`DSE_WORST_CASE_RUN_USD`, 0.60) assumes a 120-component run with every crop sent.
@@ -61,9 +61,9 @@ Outside production (`NODE_ENV !== 'production'`), the same `BudgetMeter` enforce
 ## Fallbacks (exact)
 
 - Select: deterministic top-N by score with constraints.
-- Component naming: rule type; name `{Type label} {n}` numbered within the type; `isComponent: true`; no variant hint.
-- Collision: keep separate; the later cluster's name gets a numeric suffix.
-- Color naming: the deterministic names from `token-clustering.md`.
+- Component naming: rule type; the type label for the first of a type and `{Type label} ({context})` for later ones (`component-detection.md`, D-084); `isComponent: true`; no variant hint.
+- Collision: keep separate; the later cluster's name takes its context (`Card (docs)`).
+- Color naming: the deterministic names from `token-clustering.md`; site-named tokens keep the site's names.
 - Narrative: `{headline} {supporting[0]} {supporting[1]} The proposed set keeps every passing contrast ratio.`
 - Design-system.md intro: `This design system was extracted from {host} on {date}: {colors} colors, {typeStyles} type styles, {spacingSteps} spacing steps and {components} components across {pages} pages.`
 - The prompt opening is static and never comes from a model (see `exports-and-mcp.md`).
@@ -72,7 +72,7 @@ The log line for each call states `by model`, `by model (retry)`, or `by fallbac
 
 ## Prompts
 
-Prompts live in `packages/pipeline/src/models/prompts/*.md` and are loaded at build time. They state the voice rules (no em dashes, sentence case, the three forbidden words from copy rule 3; the one prompt line that names those words carries the `qa-copy-allow` marker because `pnpm qa:copy` scans the prompts), the enum values verbatim, two or three worked examples, and the output schema in words. They never ask the model to compute numbers; numbers come in as facts.
+Prompts live in `packages/pipeline/src/models/prompts/*.md` and are loaded at build time. They state the voice rules (no em dashes, sentence case, the three forbidden words from copy rule 3; the one prompt line that names those words carries the `qa-copy-allow` marker because `pnpm qa:copy` scans the prompts), the enum values verbatim, two or three worked examples, and the output schema in words. They never ask the model to compute numbers; numbers come in as facts. The color naming prompt has one rule line for site names: site-named tokens are listed as fixed and must be returned unchanged (D-082).
 
 ## Tests
 

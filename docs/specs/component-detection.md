@@ -61,10 +61,13 @@ For each element candidate:
    - Color word: by the semantic role of its background or border token when semantic (`Success`, `Warning`, `Danger`, `Info`); else by rank of usage among the cluster's brand-colored variants (`Primary`, `Secondary`, `Tertiary`); a variant with a transparent background and a border is `Outlined`; with neither background nor border, `Ghost`.
    - Size word: by height bucket relative to the most-used variant: `Small` below it, `Large` above it, nothing for the most-used size.
    - Example, the test set of 3 colors × 2 sizes where the larger size is more used: `Primary`, `Primary small`, `Secondary`, `Secondary small`, `Ghost`, `Ghost small`.
-   The model's `variantHint` is a description of what sets the variants apart, kept for the model's reasoning; it never renames a variant, so the names above are the only names (D-076).
+   - Third word (D-084): when two variants would receive the same name, the first field in this order on which they differ supplies a third word: border (`Bordered` for the one with a visible border), radius (`Rounded` for the larger radius, `Square` for a radius of 0), padding (`Tight` for the smaller, `Wide` for the larger), font weight (`Bold` for the heavier), text color (`Muted` for the lower-contrast one against its background), height (`Tall`, `Short`), background opacity (`Faint` for the more transparent). If the two differ on none of these they are the same variant and are merged. The rule runs over every set of variants that would share a name, a field supplying a word only where its rule tells them apart, until each name is unique or the rest merge; the fourth and later brand fills take the hue word of their ground's color token (`Teal`) before it (D-089). Names are never suffixed with a number. Two ghost buttons that differ only in radius are `Ghost` and `Ghost rounded`.
+   The model's `variantHint` is a description of what sets the variants apart; it may choose among the third words that apply, never add one, and it never otherwise renames a variant (D-076).
 4. **Cross-page merge**: clusters from different pages merge when they share the exact group key, or when their representative fingerprints pass the style merge and their names from the model pass are equal. Same-named clusters that fail the style merge go to the collision call only when their `baseTokens` agree (as in the style merge); a site's own class names that set two clusters apart keep them apart (D-052). A trigger and an action control never merge by name, whatever the model called them (D-070).
 
 A cluster becomes a component when it has at least one instance and is not noise: noise is a container with no interactive descendant, no text, and no image (a layout wrapper), or an element candidate whose area is over 60% of the viewport.
+
+**Tier (D-085).** A component is `core` when it has instances on 2 or more pages, or 3 or more instances on one page, or its type is one of `button`, `input`, `select`, `checkbox`, `radio`, `toggle`, `textarea`, `link`, `badge`, `tag`, `avatar`, `tooltip` and it is the most-used component of that type (D-089: `toggle`, where the addendum wrote `switch`). Everything else is `page`. The UI, the exports and the prompt list core components first under their own heading; page components follow under "Page-specific components". Each component also gets a `slug`, the kebab case of its name, unique in the run (a repeated slug takes the next free ordinal word, as names do).
 
 ## Rule classification
 
@@ -74,9 +77,9 @@ The rules above are applied with these readings (D-052): a popup root revealed b
 
 ## The model pass (Haiku)
 
-Clusters with confidence < 0.9, plus every cluster for naming, go to the model in batches of 8 per call, in first-seen order across pages, four calls in flight (D-066, D-076). Each item carries: the default-state crop (PNG, downscaled to ≤ 512 px wide), the fingerprint summary (tag, role, class tokens, structure), the text sample, the rule guess and confidence, the instance count, and the page paths. The prompt asks for, per item (the model's `type` and `isComponent` are used only for clusters below confidence 0.9; a confident rule keeps its type): `type` from the enum, `name` (1 to 3 words, sentence case, the kind of thing it is: "Primary button", "Pricing card", "Status badge"), `isComponent` (false for layout noise), and `variantHint` (a short phrase describing what distinguishes variants, or null). Output is validated with Zod; on failure for an item, the rule guess and a generated name (`{Type} {n}`) stand. Prompt caching on the rubric. Images are sent only for items whose rule confidence is below 0.9; the rest get text only.
+Clusters with confidence < 0.9, plus every cluster for naming, go to the model in batches of 8 per call, in first-seen order across pages, four calls in flight (D-066, D-076). Each item carries: the default-state crop (PNG, downscaled to ≤ 512 px wide), the fingerprint summary (tag, role, class tokens, structure), the text sample, the rule guess and confidence, the instance count, and the page paths. The prompt asks for, per item (the model's `type` and `isComponent` are used only for clusters below confidence 0.9; a confident rule keeps its type): `type` from the enum, `name` (1 to 3 words, sentence case, the kind of thing it is: "Primary button", "Pricing card", "Status badge"), `isComponent` (false for layout noise), and `variantHint` (a short phrase describing what distinguishes variants, or null). Output is validated with Zod; on failure for an item, the rule guess and a generated name stand. The generated name is the type label for the first component of a type and `{Type label} ({context})` for later ones (D-084, D-089), where context is the nearest ancestor landmark or section name (`header`, `footer`, `nav`, `aside`, a `section` with a heading: that heading's first two words), and when there is none, the page's last path segment (`Button (pricing)`; the home page is `home`). A name still shared adds the page's last path segment (`Button (footer, pricing)`), then an ordinal word (`Button (footer, second)`). Prompt caching on the rubric. Images are sent only for items whose rule confidence is below 0.9; the rest get text only.
 
-A second, text-only call per run (the "collision" call in `model-calls.md`) resolves naming collisions across pages: items with the same name and type but failing the style merge get the model's choice between "same component, different variant" and "different components". Its fallback, and the tie-break on an invalid answer, is to keep them separate and suffix the names (`Card 2`).
+A second, text-only call per run (the "collision" call in `model-calls.md`) resolves naming collisions across pages: items with the same name and type but failing the style merge get the model's choice between "same component, different variant" and "different components". Its fallback, and the tie-break on an invalid answer, is to keep them separate and give the later one its context (`Card (docs)` instead of `Card 2`). A final pass asserts no component or variant name ends in a number; one that does is renamed with the context rule and an event line says so (D-084).
 
 Costs: roughly 1.5k input tokens per item with an image, 300 without; a 46-component run is about 40k input tokens for this stage.
 
@@ -92,7 +95,9 @@ Every instance records `pageId`, `viewport`, `selector`, `bbox`, `variantId`, an
 
 State captures from `capture` are attached to the component by instance; the component's `states` is the union across instances, preferring the first-seen instance's crop for each state. A state present on another instance is still `captured: true` with that instance noted.
 
-`tokensUsed`: for each of the component's default computed values (background, text color, border color, radius, padding steps, font tuple, shadow), the token whose representative matches (ΔE ≤ 2.3 for colors, exact for others) is linked with the property name. Unmatched values are listed under the "Unmapped" label in the panel's token section with the raw value.
+`tokensUsed`: for each of the component's default computed values (background, text color, border color, radius, padding steps, font tuple, shadow, and the durations and easings of its transitions), the token whose representative matches (ΔE ≤ 2.3 for colors, exact for others) is linked with the property name. Tokens used are computed against the raw set during this stage and re-mapped to whichever set an export asks for at export time (`exports-and-mcp.md`), so a token line in any export only ever names tokens present in that export's token block. A test asserts this on every fixture export. Unmatched values are listed under the "Unmapped" label in the panel's token section with the raw value.
+
+**Motion.** After instances and provenance, each component gets its `motion` (transitions per state, animations inside it, the patterns whose target is inside one of its instances) by the rules in `motion-capture.md` (Attachment to components).
 
 ## Responsive variants
 
@@ -104,7 +109,7 @@ Up to 120 components per run; beyond that, drop `other` first, then the lowest i
 
 ## Events
 
-`components · 46 found from 1,842 element candidates · 9 by model`, `components · merged 7 across pages`, `components · 3 noise clusters dropped`.
+`components · 46 found from 1,842 element candidates · 9 by model`, `components · merged 7 across pages`, `components · 3 noise clusters dropped`, `components · 31 core · 15 page-specific`, `components · motion attached to 31 components · 12 patterns`, and, when the final pass renames one, `components · renamed Button 2 to Button (footer)`.
 
 ## Tests
 
@@ -113,4 +118,5 @@ Up to 120 components per run; beyond that, drop `other` first, then the lowest i
 - Variant split on a button set (3 colors × 2 sizes = 6 variants, named correctly).
 - Cross-page merge: the same nav on four pages yields one component with four pages of provenance.
 - Replay tests for the model pass, including a malformed response and a wrong-enum type.
+- Variant names on a crafted set of two ghost buttons differing only in radius yield `Ghost` and `Ghost rounded`; a set differing in nothing nameable merges; the fallback name for a button in a `footer` is `Button (footer)`; no fixture run contains a component or variant name ending in a digit; tier assignment on the clean fixture matches `expected.json`.
 - Fixture evals: component precision and recall by (type, bbox IoU ≥ 0.5) against `expected.json`, and state capture rate.

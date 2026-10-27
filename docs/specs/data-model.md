@@ -61,7 +61,8 @@ Indexes: `host`, `visitor_id, created_at`, `status`, `retention_until`.
   failedDetail?, createdAt, startedAt?, finishedAt?, durationMs?, pipelineVersion,
   viewports: Viewport[], frameworkHint?, darkThemeDetected: boolean, sparse: boolean,
   pages: Page[],
-  tokens: { colors: ColorToken[], type: TypeToken[], space: SpaceToken[], spaceBase: { value: 4 | 8, clear: boolean }, radius: RadiusToken[], shadow: ShadowToken[], breakpoints: number[], rawCounts: { colors, fontDecls, spacingValues, radii, shadows }, families: { name, loaded: boolean, fallback?: string }[] },
+  tokens: { colors: ColorToken[], overlays: OverlayToken[], type: TypeToken[], space: SpaceToken[], spaceBase: { value: 4 | 8, clear: boolean }, radius: RadiusToken[], shadow: ShadowToken[], duration: DurationToken[], easing: EasingToken[], keyframes: Keyframes[], breakpoints: BreakpointToken[], siteVariables: SiteVariable[], rawCounts: { colors, fontDecls, spacingValues, radii, shadows }, families: { name, loaded: boolean, fallback?: string }[] },
+  motion: { patterns: MotionPattern[], truncatedPages: string[], intersectionObservers: number },
   components: Component[],
   checks: { summary: { passed, failed, total, applicable }, byCheck: CheckSummary[] },
   drift: Drift,
@@ -82,11 +83,20 @@ Sections are optional while running and required when complete; the schema has `
 
 ### Tokens
 
-- `ColorToken`: `{ id, name, value (hex, uppercase, with alpha as 8-digit when < 1), oklch: {l, c, h}, group: 'brand' | 'neutral' | 'semantic', semanticRole?: 'success' | 'warning' | 'danger' | 'info', usage: number, uses: { text, background, border, other }, pages: { pageId, count }[], rawValues: { value, count }[], contrastPairs: { fg, bg, ratio, large, where }[] }` where `fg` and `bg` are color token ids and `large` marks text at the large-text size (threshold 3:1)
-- `TypeToken`: `{ id, name, role: 'display' | 'h1' | 'h2' | 'h3' | 'h4' | 'body' | 'body-sm' | 'label' | 'caption' | 'code' | 'other', family, fallbackStack, size, lineHeight, weight, letterSpacing, textTransform?, usage, pages, sample }`
-- `SpaceToken`: `{ id, value, onGrid: boolean, usage, pages, contexts: { padding, margin, gap, layout } }`
-- `RadiusToken`: `{ id, value, isPill: boolean, usage, pages }`
-- `ShadowToken`: `{ id, name: 'sm' | 'md' | 'lg' | string, value, usage, pages }`
+- `ColorToken`: `{ id, name, siteName?: string, value (hex, uppercase, opaque: a color with alpha below 1 is an overlay, D-086), oklch: {l, c, h}, group: 'brand' | 'neutral' | 'semantic', semanticRole?: 'success' | 'warning' | 'danger' | 'info', usage: number, uses: { text, background, border, other }, pages: { pageId, count }[], rawValues: { value, count }[], contrastPairs: { fg, bg, ratio, large, where }[] }` where `fg` and `bg` are color token ids and `large` marks text at the large-text size (threshold 3:1)
+- `OverlayToken`: `{ id, name, siteName?: string, base: tokenId | 'white' | 'black', alpha: number, value, usage, pages, rawValues: { value, count }[] }`, where `value` is `rgb(r g b / a%)` (D-086)
+- `TypeToken`: `{ id, name, siteName?: string, role: TypeRole, family, fallbackStack, size, lineHeight, weight, letterSpacing, textTransform?, uppercase: boolean, tags: string[], usage, pages, sample }`, where `tags` are the HTML tags the tuple was found on, most common first, shown as provenance and never used for naming (D-087)
+- `SpaceToken`: `{ id, value, siteName?: string, onGrid: boolean, usage, pages, contexts: { padding, margin, gap, layout } }`
+- `RadiusToken`: `{ id, value, siteName?: string, isPill: boolean, usage, pages }`
+- `ShadowToken`: `{ id, name: 'sm' | 'md' | 'lg' | string, siteName?: string, value, usage, pages }`
+- `DurationToken`: `{ id, name, siteName?: string, ms, role?: 'faster' | 'fast' | 'base' | 'slow' | 'slower', usage, pages, rawValues: string[] }`
+- `EasingToken`: `{ id, name, value, siteName?: string, usage, pages }`
+- `Keyframes`: `{ name, css, condition?: string, used: boolean, usage, pages, unresolved: string[] }`, where `condition` is the `@media` or `@supports` condition the block sat in
+- `BreakpointToken`: `{ value, usage, maxTwin?: number, siteName?: string }`, where `maxTwin` is a value one more than this one, folded in and not exported (D-089)
+- `SiteVariable`: `{ name, value, resolved, kind?: TokenKind, mapsTo?: tokenId, hashed: boolean, usage, pages, scope: 'root' | 'theme' | 'component' }`
+- `MotionPattern`: the shape in `motion-capture.md` (Classification into patterns)
+
+`pages` on every token kind is `{ pageId, count }[]`, as on colors.
 
 ### Component
 
@@ -104,17 +114,22 @@ Sections are optional while running and required when complete; the schema has `
   preview: Preview,
   code: { html: string, css: string, tailwind?: string },
   checks: CheckResult[],
-  responsiveVariant?: { mobilePreview: Preview, note: string }
+  responsiveVariant?: { mobilePreview: Preview, note: string },
+  tier: ComponentTier,
+  slug: string,
+  motion: ComponentMotion | null
 }
 ```
 
+`slug` is the kebab case of the name, unique in the run, used by `motion.css` and the prompt. `tier` follows the rule in `component-detection.md` (D-085). `ComponentMotion = { transitions: { state: State, property, durationMs, delayMs, easingTokenId?: string, easing?: string }[], animations: { keyframesName, durationMs, easingTokenId?, easing?, iterations: number | 'infinite', trigger: MotionKind }[], patternIds: string[] }`; `motion` is null when the component has no transitions, no animations and no patterns (`motion-capture.md`).
+
 - `Variant`: `{ id, name, instanceIds: string[], delta: { property, value }[], preview: Preview }`
 - `Instance`: `{ id, pageId, viewport, selector, bbox: {x, y, w, h}, variantId, text? }`
-- `StateCapture`: `{ state (State enum), captured: boolean, reason?: string, cropKey?, delta: { property, from, to }[], reachedByKeyboard?: boolean, instanceId? }`
+- `StateCapture`: `{ state (State enum), captured: boolean, reason?: string, cropKey?, delta: { property, from, to, transition?: { durationMs, easing } }[], reachedByKeyboard?: boolean, instanceId? }`, the delta over the property set in `capture-and-states.md` (D-088)
 - `Preview`: `{ mode: PreviewMode, capturedReason?: CapturedReason, cropKey, width, height, diffPct?: number, htmlKey?: string, stateHtmlKeys?: Record<State, string> }`, with `width` and `height` in CSS px (the instance's box when live, the crop's size when captured)
 - `CheckResult`: `{ check (Check enum), status: 'pass' | 'fail' | 'na', detail: string, measured?: Record<string, number | string>, variantId? }`
 
-Enums (`packages/schema/src/enums.ts`), every one with a Zod enum and a label map entry: `RunStatus`, `BlockedReason`, `Stage` (`queue`, `discover`, `select`, `capture`, `tokens`, `components`, `previews`, `checks`, `drift`, `exports`, `done`), `Substage` (`tokens:palette`, `tokens:type`, `tokens:space`), `EventLevel` (`info`, `warn`, `error`), `Viewport`, `PageReason` (`home`, `nav`, `footer`, `sitemap`, `body`, `forms`, `forms-errors`, `tables-toggles`, `code-blocks`, `list-template`, `post-template`, `badges-timeline`, `empty-state`, `about`, `careers`, `app`, `added`, `template`), `PageStatus`, `FrameworkHint` (`tailwind`, `bootstrap`, `mui`, `chakra`, `css-in-js`), `TokenKind` (`color`, `type`, `space`, `radius`, `shadow`, `breakpoint`), `ColorGroup` (`brand`, `neutral`, `semantic`), `SemanticRole` (`success`, `warning`, `danger`, `info`), `TypeRole`, `ComponentType`, `ComponentGroup`, `State`, `PreviewMode` (`live`, `captured`), `CapturedReason` (`diff`, `css-too-large`, `fonts-unavailable`, `not-checked`), `Check`, `CheckStatus` (`pass`, `fail`, `na`), `DriftKind` (`grays`, `variants`, `spacing`, `type`), `EvidenceKind` (`color`, `variant`, `spacing`, `type`, `sprawl`), `PlanId`, `ExportFormat` (`tokens.css`, `tokens.json`, `tailwind.tokens.js`, `tokens.w3c.json`, `design-system.md`, `prompt.md`, `component-prompt.md`, `all.zip`). The UI reads labels for every enum value from one map in `packages/schema/src/labels.ts` so copy stays in one place (the values are in `docs/design/copy.md` under Enum labels).
+Enums (`packages/schema/src/enums.ts`), every one with a Zod enum and a label map entry: `RunStatus`, `BlockedReason`, `Stage` (`queue`, `discover`, `select`, `capture`, `tokens`, `components`, `previews`, `checks`, `drift`, `exports`, `done`), `Substage` (`tokens:palette`, `tokens:type`, `tokens:space`, `tokens:motion`), `EventLevel` (`info`, `warn`, `error`), `Viewport`, `PageReason` (`home`, `nav`, `footer`, `sitemap`, `body`, `forms`, `forms-errors`, `tables-toggles`, `code-blocks`, `list-template`, `post-template`, `badges-timeline`, `empty-state`, `about`, `careers`, `app`, `added`, `template`), `PageStatus`, `FrameworkHint` (`tailwind`, `bootstrap`, `mui`, `chakra`, `css-in-js`), `TokenKind` (`color`, `type`, `space`, `radius`, `shadow`, `breakpoint`, `duration`, `easing`), `ColorGroup` (`brand`, `neutral`, `semantic`), `SemanticRole` (`success`, `warning`, `danger`, `info`), `TypeRole` (`display`, `title`, `heading`, `subheading`, `body`, `body-sm`, `label`, `eyebrow`, `caption`, `code`, `text`; D-087), `ComponentType`, `ComponentGroup`, `State`, `PreviewMode` (`live`, `captured`), `CapturedReason` (`diff`, `css-too-large`, `fonts-unavailable`, `not-checked`), `Check`, `CheckStatus` (`pass`, `fail`, `na`), `DriftKind` (`grays`, `variants`, `spacing`, `type`), `EvidenceKind` (`color`, `variant`, `spacing`, `type`, `sprawl`), `PlanId`, `ExportFormat` (`tokens.css`, `tokens.json`, `tailwind.tokens.js`, `tokens.w3c.json`, `design-system.md`, `prompt.md`, `component-prompt.md`, `motion.css`, `motion.json`, `all.zip`), `MotionKind` (`entrance`, `scroll-reveal`, `scroll-progress`, `scrolled-header`, `hover`, `loop`, `open`), `MotionSource` (`css-transition`, `css-animation`, `waapi`, `inline-style`), `ComponentTier` (`core`, `page`). The UI reads labels for every enum value from one map in `packages/schema/src/labels.ts` so copy stays in one place (the values are in `docs/design/copy.md` under Enum labels).
 
 ### Drift
 
@@ -142,6 +157,7 @@ Enums (`packages/schema/src/enums.ts`), every one with a Zod enum and a label ma
 - Pages: `runs/{runId}/pages/{pageId}/{viewport}.png`, plus the intermediate `…/{viewport}.snapshot.json.gz` and `…/{viewport}.css.json.gz` (deleted after `done` unless `DSE_KEEP_INTERMEDIATE=1`).
 - Components: `runs/{runId}/components/{componentId}/{state}.png` (crops), `…/source-{viewport}.png`, `…/mobile.png` (the 390 px crop for a responsive variant), `…/variants/{variantId}/default.png` (each variant's crop), `…/preview.html` (default state, self-contained), `…/preview-{state}.html` (one per captured state of a live component), `…/variants/{variantId}/preview.html` and `…/variants/{variantId}/preview-{state}.html`.
 - Run: `runs/{runId}/og.png`.
+- Motion adds no keys: patterns carry no crops.
 - Showcase: `showcase/showcase.json`.
 
 Images are PNG at device pixel ratio 2. Crops are the element's bounding box plus 8 CSS px padding on each side; source crops follow the rule in `component-detection.md`.

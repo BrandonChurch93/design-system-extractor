@@ -14,8 +14,13 @@ Use these names exactly, in code, docs, copy and commit messages. A concept with
 - **Template group** · candidates that share a structural fingerprint (all blog posts). One per group is selected.
 - **Viewport** · `desktop` (1440 × 900) or `mobile` (390 × 844), both at device pixel ratio 2.
 - **Capture** · the DOM snapshot, computed styles, matched CSS and screenshots of one page at one viewport.
-- **Token** · a clustered design value with a kind, a name, a representative value, raw values, usage count and pages. Kinds: `color`, `type`, `space`, `radius`, `shadow`, `breakpoint`.
-- **Palette** · the color tokens of a run, grouped `brand`, `neutral`, `semantic`.
+- **Token** · a clustered design value with a kind, a name, a representative value, raw values, usage count and pages. Kinds: `color`, `type`, `space`, `radius`, `shadow`, `breakpoint`, `duration`, `easing`.
+- **Palette** · the opaque color tokens of a run, grouped `brand`, `neutral`, `semantic`.
+- **Overlay** · a translucent color, filed as a base color plus an alpha, never a palette step (D-086).
+- **Site variable** · a CSS custom property the site itself declares; its name beats any generated name (D-082).
+- **Motion pattern** · an observed or declared movement with a start state, an end state, timing and a trigger (`docs/specs/motion-capture.md`).
+- **Observed** · measured at runtime through the Web Animations API or inline-style sampling, as opposed to read from CSS.
+- **Tier** · `core` or `page`; which components the UI and the exports lead with (D-085).
 - **Component** · a cluster of elements across pages that are the same piece of interface. Has a type, a name, variants, states, instances, provenance, tokens used, a preview, and checks.
 - **Component type** · one of the enum in `docs/specs/component-detection.md`. The UI groups types into Buttons, Inputs, Navigation, Cards, Feedback, Data, Overlays, Other.
 - **Variant** · a sub-cluster of a component that differs by a stable style delta (Primary, Secondary, Ghost).
@@ -26,14 +31,14 @@ Use these names exactly, in code, docs, copy and commit messages. A concept with
 - **Check** · one of five measurements: `contrast`, `focus-visible`, `tap-target`, `label`, `reduced-motion`. Status `pass`, `fail`, `na`. The run page section is headed "Automated checks" and its nav label is "Checks"; the drift section is headed "Drift report" with the nav label "Drift".
 - **Drift** · findings about leakage in a site's system: near-duplicate tokens, off-grid values, collapsible variants, plus a proposed clean set and a narrative.
 - **Proposed set** · the clean tokens the drift report derives. Exports default to it; the raw set is one switch away.
-- **Export** · a generated file or text: `tokens.css`, `tokens.json`, `tailwind.tokens.js`, `tokens.w3c.json`, `design-system.md`, the prompt, the zip.
+- **Export** · a generated file or text: `tokens.css`, `tokens.json`, `tailwind.tokens.js`, `tokens.w3c.json`, `motion.css`, `motion.json`, `design-system.md`, the prompt, the zip.
 - **Showcase** · the owner-curated runs listed on the home page. See `docs/specs/showcase.md`.
 - **Recent runs** · the visitor's own runs, remembered in their browser only.
 - **Compare** · two runs side by side. Same site over time, or two sites.
 - **Blocked** · a run that could not proceed: `bot`, `login`, `unreachable`, `robots`, `budget`, `busy`, `visitor-cap`, `invalid-url`, `private-address`. A blocked run never counts against the visitor cap.
 - **Sparse** · a complete run with fewer than 4 components. Not a blocked reason.
-- **Stage** · a pipeline step in canonical order: `queue`, `discover`, `select`, `capture`, `tokens`, `components`, `previews`, `checks`, `drift`, `exports`, `done`. `queue` and `done` are event stages with no module; the others are modules in `packages/pipeline/src/stages/`. Stage events may carry a `substage` (`tokens:palette`, `tokens:type`, `tokens:space`). The live log shows `discover` under its display label `crawl`.
-- **Stage rail** · the horizontal progress strip on an in-progress run: Pages, Palette, Type, Spacing, Components, Checks, Drift. The mapping from stages to rings is in `docs/design/pages.md`.
+- **Stage** · a pipeline step in canonical order: `queue`, `discover`, `select`, `capture`, `tokens`, `components`, `previews`, `checks`, `drift`, `exports`, `done`. `queue` and `done` are event stages with no module; the others are modules in `packages/pipeline/src/stages/`. Stage events may carry a `substage` (`tokens:palette`, `tokens:type`, `tokens:space`, `tokens:motion`). The live log shows `discover` under its display label `crawl`.
+- **Stage rail** · the horizontal progress strip on an in-progress run: Pages, Palette, Type, Spacing, Motion, Components, Checks, Drift. The mapping from stages to rings is in `docs/design/pages.md`.
 - **Run events** · the stored event rows (`run_events`). **Live log** · the same events as the reader sees them on the run page.
 - **BYO key** · a visitor's own Anthropic API key, kept in their browser, sent per request, never stored server side.
 - **Visitor** · an anonymous browser identified by the `dse_v` cookie, with an IP fallback.

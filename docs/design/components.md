@@ -12,7 +12,7 @@ Type styles and sizes named below are the ones in `docs/design/design-system.md`
 
 **Footer** · Two lines on `bg` above a `line` rule: left, "Open source · MIT · Built by Brandon Church" (link to his portfolio), "About · Privacy · Terms", and "Built with" linking `/catalog`, all `caption`; right, context text the page supplies (a share link, a cost line). Phone: stacks.
 
-**SectionNav** · The run page's section links: Tokens, Components, Checks, Drift, Exports. Pills (`radius-pill`), `label` weight 500; the active section has `ink` ground and `inverse-ink` text. Sticky at top 0 once the header scrolls past, on `bg` with a `line` rule beneath that draws in when it sticks. Active state follows scroll position (IntersectionObserver). Phone: horizontally scrollable, no wrap, 20 px edge fade.
+**SectionNav** · The run page's section links: Tokens, Motion, Components, Checks, Drift, Exports. Pills (`radius-pill`), `label` weight 500; the active section has `ink` ground and `inverse-ink` text. Sticky at top 0 once the header scrolls past, on `bg` with a `line` rule beneath that draws in when it sticks. Active state follows scroll position (IntersectionObserver). Phone: horizontally scrollable, no wrap, 20 px edge fade.
 
 **Button** · Variants `primary` (`ink` ground, `inverse-ink` text), `ghost` (`surface` ground, `line` border, `line-strong` on hover), `inverse` (on `inverse-bg`: `inverse-ink` ground, `ink` text). Sizes `md` 44 high `space-5` side padding, `sm` 36 high `space-4`, `xl` 56 high `space-6` (the Extract button only). Optional leading Lucide icon 16. States: hover, focus-visible, active (scale 0.985), disabled (50% opacity, no pointer). Never full width except, on phones, the Extract button and the buttons of the state pages' forms (D-059).
 
@@ -20,7 +20,7 @@ Type styles and sizes named below are the ones in `docs/design/design-system.md`
 
 **Tag** · A token or category chip: 24 high, `tag` mono, `surface-tint` ground, `radius-pill`. Static text, except inside the component panel where a Tag is a button that opens the token's Popover.
 
-**Pill** · A status marker: 24 high, `caption` weight 600, `radius-pill`, transparent ground, 1 px border. Variants: `solid` (`ink` border and text: Complete, New) and `soft` (`line-strong` border, `muted` text: Changed, Removed, Blocked, Running, Failed, Cancelled, Deterministic). A Pill with a filled ground (`ink` ground, `inverse-ink` text) is the `inverse` variant, used for "Model · Haiku" and "Model · Sonnet".
+**Pill** · A status marker: 24 high, `caption` weight 600, `radius-pill`, transparent ground, 1 px border. Variants: `solid` (`ink` border and text: Complete, New) and `soft` (`line-strong` border, `muted` text: Changed, Removed, Blocked, Running, Failed, Cancelled, Deterministic). A Pill with a filled ground (`ink` ground, `inverse-ink` text) is the `inverse` variant, used for "Model · Haiku" and "Model · Sonnet". The `soft` variant also carries `Named by the site` on a token that took the site's own name (D-082) and the kind of a motion pattern.
 
 **Card** · `surface`, `line-soft` border, `radius-lg`, `shadow-card`. Padding `space-5` (`space-4` phone). A Card that is a link lifts on hover and carries the focus ring. Cards never nest more than one level.
 
@@ -76,7 +76,7 @@ Type styles and sizes named below are the ones in `docs/design/design-system.md`
 
 **Swatch** · Sizes: `xl` 96 high fluid width with `radius-md` and `shadow-swatch`; `token` 96 wide × 48 high with `radius-sm` (the width carries the hex and usage caption beneath, D-037); `mini` 36 × 36 with `radius-sm`; `strip` (used by PaletteStrip). Near-white values get the inner `line-soft` border. Below `xl` and `token`: hex (`hex`) and a usage caption ("navy · 412 uses"). Every Swatch except `strip` is a button that opens TokenPopover.
 
-**TokenPopover** · The provenance of a token (D-008): value, name, usage count, the pages it appears on with counts, the raw values it absorbed, and for colors the contrast ratios of the text pairs it is used in. A 360-wide Popover (a Sheet on phones).
+**TokenPopover** · The provenance of a token (D-008): value, name, usage count, the pages it appears on with counts, the raw values it absorbed, and for colors the contrast ratios of the text pairs it is used in. A site-named token shows the `Named by the site` Pill beside its name and the line `Named by {variable}`; a type token lists the tags it was found on. A 360-wide Popover (a Sheet on phones).
 
 **DriftHeadline** · A Card on `inverse-bg`: the headline sentence (`drift`, `inverse-ink`), a supporting line (`body-sm`, `inverse-muted`), and an `inverse` Button "Read the drift report" that scrolls to Drift. Wipe entrance for the sentence. Phone: stacks, button full width.
 
@@ -90,11 +90,11 @@ Type styles and sizes named below are the ones in `docs/design/design-system.md`
 
 **ShadowSample** · 44 × 44 `surface` boxes carrying each extracted shadow, labeled sm, md, lg (or the site's own names if they could be inferred).
 
-**ComponentFilter** · A ChipGroup by type group with counts, from copy. Groups with zero are omitted.
+**ComponentFilter** · A ChipGroup by type group with counts, from copy. Groups with zero are omitted. After the group chips, a `Core only` Chip that toggles (`aria-pressed`, not part of the radio group), on by default when the run has more than 24 components; on, the page-specific group is hidden (D-085, D-089).
 
 **ComponentCard** · A Card that is a link to the component. Preview region 152 high on `surface-tint` with the component's default-state preview centered (live or captured, per `docs/specs/preview-fidelity.md`), a `line-soft` rule below. Body: name (`h3`) left and CheckBadge right; the source line (`caption` `muted`) from copy; StatesStrip; a wrapping row of up to 4 Tag tokens. Reveal entrance. A captured preview shows a `tag` "Captured" at the preview's top right.
 
-**ComponentGrid** · 3 / 2 / 1 columns, `space-5` gap, 6 shown by default with "Show all {n} components" (ghost Button) beneath; showing all reveals the rest in staggers of 12.
+**ComponentGrid** · 3 / 2 / 1 columns, `space-5` gap, 6 shown by default with "Show all {n} components" (ghost Button) beneath; showing all reveals the rest in staggers of 12. When a run has both tiers, the Components section holds two grids under `h3` headings, "Core components" first and "Page-specific components" second; on phones the second heading is a disclosure button (`aria-expanded`, Lucide `chevron-down`), collapsed by default.
 
 **StatesStrip** · A row of state names in `caption` `muted`, each preceded by an 8 px dot: filled `ink` for a captured state, outlined (`muted` 1 px border) for a state the component has but was not captured. Each state is a button that opens a Popover with the state's crop and, for an uncaptured state, the reason. Order follows the state enum.
 
@@ -112,17 +112,37 @@ Type styles and sizes named below are the ones in `docs/design/design-system.md`
 
 **VariantCollapseList** · For variant and type merges: each row shows the two variants side by side as previews and the delta in words.
 
-**ExportCard** · A Card: name (`h3`), file name and size (`meta` `muted`), a `sm` ghost Button "Download" or "Copy prompt". The MCP card spans the full width with a CodeBlock holding the install line and a caption listing the tools. Above the grid: the set toggle (a two-Chip ChipGroup "Proposed set" / "Raw extraction") on the left and a `sm` ghost Button "Download all" on the right.
+**ExportCard** · A Card: name (`h3`), file name and size (`meta` `muted`), a `sm` ghost Button "Download" or "Copy prompt". Eight cards: the six of v1 plus Motion CSS and Motion JSON (D-089). The MCP card spans the full width with a CodeBlock holding the install line and a caption listing the tools. Above the grid: the set toggle (a two-Chip ChipGroup "Proposed set" / "Raw extraction") on the left and a `sm` ghost Button "Download all" on the right.
 
 **SharePopover** · Opened by Share: the run URL in a read-only Input with a Copy button, and "Copy as markdown".
 
 ## In-progress run
 
-**StageRail** · A Card holding seven stages in a row: a ring (20 px: filled `ink` with a check for done, dashed `ink` border for running, `line-strong` border for pending) and a label (`label` weight 600 for done and running, `muted` for pending) with a live count where known. A hairline connector draws between rings as stages complete. The stage-to-ring mapping is in `pages.md`. Phone: wraps to two rows.
+**StageRail** · A Card holding eight stages in a row (Pages, Palette, Type, Spacing, Motion, Components, Checks, Drift; D-089): a ring (20 px: filled `ink` with a check for done, dashed `ink` border for running, `line-strong` border for pending) and a label (`label` weight 600 for done and running, `muted` for pending) with a live count where known. A hairline connector draws between rings as stages complete. The stage-to-ring mapping is in `pages.md`. Phone: wraps to two rows.
 
 **PagesCard** · The list of selected pages with reasons, filling as discovery completes, same rows as PageListPopover.
 
-**RegionSkeleton** · The skeleton for each run page region at its real height: palette (8 swatches at 96 high), type (8 rows), spacing (9 bars), components (the filter row, 6 cards in two rows at desktop, the Show all button), checks (summary plus 5 rows), drift (3 numbers), exports (the download row, 6 cards plus the MCP card). Heights are the clean fixture's at 1440, the typical result, so nothing below a region moves when it fills; drift varies with what a site gets wrong and animates its height (D-080).
+**RegionSkeleton** · The skeleton for each run page region at its real height: palette (8 swatches at 96 high), type (8 rows), spacing (9 bars), motion (the duration strip, 2 easing cards, 4 pattern rows), components (the filter row, 6 cards in two rows at desktop, the Show all button), checks (summary plus 5 rows), drift (3 numbers), exports (the download row, 8 cards plus the MCP card). Heights are the clean fixture's at 1440, the typical result, so nothing below a region moves when it fills; drift varies with what a site gets wrong and animates its height (D-080).
+
+## Motion (D-081)
+
+Every motion primitive follows the Card, Chip, Pill and CodeBlock tokens. Curves are a 1.5 px `ink` stroke on a `surface-tint` ground with a `line` baseline; a replay track is a `line` hairline and its dot is 8 px `ink`. Every one has a catalog entry in every state at desktop and 390.
+
+**DurationStrip** · One horizontal scale from 0 to the longest duration: every duration a labeled tick (`hex` value above, a 1 px `ink` mark), the role under the ticks that have one (`caption` `muted`), the most used marked with a filled 8 px `ink` dot. Ticks closer than 36 px stagger their labels onto two lines. Phone: the scale keeps the full width and labels stagger.
+
+**EasingGrid** · EasingCards in a 3 / 2 / 1 grid, `space-5` gap.
+
+**EasingCard** · A Card: the name (`h3`) with the `Named by the site` Pill when the site named it, the value in `code` (wrapping at commas), a 64 × 40 SVG of the curve, and a 120 px replay track with a ReplayButton. `steps()` draws as a staircase and `linear()` as its stops joined.
+
+**KeyframesList** · A Card of rows: name in `meta`, usage (`{n} uses`) and pages in `caption` `muted`, an `Unused` Pill `soft` when `used` is false, and a disclosure that expands a CodeBlock with the block's CSS.
+
+**PatternList** · A Card of PatternRows divided by `line-soft` rules, in the document's order.
+
+**PatternRow** · Kind Pill (`soft`), the selector in `code` or the component name as a link that opens the panel, the trigger in words (`caption`), start → end as two Swatch `mini` for a color or two value Tags otherwise, duration and easing in `meta`, the `Observed` Tag when observed with the observed caption, the stagger phrase when staggered, and a ReplayButton that plays start to end on the row's 40 × 40 preview chip (a `surface-tint` square carrying an 18 × 18 `ink` block that takes the pattern's start and end values). Phone: stacks, Replay last.
+
+**MotionRow** · One line in the panel: `{state} · {property} · {duration} · {easing}` in `meta`, the easing name a Tag that opens its TokenPopover when it is a token.
+
+**ReplayButton** · A `sm` ghost Button with a play glyph (Lucide `play`) and the label `Replay`; while playing, a stop glyph (Lucide `square`) and `Stop`. It plays once, over the run's base duration (300 ms when the run has none) for an easing and over the pattern's own duration for a pattern. With reduced motion it jumps to the end state, disables itself and shows the reduced-motion caption beneath.
 
 ## Component panel and page
 
@@ -131,11 +151,12 @@ Type styles and sizes named below are the ones in `docs/design/design-system.md`
 1. **Variants** · ChipGroup of variant names and a preview ground (`surface-tint`, `radius-lg`, `space-6` padding) showing the selected variant's default state at 1:1. Caption at right: the fidelity caption from copy.
 2. **Source** (D-008; the UI name for provenance) · The source crop with the component outlined by a 2 px `ink` rectangle. The crop is the element's bounding box plus 16 px on every side, never smaller than 320 × 240 CSS px, scaled to fit the panel width. Beneath: the page path as a link to the full capture, the viewport, the CSS selector in `code`, and the page list with a "{n} more" button that expands it. A "Show on page" Button opens the CaptureViewer: a full-screen lightbox (Sheet on phones) showing the page capture image for that viewport, scrolled so the component is in view, with the component outlined by a 2 px `ink` rectangle and a Close button; Escape closes it.
 3. **States** · A 5-column grid of the captured states rendered (live) or cropped (captured), each labeled in `caption`. Missing states are listed after with reasons.
-4. **Checks** · Rows: check name left, result right with the detail string from `docs/specs/checks.md`. Rows for other variants that fail are listed after a rule with the variant name in `muted`.
-5. **Tokens used** · Tag row; each opens TokenPopover. Values that map to no token are listed after a rule as "Unmapped" with the raw value in `hex`.
-6. **Code** · Tabs HTML, CSS, and Tailwind (the Tailwind tab only when the run's framework hint is `tailwind`) over a CodeBlock. The HTML is the sanitized extracted markup; the CSS is the extracted declarations with token variables substituted where a value maps (the component's own rules, no preview scaffolding; colors, space steps in padding, margin and gap, radius steps and whole shadows, named as `tokens.css` names them, D-069).
-7. Actions: primary "Copy prompt for this component", ghost "Copy code".
-8. Footer caption from copy.
+4. **Motion** (D-081) · One MotionRow per transition (state, property, duration, easing) and per animation; attached patterns listed as PatternRows with Replay. "No motion found on this component." when the component's motion is null.
+5. **Checks** · Rows: check name left, result right with the detail string from `docs/specs/checks.md`. Rows for other variants that fail are listed after a rule with the variant name in `muted`.
+6. **Tokens used** · Tag row; each opens TokenPopover. Values that map to no token are listed after a rule as "Unmapped" with the raw value in `hex`.
+7. **Code** · Tabs HTML, CSS, and Tailwind (the Tailwind tab only when the run's framework hint is `tailwind`) over a CodeBlock. The HTML is the sanitized extracted markup; the CSS is the preview's reset-filtered rules with token variables substituted where a value maps (the component's own rules, no preview scaffolding; colors, space steps in padding, margin and gap, radius steps, whole shadows, durations and easings, named as `tokens.css` names them, D-069, D-083), every other custom property resolved or a declared site variable.
+8. Actions: primary "Copy prompt for this component", ghost "Copy code".
+9. Footer caption from copy.
 
 Phone: a Sheet at 92% height with the same sections, the states grid at 3 columns.
 
@@ -152,6 +173,8 @@ Phone: a Sheet at 92% height with the same sections, the states grid at 3 column
 **TokenDiff** · Three Cards: Added (swatches with name and where), Removed (a swatch row and a caption), Unchanged (a sentence).
 
 **ChangeTable** · Columns from copy; the Change column holds a Pill: `solid` New, `soft` Changed or Removed.
+
+**MotionDiff** · A Card holding a table with rows Durations, Easings, Keyframes and Patterns and the columns of CompareColumns (Before and After, or A and B), counts in mono (D-089).
 
 Phone: Compare renders the two CompareColumns stacked, then a StateCard-style notice from copy with the two run links. Nothing else.
 

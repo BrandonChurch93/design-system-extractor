@@ -700,3 +700,83 @@ Decision:
 - The showcase script reads its content from `DSE_SHOWCASE_CONTENT` when set, so its `--remote`, `--only` and `--refresh-links` paths run in a test against a stub of the admin API without touching the committed content.
 Reasoning: the documents ask for a page that fills without moving and for published numbers from a live run; the seams let tests prove the script's every path.
 Affects: `docs/design/components.md`, `docs/evals.md`, `apps/web/components/run/RegionSkeleton.tsx`, `apps/web/components/run/RegionSkeleton.module.css`, `apps/web/components/run/TokensSection.tsx`, `scripts/evals.ts`, `scripts/showcase/index.ts`, `tests/e2e/motion.spec.ts`, `scripts/test/showcase.int.test.ts`.
+
+## D-081 · The motion layer is part of the system
+
+Date: 2026-10-27 · Context: v1.1, the owner's first real runs (linear.app). Transitions, easings, durations, keyframes, entrances and scroll reveals were read and discarded. The v1.1 addendum listed this decision as D-027; that id was already taken (D-089).
+Decision: durations and easings are token kinds; keyframes and runtime motion patterns are captured and exported; patterns measured at runtime rather than read from CSS are labeled observed. The motion layer is specified in `docs/specs/motion-capture.md`.
+Reasoning: a design system without its motion rebuilds as a static page, which the first real run proved.
+Affects: `docs/specs/motion-capture.md`, `docs/specs/data-model.md`, `docs/specs/capture-and-states.md`, `docs/specs/token-clustering.md`, `docs/specs/component-detection.md`, `docs/specs/exports-and-mcp.md`, `docs/specs/drift.md`, `docs/design/pages.md`, `docs/design/components.md`, `docs/design/copy.md`, `docs/glossary.md`, `docs/evals.md`.
+
+## D-082 · The site's own names win
+
+Date: 2026-10-27 · Context: v1.1. The site's own token names (`--color-text-tertiary`, `--radius-rounded`, `--text-small-size`) were discarded in favor of generated hue steps. The addendum's D-028.
+Decision: a non-hashed custom property that resolves to a token's value names the token, for every kind, before the deterministic and model names. The model never renames a site-named token.
+Reasoning: the site's names are its design system; generated names are a fallback.
+Affects: `docs/specs/token-clustering.md`, `docs/specs/model-calls.md`, `docs/specs/data-model.md`, `docs/specs/exports-and-mcp.md`.
+
+## D-083 · Exported component code is the preview CSS
+
+Date: 2026-10-27 · Context: v1.1. Component code shipped with unresolved variables (`var(--ease-out-quad)`, `var(--sx-1fj52yw)`) and with resets (`* { box-sizing }`, a 7,659-character `unset` dump). The addendum's D-029. Supersedes D-069 where they differ: code is still the component's own rules with token variables, never the preview's scaffolding, but it is now the reset-filtered, resolved CSS the preview renders from.
+Decision: component code in every export is the preview's rules: scoped selectors, resets filtered, every custom property either a token of that export, a site variable that export declares, or resolved inline. Raw matched CSS is never exported. A test forbids an undeclared `var()` reference in any export.
+Reasoning: code a consumer cannot resolve is not code.
+Affects: `docs/specs/preview-fidelity.md`, `docs/specs/exports-and-mcp.md`, `docs/design/components.md`.
+
+## D-084 · Names are never numeric
+
+Date: 2026-10-27 · Context: v1.1. Variant and component names leaked the numeric fallback (`Ghost 2` to `Ghost 5`, `Variant 4`, `Button 28`). The addendum's D-030. Supersedes the numbering in D-052 (variant names, the fallback `Card 2`) and in copy.md.
+Decision: variants that would share a name get a third word from the first field on which they differ, or merge; fallback component names take a context; a final pass renames any component or variant name that ends in a digit and logs it.
+Reasoning: `Button 28` and `Ghost 5` tell a reader nothing.
+Affects: `docs/specs/component-detection.md`, `docs/specs/model-calls.md`, `docs/design/copy.md`, `docs/evals.md`.
+
+## D-085 · Components have a tier
+
+Date: 2026-10-27 · Context: v1.1. Page-specific one-offs were presented with the same weight as the core set. The addendum's D-031.
+Decision: each component is `core` or `page` by the rule in `component-detection.md`; the UI, the exports and the prompt lead with core components.
+Reasoning: a model building from the export should start from the system, not from a one-off.
+Affects: `docs/specs/component-detection.md`, `docs/specs/exports-and-mcp.md`, `docs/design/pages.md`, `docs/design/copy.md`.
+
+## D-086 · Translucent colors are overlays
+
+Date: 2026-10-27 · Context: v1.1. Translucent colors were filed as palette steps (`--color-gray-300: #BAC2D699`). The addendum's D-032. Supersedes the part of D-048 that formed color tokens with alpha below 1: those are now overlays, and near-duplicate pairs are formed among opaque palette tokens only.
+Decision: a raw color with alpha below 1 is an overlay, filed as a base color plus an alpha, in its own group, never a palette step, and never counted in drift's gray or brand counts.
+Reasoning: `gray-300: #BAC2D699` is not a gray.
+Affects: `docs/specs/token-clustering.md`, `docs/specs/data-model.md`, `docs/specs/drift.md`, `docs/specs/exports-and-mcp.md`, `docs/design/pages.md`.
+
+## D-087 · Type roles come from size ratios, not tags
+
+Date: 2026-10-27 · Context: v1.1. Type names were tag-derived and meaningless (`h2-4`, `other-10`, an `h2` that is a 15 px label). The addendum's D-033.
+Decision: the role set is `display`, `title`, `heading`, `subheading`, `body`, `body-sm`, `label`, `eyebrow`, `caption`, `code`, `text`, assigned from each tuple's size relative to body; tags are recorded as provenance; several tuples of one role take words, never numbers.
+Reasoning: sites use heading tags for layout, and tag-derived roles named a 15 px label `h2`.
+Affects: `docs/specs/token-clustering.md`, `docs/specs/data-model.md`, `docs/design/copy.md`, `docs/evals.md`.
+
+## D-088 · State diffs track a fixed property set with noise rules
+
+Date: 2026-10-27 · Context: v1.1. State diffs recorded colors only, never transform, filter, opacity or shadow, and carried noise (four `border-*-color` lines, `outline-color` on elements with no outline). The addendum's D-034.
+Decision: the state diff tracks the property set in `capture-and-states.md` and nothing else; equal border sides collapse to one entry; outline entries are dropped when there is no outline in either state; each entry carries the transition timing that covers its property.
+Reasoning: a hover that lifts and glows was recorded as a color change.
+Affects: `docs/specs/capture-and-states.md`, `docs/specs/data-model.md`, `docs/evals.md`.
+
+## D-089 · Rulings from merging the v1.1 addendum
+
+Date: 2026-10-27 · Context: P16's first step merges `docs/v1-1-addendum.md` and `docs/specs/motion-capture.md` into the kit. Read against the documents and the code, the two left some questions open and in a few places contradicted the kit or each other.
+Decision:
+- Ids. The addendum asked for D-027 to D-034, which P0 to P2 already used; decisions are never renumbered, so they are D-081 to D-088 in the addendum's order, and the plan's P16 names those.
+- Pointers. `motion-capture.md` no longer points at the addendum; it names the documents the addendum merged into. Its easing table lives at `packages/pipeline/src/tokens/easing-table.ts`, because `stages/` holds only each stage's entry module (`architecture.md`).
+- Freeze and states. The addendum said the freeze happens after state capture and that this "was already the order". It was not: since P3 the freeze comes before states (`capture-and-states.md` steps 3 and 7, `stages/capture.ts`), and it must, because every crop and the full-page screenshot need a still page. The order stays. With CSS transitions and animations disabled, a state's `to` values are the settled ones at once, which is what the transition-aware wait was for. The wait therefore applies to script-driven motion: after the 150 ms settle, while a Web Animations API animation runs on the element or inside it, capture waits for it to end (its longest duration plus delay plus 50 ms, 1,200 ms at most in all). A delta entry's `transition` comes from the element's resolved `transition-*` values, read before the freeze, and from Web Animations records taken during that state. The freeze also ends running Web Animations API animations (finite ones finished, infinite ones cancelled), as "freeze ends every running animation" says. An `open` pattern is recorded from Web Animations records during the `open` capture; a popup's CSS transitions attach to its component as `open` transitions.
+- Static motion is read from the computed `transition-*` and `animation-*` longhands of every element in the snapshot taken before the freeze, which are the matched declarations already resolved; usage counts elements.
+- Delays are not durations. A `transition-delay` is an offset, and a stagger's delays (0, 60, 120 ms) would otherwise be duration tokens and sprawl on every staggered site; delays stay in `delayMs` and `stagger`.
+- Patterns gain `instances` and `pageIds` (deduplication produces them); an `in-view` trigger's value is the fraction of the viewport height from the bottom at which it fired; a `scrolled-header` pattern's trigger is `scroll` with its value in px (400), worded `After {px} px of scrolling`.
+- design-system.md puts Motion after Shadow and before Breakpoints, as the addendum's section list and `tokens.css` do; motion-capture.md's "after Breakpoints" is corrected.
+- Tier. The type list named `switch`, which is not a component type; it is `toggle`.
+- Fallback component names. The first component of a type keeps the bare type label, as before; later ones take `{Type label} ({context})`. A name still shared adds the page's last path segment (`Button (footer, pricing)`), then an ordinal word (`Button (footer, second)`). The home page's segment is `home`.
+- Variant words. The third-word rule runs over every set of variants that would share a name, field by field, a field supplying a word only where its rule tells them apart, until each name is unique or the rest merge. The fourth and later brand fills, which were `Variant {n}`, take the hue word of their ground's color token (`Teal`), then the third-word rule.
+- Type words. Among tuples that would share a name, ordered by size then weight descending, the first keeps it and each later tuple takes the first word that applies against the first tuple: weight (`-strong` heavier, `-soft` lighter), size (`-lg`, `-sm`), tracking (`-wide`); a name still taken takes the next word that applies, and a tuple with none left merges into the earlier one.
+- Site names per kind. A site-named token's name is the variable's name without `--` and without its kind's export prefix (`color-` or `clr-`, `space-` or `spacing-`, `radius-`, `shadow-`, `breakpoint-`), and for type without a trailing `-size` or `-font-size`; durations and easings keep the whole name (`ease-out-quart`). The export prefixes then give back the site's own variable (`--color-text-tertiary`, `--radius-rounded`). A generated name equal to a site name of its kind takes the collision letter (D-051). Names starting `--tw-` (Tailwind's internal plumbing) are listed like hashed names and never name a token. Breakpoints become `BreakpointToken`s (`{ value, usage, maxTwin?, siteName? }`); data-model.md had a bare number list.
+- Overlays and contrast. Contrast pairs are recorded for opaque text tokens only; translucent text is left to the checks stage, which composites it.
+- The run page. The stage rail has eight rings (`components.md` said seven) with the labels `Motion · reading` and `Motion · {n} durations` (`Motion · none found`). Exports gain two cards, `Motion CSS` and `Motion JSON`; eight cards leave no single-card row at three columns or two. Compare's motion rows are a Motion card under Tokens with Before and After columns. How it works gains a tenth pipeline step, `Motion`, after Cluster tokens. The MCP card lists `get_motion`. The `Core only` filter is a toggle Chip (`aria-pressed`) after the group chips; on phones the Page-specific heading is a disclosure. The `Named by the site` Pill shows in the TokenPopover and on EasingCards (a swatch has no room for it). The Replay dot runs over the run's base duration, 300 ms when the run has none. Replays play a site's own properties inside their chip on demand, an exemption motion.md now states.
+- Copy. Token kind labels stay singular like the rest of the list (`Duration`, `Easing`; the addendum wrote the plurals), and the motion export formats are labeled like the other cards, `Motion CSS` and `Motion JSON`, with the file names on the card's second line. copy.md gains what the primitives show and the addendum did not word: the `Overlays` label, the type tags line `Found on {tags}`, the keyframes usage line and the `Unused` Pill, the scrolled-header trigger phrase, the Motion rail labels, the third words and ordinal words.
+- Hashed names. The addendum's "6 or more characters of mixed letters and digits with no vowels pattern" is read as 6 or more characters mixing letters and digits; "no vowels pattern" names no test a build can run.
+- The gate's "no name ending in a digit" means component and variant names, as component-detection.md's final pass says; token names such as `gray-100` and `duration-160` end in digits by design.
+Reasoning: each settles a question the addendum left open, toward the closest faithful reading; the freeze order follows the code and the capture spec because the addendum's premise about it was mistaken, and its goal (settled values, timing attached) holds.
+Affects: `docs/specs/motion-capture.md`, `docs/specs/capture-and-states.md`, `docs/specs/token-clustering.md`, `docs/specs/component-detection.md`, `docs/specs/data-model.md`, `docs/specs/exports-and-mcp.md`, `docs/design/pages.md`, `docs/design/components.md`, `docs/design/copy.md`, `docs/design/motion.md`, `docs/plan.md`.

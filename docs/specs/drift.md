@@ -4,7 +4,7 @@ Stage `drift`. Where a site's system is leaking: tokens that are too close to be
 
 ## Findings
 
-**Near-duplicate colors.** Pairs of color tokens in the same group (neutral with neutral, brand with brand within the same hue band) whose alphas match within 0.05 (a translucent shadow color is not a duplicate of its opaque base, D-048) and whose representatives are within ΔE 6 (neutrals) or ΔE 8 (chromatic). The clustering threshold (2.3) already merged what is imperceptible; this finds what is perceptible but pointless. Each finding: the two tokens, the ΔE, the pages where both appear, and both usage counts.
+**Near-duplicate colors.** Pairs of palette color tokens in the same group (neutral with neutral, brand with brand within the same hue band) whose representatives are within ΔE 6 (neutrals) or ΔE 8 (chromatic). Palette tokens are opaque; overlays are never paired and never count toward the gray or brand counts (D-048, D-086). The clustering threshold (2.3) already merged what is imperceptible; this finds what is perceptible but pointless. Each finding: the two tokens, the ΔE, the pages where both appear, and both usage counts.
 
 **Raw spread.** For each color token, the number of raw values it absorbed. Reported in the Tokens caption and as evidence rows when a token absorbed 4 or more raw values ("#6B6B6B written 6 ways"). Raw spread is evidence only: it is never a finding, never changes the numbers or the headline, and does not count as drift on a fixture that expects none.
 
@@ -16,6 +16,8 @@ Stage `drift`. Where a site's system is leaking: tokens that are too close to be
 
 **Shadow and radius sprawl.** More than 4 radius tokens, or more than 3 distinct shadows found (token clustering keeps 3 buckets and records how many it merged). Reported as evidence rows of kind `sprawl` ("5 radii: 4, 6, 8, 10, 12", "7 shadows merged into 3"); it has no number card and never becomes the headline.
 
+**Motion sprawl.** More than 6 distinct durations ("9 durations: 100, 120, 150, 160, 200, 250, 300, 400, 500 ms") or more than 5 distinct easings ("7 easings, 3 within 0.05 of ease-out-quad"), as evidence rows of kind `sprawl` (`motion-capture.md`). Like shadow and radius sprawl, it has no number card and never becomes the headline.
+
 ## The proposed set
 
 **Neutrals.** Target count N: the smallest of 5, 7 or 9 such that every current neutral token maps to a proposed step within ΔE 8. Candidate steps are chosen by 1-dimensional k-means on OKLCH lightness weighted by usage, seeded evenly across the observed lightness range. Each proposed step takes the representative value of the most-used token it absorbs (so the proposal reuses real values, never invents). Constraint check: for every contrast pair recorded on the tokens (`contrastPairs`), compute the ratio with both colors mapped to their proposals; if any pair that passes today (at today's token values: a raw pair can pass while its clustered tokens do not, and no proposal can keep that one, D-067) would fall below its threshold, move the offending step toward the needed lightness in 0.01 L increments until it passes, and if that pushes it within ΔE 2.3 of a neighbor, increase N and retry. `contrastKept` is true only when every pair holds.
@@ -25,6 +27,8 @@ Stage `drift`. Where a site's system is leaking: tokens that are too close to be
 **Spacing.** The on-grid steps, with each off-grid value mapped to the nearest step (rounded to the base grid).
 
 **Type.** Merge near-duplicates into the more-used token.
+
+**Motion.** Durations with usage under 1% of the total and within 20 ms of a neighbor merge into the neighbor; near-identical easings (every control point within 0.05) map to the most used one (`motion-capture.md`). The raw set keeps every value.
 
 Exports use the proposed set by default (`?set=proposed`); the raw set is available (`?set=raw`). Component code writes a value that equals a raw-set token as that token's variable, as `tokens.css` names it (D-069).
 
@@ -41,7 +45,7 @@ Captions are generated from these templates with the computed facts, never free 
 
 ## Evidence
 
-Rows for every finding, in the order: color near-duplicates by ΔE ascending (kind `color`), variant collapses (`variant`), off-grid spacing (`spacing`), type near-duplicates (`type`), sprawl (`sprawl`), then raw-spread evidence (kind `color`, flagged `evidenceOnly`). Each row: `a`, `b`, `delta` (a string such as `ΔE 1.2`, `radius 8 vs 6`, `2 px`), `kind`, `pages`, `usesA`, `usesB`. Capped at 40 rows in the document, which the run page, the exports and the MCP server's `get_drift` all read; the numbers and the headline count every finding, so the cap only shortens the list (D-077).
+Rows for every finding, in the order: color near-duplicates by ΔE ascending (kind `color`), variant collapses (`variant`), off-grid spacing (`spacing`), type near-duplicates (`type`), sprawl (`sprawl`; motion sprawl after radius and shadow sprawl), then raw-spread evidence (kind `color`, flagged `evidenceOnly`). Each row: `a`, `b`, `delta` (a string such as `ΔE 1.2`, `radius 8 vs 6`, `2 px`), `kind`, `pages`, `usesA`, `usesB`. Capped at 40 rows in the document, which the run page, the exports and the MCP server's `get_drift` all read; the numbers and the headline count every finding, so the cap only shortens the list (D-077).
 
 ## Narrative and intro (Sonnet, one call)
 

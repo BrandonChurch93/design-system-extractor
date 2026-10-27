@@ -1,6 +1,6 @@
 # Plan
 
-Sixteen phases, P0 to P15, in order. Each phase lists what it builds, which documents it follows, and its gate: the exit criteria that must all pass before the next phase starts. There are no time estimates anywhere in this plan; a phase takes as long as its gate takes.
+Seventeen phases, P0 to P16, in order. P16 is v1.1. Each phase lists what it builds, which documents it follows, and its gate: the exit criteria that must all pass before the next phase starts. There are no time estimates anywhere in this plan; a phase takes as long as its gate takes.
 
 Every gate also includes, without repeating it below: the handoff consistency sweep (`docs/handoff.md`), `pnpm check` green, `pnpm qa:copy` green, `pnpm verify:all` green as far as it is wired at that phase (see `docs/specs/architecture.md`: until P8 the evals step runs `--through` the last completed stage), a local commit with a message naming the phase, and the STATUS update. From P2 on, every gate includes `pnpm qa:design` with a screenshot self-review of every page or catalog section the phase touched at 1440, 820 and 390, against `docs/design/*` and `docs/quality-bar.md`. From P6 on, every gate includes `pnpm test:security`.
 
@@ -232,11 +232,39 @@ Build:
 
 Gate: the Definition of Done.
 
+## P16 · Fidelity: motion, site variables, naming, export integrity
+
+Follows: `docs/specs/motion-capture.md`, and every spec and design document v1.1 amended: `data-model.md`, `capture-and-states.md`, `token-clustering.md`, `component-detection.md`, `preview-fidelity.md`, `exports-and-mcp.md`, `drift.md`, `model-calls.md`, `docs/evals.md`, `docs/design/pages.md`, `components.md`, `copy.md`, `motion.md`, `docs/glossary.md`, decisions D-081 to D-089.
+
+Build:
+- Merge `docs/v1-1-addendum.md` into the named documents and sections, log its decisions in `docs/decisions.md` (D-081 to D-088, the addendum's D-027 to D-034, whose ids were taken; the merge rulings are D-089), delete the addendum, and commit (`P16 · docs merged`). From here the specs are the only source.
+- Schema: every new enum, type and field; labels; migration for the new JSONB fields (no new tables).
+- Fixtures: the clean and messy fixture additions in `docs/evals.md`, and `expected.json` for every fixture updated to the new type roles, tiers and names (every fixture's existing expectations are re-derived under the new naming rules and checked by hand against the fixture source, since type names change for all of them).
+- Capture: the motion init script, the motion pass, the new state-diff property set and rules, the transition-aware hover wait.
+- Tokens: site variables, site-name precedence for every kind, overlays, the new type roles and word suffixes, breakpoint twins, `tokens:motion` (durations, easings with the table, keyframes).
+- Components: tier, slug, variant third words, context fallback names, the no-numeric-name pass, motion attachment, raw-set token references with export-time mapping.
+- Previews: reset filtering.
+- Drift: motion sprawl and the proposed motion set.
+- Exports: every format change, `motion.css`, `motion.json`, the Default line, core-first ordering, the site variables block, the variable-resolution assertion; MCP `get_motion`; CLI format.
+- Web: the Motion section and its primitives, the rail ring, overlays strip, site-name Pill and provenance, tier headings and filter, panel Motion block, Compare rows, /open; catalog entries; copy strings; goldens updated once and logged.
+- Recordings: the naming call re-recorded for the fixtures (site-named tokens now arrive as fixed).
+- `docs/traceability.md` regenerated; README's feature list and screenshot updated; CHANGELOG `1.1.0`.
+
+Gate:
+- `pnpm evals` passes every threshold in `docs/evals.md` including all the new rows.
+- The export variable-resolution test passes on every fixture and on the three frozen partial documents.
+- No component or variant name ending in a digit in any fixture run; no type token named `other`; every component has `tier` and `slug`.
+- `motion.css` and `motion.json` goldens committed; `tokens.w3c.json` validates.
+- The Motion section is screenshotted at 1440, 820 and 390 on a fixture run and reviewed; Replay works and respects reduced motion (Playwright test with `reducedMotion: 'reduce'` asserts the dot does not move and the caption appears).
+- Panel Motion block, Compare rows and /open reviewed the same way.
+- A fresh local run against one real site the owner names in `docs/specs/showcase.md` (the first roster entry that is not his own: stripe.com) produces a prompt export with a Motion section, at least one observed pattern, zero `var(--` references to undeclared names, and no numeric names; the prompt is pasted into STATUS under a heading `P16 real-site check` for the owner to read.
+- `pnpm verify:all` green; goldens updated once and logged; Definition of Done re-run in full.
+
 ## Definition of Done
 
 All true at once, on a clean checkout, with Docker services running and `DSE_MODEL_MODE=replay`:
 
-1. `pnpm verify:all` is green: check, test, e2e, full evals at thresholds, build, visual goldens, axe, Lighthouse, copy, audit.
+1. `pnpm verify:all` is green: check, test, e2e, full evals at thresholds including the motion, naming and export-integrity rows, build, visual goldens, axe, Lighthouse, copy, audit.
 2. Every phase gate above is recorded as passed in STATUS with its date.
 3. `docs/traceability.md` maps every section of every spec and design document to code and tests with no gaps.
 4. `docs/decisions.md` records every deviation, and `STATUS.md` Known limitations lists each with its decision id.
@@ -246,3 +274,4 @@ All true at once, on a clean checkout, with Docker services running and `DSE_MOD
 8. `pnpm run doctor --production --env fixtures/env/production.sample` passes.
 9. The working tree is clean, committed, never pushed.
 10. STATUS says `Build complete` and the owner's end list is exactly what remains.
+11. The prompt export of every fixture run contains a Motion section, a Site variables block, a Default line per component, core components before page components, and no `var(--` reference to an undeclared name.
