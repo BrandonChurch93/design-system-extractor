@@ -15,7 +15,7 @@ import { drift } from '../src/stages/drift';
 import { fakeCapture } from './helpers/capture';
 
 const sp = (value: number, usage: number, onGrid = true): SpaceToken => ({ id: `s${value}`, value, onGrid, usage, pages: [{ pageId: 'p1', count: usage }], contexts: { padding: usage, margin: 0, gap: 0, layout: 0 } });
-const ty = (size: number, lineHeight: number, weight = 400, usage = 10): TypeToken => ({ id: `t${size}-${lineHeight}-${weight}`, name: `t${size}-${lineHeight}`, role: 'other', family: 'Inter', fallbackStack: 'Inter', size, lineHeight, weight, letterSpacing: 0, usage, pages: [], sample: '' });
+const ty = (size: number, lineHeight: number, weight = 400, usage = 10): TypeToken => ({ id: `t${size}-${lineHeight}-${weight}`, name: `t${size}-${lineHeight}`, role: 'text', family: 'Inter', fallbackStack: 'Inter', size, lineHeight, weight, letterSpacing: 0, uppercase: false, tags: [], usage, pages: [], sample: '' });
 
 const color = (id: string, hex: string, usage: number, group: ColorToken['group'] = 'neutral', pages = ['p1']): ColorToken => {
   const o = oklabToOklch(rgbToOklab(parseCssColor(hex)!));
@@ -197,6 +197,11 @@ describe('the drift stage', () => {
       radius: [],
       shadow: [],
       breakpoints: [],
+      overlays: [],
+      duration: [],
+      easing: [],
+      keyframes: [],
+      siteVariables: [],
       rawCounts: { colors: 7, fontDecls: 0, spacingValues: 4, radii: 0, shadows: 0 },
       families: [],
     } as Tokens;

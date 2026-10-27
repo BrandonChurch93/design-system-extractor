@@ -3,17 +3,19 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { PNG } from 'pngjs';
 import { describe, expect, it } from 'vitest';
-import { ComponentGroup, type ColorToken, type RunConfig, type Tokens } from '@dse/schema';
+import { ComponentGroup, type ColorToken, type RunConfig } from '@dse/schema';
 import type { StyleMap } from '../src/capture/snapshot';
 import { classify } from '../src/components/classify';
 import { classesAllowMerge, clusterItems, structureSimilarity } from '../src/components/cluster';
 import { baseTokens, itemsFrom } from '../src/components/items';
 import { fallbackNames, validName } from '../src/components/model';
+import { endsInDigit, ordinal, slugsOf, uniqueNames } from '../src/components/naming';
 import { LocalStorage, MemoryRunContext } from '../src/context';
 import { ModelClient, type ModelClientOptions } from '../src/models/client';
 import { nameVariants, splitVariants } from '../src/components/variants';
 import type { CaptureOutput } from '../src/stages/capture';
-import { COMPONENT_CAP, components, firstSeen } from '../src/stages/components';
+import type { ExtractedTokens } from '../src/stages/tokens';
+import { COMPONENT_CAP, components, firstSeen, tiersOf } from '../src/stages/components';
 import { fakeCapture } from './helpers/capture';
 import { snap, type El } from './helpers/snap';
 
@@ -54,9 +56,20 @@ describe('clustering', () => {
     const items = itemsFrom(fakeCapture([{ path: '/', desktop: snap(buttonPage(100)) }]));
     const clusters = clusterItems(items);
     expect(clusters).toHaveLength(1);
-    const variants = splitVariants(clusters[0]!.items);
-    nameVariants(variants, tokens);
+    const variants = nameVariants(splitVariants(clusters[0]!.items), tokens);
     expect(variants.map((v) => v.name).sort()).toEqual(['Ghost', 'Ghost small', 'Primary', 'Primary small', 'Secondary', 'Secondary small']);
+  });
+
+  it('names two ghost buttons that differ only in radius Ghost and Ghost rounded, never with a number', () => {
+    const page = [body, ...[0, 1, 2].map((i) => button(['btn'], `Go ${i}`, 100 + i * 60, 'md', 'ghost')), ...[0, 1].map((i) => ({ ...button(['btn'], `Pill ${i}`, 400 + i * 60, 'md', 'ghost'), style: { ...button(['btn'], '', 0, 'md', 'ghost').style, ...radius(22) } }))];
+    const variants = nameVariants(splitVariants(clusterItems(itemsFrom(fakeCapture([{ path: '/', desktop: snap(page) }])))[0]!.items), tokens);
+    expect(variants.map((v) => v.name)).toEqual(['Ghost', 'Ghost rounded']);
+  });
+
+  it('merges variants that differ in nothing a word can name', () => {
+    const page = [body, ...[0, 1, 2].map((i) => button(['btn'], `Go ${i}`, 100 + i * 60, 'md', 'ghost')), ...[0, 1].map((i) => ({ ...button(['btn'], `Wide ${i}`, 400 + i * 60, 'md', 'ghost'), style: { ...button(['btn'], '', 0, 'md', 'ghost').style, 'font-weight': '600', 'background-color': 'rgba(0, 0, 0, 0)', color: 'rgb(11, 31, 59)' } }))];
+    const variants = nameVariants(splitVariants(clusterItems(itemsFrom(fakeCapture([{ path: '/', desktop: snap(page) }])))[0]!.items), tokens);
+    expect(variants.map((v) => [v.name, v.items.length])).toEqual([['Default', 5]]);
   });
 
   it('merges the same nav on four pages into one component with four pages of provenance', () => {
@@ -140,8 +153,29 @@ describe('rule classification', () => {
 });
 
 describe('fallback names', () => {
-  it('uses the type label, numbered from the second of a type', () => {
-    expect(fallbackNames([{ guess: { type: 'card', confidence: 0.6 } }, { guess: { type: 'button', confidence: 0.95 } }, { guess: { type: 'card', confidence: 0.6 } }])).toEqual(['Card', 'Button', 'Card 2']);
+  it('uses the type label, never a number', () => {
+    expect(fallbackNames([{ guess: { type: 'card', confidence: 0.6 } }, { guess: { type: 'button', confidence: 0.95 } }, { guess: { type: 'card', confidence: 0.6 } }])).toEqual(['Card', 'Button', 'Card']);
+  });
+  it('gives a repeated name its context: the landmark, a section heading, the page; then an ordinal word', () => {
+    const page = snap([body, { tag: 'header', parent: 0 }, { tag: 'button', parent: 1 }, { tag: 'footer', parent: 0 }, { tag: 'button', parent: 3 }, { tag: 'section', parent: 0 }, { tag: 'h2', parent: 5, text: 'Pricing for teams' }, { tag: 'button', parent: 5 }, { tag: 'button', parent: 0 }, { tag: 'button', parent: 3 }]);
+    const items = itemsFrom(fakeCapture([{ path: '/', desktop: page }, { path: '/docs/start.html', desktop: page }]));
+    const at = (pageOrder: number, index: number) => items.find((it) => it.page.order === pageOrder && it.el.index === index)!;
+    const list = [at(0, 2), at(0, 4), at(0, 7), at(1, 8), at(0, 9), at(0, 8)].map((first) => ({ name: 'Button', first }));
+    list.push({ name: 'Step 2', first: at(0, 8) });
+    const renamed = uniqueNames(list);
+    expect(list.map((x) => x.name)).toEqual(['Button', 'Button (footer)', 'Button (pricing for)', 'Button (start)', 'Button (footer, home)', 'Button (home)', 'Step (home)']);
+    expect(renamed).toEqual([{ from: 'Step 2', to: 'Step (home)' }]);
+    expect(list.every((x) => !endsInDigit(x.name))).toBe(true);
+    expect(ordinal(2)).toBe('second');
+    expect(ordinal(21)).toBe('twenty first');
+    expect(ordinal(140)).toBe('one hundred fortieth');
+  });
+  it('makes slugs unique, kebab case, with an ordinal word for a repeat', () => {
+    expect(slugsOf(['Primary button', 'Button (footer)', 'Primary button'])).toEqual(['primary-button', 'button-footer', 'primary-button-second']);
+  });
+  it('tiers: core on two pages, three on one, or the most used of a control type; else page-specific', () => {
+    const c = (type: string, pages: number[]) => ({ type, provenance: { firstSeen: {}, pages: pages.map((count, i) => ({ pageId: `p${i}`, path: '/', count })) } }) as unknown as Parameters<typeof tiersOf>[0][number];
+    expect(tiersOf([c('card', [1, 1]), c('card', [3]), c('card', [1]), c('button', [2]), c('button', [1]), c('tooltip', [1])])).toEqual(['core', 'core', 'page', 'core', 'page', 'core']);
   });
   it('accepts sentence-case names of one to three words and nothing else', () => {
     for (const ok of ['Button', 'Pricing card', 'Status badge', 'Site header']) expect(validName(ok), ok).toBe(true);
@@ -151,7 +185,7 @@ describe('fallback names', () => {
 
 describe('the components stage', () => {
   const config: RunConfig = { url: 'https://t.app/', include: [], pageCap: 12, viewports: ['desktop'], userAgent: 'DesignSystemExtractorBot/1.0', allowPrivateHosts: [], timeoutMs: 360_000, keepIntermediate: false, byo: false };
-  const stageTokens = { colors: tokens, type: [], space: [], spaceBase: { value: 4, clear: true }, radius: [], shadow: [], breakpoints: [], rawCounts: { colors: 0, fontDecls: 0, spacingValues: 0, radii: 0, shadows: 0 }, families: [] } as unknown as Tokens;
+  const stageTokens = { colors: tokens, type: [], space: [], spaceBase: { value: 4, clear: true }, radius: [], shadow: [], breakpoints: [], rawCounts: { colors: 0, fontDecls: 0, spacingValues: 0, radii: 0, shadows: 0 }, families: [] } as unknown as ExtractedTokens;
   const png = PNG.sync.write(new PNG({ width: 144, height: 300 }));
   const usage = { input_tokens: 100, output_tokens: 10, cache_creation_input_tokens: 0, cache_read_input_tokens: 0 };
 

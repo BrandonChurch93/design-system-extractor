@@ -127,7 +127,8 @@ const fields: Field[] = [
   (set) => {
     const vals = nums(set, contrastOf);
     const min = Math.min(...vals);
-    return Math.abs(min - Math.max(...vals)) < 0.01 ? null : new Map(set.map((v, i) => [v, vals[i] === min ? w.muted : '']));
+    // Muted means a reader sees less contrast: at least 10% less than the most contrasted (D-090).
+    return min >= Math.max(...vals) * 0.9 ? null : new Map(set.map((v, i) => [v, vals[i] === min ? w.muted : '']));
   },
   (set) => extremes(set, (v) => Number(v.tuple[7] || 0), w.short, w.tall),
   (set) => {

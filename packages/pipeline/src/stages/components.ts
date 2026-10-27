@@ -240,16 +240,17 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
   }
 
   // Tier (D-085), slug, and motion (motion-capture.md, Attachment to components).
-  const owned = patternOwners(capture, owners, tokens.motionBuild.targets);
+  const owned = patternOwners(capture, owners, tokens.motionBuild?.targets ?? new Map());
   const patternsOf = new Map<string, string[]>();
   for (const [pid, cids] of owned) for (const cid of cids) patternsOf.set(cid, [...(patternsOf.get(cid) ?? []), pid]);
   const tiers = tiersOf(assembled);
   const slugs = slugsOf(assembled.map((c) => c.name));
   const out: Component[] = assembled.map((c, i) => {
     const w = list[i]!;
-    return { ...c, tier: tiers[i]!, slug: slugs[i]!, motion: componentMotion(firstSeen(w.items), w.items, c.states, tokens.easing, patternsOf.get(c.id) ?? []) };
+    return { ...c, tier: tiers[i]!, slug: slugs[i]!, motion: componentMotion(firstSeen(w.items), w.items, c.states, tokens.easing ?? [], patternsOf.get(c.id) ?? []) };
   });
-  const motion = { ...tokens.motionBuild.motion, patterns: withOwners(tokens.motionBuild.motion.patterns, owned) };
+  const built = tokens.motionBuild?.motion ?? { patterns: [], truncatedPages: [], intersectionObservers: 0 };
+  const motion = { ...built, patterns: withOwners(built.patterns, owned) };
   for (const v of out.flatMap((c) => c.variants)) if (endsInDigit(v.name)) throw new Error(`variant name ends in a number: ${v.name}`);
 
   const byModel = list.filter((w) => w.naming!.by !== 'fallback').length;

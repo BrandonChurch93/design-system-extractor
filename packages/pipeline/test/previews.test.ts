@@ -11,7 +11,7 @@ import { diffPercent } from '../src/previews/render';
 import { snap } from './helpers/snap';
 
 const policy = { storageBase: 'https://store.example/dse' };
-const sheets = (over: Partial<SheetScan>): SheetScan => ({ media: [], hasReducedMotionRule: false, googleFonts: [], fontFaces: [], fonts: [], crossOrigin: [], ...over });
+const sheets = (over: Partial<SheetScan>): SheetScan => ({ media: [], hasReducedMotionRule: false, googleFonts: [], fontFaces: [], fonts: [], crossOrigin: [], keyframes: [], rootVars: [], ...over });
 
 describe('fonts', () => {
   it('links Google Fonts for a family the site loaded from fonts.googleapis.com, with the weights used', async () => {
@@ -66,16 +66,41 @@ describe('the preview builder', () => {
     expect(rescope('.nowhere', a)).toBeNull();
   });
 
+  it('filters resets: reset values, box-sizing, universal rules and bare tags left empty, measured after filtering', () => {
+    const snapshot = snap([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'button', parent: 0, box: [10, 10, 120, 44] }, { tag: 'span', parent: 1, box: [20, 20, 40, 16] }]);
+    const rule = (selector: string, declarations: [string, string][]) => ({ selector, matched: [selector], origin: 'regular', media: [], supports: [], declarations: declarations.map(([name, value]) => ({ name, value, important: false })) });
+    const longhands = ['align-content', 'align-items', 'align-self', 'animation', 'appearance', 'aspect-ratio', 'backdrop-filter', 'background', 'block-size', 'border', 'bottom', 'box-shadow', 'break-after', 'caption-side', 'clear', 'clip-path', 'color', 'column-gap', 'columns', 'contain', 'content', 'cursor', 'display', 'filter', 'flex', 'float', 'font', 'gap', 'grid', 'height', 'hyphens', 'inset', 'isolation', 'justify-content', 'left', 'letter-spacing', 'line-height', 'list-style', 'margin', 'mask', 'max-height', 'max-width', 'min-height', 'min-width', 'mix-blend-mode', 'object-fit', 'opacity', 'order', 'outline', 'overflow', 'padding', 'perspective', 'place-items', 'pointer-events', 'position', 'quotes', 'resize', 'right', 'rotate', 'row-gap', 'scale', 'tab-size', 'text-align', 'text-indent', 'text-shadow', 'top', 'transform', 'transition', 'translate', 'user-select', 'vertical-align', 'visibility', 'white-space', 'width', 'word-break', 'z-index'];
+    const unset: [string, string][] = [];
+    while (unset.map(([n, v]) => `${n}: ${v}; `).join('').length < 7000) for (const n of longhands) unset.push([`${n}${unset.length >= longhands.length ? `-${unset.length}` : ''}`, 'unset']);
+    const matched: Record<string, MatchedStyles> = {
+      e1: { rules: [rule('*', [['box-sizing', 'border-box']]), rule('*::before, *::after', [['box-sizing', 'inherit']]), rule('::before', [['content', 'none']]), rule('.reset', unset), rule('button', [['font-size', 'inherit'], ['-webkit-tap-highlight-color', 'transparent']]), rule('.btn', [['background-color', 'rgb(36, 88, 230)'], ['padding', '12px 20px'], ['border-radius', '8px'], ['color', 'inherit']])], inline: [], pseudo: [] },
+      e2: { rules: [rule('span', [['font-size', 'inherit'], ['font-weight', '600']])], inline: [], pseudo: [] },
+    };
+    expect(unset.map(([n, v]) => `${n}: ${v};`).join(' ').length).toBeGreaterThanOrEqual(7000);
+    const out = buildPreview({ markup: '<button class="btn reset" data-dse-id="e1"><span data-dse-id="e2">Go</span></button>', vars: {}, snapshot, root: snapshot.elements[1]!, matched, ground: 'rgb(255, 255, 255)', imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy });
+    expect(out.rules.length).toBeLessThan(1500);
+    expect(out.rules).toBe('.btn { background-color: rgb(36, 88, 230); padding: 12px 20px; border-radius: 8px; }\nspan { font-weight: 600; }');
+    expect(out.code).toBe(out.rules);
+  });
+
+  it('writes the code with every variable resolved but the site variables the exports declare', () => {
+    const snapshot = snap([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'a', parent: 0, box: [10, 10, 120, 44] }]);
+    const rule = (selector: string, declarations: [string, string][]) => ({ selector, matched: [selector], origin: 'regular', media: [], supports: [], declarations: declarations.map(([name, value]) => ({ name, value, important: false })) });
+    const matched: Record<string, MatchedStyles> = { e1: { rules: [rule('.btn', [['--sx-1fj52yw', '#2458E6'], ['background', 'var(--sx-1fj52yw)'], ['color', 'var(--color-text-primary)'], ['border', '1px solid var(--missing, rgb(0, 0, 0))'], ['outline', 'var(--gone)'], ['transition', 'opacity 0.16s var(--ease-out-quad)']])], inline: [], pseudo: [] } };
+    const out = buildPreview({ markup: '<a class="btn" data-dse-id="e1">Go</a>', vars: { '--sx-1fj52yw': '#2458E6', '--color-text-primary': '#0B1F3A', '--ease-out-quad': 'cubic-bezier(0.25, 0.46, 0.45, 0.94)' }, snapshot, root: snapshot.elements[1]!, matched, ground: 'rgb(255, 255, 255)', imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy, siteVars: new Set(['--color-text-primary', '--ease-out-quad']) });
+    expect(out.code).toBe('.btn { background: #2458E6; color: var(--color-text-primary); border: 1px solid rgb(0, 0, 0); transition: opacity 0.16s var(--ease-out-quad); }');
+  });
+
   it('keeps each element’s rules in cascade order when merging them, resolves variables and states', () => {
     const snapshot = snap([{ tag: 'body', box: [0, 0, 400, 300], style: { color: 'rgb(11, 31, 58)', 'font-size': '16px' } }, { tag: 'a', parent: 0, box: [10, 10, 120, 44] }, { tag: 'span', parent: 1, box: [80, 20, 16, 16] }]);
     const rule = (selector: string, declarations: [string, string][]) => ({ selector, matched: [selector], origin: 'regular', media: [], supports: [], declarations: declarations.map(([name, value]) => ({ name, value, important: false })) });
-    // `*` matches both elements; the span's list puts .icon before it, so .icon must come first.
-    const star = rule('*', [['color', 'var(--c-primary)']]);
+    // `a, span` matches both elements; the span's list puts .icon before it, so .icon must come first.
+    const star = rule('a, span', [['color', 'var(--c-primary)']]);
     const mid = rule('.icon', [['width', '16px']]);
     const high = rule('.btn-primary', [['background', 'var(--c-primary)']]);
     const matched: Record<string, MatchedStyles> = { e1: { rules: [star, high], inline: [], pseudo: [] }, e2: { rules: [mid, star], inline: [], pseudo: [] } };
     const out = buildPreview({ markup: '<a class="btn btn-primary" data-dse-id="e1">Go <span class="icon" data-dse-id="e2"></span></a>', vars: { '--c-primary': '#2458E6' }, snapshot, root: snapshot.elements[1]!, matched, ground: 'rgb(255, 255, 255)', imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy });
-    const order = ['.icon {', '* {', '.btn-primary {'].map((s) => out.css.indexOf(s));
+    const order = ['.icon {', 'a, span {', '.btn-primary {'].map((s) => out.css.indexOf(s));
     expect(order.every((n) => n >= 0)).toBe(true);
     expect(order).toEqual([...order].sort((x, y) => x - y));
     expect(out.css).toContain('--c-primary: #2458E6;');

@@ -252,15 +252,15 @@ export function stagger(patterns: BuiltPattern[]): BuiltPattern[] {
   for (const p of patterns) {
     if (done.has(p)) continue;
     const group = patterns.filter((q) => !done.has(q) && q.parent === p.parent && q.parent !== '' && q.pageId === p.pageId && q.viewport === p.viewport && sameMotion(p, q)).sort((a, b) => a.at - b.at);
-    if (group.length >= 2) {
+    // Two siblings always share their one step; a constant step takes three or more (D-090).
+    if (group.length >= 3) {
       const steps = group.slice(1).map((q, i) => q.at - group[i]!.at);
       const mean = steps.reduce((s, x) => s + x, 0) / steps.length;
       const sd = Math.sqrt(steps.reduce((s, x) => s + (x - mean) ** 2, 0) / steps.length);
-      if (mean >= 5 && sd / mean < STAGGER_CV) {
-        for (const q of group) done.add(q);
-        out.push({ ...group[0]!, instances: group.length, stagger: { count: group.length, stepMs: Math.round(mean) }, targets: group.flatMap((q) => q.targets) });
-        continue;
-      }
+      for (const q of group) done.add(q);
+      if (mean >= 5 && sd / mean < STAGGER_CV) out.push({ ...group[0]!, instances: group.length, stagger: { count: group.length, stepMs: Math.round(mean) }, targets: group.flatMap((q) => q.targets) });
+      else out.push(...group);
+      continue;
     }
     done.add(p);
     out.push(p);

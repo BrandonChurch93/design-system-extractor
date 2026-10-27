@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { PNG } from 'pngjs';
 import { describe, expect, it } from 'vitest';
-import type { RunConfig, Tokens } from '@dse/schema';
+import type { RunConfig } from '@dse/schema';
 import { LocalStorage, MemoryRunContext } from '../src/context';
 import { classify } from '../src/components/classify';
 import { clusterItems } from '../src/components/cluster';
@@ -11,6 +11,7 @@ import { downscale } from '../src/components/crop';
 import { itemsFrom } from '../src/components/items';
 import { IMAGE_BELOW_CONFIDENCE, nameComponents, resolveCollisions, type Draft } from '../src/components/model';
 import { ModelClient, type ContentBlock, type ModelClientOptions } from '../src/models/client';
+import type { ExtractedTokens } from '../src/stages/tokens';
 import { components } from '../src/stages/components';
 import { fakeCapture } from './helpers/capture';
 import { snap, type El } from './helpers/snap';
@@ -127,7 +128,7 @@ describe('the collision call', () => {
     expect(await resolveCollisions(slow, pairs)).toEqual({ same: new Set(), by: 'by fallback (timeout)' });
   });
 
-  it('gives the later cluster a numeric suffix when the call falls back', async () => {
+  it('gives the later cluster its context, never a number, when the call falls back', async () => {
     // The second button carries an icon, so the two never cluster; the model names both Button.
     const page = (style: El['style'], box: [number, number, number, number], icon = false) => snap([{ tag: 'body', box: [0, 0, 1440, 900] }, { tag: 'button', parent: 0, own: 'Send', text: 'Send', box, style }, ...(icon ? [{ tag: 'svg', parent: 1, box: [104, 107, 16, 16] } as El] : [])]);
     const capture = fakeCapture([
@@ -146,12 +147,12 @@ describe('the collision call', () => {
         return { text: JSON.stringify({ items: ids.map((id) => ({ id, type: 'button', name: 'Button', isComponent: true, variantHint: null })) }), usage };
       },
     });
-    const tokens = { colors: [], type: [], space: [], radius: [], shadow: [] } as unknown as Tokens;
+    const tokens = { colors: [], type: [], space: [], radius: [], shadow: [] } as unknown as ExtractedTokens;
     const out = await components(ctx, capture, tokens);
     expect(asked).toEqual(['Items', 'Pairs']);
     expect(out.components.map((c) => [c.name, c.provenance.firstSeen.path])).toEqual([
       ['Button', '/'],
-      ['Button 2', '/pricing'],
+      ['Button (pricing)', '/pricing'],
     ]);
     expect(ctx.events[0]!.data).toMatchObject({ collisions: 'by fallback (timeout)' });
   });

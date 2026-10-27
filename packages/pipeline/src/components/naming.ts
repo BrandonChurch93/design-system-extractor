@@ -30,17 +30,22 @@ export function contextOf(it: Item): string {
   return pageSegment(it.page.path);
 }
 
-/** Up to ninety-ninth, in words. */
+const units = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+const onesOrd = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth'];
+const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+const teens = ['tenth', 'eleventh', 'twelfth', 'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
+
+/** An ordinal in words, from second to nine hundred ninety-ninth (written without a hyphen). */
 export function ordinal(n: number): string {
   if (n >= 2 && n <= ordinalWords.length + 1) return ordinalWords[n - 2]!;
-  const ones = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth'];
-  const tens = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
-  const teens = ['thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth'];
-  if (n >= 13 && n <= 19) return teens[n - 13]!;
-  const t = Math.floor(n / 10);
-  const o = n % 10;
-  if (o === 0) return `${tens[t]!.replace(/y$/, 'ie')}th`;
-  return `${tens[t]} ${ones[o]}`;
+  const h = Math.floor(n / 100);
+  const r = n % 100;
+  const head = h ? `${units[h]} hundred` : '';
+  if (!r) return `${head}th`;
+  const t = Math.floor(r / 10);
+  const o = r % 10;
+  const tail = r < 10 ? onesOrd[r]! : r < 20 ? teens[r - 10]! : o === 0 ? `${tens[t]!.replace(/y$/, 'ie')}th` : `${tens[t]} ${onesOrd[o]}`;
+  return head ? `${head} ${tail}` : tail;
 }
 
 export const endsInDigit = (name: string) => /\d\s*\)?$/.test(name.trim());
@@ -63,7 +68,7 @@ export function uniqueNames(list: { name: string; first: Item }[]): { from: stri
     const ctx = contextOf(w.first);
     const seg = pageSegment(w.first.page.path);
     const tries = [`${base} (${ctx})`, ...(seg !== ctx ? [`${base} (${ctx}, ${seg})`] : [])];
-    for (let n = 2; n < 100; n++) tries.push(`${base} (${ctx}, ${ordinal(n)})`);
+    for (let n = 2; n < 1000; n++) tries.push(`${base} (${ctx}, ${ordinal(n)})`);
     const name = tries.find((t) => !taken.has(t.toLowerCase()))!;
     taken.add(name.toLowerCase());
     if (numeric) renamed.push({ from: w.name, to: name });

@@ -61,7 +61,7 @@ export function scoreTokens(expected: ExpectedFixture, doc: RunDocumentPartial, 
   const steps = matchKind('space', (t.space ?? []).filter((s) => s.onGrid).map((s) => s.value), ex.space.steps, (p, e) => p === e, String);
   const off = matchKind('offGrid', (t.space ?? []).filter((s) => !s.onGrid).map((s) => s.value), ex.space.offGrid, (p, e) => p === e, String);
   const radius = matchKind('radius', (t.radius ?? []).map((r) => (r.isPill ? 999 : r.value)), ex.radius, (p, e) => p === e, String);
-  const breakpoints = matchKind('breakpoints', t.breakpoints ?? [], ex.breakpoints, (p, e) => p === e, String);
+  const breakpoints = matchKind('breakpoints', (t.breakpoints ?? []).map((b) => b.value), ex.breakpoints, (p, e) => p === e, String);
   const shadowCount = t.shadow?.length ?? 0;
   const shadow: Kind = { kind: 'shadow', predicted: shadowCount, expected: ex.shadowCount, matched: Math.min(shadowCount, ex.shadowCount), misses: [], extras: [] };
   const base: Kind = { kind: 'base', predicted: 1, expected: 1, matched: t.spaceBase?.value === ex.space.base ? 1 : 0, misses: [], extras: [] };

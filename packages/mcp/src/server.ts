@@ -1,12 +1,12 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { ComponentGroup, ComponentType, ExportSet, TokenKind, type RunDocumentPartial, type TokensJson } from '@dse/schema';
-import { exportTokens, generateExport, tokensJson } from '@dse/pipeline/exports';
+import { componentCss, exportTokens, generateExport, motionJson, tokensJson } from '@dse/pipeline/exports';
 
 // The MCP server (docs/specs/exports-and-mcp.md): one run, read once, served over stdio. No network
 // beyond the first fetch, nothing written to disk.
 
-export const VERSION = '1.0.0';
+export const VERSION = '1.1.0';
 
 const kindKeys: Record<TokenKind, (keyof TokensJson)[]> = {
   color: ['color'],
@@ -15,6 +15,8 @@ const kindKeys: Record<TokenKind, (keyof TokensJson)[]> = {
   radius: ['radius'],
   shadow: ['shadow'],
   breakpoint: ['breakpoints'],
+  duration: ['duration'],
+  easing: ['easing'],
 };
 
 const json = (value: unknown) => ({ content: [{ type: 'text' as const, text: JSON.stringify(value, null, 2) }] });
@@ -25,6 +27,8 @@ export function createServer(doc: RunDocumentPartial, runUrl: string): McpServer
   const server = new McpServer({ name: 'design-system-extractor', version: VERSION });
   const comps = doc.components ?? [];
   const find = (idOrName?: string) => comps.find((c) => c.id === idOrName || c.name.toLowerCase() === idOrName?.toLowerCase());
+  // Code names the variables of the set get_tokens serves by default (D-083).
+  const proposed = () => exportTokens(doc, 'proposed');
 
   server.registerTool(
     'get_tokens',
@@ -45,7 +49,7 @@ export function createServer(doc: RunDocumentPartial, runUrl: string): McpServer
           .filter((c) => (!group || c.group === group) && (!type || c.type === type))
           .map((c) => {
             const applicable = c.checks.filter((r) => r.status !== 'na');
-            return { id: c.id, name: c.name, type: c.type, group: c.group, variants: c.variants.length, states: c.states.filter((s) => s.captured).length, checksPassed: applicable.filter((r) => r.status === 'pass').length, checksApplicable: applicable.length };
+            return { id: c.id, name: c.name, type: c.type, group: c.group, tier: c.tier, variants: c.variants.length, states: c.states.filter((s) => s.captured).length, checksPassed: applicable.filter((r) => r.status === 'pass').length, checksApplicable: applicable.length };
           }),
       ),
   );
@@ -65,7 +69,8 @@ export function createServer(doc: RunDocumentPartial, runUrl: string): McpServer
         states: c.states.map((s) => ({ state: s.state, captured: s.captured, ...(s.reason ? { reason: s.reason } : {}), delta: s.delta })),
         tokensUsed: c.tokensUsed,
         unmapped: c.unmapped,
-        code: c.code,
+        code: { ...c.code, css: componentCss(c, proposed()) },
+        motion: c.motion,
         checks: c.checks,
         provenance: c.provenance,
       });
@@ -97,11 +102,26 @@ export function createServer(doc: RunDocumentPartial, runUrl: string): McpServer
     },
   );
 
+  server.registerTool(
+    'get_motion',
+    { description: "The run's motion: durations, easings, keyframes and the observed and declared patterns; or one component's transitions, animations and patterns.", inputSchema: { componentId: z.string().optional() } },
+    async ({ componentId }) => {
+      const all = motionJson(doc, proposed());
+      if (!componentId) return json(all);
+      const c = find(componentId);
+      if (!c) return fail(`No component ${componentId}.`);
+      return json({ id: c.id, name: c.name, slug: c.slug, motion: c.motion, patterns: all.patterns.filter((p) => c.motion?.patternIds.includes(p.id)) });
+    },
+  );
+
   server.registerResource('design-system.md', `dse://run/${doc.id}/design-system.md`, { title: `${doc.host} design system`, mimeType: 'text/markdown' }, async (uri) => ({
     contents: [{ uri: uri.href, mimeType: 'text/markdown', text: generateExport(doc, 'design-system.md', { runUrl }).body }],
   }));
   server.registerResource('tokens.css', `dse://run/${doc.id}/tokens.css`, { title: `${doc.host} tokens`, mimeType: 'text/css' }, async (uri) => ({
     contents: [{ uri: uri.href, mimeType: 'text/css', text: generateExport(doc, 'tokens.css', { runUrl }).body }],
+  }));
+  server.registerResource('motion.css', `dse://run/${doc.id}/motion.css`, { title: `${doc.host} motion`, mimeType: 'text/css' }, async (uri) => ({
+    contents: [{ uri: uri.href, mimeType: 'text/css', text: generateExport(doc, 'motion.css', { runUrl }).body }],
   }));
   return server;
 }

@@ -45,19 +45,15 @@ export function assignRoles(types: RawType[]): Map<RawType, TypeRole> {
   return roles;
 }
 
-type Word = { word: string; applies: (t: RawType, first: RawType) => boolean };
-/** The words a later tuple of a role takes, in the order they are tried (D-089). */
-const words: Word[] = [
-  { word: 'strong', applies: (t, f) => t.weight > f.weight },
-  { word: 'soft', applies: (t, f) => t.weight < f.weight },
-  { word: 'lg', applies: (t, f) => t.size > f.size },
-  { word: 'sm', applies: (t, f) => t.size < f.size },
-  { word: 'wide', applies: (t, f) => t.letterSpacing > f.letterSpacing },
-];
+const smaller = ['sm', 'xs', 'xxs'];
+const larger = ['lg', 'xl', 'xxl'];
 
 /**
  * Names: the role, `text-{size}` for text; the second and later tuples of one name take words, not
- * numbers; a tuple with no word left to tell it apart merges into the one holding the name.
+ * numbers, against the first: weight (`-strong`, `-soft`), size graded by rank (`-sm`, `-xs`, `-xxs`;
+ * `-lg`, `-xl`, `-xxl`), tracking (`-wide`), joined while a name is taken. Past the words a tuple is
+ * named by its size, as text is; one that differs in nothing nameable merges into the one holding the
+ * name (D-087, D-089, D-090).
  */
 export function nameTypes(types: RawType[], roles: Map<RawType, TypeRole>): { names: Map<RawType, string>; mergedInto: Map<RawType, RawType> } {
   const names = new Map<RawType, string>();
@@ -71,13 +67,20 @@ export function nameTypes(types: RawType[], roles: Map<RawType, TypeRole>): { na
     const first = sorted[0]!;
     names.set(first, base);
     holder.set(base, first);
+    const down = [...new Set(sorted.filter((t) => t.size < first.size).map((t) => t.size))].sort((a, b) => b - a);
+    const up = [...new Set(sorted.filter((t) => t.size > first.size).map((t) => t.size))].sort((a, b) => a - b);
     for (const t of sorted.slice(1)) {
-      const apply = words.filter((w) => w.applies(t, first)).map((w) => w.word);
+      const words = [
+        t.weight > first.weight ? 'strong' : t.weight < first.weight ? 'soft' : '',
+        t.size < first.size ? (smaller[down.indexOf(t.size)] ?? '') : t.size > first.size ? (larger[up.indexOf(t.size)] ?? '') : '',
+        t.letterSpacing > first.letterSpacing ? 'wide' : '',
+      ].filter(Boolean);
       let name = base;
-      for (const w of apply) {
+      for (const w of words) {
         name = `${name}-${w}`;
         if (!holder.has(name)) break;
       }
+      if (holder.has(name) && t.size !== holder.get(name)!.size) name = `${base}-${Math.round(t.size)}`;
       if (holder.has(name)) {
         mergedInto.set(t, holder.get(name)!);
         continue;

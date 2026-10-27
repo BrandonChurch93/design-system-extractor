@@ -67,6 +67,6 @@ describe('the color naming model pass', () => {
   it('describes each token to the model on one line', () => {
     const table = namingTable(palette(), 9).split('\n');
     expect(table).toHaveLength(4);
-    expect(table[1]).toMatch(/\| blue-600 \| #2458E6 \| brand \| - \| blue \| 600 \| text 30 background 0 border 0 other 0 \| 1 of 9 pages$/);
+    expect(table[1]).toMatch(/\| blue-600 \| #2458E6 \| brand \| - \| blue \| 600 \| text 30 background 0 border 0 other 0 \| 1 of 9 pages \| -$/);
   });
 });
