@@ -92,6 +92,8 @@ Every root script loads `.env.local` from the repository root; setting `DOTENV_F
 | `pnpm qa:copy` | the em dash and forbidden-word grep (rules below) |
 | `pnpm build` | builds every package and the web app (`next build`) and the worker bundle |
 | `pnpm verify:all` | in order, failing fast: `check`, `db:seed:check` (from P10), `test`, `test:security` (from P6), `test:e2e`, `evals:gate`, `build`, `qa:visual`, `qa:axe`, `qa:billing` (from P12), `qa:lighthouse`, `qa:copy`, `pnpm audit --audit-level high` |
+| `pnpm soak` | ten fixture runs through one worker, memory and open browser contexts after each, `.dse/soak.json` (D-075) |
+| `pnpm docker:smoke` | builds the worker image from the root and runs a fixture extraction with it against the Docker services (D-075) |
 | `pnpm showcase` | runs the showcase roster (local by default, `--remote` against production with the admin token; `--only`, `--alternates`, `--refresh-links`, `--dry-run`, D-063) |
 | `pnpm run doctor [--production [--env <file>]]` | env and connectivity check; `--production` checks the shape of a production env file (default `.env.production.local`) without connecting. Always `pnpm run doctor`: pnpm's built-in `doctor` command shadows a bare `pnpm doctor` (D-028) |
 

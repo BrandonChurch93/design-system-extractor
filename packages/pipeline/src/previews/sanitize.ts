@@ -168,10 +168,10 @@ export function sanitizeMarkup(html: string, policy: CssPolicy): { html: string;
 
 /** Explicit checks on the sanitizer's output; anything that survived is removed and reported. */
 function secondPass(html: string, window: JSDOM['window'], report: SanitizeReport): string {
-  const doc = window.document.implementation.createHTMLDocument('');
-  const host = doc.createElement('div');
+  // A template parses inertly into its one shared content document; a new document per call is retained (D-075).
+  const host = window.document.createElement('template');
   host.innerHTML = html;
-  for (const el of [...host.querySelectorAll('*')]) {
+  for (const el of [...host.content.querySelectorAll('*')]) {
     const tag = el.tagName.toLowerCase();
     if (forbiddenTags.includes(tag)) {
       report.secondPass.push(`tag ${tag}`);

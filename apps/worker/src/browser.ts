@@ -37,6 +37,12 @@ export class BrowserPool {
     return this.runs;
   }
 
+  /** Contexts and pages still open in the browser; zero between runs (the soak checks it). */
+  get open(): { contexts: number; pages: number } {
+    const contexts = this.browser?.isConnected() ? this.browser.contexts() : [];
+    return { contexts: contexts.length, pages: contexts.reduce((n, c) => n + c.pages().length, 0) };
+  }
+
   async close(): Promise<void> {
     const b = this.browser;
     this.browser = null;

@@ -51,7 +51,7 @@ function useRunsLeft(): string | null {
   const [line, setLine] = useState<string | null>(null);
   useEffect(() => {
     let live = true;
-    fetch('/api/me', { cache: 'no-store' })
+    fetch('/api/me', { cache: 'no-store', signal: AbortSignal.timeout(10_000) })
       .then((r) => (r.ok ? (r.json() as Promise<MeResponse>) : null))
       .then((me) => live && me && setLine(fill(recent.runsLeft, { runsLeft: count(me.runsLeft), runsPerDay: count(me.runsPerDay) })))
       .catch(() => {});

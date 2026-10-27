@@ -112,11 +112,11 @@ Read for P11: pages, components, copy, motion, quality-bar, design-system, expor
 
 P14 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
-- [ ] Soak test passes; chaos tests (worker killed mid-run, Redis unavailable at enqueue, storage unavailable mid-capture) end in the specified statuses with refunds.
-- [ ] `docker build -f apps/worker/Dockerfile .` succeeds and the image runs a fixture extraction end to end against the Docker services.
+- [x] Soak passes (`pnpm soak`: ten of ten complete, max RSS 967 MB of 1,536, zero contexts and pages after every run, heap growth 6.2 MB from run 2 to 10 after the leak fix, D-075); chaos tests pass (`apps/web/test/chaos.int.test.ts`: killed worker restarts and completes, counted once; Redis down answers 500 in 0.2 s with no run; failed enqueue fails its run and refunds; storage outage fails the run and refunds, D-074).
+- [x] `pnpm docker:smoke`: the image builds from the root and completes the clean fixture against the Docker services (9 pages, 27 components, 26 live previews, 43 of 45 checks), then exits cleanly on SIGTERM.
 - [ ] `pnpm --filter web build` succeeds.
-- [ ] `pnpm audit --audit-level high` has no findings, or each is listed here with advisory id and date.
-- [ ] Error handling audit, timeouts, log review, pinning, `fixtures/env/production.sample` with doctor passing.
+- [x] `pnpm audit --audit-level high`: no high findings. One moderate, recorded: GHSA-67mh-4wv8-2f99 (esbuild ≤0.24.2 dev server, via drizzle-kit's dev tooling only, never in the app or the worker), 2026-10-26.
+- [x] Error handling audit (catch sites read; storage reads swallow only a missing file; the OG route logs a failed write; enqueue compensation steps independent), timeouts on every fetch (test) and on the web app's Redis, log review (test), pinning (test), `fixtures/env/production.sample` with doctor passing (test).
 - [ ] Handoff consistency sweep, `pnpm check`, `pnpm qa:copy`, `pnpm test:security`, `pnpm verify:all`, commit naming P14, STATUS updated.
 
 ## Gates passed
@@ -144,6 +144,7 @@ P14 exit criteria (from `docs/plan.md`), plus the standing gate items:
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-075 · `pnpm soak` and `pnpm docker:smoke` with their pass rules; preview JSDOM windows closed and the sanitizer's second pass uses a template (a heap leak the soak found).
 - D-074 · Outage outcomes: a killed worker's run restarts on the next worker; the web app's Redis fails fast; a failed enqueue fails its run and gives everything back; a storage outage fails the run, refunded.
 - D-073 · Visual goldens take `maxDiffPixels: 25` beside the ratio; seven stale goldens updated.
 - D-072 · Text at zero font size or line height is not a type style; the roster's Notion entry is notion.com.

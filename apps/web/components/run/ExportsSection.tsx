@@ -78,7 +78,7 @@ export function ExportsSection({ doc, landed, runUrl, source }: { doc: RunDocume
     const bytes = await mod.allZip(doc, { set, runUrl }, async (key) => {
       if (!source.storageBase) return null;
       try {
-        const res = await fetch(`${source.storageBase.replace(/\/$/, '')}/${key}`);
+        const res = await fetch(`${source.storageBase.replace(/\/$/, '')}/${key}`, { signal: AbortSignal.timeout(30_000) });
         return res.ok ? new Uint8Array(await res.arrayBuffer()) : null;
       } catch {
         return null;

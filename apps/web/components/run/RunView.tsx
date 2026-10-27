@@ -99,7 +99,7 @@ export function RunView({ initial, storageBase, appUrl, contactEmail, partial, l
     let stop = false;
     const tick = async () => {
       try {
-        const res = await fetch(`/api/runs/${id}`, { cache: 'no-store', headers: etag.current ? { 'if-none-match': etag.current } : {} });
+        const res = await fetch(`/api/runs/${id}`, { cache: 'no-store', headers: etag.current ? { 'if-none-match': etag.current } : {}, signal: AbortSignal.timeout(10_000) });
         if (stop || res.status === 304 || !res.ok) return;
         etag.current = res.headers.get('etag');
         const next = (await res.json()) as RunResponse;
@@ -121,7 +121,7 @@ export function RunView({ initial, storageBase, appUrl, contactEmail, partial, l
   async function cancel() {
     setCancelling(true);
     try {
-      await fetch(`/api/runs/${id}/cancel`, { method: 'POST' });
+      await fetch(`/api/runs/${id}/cancel`, { method: 'POST', signal: AbortSignal.timeout(10_000) }).catch(() => null);
     } finally {
       setCancelling(false);
     }

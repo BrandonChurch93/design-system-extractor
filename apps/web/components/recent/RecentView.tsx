@@ -28,12 +28,12 @@ export function RecentView({ byoPageCap }: { byoPageCap: number }) {
 
   useEffect(() => {
     let live = true;
-    fetch('/api/me', { cache: 'no-store' })
+    fetch('/api/me', { cache: 'no-store', signal: AbortSignal.timeout(10_000) })
       .then((r) => (r.ok ? (r.json() as Promise<MeResponse>) : null))
       .then((m) => live && setMe(m))
       .catch(() => {});
     for (const r of recentRuns().filter((x) => !terminal(x.status))) {
-      fetch(`/api/runs/${r.id}`, { cache: 'no-store' })
+      fetch(`/api/runs/${r.id}`, { cache: 'no-store', signal: AbortSignal.timeout(10_000) })
         .then((res) => (res.ok ? (res.json() as Promise<RunResponse>) : null))
         .then((body) => {
           if (!body) return;

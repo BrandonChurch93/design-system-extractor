@@ -29,7 +29,7 @@ const inherited = ['font-family', 'font-size', 'color', 'line-height', 'letter-s
 const placeholderTags = new Set(['img', 'picture', 'video', 'iframe', 'canvas', 'object', 'embed']);
 
 /** Images and embeds become sized blocks in the image's average color, before sanitization. */
-export function withPlaceholders(markup: string, snapshot: Snapshot, imageColors: Record<string, string>): { html: string; doc: Document } {
+export function withPlaceholders(markup: string, snapshot: Snapshot, imageColors: Record<string, string>): { html: string; doc: Document; close: () => void } {
   const dom = new JSDOM(`<!doctype html><body><div class="dse-root">${markup}</div></body>`);
   const doc = dom.window.document;
   for (const el of [...doc.querySelectorAll([...placeholderTags].join(','))]) {
@@ -45,7 +45,8 @@ export function withPlaceholders(markup: string, snapshot: Snapshot, imageColors
     for (const c of el.getAttribute('class')?.split(/\s+/).filter(Boolean) ?? []) span.classList.add(c);
     el.replaceWith(span);
   }
-  return { html: doc.querySelector('.dse-root')!.innerHTML, doc };
+  // An unclosed window stays reachable after the run (D-075), so the caller closes it.
+  return { html: doc.querySelector('.dse-root')!.innerHTML, doc, close: () => dom.window.close() };
 }
 
 function splitSelectorList(text: string): string[] {
@@ -146,7 +147,15 @@ function mergeInOrder(lists: Placed[][]): Placed[] {
 }
 
 export function buildPreview(input: PreviewInput): PreviewDoc {
-  const { html: placed, doc } = withPlaceholders(input.markup, input.snapshot, input.imageColors);
+  const { html: placed, doc, close } = withPlaceholders(input.markup, input.snapshot, input.imageColors);
+  try {
+    return previewOf(input, placed, doc);
+  } finally {
+    close();
+  }
+}
+
+function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewDoc {
   const policy = input.policy;
   const lists: Placed[][] = [];
   for (const el of [doc.querySelector('.dse-root')!.firstElementChild, ...doc.querySelectorAll('.dse-root [data-dse-id]')]) {

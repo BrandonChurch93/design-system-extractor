@@ -43,6 +43,7 @@ export async function submitRun(url: string, include: string[], key = savedKey()
       method: 'POST',
       headers: { 'content-type': 'application/json', ...(key ? { 'x-byo-key': key } : {}) },
       body: JSON.stringify(include.length ? { url, include } : { url }),
+      signal: AbortSignal.timeout(30_000),
     });
   } catch {
     return { error: global.validation };
