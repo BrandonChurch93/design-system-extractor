@@ -143,7 +143,9 @@ async function previewFor(ctx: RunContext, it: Item, htmlKey: string, existing: 
     const dy = clipped ? shown.y - it.el.y : 0;
     const boxes = (await textBoxes(session)).map((b) => ({ ...b, x: b.x - dx, y: b.y - dy }));
     const width = clipped ? shown.w : it.el.w;
-    const masked = boxes.length ? diffPercent(maskBoxes(shot, boxes, width), maskBoxes(ref, boxes, width)) : diffPct;
+    // Masking that covers most of the box proves nothing about the rest, so it does not decide (D-098).
+    const covered = boxes.reduce((a, b) => a + Math.max(0, b.w + 4) * Math.max(0, b.h + 4), 0) / Math.max(1, width * (clipped ? shown.h : it.el.h));
+    const masked = boxes.length && covered <= 0.5 ? diffPercent(maskBoxes(shot, boxes, width), maskBoxes(ref, boxes, width)) : diffPct;
     if (masked <= LIVE_MAX_DIFF_PCT) return { preview: { ...existing, ...size, ground, mode: 'live', htmlKey, diffPct, fontsSubstituted: fonts.substituted ?? [] }, doc, fonts: fonts.mode };
     return { preview: { ...existing, ground, mode: 'captured', capturedReason: 'fonts-unavailable', diffPct, htmlKey }, doc, fonts: fonts.mode };
   }

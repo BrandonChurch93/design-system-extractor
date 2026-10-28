@@ -53,10 +53,12 @@ export const isUniversal = (rule: MatchedRule) => {
 
 const controls = ['button', 'input', 'select', 'textarea', 'optgroup'];
 const fontProps = ['font', 'font-family', 'font-size', 'font-weight', 'font-style', 'line-height', 'letter-spacing', 'color', 'text-transform'];
+/** A control's own box a browser draws: a reset of it (`all: unset`, `background: none`) is how the site styles the control (D-098). */
+const controlBox = ['all', 'appearance', 'background', 'background-color', 'border', 'border-width', 'border-style', 'border-color', 'border-radius', 'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left', 'margin', 'text-align', 'outline'];
 /** Properties a browser styles on a tag that a reset value (`a { color: inherit }`) overrides, so the page depends on it. */
 const uaStyled: Record<string, string[]> = {
   a: ['color', 'text-decoration', 'text-decoration-line', 'text-decoration-color'],
-  ...Object.fromEntries(controls.map((t) => [t, fontProps])),
+  ...Object.fromEntries(controls.map((t) => [t, [...fontProps, ...controlBox]])),
   ...Object.fromEntries(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].map((t) => [t, ['font-size', 'font-weight']])),
   b: ['font-weight'],
   strong: ['font-weight'],
@@ -293,8 +295,11 @@ export function rescope(selector: string, target: Element): string | null {
   if (test(base)) return ids(selector);
   const parts = compounds(base);
   for (let k = 1; k < parts.length; k++) {
-    const rest = parts.slice(k).join(' ').replace(/^[>+~]\s*/, '');
-    const candidate = `.dse-root ${rest}`;
+    const joined = parts.slice(k).join(' ');
+    // A child combinator kept where it still matches is closer to the site's rule than a descendant one (D-098).
+    const kept = /^>\s*/.test(joined) ? `.dse-root > ${joined.replace(/^>\s*/, '')}` : null;
+    if (kept && test(kept)) return ids(`${kept}${pseudo}`);
+    const candidate = `.dse-root ${joined.replace(/^[>+~]\s*/, '')}`;
     if (test(candidate)) return ids(`${candidate}${pseudo}`);
   }
   // Ancestors inside `:where()` or `:is()` are rescoped within it, which keeps the selector's specificity (D-098).
@@ -418,8 +423,12 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
       ...filtered.map(({ p, decls }) => {
         const body = declarationText(decls, code);
         if (!body) return '';
-        const rule = `${p.selectors.join(', ')} { ${body} }`;
-        return !code && p.rule.layerRank !== undefined ? `@layer dse-l${p.rule.layerRank} { ${rule} }` : rule;
+        let rule = `${p.selectors.join(', ')} { ${body} }`;
+        if (code) return rule;
+        // A condition is the site's text: one that could leave its block drops the rule.
+        if ((p.rule.container ?? []).some((c) => /[{}<;]/.test(c))) return '';
+        for (const c of [...(p.rule.container ?? [])].reverse()) rule = `@container ${c} { ${rule} }`;
+        return p.rule.layerRank !== undefined ? `@layer dse-l${p.rule.layerRank} { ${rule} }` : rule;
       }),
     ]
       .filter(Boolean)

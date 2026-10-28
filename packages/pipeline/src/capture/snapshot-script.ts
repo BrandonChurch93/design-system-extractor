@@ -151,7 +151,8 @@ export function takeSnapshot(args: { props: string[]; cap: number; root?: string
   };
   const out: RawElement[] = [];
   const index = new Map<Element, number>();
-  let counter = 0;
+  // One counter per page and prefix: a second snapshot must never hand out an id an element already carries (D-098).
+  const counters = ((window as unknown as { __dseIds?: Record<string, number> }).__dseIds ??= {});
   let truncated = false;
   const sx = window.scrollX;
   const sy = window.scrollY;
@@ -196,7 +197,7 @@ export function takeSnapshot(args: { props: string[]; cap: number; root?: string
       } else {
         let dse = el.getAttribute('data-dse-id');
         if (!dse) {
-          dse = `${prefix}${counter++}`;
+          dse = `${prefix}${(counters[prefix] = (counters[prefix] ?? 0) + 1) - 1}`;
           el.setAttribute('data-dse-id', dse);
         }
         const aria: Record<string, string> = {};

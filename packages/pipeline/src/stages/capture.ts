@@ -8,7 +8,7 @@ import { endScriptAnimations, motionInit, motionMarkScroll, motionReadout, type 
 import type { MatchedStyles } from '../capture/matched-css';
 import { scanSheets, type SheetScan } from '../capture/sheet-scan';
 import { buildSnapshot, compactSnapshot, descendants, type SnapElement, type Snapshot } from '../capture/snapshot';
-import type { ShotBand } from '../components/crop';
+import { stitch, type ShotBand } from '../components/crop';
 import { buildSelectors, motionProps, styleProps, takeSnapshot } from '../capture/snapshot-script';
 import { activeState, cropOf, hoverState, neutral, readStyles, scrolledState, settle, splitList, STATE_WAIT_CAP, styleDelta, tabWalk, withTransitions, type StateRecord, type StyleDelta } from '../capture/states';
 import type { RunContext } from '../context';
@@ -128,6 +128,8 @@ export const SCREENSHOT_MAX_HEIGHT = 8000;
 export const BAND_MAX_HEIGHT = 2000;
 export const BAND_MAX_COUNT = 12;
 export const BAND_REACH = 24_000;
+/** The page screenshot is taken in clips this tall: one tall capture at scale 2 leaves regions unpainted (D-098). */
+export const CLIP_HEIGHT = 2000;
 export const TAB_WALK_MAX = 80;
 
 export type MotionProbe = { animation: boolean; transition: boolean };
@@ -158,7 +160,8 @@ export type ViewportCapture = {
   motionSelectors: Record<string, string>;
   opens: OpenCapture[];
   /** `bands`: clips below the cut where novel candidates sit, kept in memory for crops (D-098). */
-  screenshot: { key: string; width: number; height: number; cut: boolean; png: Buffer; bands?: ShotBand[] };
+  /** `png` is the first clip and `height` its height; `bands` the other clips and those below the cut; `pageHeight` what was captured (D-098). */
+  screenshot: { key: string; width: number; height: number; pageHeight: number; cut: boolean; png: Buffer; bands?: ShotBand[] };
   submitAttempts: number;
   /** Forms that a submit handler marked as submitted; must stay 0. */
   submittedMarkers: number;
@@ -376,9 +379,13 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     const docH = await p.evaluate(() => Math.max(document.documentElement.scrollHeight, document.body.scrollHeight));
     const cut = docH > SCREENSHOT_MAX_HEIGHT;
     const height = Math.min(docH, SCREENSHOT_MAX_HEIGHT);
-    const png = await p.screenshot({ fullPage: true, clip: { x: 0, y: 0, width: vp.width, height }, type: 'png', animations: 'disabled', caret: 'hide' });
+    const clips: ShotBand[] = [];
+    for (let y = 0; y < height; y += CLIP_HEIGHT) {
+      const h = Math.min(CLIP_HEIGHT, height - y);
+      clips.push({ y, height: h, png: await p.screenshot({ fullPage: true, clip: { x: 0, y, width: vp.width, height: h }, type: 'png', animations: 'disabled', caret: 'hide' }) });
+    }
     const shotKey = keys.pageScreenshot(ctx.runId, page.id, viewport);
-    await ctx.files.put(shotKey, png, { contentType: 'image/png' });
+    await ctx.files.put(shotKey, clips.length === 1 ? clips[0]!.png : stitch(clips), { contentType: 'image/png' });
     const snapshot = buildSnapshot(await p.evaluate(takeSnapshot, { props: [...styleProps], cap: SNAPSHOT_CAP }));
     const candidates = capCandidates(findCandidates(snapshot, viewport), CANDIDATE_CAP);
     const selectors = await p.evaluate(buildSelectors, candidates.map((c) => c.dse));
@@ -547,7 +554,7 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
         motion,
         motionSelectors,
         opens,
-        screenshot: { key: shotKey, width: vp.width, height, cut, png, ...(bands.length ? { bands } : {}) },
+        screenshot: { key: shotKey, width: vp.width, height: clips[0]!.height, pageHeight: height, cut, png: clips[0]!.png, ...(clips.length > 1 || bands.length ? { bands: [...clips.slice(1), ...bands] } : {}) },
         submitAttempts,
         submittedMarkers,
         dialogs,
@@ -687,8 +694,8 @@ export async function capture(ctx: RunContext, deps: CaptureDeps): Promise<Captu
         nodeCount: r.nodeCount,
         status: 'captured',
         captures: {
-          desktop: d ? { screenshotKey: d.screenshot.key, width: d.screenshot.width, height: d.screenshot.height } : undefined,
-          mobile: m ? { screenshotKey: m.screenshot.key, width: m.screenshot.width, height: m.screenshot.height } : undefined,
+          desktop: d ? { screenshotKey: d.screenshot.key, width: d.screenshot.width, height: d.screenshot.pageHeight } : undefined,
+          mobile: m ? { screenshotKey: m.screenshot.key, width: m.screenshot.width, height: m.screenshot.pageHeight } : undefined,
         },
       };
       const shots = Object.keys(r.viewports).length;

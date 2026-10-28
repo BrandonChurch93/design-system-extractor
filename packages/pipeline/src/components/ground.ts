@@ -36,7 +36,7 @@ export function groundOf(it: Item): string {
   const bg = body ? parseRgb(body.style['background-color']) : null;
   if (bg && bg.a >= 1) return hexOf(bg);
   // No opaque background anywhere: the canvas the page paints on, read where nothing covers it (D-098).
-  const canvas = pixelAt(it.vc.screenshot, 1, Math.max(1, it.vc.screenshot.height - 2));
+  const canvas = pixelAt(it.vc.screenshot, 1, 1);
   return canvas && canvas.a >= 1 ? hexOf({ ...canvas, a: 1 }) : '#FFFFFF';
 }
 

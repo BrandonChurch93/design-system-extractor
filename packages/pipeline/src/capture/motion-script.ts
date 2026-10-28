@@ -285,7 +285,15 @@ export function endScriptAnimations(): number {
     n++;
     try {
       if (a.effect?.getComputedTiming().iterations === Infinity) a.cancel();
-      else a.finish();
+      else {
+        a.finish();
+        // The end state written into the element's style, so the captured markup shows it (D-098).
+        try {
+          a.commitStyles();
+        } catch {
+          // an element no longer rendered cannot take committed styles
+        }
+      }
     } catch {
       a.cancel();
     }

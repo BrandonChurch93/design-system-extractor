@@ -4,5 +4,6 @@
 
 export type Declaration = { name: string; value: string; important: boolean };
 /** `layerRank`: the rule's cascade layer by its place in the page's layer order; absent when the rule is in no layer (D-098). */
-export type MatchedRule = { selector: string; matched: string[]; origin: string; media: string[]; supports: string[]; declarations: Declaration[]; layerRank?: number };
+/** `container`: the `@container` conditions the rule sat in, kept in the preview rather than flattened (D-098). */
+export type MatchedRule = { selector: string; matched: string[]; origin: string; media: string[]; supports: string[]; declarations: Declaration[]; layerRank?: number; container?: string[] };
 export type MatchedStyles = { rules: MatchedRule[]; inline: Declaration[]; pseudo: { pseudo: string; rules: MatchedRule[] }[] };

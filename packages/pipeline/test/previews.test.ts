@@ -62,7 +62,8 @@ describe('the preview builder', () => {
   it('keeps selectors that still match and rescopes ancestor ones to .dse-root', () => {
     expect(rescope('.btn', a)).toBe('.btn');
     expect(rescope('.hero .btn-primary', a)).toBe('.dse-root .btn-primary');
-    expect(rescope('.pricing-card > a.btn::before', a)).toBe('.dse-root a.btn::before');
+    expect(rescope('.pricing-card > a.btn::before', a)).toBe('.dse-root > a.btn::before');
+    expect(rescope('.pricing-card > .row a.btn', a)).toBe('.dse-root a.btn');
     expect(rescope('#go', a)).toBe('#dse-go');
     expect(rescope('.nowhere', a)).toBeNull();
   });
@@ -80,9 +81,9 @@ describe('the preview builder', () => {
     expect(unset.map(([n, v]) => `${n}: ${v};`).join(' ').length).toBeGreaterThanOrEqual(7000);
     const out = buildPreview({ markup: '<button class="btn reset" data-dse-id="e1"><span data-dse-id="e2">Go</span></button>', vars: {}, snapshot, root: snapshot.elements[1]!, matched, imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy });
     expect(out.rules.length).toBeLessThan(1500);
-    // What a button's browser styles depend on stays (D-090); span { font-size: inherit } and the dump go.
+    // What a button's browser styles depend on stays, its own box included (D-090, D-098); span { font-size: inherit } and the rest of the dump go.
     expect(out.rules).toBe(
-      ".reset { color: unset; font: unset; letter-spacing: unset; line-height: unset; }\nbutton { font-size: inherit; }\n.btn { background-color: rgb(36, 88, 230); padding: 12px 20px; border-radius: 8px; color: inherit; }\nspan { font-weight: 600; }",
+      ".reset { appearance: unset; background: unset; border: unset; color: unset; font: unset; letter-spacing: unset; line-height: unset; margin: unset; outline: unset; padding: unset; text-align: unset; }\nbutton { font-size: inherit; }\n.btn { background-color: rgb(36, 88, 230); padding: 12px 20px; border-radius: 8px; color: inherit; }\nspan { font-weight: 600; }",
     );
     expect(out.code).toBe(out.rules);
   });

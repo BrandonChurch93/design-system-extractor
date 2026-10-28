@@ -121,7 +121,7 @@ export function matchInPage({ ids, texts }: MatchArgs): Record<string, { rules: 
   };
   const layered: { rule: MatchedRuleOut; layer: string }[] = [];
 
-  const styleRule = (rule: CSSStyleRule, media: string[], supports: string[], layer = '') => {
+  const styleRule = (rule: CSSStyleRule, media: string[], supports: string[], layer = '', container: string[] = []) => {
     const hits = new Map<Element, { matched: string[]; pseudo?: string }[]>();
     for (const part of parts(rule.selectorText)) {
       const p = pseudoRe.exec(part);
@@ -154,24 +154,31 @@ export function matchInPage({ ids, texts }: MatchArgs): Record<string, { rules: 
       for (const h of list) {
         const r: MatchedRuleOut = { selector: rule.selectorText, matched: h.matched, origin: 'regular', media, supports, declarations: decls };
         if (layer) layered.push({ rule: r, layer });
+        if (container.length) r.container = container;
         if (h.pseudo) o.pseudo.set(h.pseudo, [...(o.pseudo.get(h.pseudo) ?? []), r]);
         else o.rules.push(r);
       }
     }
   };
 
-  const walk = (rules: CSSRuleList | undefined, media: string[], supports: string[], layer = '') => {
+  const walk = (rules: CSSRuleList | undefined, media: string[], supports: string[], layer = '', container: string[] = []) => {
     if (!rules) return;
     for (const rule of rules) {
-      if (rule instanceof CSSStyleRule) styleRule(rule, media, supports, layer);
+      // Entry values for a first style change never apply to a settled page (D-098).
+      if (rule.constructor.name === 'CSSStartingStyleRule') continue;
+      if (rule.constructor.name === 'CSSContainerRule') {
+        walk((rule as CSSGroupingRule).cssRules, media, supports, layer, [...container, (rule as CSSRule & { conditionText: string }).conditionText]);
+        continue;
+      }
+      if (rule instanceof CSSStyleRule) styleRule(rule, media, supports, layer, container);
       else if (rule instanceof CSSMediaRule) {
-        if (window.matchMedia(rule.media.mediaText).matches) walk(rule.cssRules, [...media, rule.media.mediaText], supports, layer);
+        if (window.matchMedia(rule.media.mediaText).matches) walk(rule.cssRules, [...media, rule.media.mediaText], supports, layer, container);
       } else if (rule instanceof CSSSupportsRule) {
-        if (CSS.supports(rule.conditionText)) walk(rule.cssRules, media, [...supports, rule.conditionText], layer);
+        if (CSS.supports(rule.conditionText)) walk(rule.cssRules, media, [...supports, rule.conditionText], layer, container);
       } else if (typeof CSSLayerStatementRule !== 'undefined' && rule instanceof CSSLayerStatementRule) {
         for (const name of rule.nameList) layerOf(layer, name);
       } else if (typeof CSSLayerBlockRule !== 'undefined' && rule instanceof CSSLayerBlockRule) {
-        walk(rule.cssRules, media, supports, layerOf(layer, rule.name));
+        walk(rule.cssRules, media, supports, layerOf(layer, rule.name), container);
       } else if (rule instanceof CSSImportRule) {
         const named = (rule as CSSImportRule & { layerName?: string | null }).layerName;
         try {
@@ -179,7 +186,7 @@ export function matchInPage({ ids, texts }: MatchArgs): Record<string, { rules: 
         } catch {
           // a cross-origin import: its rules are not readable from the page
         }
-      } else if ('cssRules' in rule) walk((rule as CSSGroupingRule).cssRules, media, supports, layer);
+      } else if ('cssRules' in rule) walk((rule as CSSGroupingRule).cssRules, media, supports, layer, container);
     }
   };
 

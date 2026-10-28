@@ -209,7 +209,7 @@ describe('the components stage', () => {
   }
 
   async function run(capture: CaptureOutput, transport: ModelClientOptions['transport']) {
-    for (const p of capture.pages) for (const vc of Object.values(p.viewports)) vc!.screenshot = { key: 'x.png', width: 1440, height: 3000, cut: false, png };
+    for (const p of capture.pages) for (const vc of Object.values(p.viewports)) vc!.screenshot = { key: 'x.png', width: 1440, height: 3000, pageHeight: 3000, cut: false, png };
     const dir = mkdtempSync(join(tmpdir(), 'dse-components-'));
     const ctx = new MemoryRunContext('comptest01', config, new ModelClient({ mode: 'live', recordingsDir: dir, transport }), new LocalStorage(dir), { id: 'comptest01', url: config.url, host: 't.app', status: 'running', createdAt: new Date().toISOString(), pipelineVersion: '1.0.0', viewports: ['desktop'] });
     const out = await components(ctx, capture, stageTokens);

@@ -24,17 +24,49 @@ export function shotExtent(shot: Shot): number {
 }
 
 /**
- * A region of the screenshot in CSS px, clipped to the page; null when nothing is left. A region
- * below the cut is read from the band that holds it, else from the band it overlaps most.
+ * A region of the screenshot in CSS px, clipped to what was captured; null when nothing is left. The
+ * screenshot is a main image and bands below it (clips of the page, D-098): a region inside one image
+ * is cut from it, a region across two is composed from both.
  */
 export function cropShot(shot: Shot, box: BBox): Buffer | null {
-  if (box.y + box.h > shot.height && shot.bands?.length) {
-    const overlap = (b: ShotBand) => Math.min(box.y + box.h, b.y + b.height) - Math.max(box.y, b.y);
-    const band = [...shot.bands].sort((a, b) => overlap(b) - overlap(a))[0]!;
-    const main = Math.min(box.y + box.h, shot.height) - box.y;
-    if (overlap(band) > main) return cropImage(band.png, shot.width, { ...box, y: box.y - band.y });
+  const sources = [{ y: 0, height: shot.height, png: shot.png }, ...(shot.bands ?? [])];
+  const within = sources.find((s) => box.y >= s.y && box.y + box.h <= s.y + s.height);
+  if (within) return cropImage(within.png, shot.width, { ...box, y: box.y - within.y });
+  const covering = sources.filter((s) => s.y < box.y + box.h && s.y + s.height > box.y).sort((a, b) => a.y - b.y);
+  if (!covering.length) return null;
+  if (covering.length === 1) return cropImage(covering[0]!.png, shot.width, { ...box, y: box.y - covering[0]!.y });
+  const scale = decode(covering[0]!.png).width / shot.width;
+  const x0 = Math.max(0, Math.floor(box.x * scale));
+  const x1 = Math.min(decode(covering[0]!.png).width, Math.ceil((box.x + box.w) * scale));
+  const top = Math.max(box.y, covering[0]!.y);
+  const bottom = Math.min(box.y + box.h, Math.max(...covering.map((c) => c.y + c.height)));
+  const y0 = Math.floor(top * scale);
+  const y1 = Math.ceil(bottom * scale);
+  if (x1 <= x0 || y1 <= y0) return null;
+  const out = new PNG({ width: x1 - x0, height: y1 - y0 });
+  let row = y0;
+  for (const c of covering) {
+    const src = decode(c.png);
+    const cTop = Math.floor(c.y * scale);
+    const from = Math.max(row, cTop);
+    const to = Math.min(y1, cTop + src.height);
+    if (to <= from) continue;
+    PNG.bitblt(src, out, x0, from - cTop, x1 - x0, to - from, 0, from - y0);
+    row = to;
   }
-  return cropImage(shot.png, shot.width, box);
+  return PNG.sync.write(out);
+}
+
+/** Clips of one page, top to bottom, as one image (the stored page screenshot). */
+export function stitch(clips: { png: Buffer }[]): Buffer {
+  const images = clips.map((c) => PNG.sync.read(c.png));
+  const out = new PNG({ width: images[0]!.width, height: images.reduce((h, i) => h + i.height, 0) });
+  let y = 0;
+  for (const i of images) {
+    PNG.bitblt(i, out, 0, 0, i.width, i.height, 0, y);
+    y += i.height;
+  }
+  return PNG.sync.write(out);
 }
 
 function cropImage(png: Buffer, cssWidth: number, box: BBox): Buffer | null {
@@ -53,7 +85,7 @@ function cropImage(png: Buffer, cssWidth: number, box: BBox): Buffer | null {
 /** One pixel of the screenshot or a band at a CSS px point, or null outside them. */
 export function pixelAt(shot: Shot, x: number, y: number): { r: number; g: number; b: number; a: number } | null {
   const band = y >= shot.height ? shot.bands?.find((b) => y >= b.y && y < b.y + b.height) : undefined;
-  if (y >= shot.height && !band) return null;
+  if (y < 0 || (y >= shot.height && !band)) return null;
   const src = decode(band ? band.png : shot.png);
   const scale = src.width / shot.width;
   const px = Math.floor(x * scale);

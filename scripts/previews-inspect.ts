@@ -21,8 +21,10 @@ const runDir = existsSync(join(target, 'run.json')) ? resolve(target) : null;
 const root = runDir ? resolve(runDir, '..') : resolve(import.meta.dirname, '../.dse/evals');
 const folder = runDir ? runDir.split('/').pop()! : target;
 const doc = JSON.parse(readFileSync(join(root, folder, 'run.json'), 'utf8')) as RunDocumentPartial;
-const server = await startStorageServer(root, 4401);
-const base = `http://localhost:4401/${folder}`;
+// The previews name the storage base they were built for: pipeline:run serves on 4403 (DSE_STORAGE_PORT), evals on 4400.
+const port = Number(process.env.DSE_STORAGE_PORT ?? (runDir ? 4403 : 4400));
+const server = await startStorageServer(root, port);
+const base = `http://localhost:${port}/${folder}`;
 const browser = await launchBrowser();
 const session = await openRenderSession(browser, base);
 mkdirSync(out, { recursive: true });
@@ -37,7 +39,7 @@ for (const c of doc.components ?? []) {
   if (existsSync(cropPath)) writeFileSync(join(out, `${slug}.captured.png`), readFileSync(cropPath));
   if (c.preview.htmlKey) {
     const f = c.provenance.firstSeen;
-    const shot = await renderPreview(session, `${base}/${c.preview.htmlKey}`, { w: f.bbox.w, h: f.bbox.h });
+    const shot = await renderPreview(session, `${base}/${c.preview.htmlKey}`, { w: f.bbox.w, h: f.bbox.h }, c.preview.ground ?? c.ground);
     if (shot) writeFileSync(join(out, `${slug}.render.png`), shot);
     const page = doc.pages?.find((p) => p.id === f.pageId);
     const shotKey = keys.pageScreenshot(doc.id!, f.pageId, f.viewport);
