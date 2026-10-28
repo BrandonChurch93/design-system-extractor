@@ -136,14 +136,16 @@ describe('the previews stage on the clean fixture', () => {
     const button = comps.find((c) => c.name === 'Button')!;
     expect(Object.keys(button.preview.stateHtmlKeys ?? {}).sort()).toEqual(['active', 'focus', 'hover']);
     const hover = (await storage.get(button.preview.stateHtmlKeys!.hover!))!.toString('utf8');
-    expect(hover).toContain('background-color: #E2E8F0 !important');
+    // The state rule without !important, and the recorded transition played from the default (D-094).
+    expect(hover).toMatch(/\.dse-root > :first-child:not\(#dse-state\) \{ background-color: #E2E8F0;[^}]*animation: dse-state-0 160ms /);
     expect(button.variants.every((v) => v.preview.mode === 'live')).toBe(true);
-    expect(comps.find((c) => c.type === 'avatar')!.preview).toMatchObject({ mode: 'captured', capturedReason: 'diff' });
+    // The avatar's photo keeps its own pixels from the screenshot, so it renders live (D-098).
+    expect(comps.find((c) => c.type === 'avatar')!.preview).toMatchObject({ mode: 'live' });
   });
 
   it('logs the build in the live-log voice', () => {
     const line = ctx.events.find((e) => e.stage === 'previews')!.message;
-    expect(line).toMatch(/^previews · 28 built · 27 live · 1 captured \(median diff \d+\.\d %\)$/);
+    expect(line).toMatch(/^previews · 28 built · 28 live · 0 captured \(median diff \d+\.\d %\)$/);
   });
 });
 

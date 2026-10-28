@@ -149,7 +149,7 @@ async function previewFor(ctx: RunContext, it: Item, htmlKey: string, existing: 
     if (masked <= LIVE_MAX_DIFF_PCT) return { preview: { ...existing, ...size, ground, mode: 'live', htmlKey, diffPct, fontsSubstituted: fonts.substituted ?? [] }, doc, fonts: fonts.mode };
     return { preview: { ...existing, ground, mode: 'captured', capturedReason: 'fonts-unavailable', diffPct, htmlKey }, doc, fonts: fonts.mode };
   }
-  return { preview: { ...existing, ground, mode: 'captured', capturedReason: 'diff', diffPct, htmlKey }, doc, fonts: fonts.mode };
+  return { preview: { ...existing, ground, mode: 'captured', capturedReason: fonts.mode === 'fallback' ? 'fonts-unavailable' : 'diff', diffPct, htmlKey }, doc, fonts: fonts.mode };
 }
 
 /** Render checks in flight at once, each on its own page: loading and drawing overlap the comparisons (D-066). */
