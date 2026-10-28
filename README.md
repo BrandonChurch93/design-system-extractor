@@ -2,19 +2,19 @@
 
 Paste a URL. Get its design system back.
 
-Tokens under the site's own names, its motion (durations, easings, keyframes, and the entrances, reveals and loops it runs), components with every state, automated checks, and a drift report that shows where the system is leaking. Exports to CSS variables, JSON, Tailwind, W3C design tokens, motion CSS and JSON, a design-system.md, a prompt for any model, an MCP server and a CLI.
+Tokens under the site's own names, its motion (durations, easings, keyframes, and the entrances, reveals and loops it runs), components with every state you can pin and replay on the component's own ground, automated checks with a per-component mark, and a drift report that shows where the system is leaking. Exports to CSS variables, JSON, Tailwind, W3C design tokens, motion CSS and JSON, a design-system.md, a prompt for any model, an MCP server and a CLI.
 
 ![A complete run of a fixture site: the stats, the palette, the drift headline and the tokens](docs/images/run-page.png)
 
-![The Motion section of a fixture run: the duration scale with its roles, the easing curves with Replay, the keyframes, and the patterns with their triggers](docs/images/motion.png)
+![The Motion section of a fixture run: the duration scale with its running ticks, the easing curves looping on one shared clock, the keyframes, and the patterns with their triggers](docs/images/motion.png)
 
 ## How it works
 
 1. A headless Chromium reads the site's sitemap and navigation, and a short model pass picks up to 12 pages that cover the most components.
 2. Each page is captured at 1440 and 390 px: the DOM with computed styles, screenshots, every control hovered, focused, tabbed and opened, and the motion that runs while it loads and scrolls, read through the Web Animations API and inline-style sampling.
 3. Raw values cluster into tokens, named by the site's own custom properties where it declares them; elements cluster into components with variants, states, their transitions and the page they were first seen on, core components apart from page-specific ones.
-4. Each component gets a sandboxed live preview when it renders faithfully, measured checks (contrast, focus, tap targets, names, reduced motion), and the drift report proposes a cleaner set that keeps every contrast ratio.
-5. Everything exports as files, a prompt, an MCP server and a CLI. The details are on the How it works page and in `docs/specs/`.
+4. Each component gets a sandboxed live preview on the ground it sat on when it renders faithfully, a file per state that plays the site's own transition, measured checks (contrast, focus, tap targets, names, reduced motion) with a mark on every component that passes all of them, and the drift report proposes a cleaner set that keeps every contrast ratio.
+5. Everything exports as files, a prompt, an MCP server and a CLI. Runs made by an earlier version open and compare: every read upgrades the stored document. The details are on the How it works page and in `docs/specs/`.
 
 ## Local setup
 

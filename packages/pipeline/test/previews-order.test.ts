@@ -2,7 +2,9 @@ import { PNG } from 'pngjs';
 import { describe, expect, it } from 'vitest';
 import { cropShot, paintMargin, pixelAt, shotExtent, type Shot } from '../src/components/crop';
 import { bandRegions } from '../src/stages/capture';
-import { reasonWords, renderOrder } from '../src/stages/previews';
+import { buildPreview } from '../src/previews/build';
+import { reasonWords, renderOrder, visibleBox } from '../src/stages/previews';
+import { snap } from './helpers/snap';
 
 const png = (w: number, h: number, rgb: [number, number, number]) => {
   const p = new PNG({ width: w, height: h });
@@ -49,3 +51,27 @@ describe('crops below the screenshot cut (D-098)', () => {
     expect(at(4, 4)).toEqual([255, 255, 255]);
   });
 });
+
+describe('what the render check compares (D-098)', () => {
+  it('takes the part of a box the viewport and a clipping ancestor show', () => {
+    const s = snap([
+      { tag: 'body', box: [0, 0, 1440, 3000] },
+      { tag: 'div', parent: 0, box: [100, 100, 384, 300], style: { 'overflow-x': 'hidden', 'overflow-y': 'hidden' } },
+      { tag: 'div', parent: 1, box: [100, 120, 784, 80] },
+      { tag: 'div', parent: 0, box: [-203, 400, 260, 40] },
+    ]);
+    expect(visibleBox({ el: s.elements[2]!, snapshot: s, viewport: 'desktop' })).toEqual({ x: 100, y: 120, w: 384, h: 80 });
+    expect(visibleBox({ el: s.elements[3]!, snapshot: s, viewport: 'desktop' })).toEqual({ x: 0, y: 400, w: 57, h: 40 });
+  });
+
+  it("keeps a rule in its cascade layer, declared in the page's order, under the unlayered rules", () => {
+    const s = snap([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'a', parent: 0, box: [10, 10, 120, 44] }]);
+    const rule = (selector: string, decl: [string, string], layerRank?: number) => ({ selector, matched: [selector], origin: 'regular', media: [], supports: [], declarations: [{ name: decl[0], value: decl[1], important: false }], ...(layerRank === undefined ? {} : { layerRank }) });
+    const out = buildPreview({ markup: '<a class="anchor reset" data-dse-id="e1">Go</a>', vars: {}, snapshot: s, root: s.elements[1]!, matched: { e1: { rules: [rule('.anchor', ['color', 'rgb(1, 2, 3)']), rule('.reset', ['color', 'inherit'], 1), rule('.reset', ['padding', '0px'], 0)], inline: [], pseudo: [] } }, imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy: { storageBase: 'https://store.example/dse' } });
+    expect(out.rules).toContain('@layer dse-l0, dse-l1;');
+    expect(out.rules).toContain('@layer dse-l0 { .reset { padding: 0px; } }');
+    expect(out.rules).toContain('.anchor { color: rgb(1, 2, 3); }');
+    expect(out.code).not.toContain('@layer');
+  });
+});
+

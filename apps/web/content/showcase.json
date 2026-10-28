@@ -15,7 +15,18 @@
         "spacingSteps": 11,
         "components": 28,
         "checksPassed": 47,
-        "checksApplicable": 49
+        "checksApplicable": 49,
+        "componentsPassing": {
+          "passed": 24,
+          "applicable": 26
+        },
+        "previews": {
+          "live": 28,
+          "diff": 0,
+          "css-too-large": 0,
+          "fonts-unavailable": 0,
+          "not-checked": 0
+        }
       },
       "palette": [
         {
@@ -65,7 +76,18 @@
         "spacingSteps": 11,
         "components": 31,
         "checksPassed": 48,
-        "checksApplicable": 57
+        "checksApplicable": 57,
+        "componentsPassing": {
+          "passed": 21,
+          "applicable": 29
+        },
+        "previews": {
+          "live": 30,
+          "diff": 1,
+          "css-too-large": 0,
+          "fonts-unavailable": 0,
+          "not-checked": 0
+        }
       },
       "palette": [
         {
@@ -115,7 +137,18 @@
         "spacingSteps": 11,
         "components": 28,
         "checksPassed": 47,
-        "checksApplicable": 49
+        "checksApplicable": 49,
+        "componentsPassing": {
+          "passed": 24,
+          "applicable": 26
+        },
+        "previews": {
+          "live": 28,
+          "diff": 0,
+          "css-too-large": 0,
+          "fonts-unavailable": 0,
+          "not-checked": 0
+        }
       },
       "palette": [
         {
@@ -165,7 +198,18 @@
         "spacingSteps": 11,
         "components": 28,
         "checksPassed": 47,
-        "checksApplicable": 49
+        "checksApplicable": 49,
+        "componentsPassing": {
+          "passed": 24,
+          "applicable": 26
+        },
+        "previews": {
+          "live": 28,
+          "diff": 0,
+          "css-too-large": 0,
+          "fonts-unavailable": 0,
+          "not-checked": 0
+        }
       },
       "palette": [
         {
@@ -215,7 +259,18 @@
         "spacingSteps": 7,
         "components": 22,
         "checksPassed": 42,
-        "checksApplicable": 47
+        "checksApplicable": 47,
+        "componentsPassing": {
+          "passed": 15,
+          "applicable": 20
+        },
+        "previews": {
+          "live": 22,
+          "diff": 0,
+          "css-too-large": 0,
+          "fonts-unavailable": 0,
+          "not-checked": 0
+        }
       },
       "palette": [
         {
@@ -260,29 +315,40 @@
       "category": "SaaS",
       "order": 6,
       "stats": {
-        "colors": 17,
+        "colors": 19,
         "typeStyles": 9,
         "spacingSteps": 11,
-        "components": 33,
-        "checksPassed": 52,
-        "checksApplicable": 59
+        "components": 36,
+        "checksPassed": 56,
+        "checksApplicable": 63,
+        "componentsPassing": {
+          "passed": 26,
+          "applicable": 33
+        },
+        "previews": {
+          "live": 35,
+          "diff": 1,
+          "css-too-large": 0,
+          "fonts-unavailable": 0,
+          "not-checked": 0
+        }
       },
       "palette": [
         {
           "value": "#1F1F1F",
-          "share": 0.347
+          "share": 0.346
         },
         {
           "value": "#FFFFFF",
-          "share": 0.143
+          "share": 0.146
         },
         {
           "value": "#0B1F3A",
-          "share": 0.082
+          "share": 0.081
         },
         {
           "value": "#D1D1D1",
-          "share": 0.08
+          "share": 0.079
         },
         {
           "value": "#737373",

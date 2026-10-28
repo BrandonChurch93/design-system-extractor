@@ -105,7 +105,23 @@ export function matchInPage({ ids, texts }: MatchArgs): Record<string, { rules: 
     return Boolean(tag && !tags.has(tag));
   };
 
-  const styleRule = (rule: CSSStyleRule, media: string[], supports: string[]) => {
+  // Cascade layers (D-098): every layer path in first-seen order, so ranks can follow the cascade.
+  type LayerNode = { kids: Map<string, LayerNode>; path: string };
+  const layerRoot: LayerNode = { kids: new Map(), path: '' };
+  let anonymous = 0;
+  const layerOf = (parent: string, name: string): string => {
+    const segs = parent ? parent.split('.') : [];
+    let node = layerRoot;
+    for (const seg of segs) node = node.kids.get(seg)!;
+    for (const seg of (name || `anon${++anonymous}`).split('.')) {
+      if (!node.kids.has(seg)) node.kids.set(seg, { kids: new Map(), path: node.path ? `${node.path}.${seg}` : seg });
+      node = node.kids.get(seg)!;
+    }
+    return node.path;
+  };
+  const layered: { rule: MatchedRuleOut; layer: string }[] = [];
+
+  const styleRule = (rule: CSSStyleRule, media: string[], supports: string[], layer = '') => {
     const hits = new Map<Element, { matched: string[]; pseudo?: string }[]>();
     for (const part of parts(rule.selectorText)) {
       const p = pseudoRe.exec(part);
@@ -137,27 +153,33 @@ export function matchInPage({ ids, texts }: MatchArgs): Record<string, { rules: 
       const o = byEl.get(el)!;
       for (const h of list) {
         const r: MatchedRuleOut = { selector: rule.selectorText, matched: h.matched, origin: 'regular', media, supports, declarations: decls };
+        if (layer) layered.push({ rule: r, layer });
         if (h.pseudo) o.pseudo.set(h.pseudo, [...(o.pseudo.get(h.pseudo) ?? []), r]);
         else o.rules.push(r);
       }
     }
   };
 
-  const walk = (rules: CSSRuleList | undefined, media: string[], supports: string[]) => {
+  const walk = (rules: CSSRuleList | undefined, media: string[], supports: string[], layer = '') => {
     if (!rules) return;
     for (const rule of rules) {
-      if (rule instanceof CSSStyleRule) styleRule(rule, media, supports);
+      if (rule instanceof CSSStyleRule) styleRule(rule, media, supports, layer);
       else if (rule instanceof CSSMediaRule) {
-        if (window.matchMedia(rule.media.mediaText).matches) walk(rule.cssRules, [...media, rule.media.mediaText], supports);
+        if (window.matchMedia(rule.media.mediaText).matches) walk(rule.cssRules, [...media, rule.media.mediaText], supports, layer);
       } else if (rule instanceof CSSSupportsRule) {
-        if (CSS.supports(rule.conditionText)) walk(rule.cssRules, media, [...supports, rule.conditionText]);
+        if (CSS.supports(rule.conditionText)) walk(rule.cssRules, media, [...supports, rule.conditionText], layer);
+      } else if (typeof CSSLayerStatementRule !== 'undefined' && rule instanceof CSSLayerStatementRule) {
+        for (const name of rule.nameList) layerOf(layer, name);
+      } else if (typeof CSSLayerBlockRule !== 'undefined' && rule instanceof CSSLayerBlockRule) {
+        walk(rule.cssRules, media, supports, layerOf(layer, rule.name));
       } else if (rule instanceof CSSImportRule) {
+        const named = (rule as CSSImportRule & { layerName?: string | null }).layerName;
         try {
-          walk(rule.styleSheet?.cssRules, media, supports);
+          walk(rule.styleSheet?.cssRules, media, supports, named === null || named === undefined ? layer : layerOf(layer, named));
         } catch {
           // a cross-origin import: its rules are not readable from the page
         }
-      } else if ('cssRules' in rule) walk((rule as CSSGroupingRule).cssRules, media, supports);
+      } else if ('cssRules' in rule) walk((rule as CSSGroupingRule).cssRules, media, supports, layer);
     }
   };
 
@@ -181,6 +203,14 @@ export function matchInPage({ ids, texts }: MatchArgs): Record<string, { rules: 
     walk(rules, sheet.media.mediaText ? [sheet.media.mediaText] : [], []);
   });
   for (const sheet of document.adoptedStyleSheets ?? []) walk(sheet.cssRules, [], []);
+  // A layer's sublayers come before its own rules; all layers before unlayered rules.
+  const rank = new Map<string, number>();
+  const order = (node: LayerNode) => {
+    for (const kid of node.kids.values()) order(kid);
+    if (node.path) rank.set(node.path, rank.size);
+  };
+  order(layerRoot);
+  for (const l of layered) l.rule.layerRank = rank.get(l.layer);
 
   const out: Record<string, { rules: MatchedRuleOut[]; inline: Declaration[]; pseudo: { pseudo: string; rules: MatchedRuleOut[] }[] }> = {};
   for (const [el, o] of byEl) {

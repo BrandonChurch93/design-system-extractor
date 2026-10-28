@@ -409,12 +409,19 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
     return out;
   };
   const filtered = [...carried, ...rules.map((p) => ({ p, decls: filterResets(p.rule, tagsOf(p)) })).filter((x): x is { p: Placed; decls: MatchedRule['declarations'] } => x.decls !== null)];
+  // A rule in a cascade layer keeps its place under the site's unlayered rules: the preview declares
+  // the layers in the page's order and wraps each rule in its own (D-098). The exported code is unwrapped.
+  const ranks = [...new Set(filtered.map((x) => x.p.rule.layerRank).filter((r): r is number => r !== undefined))].sort((a, b) => a - b);
   const textOf = (code: boolean) =>
-    filtered
-      .map(({ p, decls }) => {
+    [
+      ...(!code && ranks.length ? [`@layer ${ranks.map((r) => `dse-l${r}`).join(', ')};`] : []),
+      ...filtered.map(({ p, decls }) => {
         const body = declarationText(decls, code);
-        return body ? `${p.selectors.join(', ')} { ${body} }` : '';
-      })
+        if (!body) return '';
+        const rule = `${p.selectors.join(', ')} { ${body} }`;
+        return !code && p.rule.layerRank !== undefined ? `@layer dse-l${p.rule.layerRank} { ${rule} }` : rule;
+      }),
+    ]
       .filter(Boolean)
       .join('\n');
   const ruleText = textOf(false);

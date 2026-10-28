@@ -3,6 +3,7 @@
   align-items: center;
   gap: var(--dse-space-3);
   min-width: 0;
+  max-width: 100%;
 }
 
 .chips {
@@ -15,7 +16,7 @@
   }
 
   /* The chips scroll; Play stays at the end of the row. */
-  .chips {
+  .chips.chips {
     flex: 1 1 auto;
     flex-wrap: nowrap;
     overflow-x: auto;

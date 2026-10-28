@@ -3,5 +3,6 @@
 // `cssom-match.ts` (D-068). Previews are rebuilt from these.
 
 export type Declaration = { name: string; value: string; important: boolean };
-export type MatchedRule = { selector: string; matched: string[]; origin: string; media: string[]; supports: string[]; declarations: Declaration[] };
+/** `layerRank`: the rule's cascade layer by its place in the page's layer order; absent when the rule is in no layer (D-098). */
+export type MatchedRule = { selector: string; matched: string[]; origin: string; media: string[]; supports: string[]; declarations: Declaration[]; layerRank?: number };
 export type MatchedStyles = { rules: MatchedRule[]; inline: Declaration[]; pseudo: { pseudo: string; rules: MatchedRule[] }[] };

@@ -26,8 +26,10 @@
 
 .groundToggle {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--dse-space-2);
+  min-width: 0;
 }
 
 .label {
@@ -48,5 +50,10 @@
   .controls {
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .controls > * {
+    min-width: 0;
+    max-width: 100%;
   }
 }

@@ -41,9 +41,40 @@ function averageColor(png: Buffer | null): string | undefined {
   return `rgb(${Math.round(r / n)}, ${Math.round(g / n)}, ${Math.round(b / n)})`;
 }
 
-function referenceCrop(it: Item): Buffer | null {
+/**
+ * The part of the element the page shows: its box within the viewport's width and every ancestor
+ * that clips its overflow, in page coordinates (D-098). Null when nothing of it shows.
+ */
+export function visibleBox(it: Pick<Item, 'el' | 'snapshot' | 'viewport'>): { x: number; y: number; w: number; h: number } | null {
+  let x0 = Math.max(it.el.x, 0);
+  let y0 = Math.max(it.el.y, 0);
+  let x1 = Math.min(it.el.x + it.el.w, viewportSize[it.viewport].width);
+  let y1 = it.el.y + it.el.h;
+  for (let p = it.el.p; p >= 0; p = it.snapshot.elements[p]!.p) {
+    const a = it.snapshot.elements[p]!;
+    const clipX = a.style['overflow-x'] && a.style['overflow-x'] !== 'visible';
+    const clipY = a.style['overflow-y'] && a.style['overflow-y'] !== 'visible';
+    if (a.tag === 'html' || a.tag === 'body') continue;
+    if (clipX) {
+      x0 = Math.max(x0, a.x);
+      x1 = Math.min(x1, a.x + a.w);
+    }
+    if (clipY) {
+      y0 = Math.max(y0, a.y);
+      y1 = Math.min(y1, a.y + a.h);
+    }
+  }
+  return x1 - x0 >= 1 && y1 - y0 >= 1 ? { x: x0, y: y0, w: x1 - x0, h: y1 - y0 } : null;
+}
+
+function referenceCrop(it: Item, shown: { x: number; y: number; w: number; h: number } | null): Buffer | null {
   if (it.revealed) return it.revealed.open.rootCrop ?? null;
-  return cropShot(it.vc.screenshot, { x: it.el.x, y: it.el.y, w: it.el.w, h: it.el.h });
+  return cropShot(it.vc.screenshot, shown ?? { x: it.el.x, y: it.el.y, w: it.el.w, h: it.el.h });
+}
+
+/** The render cut to the part of the element the page shows, in the render's own coordinates. */
+function cutRender(png: Buffer, it: Item, shown: { x: number; y: number; w: number; h: number }): Buffer | null {
+  return cropShot({ png, width: Math.round(it.el.w * 100) / 100, height: it.el.h }, { x: shown.x - it.el.x, y: shown.y - it.el.y, w: shown.w, h: shown.h });
 }
 
 function fontsUsed(it: Item): { family: string; weights: number[] }[] {
@@ -98,15 +129,21 @@ async function previewFor(ctx: RunContext, it: Item, htmlKey: string, existing: 
   const doc = buildPreview({ markup: markup.html, vars: markup.vars, snapshot: it.snapshot, root: it.el, matched, imageColors, imageUrls, fonts, policy, siteVars, viewport: viewportSize[it.viewport] });
   if (doc.tooLarge) return { preview: { ...existing, ground, mode: 'captured', capturedReason: 'css-too-large' }, doc, fonts: fonts.mode };
   await ctx.files.put(htmlKey, doc.html, { contentType: 'text/html; charset=utf-8' });
-  const shot = await renderPreview(session, ctx.files.publicUrl(htmlKey), { w: it.el.w, h: it.el.h }, ground);
-  const ref = referenceCrop(it);
+  const rendered = await renderPreview(session, ctx.files.publicUrl(htmlKey), { w: it.el.w, h: it.el.h }, ground);
+  const shown = it.revealed ? null : visibleBox(it);
+  const clipped = shown && (shown.x > it.el.x + 0.5 || shown.y > it.el.y + 0.5 || shown.w < it.el.w - 0.5 || shown.h < it.el.h - 0.5);
+  const shot = rendered && clipped ? cutRender(rendered, it, shown) : rendered;
+  const ref = referenceCrop(it, clipped ? shown : null);
   const diffPct = shot && ref ? diffPercent(shot, ref) : 100;
   const size = { width: Math.round(it.el.w), height: Math.round(it.el.h) };
   if (diffPct <= LIVE_MAX_DIFF_PCT) return { preview: { ...existing, ...size, ground, mode: 'live', htmlKey, diffPct }, doc, fonts: fonts.mode };
   // A substituted font alone never demotes a component: the comparison runs again with the text masked (D-095).
   if (fonts.mode === 'fallback' && shot && ref) {
-    const boxes = await textBoxes(session);
-    const masked = boxes.length ? diffPercent(maskBoxes(shot, boxes, it.el.w), maskBoxes(ref, boxes, it.el.w)) : diffPct;
+    const dx = clipped ? shown.x - it.el.x : 0;
+    const dy = clipped ? shown.y - it.el.y : 0;
+    const boxes = (await textBoxes(session)).map((b) => ({ ...b, x: b.x - dx, y: b.y - dy }));
+    const width = clipped ? shown.w : it.el.w;
+    const masked = boxes.length ? diffPercent(maskBoxes(shot, boxes, width), maskBoxes(ref, boxes, width)) : diffPct;
     if (masked <= LIVE_MAX_DIFF_PCT) return { preview: { ...existing, ...size, ground, mode: 'live', htmlKey, diffPct, fontsSubstituted: fonts.substituted ?? [] }, doc, fonts: fonts.mode };
     return { preview: { ...existing, ground, mode: 'captured', capturedReason: 'fonts-unavailable', diffPct, htmlKey }, doc, fonts: fonts.mode };
   }

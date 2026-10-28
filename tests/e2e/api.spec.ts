@@ -51,8 +51,10 @@ test('the MCP server loads a run with --run from the app', async ({ baseURL }) =
 test('the compare page shows the messy-after deltas', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/compare?a=seedmessy0&b=seedmafter');
-  await expect(page.getByText('Grays · 5 fewer')).toBeVisible();
-  await expect(page.getByText('Components · 2 new')).toBeVisible();
+  // messy-after's dark band (D-094) adds one gray (#0B0D10) and three components to the v1.1 deltas.
+  await expect(page.getByText('Grays · 4 fewer, still 2 to go')).toBeVisible();
+  await expect(page.getByText('Components · 5 new')).toBeVisible();
+  for (const name of ['Band button', 'Feature card (night mode)']) await expect(page.getByRole('row', { name: new RegExp(`^${name.replace(/[()]/g, '\\$&')} New`) })).toBeVisible();
   await expect(page.getByRole('row', { name: /Button Changed 7 variants 6 variants/ })).toBeVisible();
   for (const name of ['Newsletter input', 'Status badge']) await expect(page.getByRole('row', { name: new RegExp(`^${name} Changed`) })).toBeVisible();
   await expect(page.getByRole('row', { name: /^Toast New/ })).toBeVisible();

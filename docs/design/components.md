@@ -124,7 +124,7 @@ Type styles and sizes named below are the ones in `docs/design/design-system.md`
 
 **PagesCard** · The list of selected pages with reasons, filling as discovery completes, same rows as PageListPopover.
 
-**RegionSkeleton** · The skeleton for each run page region at its real height: palette (8 swatches at 96 high), type (8 rows), spacing (9 bars), motion (the duration strip, 2 easing cards with their stages, 4 pattern rows), components (the filter row, the tier heading, 6 cards in two rows at desktop, the Show all button), checks (summary plus 5 rows), drift (3 numbers), exports (the download row, 8 cards plus the MCP card). Heights are the clean fixture's at 1440, the typical result, so nothing below a region moves when it fills; drift varies with what a site gets wrong and animates its height (D-080).
+**RegionSkeleton** · The skeleton for each run page region at its real height: palette (8 swatches at 96 high), type (8 rows), spacing (9 bars), motion (the duration strip, 2 easing cards with their stages, 4 pattern rows), components (the filter row, the tier heading, 6 cards in two rows at desktop, the Show all button), checks (the opening line, the summary plus 5 rows), drift (3 numbers), exports (the download row, 8 cards plus the MCP card). Heights are the clean fixture's at 1440, the typical result, so nothing below a region moves when it fills; drift varies with what a site gets wrong and animates its height (D-080).
 
 ## Motion (D-081)
 

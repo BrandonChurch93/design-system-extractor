@@ -4,8 +4,8 @@ import styles from './RegionSkeleton.module.css';
 export type SkeletonRegion = 'palette' | 'type' | 'spacing' | 'motion' | 'components' | 'checks' | 'drift' | 'exports';
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
-/** The clean fixture's Motion section at 1440 (D-080). */
-const MOTION = { strip: 171, easing: 251, patterns: 977 };
+/** The clean fixture's Motion section at 1440 (D-080, re-measured for v1.2's easing stages, D-098). */
+const MOTION = { strip: 171, easing: 358, patterns: 977 };
 
 /**
  * A run page region before its stage lands, at the height of a typical result so nothing below it
@@ -63,7 +63,8 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
       return (
         <span className={styles.stack} aria-hidden="true">
           <Skeleton height={32} width="56%" radius="pill" />
-          <Skeleton height={20} width={180} />
+          {/* The tier heading, and the cards' taller check Pills (D-096). */}
+          <Skeleton height={26} width={180} />
           <ul className={styles.cards}>
             {range(6).map((i) => (
               <li key={i} className={styles.card}>
@@ -82,6 +83,8 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
     case 'checks':
       return (
         <span className={styles.stack} aria-hidden="true">
+          {/* The opening line and its margin (D-096): 63 px in all with the stack's gap. */}
+          <Skeleton height={43} width="60%" />
           <Skeleton height={143} radius="lg" />
           <span className={styles.rows} style={{ height: 374 }}>
             {range(5).map((i) => (

@@ -100,16 +100,15 @@ test('pinning Hover loads the hover file, whose root reaches the recorded values
   await expect(frame).toHaveAttribute('src', new RegExp(`${c.preview.stateHtmlKeys!.hover!.replace(/[.]/g, '\\.')}$`));
   await expect(stage).toHaveAttribute('data-state', 'hover');
   // The frame is sandboxed with no scripts; the test reads its root through the browser's own frame tree.
-  const inner = page.frames().find((f) => f.url().endsWith(c.preview.stateHtmlKeys!.hover!))!;
-  expect(inner).toBeTruthy();
-  const read = () => inner.evaluate((p) => getComputedStyle(document.querySelector('.dse-root > :first-child')!).getPropertyValue(p), timed.property);
-  // On load the root plays the state's generated keyframes (D-094); choosing Hover again replays them.
+  // Choosing Hover again mounts a new frame, which plays the state's generated keyframes on load (D-094).
   await page.getByRole('radiogroup', { name: runPage.preview.states }).getByRole('radio', { name: 'Hover' }).click();
-  const replayed = page.frames().find((f) => f.url().endsWith(c.preview.stateHtmlKeys!.hover!))!;
+  await page.waitForTimeout(50);
+  const replayed = (await (await frame.elementHandle())!.contentFrame())!;
+  expect(replayed.url()).toMatch(new RegExp(`${c.preview.stateHtmlKeys!.hover!.replace(/[.]/g, '\\.')}$`));
   const names = await replayed.evaluate(() => document.getAnimations().map((a) => (a as CSSAnimation).animationName));
   expect(names.some((n) => n.startsWith('dse-state-'))).toBe(true);
   await page.waitForTimeout(timed.transition!.durationMs + 250);
-  const late = await read().catch(() => replayed.evaluate((p) => getComputedStyle(document.querySelector('.dse-root > :first-child')!).getPropertyValue(p), timed.property));
+  const late = await replayed.evaluate((p) => getComputedStyle(document.querySelector('.dse-root > :first-child')!).getPropertyValue(p), timed.property);
   const expected = await replayed.evaluate(([p, v]) => {
     const probe = document.createElement('i');
     probe.style.setProperty(p!, v!);
