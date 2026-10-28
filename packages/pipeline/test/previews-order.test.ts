@@ -73,5 +73,12 @@ describe('what the render check compares (D-098)', () => {
     expect(out.rules).toContain('.anchor { color: rgb(1, 2, 3); }');
     expect(out.code).not.toContain('@layer');
   });
-});
 
+  it("does not apply the root's own translation again, since its box was measured with it", () => {
+    const s = snap([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'div', parent: 0, box: [10, 10, 120, 44], style: { transform: 'matrix(1, 0, 0, 1, -60, 0)' } }]);
+    const out = buildPreview({ markup: '<div data-dse-id="e1">Go</div>', vars: {}, snapshot: s, root: s.elements[1]!, matched: {}, imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy: { storageBase: 'https://store.example/dse' } });
+    expect(out.css).toContain('.dse-root > :first-child:not(#dse-shift) { transform: none; }');
+    const turned = snap([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'div', parent: 0, box: [10, 10, 120, 44], style: { transform: 'matrix(0.7, 0.7, -0.7, 0.7, 0, 0)' } }]);
+    expect(buildPreview({ markup: '<div data-dse-id="e1">Go</div>', vars: {}, snapshot: turned, root: turned.elements[1]!, matched: {}, imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy: { storageBase: 'https://store.example/dse' } }).css).not.toContain('dse-shift');
+  });
+});

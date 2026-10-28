@@ -175,6 +175,16 @@ On the production build against the local database: `/compare?a=tx4mehptdf&b=mhx
 
 `pnpm showcase --add z1ud0oz4vu` (the sparse v1.0 modernsoftworks.com run) answered `z1ud0oz4vu is sparse (0 components). A sparse run is not added to the showcase.` and exited 1. `pnpm showcase --add mhxvphzzfr` made Modern Softworks the first card on the home page with the promoted caption (`Sites I have run it on. Yours stays private unless you share the link.`), `is_showcase` true and null retention, and warned `7 entries leave an orphan at 3 or 2 columns. Add 5 more or remove 1.`; `--list` showed it as promoted; `--remove mhxvphzzfr` took it down with its 90-day retention back.
 
+### After the second round of handling (2026-10-28, 15 min)
+
+| Run | live | diff | css-too-large | fonts-unavailable | not-checked | total | live of checked |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| www.modernsoftworks.com `89oeabwdea` | 60 | 15 | 0 | 0 | 0 | 75 | 60 of 75 · 80.0% |
+| linear.app `ydbxpnubjo` | 83 | 36 | 1 | 0 | 0 | 120 | 83 of 120 · 69.2% |
+| stripe.com `dk3a8fecyk` | 80 | 40 | 0 | 0 | 0 | 120 | 80 of 120 · 66.7% |
+
+linear.app and stripe.com are below the 70% floor and their remaining captures are not the out-of-scope kinds, so a third round followed.
+
 ### After the first round of handling (2026-10-28, 15 min, storage over HTTP)
 
 | Run | live | diff | css-too-large | fonts-unavailable | not-checked | total | live of checked |

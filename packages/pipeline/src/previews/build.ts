@@ -451,7 +451,11 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
   const inside = input.snapshot.elements.filter((e) => e.p >= 0 && isInside(input.snapshot, e, input.root));
   const borderBox = inside.length > 0 && inside.filter((e) => e.style['box-sizing'] === 'border-box').length * 2 > inside.length;
   const boxCss = borderBox ? '\n.dse-root *, .dse-root *::before, .dse-root *::after { box-sizing: border-box; }' : '';
-  const rootCss = `.dse-root { ${rootDecls.map((d) => `${d.name}: ${d.value};`).join(' ')} display: flex; flex-direction: column; align-items: flex-start; width: ${w}px; }\n.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: ${w}px !important; height: ${h}px !important; flex: none !important;${/^(absolute|fixed|sticky)$/.test(input.root.style.position) ? ' position: relative !important; inset: auto !important;' : ''} }${boxCss}`;
+  // The box was measured with the element's own translation applied, so the preview does not apply it again (D-098).
+  const shift = /^matrix\(1, 0, 0, 1, [-\d.e]+, [-\d.e]+\)$/.test(input.root.style.transform ?? '');
+  const ownTranslate = input.root.style.translate && input.root.style.translate !== 'none';
+  const unshift = shift || ownTranslate ? `\n.dse-root > :first-child:not(#dse-shift) { ${shift ? 'transform: none; ' : ''}${ownTranslate ? 'translate: none; ' : ''}}` : '';
+  const rootCss = `.dse-root { ${rootDecls.map((d) => `${d.name}: ${d.value};`).join(' ')} display: flex; flex-direction: column; align-items: flex-start; width: ${w}px; }\n.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: ${w}px !important; height: ${h}px !important; flex: none !important;${/^(absolute|fixed|sticky)$/.test(input.root.style.position) ? ' position: relative !important; inset: auto !important;' : ''} }${boxCss}${unshift}`;
   const fontCss = input.fonts.faces.map((f) => `@font-face { font-family: '${f.family}'; src: url('${f.url}') format('${f.format}'); font-weight: ${f.weight}; font-style: ${f.style}; font-display: block; }`).join('\n');
   const css = [fontCss, rootCss, ruleText].filter(Boolean).join('\n');
 
