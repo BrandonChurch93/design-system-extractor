@@ -10,13 +10,13 @@ None.
 
 ## Current phase
 
-P16 · Fidelity: motion, site variables, naming, export integrity (v1.1). In progress. Step 1 done: the addendum is merged into the documents (D-081 to D-089) and deleted. v1.0 (P0 to P15) passed its Definition of Done on 2026-10-26.
+Build complete. v1.1 (P16 · Fidelity: motion, site variables, naming, export integrity) passed its gate and the Definition of Done in full on a fresh clone on 2026-10-27. v1.0 (P0 to P15) passed on 2026-10-26.
 
 ## Next action
 
-A record run is in progress after the page-segment change (`env DSE_MODEL_MODE=record pnpm evals`; the one before it passed 55 of 55, replay 55 of 55). When it passes: `pnpm evals` (replay) then `pnpm fixtures:runs` (before any `--fallback` run, which overwrites `.dse/evals`), `env DSE_UPDATE_GOLDENS=1 pnpm test:unit packages/pipeline/test/exports.test.ts`, `pnpm evals --fallback`, `pnpm evals --prune-recordings`, the extras (`env DSE_MODEL_MODE=record pnpm exec node scripts/run.mjs tsx scripts/record-extra.ts messy-after walled`), commit recordings, runs and goldens. Then the integration suites (counts in `stages.int.test.ts` move from 27 to 28 components on clean), `pnpm db:seed:fixtures`, the skeleton heights (`MOTION` in `RegionSkeleton.tsx`, and Tokens and Components after the overlays row and tier headings) from `tests/e2e/motion.spec.ts`, `qa:design` review at 1440, 820 and 390, axe, Lighthouse, the stripe.com real-site check, the final live eval (`env DSE_MODEL_MODE=live pnpm evals`) for `results.json` and the README table, the README screenshot, verify:all, the Definition of Done.
+None. The build is complete; what remains is the owner's list at the end of this file. A future session starts from `docs/plan.md` and this file as usual.
 
-Done so far in P16: docs merged (D-081 to D-089); schema; capture motion pass and state diff; tokens; components; previews; drift; exports; MCP get_motion; CLI formats; eval metrics; the fixtures' v1.1 layer and expected.json; the web app's v1.1 surfaces (Motion section with DurationStrip, EasingGrid, KeyframesList, PatternList and Replay; overlays strip; site-name Pill and provenance lines in TokenPopover; component tiers and the Core only chip; the panel's Motion block and token-named CSS; eight export cards; Compare's Motion table; catalog entries). The build's own rulings are D-090.
+P16 in short: the addendum merged into the documents (D-081 to D-089) and deleted; schema; capture's motion pass and state diff; site variables, overlays, type role words, breakpoint twins and motion tokens; component tiers, slugs, context names, third words and motion; reset filtering; motion drift; `motion.css`, `motion.json` and the export rewrite with variable resolution; MCP `get_motion`; CLI formats; eval rows for motion, naming and export integrity; the fixtures' v1.1 layer; the web app's Motion section, overlays strip, site names, tiers and Core only, panel Motion block, eight export cards, Compare's Motion table and catalog entries; the stripe.com check. The build's own rulings are D-090.
 
 Environment note: the repository sits on an iCloud-synced Desktop and macOS evicts files (`ls -lO` shows `dataless`); a read then blocks while iCloud downloads. `find . -type f -flags +dataless -print0 | xargs -0 cat > /dev/null` brings them back.
 
@@ -253,7 +253,21 @@ P16 gate (docs/plan.md):
 - [x] The Motion section screenshotted at 1440, 820 and 390 on a fixture run and reviewed (`qa:design`; the duration labels fixed after review); Replay works and respects reduced motion (`tests/e2e/reduced-motion.spec.ts`, both halves).
 - [x] Panel Motion block, Compare rows and /open reviewed the same way.
 - [x] Fresh local run on stripe.com: prompt with a Motion section, 46 observed patterns, zero undeclared `var(--`, no numeric names; under `P16 real-site check` above.
-- [ ] `pnpm verify:all` green on a fresh clone; goldens updated once and logged (D-090); Definition of Done re-run in full (eleven items).
+- [x] `pnpm verify:all` green on a fresh clone; goldens updated for v1.1 and logged (D-090: the final set follows the final live eval); Definition of Done re-run in full (eleven items, below).
+
+v1.1 Definition of Done (P16), all true at once on a fresh clone of `570874d` with the Docker services running and `DSE_MODEL_MODE=replay` (2026-10-27):
+
+- [x] 1. `pnpm verify:all` green on a fresh clone in 3,715 s: check, seed check, 716 tests (579 unit), security, e2e 225, full evals at thresholds with the motion, naming and export-integrity rows, build, visual 128 (the catalog section by section), axe 184, billing 17, Lighthouse, copy, audit (no high; one moderate, GHSA-67mh-4wv8-2f99, as in v1.0).
+- [x] 2. Every phase gate P0 to P16 recorded below with its date.
+- [x] 3. `docs/traceability.md` maps every `##` and `###` section of the 21 spec and design documents, `motion-capture.md` included, with no gap (`scripts/test/traceability.test.ts`).
+- [x] 4. `docs/decisions.md` records every deviation (D-001 to D-090); Known limitations lists each with its decision id.
+- [x] 5. `pnpm docker:smoke` builds the worker image from the root and completes the clean fixture in it (28 components, 27 live previews); `pnpm --filter web build` succeeds.
+- [x] 6. The flag-off test passes (inside verify:all).
+- [x] 7. `pnpm qa:copy` passes.
+- [x] 8. `pnpm run doctor --production --env fixtures/env/production.sample` passes.
+- [x] 9. The working tree is clean and committed; there is no remote, nothing was pushed.
+- [x] 10. STATUS says `Build complete`, and the owner's end list below is exactly what remains.
+- [x] 11. The prompt export of every fixture run has a Motion section, a Site variables block, a Default line per component, core components before page-specific ones, and no `var(--` to an undeclared name (the export-integrity eval row, every fixture; the stripe.com run too).
 
 v1.0 Definition of Done (P15):
 
@@ -271,6 +285,8 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 - [x] 10. STATUS says `Build complete`, and the owner's end list below is exactly what remains.
 
 ## Gates passed
+
+- P16 · Fidelity: motion, site variables, naming, export integrity (v1.1) · 2026-10-27 · addendum merged and deleted (D-081 to D-089), the build's rulings D-090 · evals: final live (record) run 55 of 55 published in `fixtures/results.json` and the README, replay 55 of 55, fallback 55 of 55 · variable resolution on every fixture export, every component prompt and the three frozen partial documents · `motion.css` and `motion.json` goldens · Motion section, panel Motion block, Compare and /open reviewed at 1440, 820 and 390 (duration labels and type row names fixed after review) · Replay under reduced motion (e2e, both halves) · stripe.com real-site check pasted above, two real-site defects fixed (0 ms durations, undeclared theme and runtime variables) · skeleton heights re-measured · axe zero violations (landmarks named apart) · visual goldens updated after the final live eval, the catalog compared section by section · README features, Motion screenshot and table, CHANGELOG 1.1.0, version 1.1.0 · verify:all green on a fresh clone, Docker smoke, web build, doctor on the production sample · build spend $0.56 of $20.
 
 - P15 · Final consistency, README, runbook, Definition of Done · 2026-10-26 · traceability for every section of every spec and design document, 136 gaps closed by tests or by fixes logged in D-076 to D-080 (intermediate files deleted, snapshot cap, structural rule forms, blocked-run redirect, toast replacement, worker connections in the seed and showcase, budget cut events, grid entrances, exits first, row hover, skeleton heights, font CORS, the synthetic 404 under the cap, `radius-xs`, run ids in mono) · final live eval: every threshold passed on all five fixtures, $0.023, committed to `fixtures/results.json` · README with screenshot and results, CHANGELOG 1.0.0, runbook verified (showcase time, timeout variable, the modernsoftworks.com restore) · Known limitations complete · goldens for the run pages and the catalog reviewed · verify:all green on a fresh clone, Docker smoke, web build, doctor on the production sample · build spend $0.40 of $20.
 
@@ -428,6 +444,8 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-27 · Build complete · v1.1 · the Definition of Done is green on a fresh clone; nothing pushed.
+- 2026-10-27 · Gate passed · P16 · evals 55 of 55 live, replay and fallback, stripe.com check, screenshot review, verify:all on a fresh clone.
 - 2026-10-27 · Session continued (after compaction) · P16 · re-read CLAUDE.md, STATUS, decisions D-081 to D-089, plan P16, motion-capture, pages, components, copy, component-detection, model-calls · first live recording: 53 of 55 rows, naming variance on tailwind and css-in-js, fixed by D-090's deterministic rules.
 - 2026-10-27 · P16 · docs merged: the addendum's changes are in their documents, D-081 to D-089 logged, the addendum deleted.
 - 2026-10-27 · Session started · P16 · read CLAUDE.md, STATUS, decisions, handoff, plan, the v1.1 addendum, motion-capture, data-model, capture-and-states, token-clustering, component-detection, preview-fidelity, exports-and-mcp, drift, model-calls, evals, pages, components, copy, motion, design-system, quality-bar, glossary, showcase, architecture · tree reconciled (`apps/web/next-env.d.ts` rewritten by the dev server, restored; the addendum, motion-capture.md and prompts/v1-1.md new) · `pnpm check` green but the traceability test, which fails only on the new motion-capture.md.
