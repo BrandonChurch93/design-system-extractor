@@ -206,7 +206,8 @@ export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel 
         {missing.length ? <p className={styles.caption}>{fill(P.notCaptured, { names: missing.map((s) => (s.reason ? `${stateLabels[s.state]} (${s.reason})` : stateLabels[s.state])).join(' · ') })}</p> : null}
       </section>
 
-      <section className={styles.section} aria-labelledby={`m-${c.id}`}>
+      {/* The run page has a Motion section of its own, so this region is named for its component. */}
+      <section className={styles.section} aria-label={fill(P.motionRegion, { name: c.name })}>
         <H id={`m-${c.id}`} className={styles.label}>
           {P.motion}
         </H>

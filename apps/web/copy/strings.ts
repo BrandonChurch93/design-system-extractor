@@ -314,6 +314,7 @@ export const componentPanel = {
   tokens: 'Tokens used',
   unmapped: 'Unmapped',
   motion: 'Motion',
+  motionRegion: '{name} · Motion',
   motionNone: 'No motion found on this component.',
   motionRow: '{state} · {property} · {duration} · {easing}',
   responsive: { stacks: 'Stacks at 390 px', changes: 'Changes layout at 390 px' },

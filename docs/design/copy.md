@@ -181,7 +181,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Tokens label: `Tokens used`; unmapped label `Unmapped`
 - Responsive note: `Stacks at 390 px` · `Changes layout at 390 px`
 - Code tabs: `HTML` · `CSS` · `Tailwind`
-- Motion (D-081): label `Motion` · none `No motion found on this component.` · MotionRow `{state} · {property} · {duration} · {easing}`
+- Motion (D-081): label `Motion` · region name `{name} · Motion` (the run page has a Motion region of its own, D-090) · none `No motion found on this component.` · MotionRow `{state} · {property} · {duration} · {easing}`
 - Actions: `Copy prompt for this component` · `Copy code`
 - Footer: `Seen on {paths} and {n} more. First captured on {path} at {viewport} px.`
 - Phone sheet handle label: `Component details`

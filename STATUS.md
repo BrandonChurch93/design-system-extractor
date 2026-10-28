@@ -299,6 +299,7 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-090 · Rulings from building v1.1: type role words and order, motion reads (grouping, gaps, stagger of three, loop ends, one pattern per element across viewports, instant timings make no duration), naming made deterministic where it decides structure (context in both model calls, badge and tag by the rule, notices merged by their box before and after naming, page segments read as words), export variable resolution found on stripe.com (theme values, chains, fallbacks, literal tokens.json, runtime properties left out with a comment), preview reset carry and box model, UI wording (card heads, graded type names, staggered duration roles, shared Replay caption, overlays ground), skeleton heights, QA (sampled readings masked, the catalog compared section by section), capture stopping both workers on a failure, the real-site prompt excerpted in STATUS.
 - D-089 · Rulings from merging the v1.1 addendum: ids, pointers, the freeze stays before states, delays are not durations, pattern fields, Motion before Breakpoints, `toggle` in the tier list, fallback, variant and type words, site names per kind, BreakpointToken, opaque contrast pairs, eight rail rings and export cards, Compare's Motion card, copy labels, hashed names.
 - D-088 · State diffs track a fixed property set with noise rules (the addendum's D-034).
 - D-087 · Type roles come from size ratios, not tags (the addendum's D-033).

@@ -203,9 +203,9 @@ export const pageDemos: Demo[] = [
     tokens: ['h2', 'caption', 'h3', 'meta', 'surface', 'line-soft', 'radius-lg'],
     frameHeight: 2600,
     states: () => [
-      { label: runPage.motion.heading, wide: true, node: <Wide><MotionSection doc={motionDoc} landed hrefFor={() => '#'} /></Wide> },
-      { label: runPage.motion.empty, wide: true, node: <Wide><MotionSection doc={motionStill} landed /></Wide> },
-      { label: 'Skeleton', wide: true, node: <Wide><MotionSection doc={motionDoc} landed={false} /></Wide> },
+      { label: runPage.motion.heading, wide: true, node: <Wide><MotionSection doc={motionDoc} landed hrefFor={() => '#'} id="catalog-motion-complete" label={`${runPage.motion.heading} · ${stateLabels.default}`} /></Wide> },
+      { label: runPage.motion.empty, wide: true, node: <Wide><MotionSection doc={motionStill} landed id="catalog-motion-empty" label={runPage.motion.empty} /></Wide> },
+      { label: 'Skeleton', wide: true, node: <Wide><MotionSection doc={motionDoc} landed={false} id="catalog-motion-skeleton" label={`${runPage.motion.heading} · Skeleton`} /></Wide> },
     ],
   },
   {
@@ -332,23 +332,10 @@ export const pageDemos: Demo[] = [
         wide: true,
         node: (
           <Card className={styles.panelBox}>
-            <ComponentDetail doc={doc} component={comps[0]!} base={sampleBase} runUrl="https://design-system-extractor.vercel.app/r/catalogmsy" />
+            <ComponentDetail doc={moving ? motionDoc : doc} component={moving ?? comps[0]!} base={sampleBase} runUrl="https://design-system-extractor.vercel.app/r/catalogmsy" />
           </Card>
         ),
       },
-      ...(moving
-        ? [
-            {
-              label: componentPanel.motion,
-              wide: true,
-              node: (
-                <Card className={styles.panelBox}>
-                  <ComponentDetail doc={motionDoc} component={moving} base={sampleBase} runUrl="https://design-system-extractor.vercel.app/r/catalogcln" />
-                </Card>
-              ),
-            },
-          ]
-        : []),
       { label: 'CheckList', node: <Card className={styles.popoverBox}><CheckList checks={comps[0]!.checks} /></Card> },
     ],
   },

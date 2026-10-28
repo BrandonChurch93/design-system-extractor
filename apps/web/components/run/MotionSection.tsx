@@ -18,14 +18,14 @@ import styles from './MotionSection.module.css';
 const M = runPage.motion;
 
 /** Motion: durations on one scale, the easings, the keyframes, then what moves and when (pages.md, 9). */
-export function MotionSection({ doc, landed, hrefFor, onOpen }: { doc: RunDocumentPartial; landed: boolean; hrefFor?: (id: string) => string; onOpen?: (id: string) => void }) {
+export function MotionSection({ doc, landed, hrefFor, onOpen, id = 'motion', label }: { doc: RunDocumentPartial; landed: boolean; hrefFor?: (id: string) => string; onOpen?: (id: string) => void; id?: string; label?: string }) {
   const captionId = useId();
   const t = doc.tokens;
   const n = motionCounts(doc);
   const none = landed && n.durations + n.easings + n.keyframes + n.patterns === 0;
   const caption = landed && !none ? fill(M.caption, { durations: count(n.durations), easings: count(n.easings), keyframes: count(n.keyframes), patterns: count(n.patterns) }) : undefined;
   return (
-    <Section id="motion" title={M.heading} caption={caption}>
+    <Section id={id} title={M.heading} caption={caption} label={label}>
       {!landed ? (
         <RegionSkeleton region="motion" />
       ) : none ? (

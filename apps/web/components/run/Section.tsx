@@ -4,9 +4,9 @@ import { Enter } from '../motion/Enter';
 import styles from './Section.module.css';
 
 /** A run page section: the h2 wipes in, the caption sits right (docs/design/pages.md). */
-export function Section({ id, title, caption, children }: { id: string; title: string; caption?: ReactNode; children: ReactNode }) {
+export function Section({ id, title, caption, children, label }: { id: string; title: string; caption?: ReactNode; children: ReactNode; /** A name of its own where another region on the page has the title (the catalog). */ label?: string }) {
   return (
-    <section id={id} className={styles.section} aria-labelledby={`${id}-title`}>
+    <section id={id} className={styles.section} aria-labelledby={label ? undefined : `${id}-title`} aria-label={label}>
       <div className={styles.head}>
         <Enter as="h2" move="wipe" id={`${id}-title`} className={styles.title}>
           {title}
