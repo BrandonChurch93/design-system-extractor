@@ -163,6 +163,10 @@ At the showcase timeout nothing is cut by the budget on any of the three: linear
 
 Complete in 292 s. The budget cut fingerprints (48 of 59) and the states of later pages; previews were not cut: 86 live, 33 render differed, 1 styles too large, 0 not checked of 120 (71.7% of the checked), and all 87 core components checked (57 live), since render checks run core first by use (D-095). The owner's v1.0 run of this site at the same timeout left 76 unchecked.
 
+### qa:design and the qa:visual goldens (2026-10-28)
+
+`pnpm qa:design` 165 of 165 captured on the final builder and seed, reviewed at 1440, 820 and 390 (run page, panel, Compare, home; the StateBar's chips scroll on phones with Play at the row's end as specified). `pnpm qa:visual` then differed on the v1.2 surfaces, and the goldens were updated once (`--update-snapshots=all`, 128 passed): 4 new (the catalog StateBar at three widths, one catalog entry), 128 resized (the six-cell stat strip, the checks opening line, the easing stages and the 12-easing catalog sample, the Compare Motion card, `messy-after`'s dark band, and 1 px rounding on section crops), the rest unchanged or under 3% of pixels (anti-aliasing and the seed's re-recorded content).
+
 ### axe (2026-10-28)
 
 `pnpm qa:axe`: 185 of 185 pages and states with zero violations, the StateBar, the Ground toggle, the check Pills and the Compare StateCard included.
