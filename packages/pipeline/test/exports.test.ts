@@ -119,7 +119,8 @@ describe('the exports module', () => {
     expect(crc32(new TextEncoder().encode('The quick brown fox jumps over the lazy dog'))).toBe(0x414fa339);
     const a = zip([{ path: 'a.txt', data: 'hello' }]);
     expect(zip([{ path: 'a.txt', data: 'hello' }])).toEqual(a);
-    const doc = load('clean');
+    // messy keeps a captured component (its planted promo card), so the zip has crops too.
+    const doc = load('messy');
     const bytes = await allZip(doc, { runUrl: runUrl(doc) }, async () => new Uint8Array([1, 2, 3]));
     const names = centralNames(bytes);
     const dir = mkdtempSync(join(tmpdir(), 'dse-zip-'));

@@ -83,7 +83,7 @@ This design system was extracted from localhost:4100 across nine pages. It holds
 
 - Entrance · h1.display · on load · opacity 0 → 1, transform translateY(12px) → none · 480 ms · ease-out-quart
 - Scroll reveal · Feature card · when it enters the viewport at 15% from the bottom · opacity 0 → 1, transform translateY(16px) → none · 240 ms · ease-out-quart · 3 items · 60 ms apart
-- Scroll reveal · div.testimonial · when it enters the viewport at 25% from the bottom · opacity 0.03 → 1, transform translateY(15.6px) → translateY(0px) · about 399 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
+- Scroll reveal · div.testimonial · when it enters the viewport at 30% from the bottom · opacity 0.04 → 1, transform translateY(15.4px) → translateY(0px) · about 400 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
 - Scrolled header · Site header · after 400 px of scrolling · box-shadow none → 0px 12px 32px 0px #0B1F3A1F · 160 ms · ease-out-quad
 - Loop · Notice · loops every 1,600 ms · opacity 1 → 0.4 · 1,600 ms · ease-out-quart
 
@@ -817,7 +817,7 @@ Motion: none
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
 ```html
-<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: rgb(215, 221, 229); vertical-align: middle" class="avatar"></span>
+<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: url('http://localhost:4400/clean/runs/evalclean0/components/f83pxouf/img-e57.png') center / 100% 100% no-repeat rgb(215, 221, 229); vertical-align: middle" class="avatar"></span>
 ```
 
 ```css
@@ -1043,4 +1043,4 @@ Nothing drifts in this system. It holds nine colors, nine type styles and 11 spa
 
 ## How this was made
 
-Extracted by Design System Extractor from localhost:4100 in run evalclean0 on 2026-10-12. Tokens, motion, components and checks are measured from the rendered pages; motion marked observed was measured at runtime. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the proposed set. 27 of 28 components are live previews; 1 are captured images.
+Extracted by Design System Extractor from localhost:4100 in run evalclean0 on 2026-10-12. Tokens, motion, components and checks are measured from the rendered pages; motion marked observed was measured at runtime. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the proposed set. 28 of 28 components are live previews; 0 are captured images.

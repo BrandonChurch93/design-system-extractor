@@ -807,7 +807,7 @@ Motion: none
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
 ```html
-<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: rgb(215, 221, 229); vertical-align: middle" class="avatar"></span>
+<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: url('http://localhost:4400/messy/runs/evalmessy0/components/f83pxouf/img-e58.png') center / 100% 100% no-repeat rgb(215, 221, 229); vertical-align: middle" class="avatar"></span>
 ```
 
 ```css
@@ -1144,4 +1144,4 @@ The palette carries 14 grays where nine would do, and nine of them sit within Δ
 
 ## How this was made
 
-Extracted by Design System Extractor from localhost:4100 in run evalmessy0 on 2026-10-12. Tokens, motion, components and checks are measured from the rendered pages; motion marked observed was measured at runtime. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the raw set. 29 of 31 components are live previews; 2 are captured images.
+Extracted by Design System Extractor from localhost:4100 in run evalmessy0 on 2026-10-12. Tokens, motion, components and checks are measured from the rendered pages; motion marked observed was measured at runtime. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the raw set. 30 of 31 components are live previews; 1 are captured images.
