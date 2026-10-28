@@ -23,7 +23,8 @@ function TickDot({ ms }: { ms: number }) {
   const travel = Math.min(ms, AMBIENT.travelMs);
   const reach = RISE * Math.min(1, AMBIENT.travelMs / Math.max(1, ms));
   useAmbientLoop(ref, loopFrames({ transform: 'translateY(0px)' }, { transform: `translateY(${-reach}px)` }, 'linear', Math.max(1, travel)), [ms]);
-  return <span ref={ref} className={styles.run} data-testid="duration-dot" />;
+  // QA masks the loops like the clock: where a dot is depends on when the page is captured.
+  return <span ref={ref} className={styles.run} data-testid="duration-dot" data-qa-mask="ambient" />;
 }
 
 /** Every duration as a tick on one scale from 0 to the longest, the most used marked with its role. */

@@ -12,6 +12,8 @@
   min-height: 160px;
   padding: var(--dse-space-6);
   background: var(--dse-surface-tint);
+  /* The ground may be the site's white on the panel's surface; the hairline keeps the stage's edge. */
+  border: 1px solid var(--dse-line-soft);
   border-radius: var(--dse-radius-lg);
 }
 

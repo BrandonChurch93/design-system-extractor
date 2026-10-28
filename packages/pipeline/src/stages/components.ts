@@ -409,7 +409,7 @@ async function statesOf(ctx: RunContext, w: Working, id: string, first: Item, in
     for (const it of ordered) {
       const rec = (it.vc.states[it.el.d] ?? []).find((r) => r.state === state);
       if (!rec || it.revealed) continue;
-      out.set(state, { state, captured: true, cropKey: await save(state, withGround(rec.crop, it, groundOf(it))), delta: rec.delta, ...(state === 'focus' ? { reachedByKeyboard: Boolean(rec.reachedByKeyboard) } : {}), instanceId: instanceId(it) });
+      out.set(state, { state, captured: true, cropKey: await save(state, withGround(rec.crop, it, groundOf(it), rec.delta)), delta: rec.delta, ...(state === 'focus' ? { reachedByKeyboard: Boolean(rec.reachedByKeyboard) } : {}), instanceId: instanceId(it) });
       break;
     }
     if (!out.has(state) && interactive && state !== 'scrolled') {

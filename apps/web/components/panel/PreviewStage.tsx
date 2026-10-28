@@ -22,10 +22,19 @@ export function holdFor(c: Pick<Component, 'states'>, s: State): number {
   return Math.max(600, longest + 400);
 }
 
-/** The states a preview can show: a live one's state files, a captured one's state crops; Default first. */
+/** The variant whose preview is the component's own, which the state files and crops belong to. */
+export function mainVariant(c: Component): Component['variants'][number] {
+  return c.variants.find((v) => (c.preview.mode === 'live' ? v.preview.htmlKey === c.preview.htmlKey : v.preview.cropKey === c.preview.cropKey)) ?? c.variants[0]!;
+}
+
+/**
+ * The states a preview can show: a live one's state files, a captured one's state crops; Default
+ * first. Only on the variant that shares the component's preview, since the state files are built
+ * from that instance (D-097).
+ */
 export function pinnable(c: Component, variantId: string): State[] {
   const variant = c.variants.find((v) => v.id === variantId) ?? c.variants[0]!;
-  if (variant.id !== c.variants[0]!.id) return ['default'];
+  if (variant.id !== mainVariant(c).id) return ['default'];
   const have = variant.preview.mode === 'live' ? new Set(Object.keys(c.preview.stateHtmlKeys ?? {})) : new Set(c.states.filter((s) => s.captured && s.cropKey).map((s) => s.state));
   return ['default', ...stateOrder.filter((s) => s !== 'default' && have.has(s))];
 }

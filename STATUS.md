@@ -159,6 +159,10 @@ Measured on the v1.1 code (the main tree before step 5, and a worktree at `a87c6
 
 At the showcase timeout nothing is cut by the budget on any of the three: linear.app's fallbacks are fonts (71), stripe.com's and modernsoftworks.com's are render differences. The bare host modernsoftworks.com still answers Hostinger's 403 to the crawler (a 17 s sparse run); the owner's run and this one use `https://www.modernsoftworks.com/`.
 
+### The halo check (2026-10-28)
+
+`messy-after`'s dark band: the Band button (`t8l06oxn`) and the Feature card (night mode) are live with ground `#0B0D10`; at device scale 2 the rounded white button sits on its own dark ground in the panel's PreviewStage and on its card, with no ring of another color at its corners (screenshot review).
+
 ### The owner's two runs after the upgrade (2026-10-28)
 
 On the production build against the local database: `/compare?a=tx4mehptdf&b=mhxvphzzfr` answers 200 and renders every row (two sites; Colors · 49 fewer; the Motion card's Durations 0 → 15, Easings 0 → 6, Keyframes 0 → 45, Patterns 0 → 43; the component table); `/r/tx4mehptdf` and `/api/runs/tx4mehptdf` answer 200; no page error. Before the upgrade all three threw (D-092).
@@ -504,6 +508,14 @@ Interface
 - The row hover is on the recent runs list only; table rows are read, not clicked, and stay still (D-079).
 - `/open` loads a local run's files only from `http://localhost:4300`, the port `dse serve` uses (by design, `docs/specs/preview-fidelity.md`, Serving).
 - The MCP install line in Claude Code is the one check the build could not run itself; the runbook's step 12 has Brandon run it once (by design, `docs/specs/exports-and-mcp.md`, The MCP server).
+
+Previews and v1.2 (D-098)
+- Causes the builder does not handle, which keep a preview captured on real sites: a reference crop that does not show the element as its markup does (an entrance a script never played, a closed menu, a hidden tooltip, a marquee mid-move, a sticky element on top), an element moved by an ancestor's transform, a longhand Chromium serializes empty after a shorthand with a `var()`, rule order the site's duplicated sheets confuse, a custom property used only in markup attributes, a gradient or image behind a transparent element (a flat ground cannot reproduce it). Counts are in `P17 real-site check`.
+- A crop margin is not painted when the element casts a shadow, since the shadow lives in the margin (D-097).
+- The StateBar pins states on the variant that shares the component's preview (its first-seen instance, which the state files are built from); the panel opens on it, and other variants show their default only (D-097).
+- A staggered pattern previews six chips at most (D-098).
+- Exported component code is not wrapped in the site's cascade layers; only the preview is (D-098).
+- P16's stripe.com check (5 of 120 live) and the P17 baseline runs were measured with `pnpm pipeline:run` before it served storage over HTTP, so copied fonts never loaded in them; the owner's runs through the worker are the production-like baseline (D-098).
 
 ## Toolchain notes
 

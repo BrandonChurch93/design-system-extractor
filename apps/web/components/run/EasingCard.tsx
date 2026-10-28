@@ -61,11 +61,11 @@ export function EasingStage({ value }: { value: string }) {
           <path d={curvePath(value)} className={styles.path} />
         </svg>
         <span ref={x} className={styles.curveX}>
-          <span ref={y} className={styles.curveDot} data-testid="easing-curve-dot" />
+          <span ref={y} className={styles.curveDot} data-testid="easing-curve-dot" data-qa-mask="ambient" />
         </span>
       </span>
       <span className={styles.track}>
-        <span ref={track} className={styles.dot} data-testid="easing-dot" />
+        <span ref={track} className={styles.dot} data-testid="easing-dot" data-qa-mask="ambient" />
       </span>
     </div>
   );

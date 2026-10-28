@@ -42,12 +42,15 @@ export function groundOf(it: Item): string {
 
 /**
  * A crop with its margin painted with the ground, so no page bleeds into it. Left as captured when the
- * element casts a shadow (it lives in the margin, D-097) or when the crop was clipped at an edge.
+ * element casts a shadow or the state draws a ring or glow (they live in the margin, D-097), or when the
+ * crop was clipped at an edge.
  */
-export function withGround(png: Buffer | null | undefined, it: Item, ground: string): Buffer | null {
+export function withGround(png: Buffer | null | undefined, it: Item, ground: string, delta: { property: string }[] = []): Buffer | null {
   if (!png) return null;
   const shadow = it.el.style['box-shadow'];
   if (shadow && shadow !== 'none') return png;
+  // A state that draws outside the box (a focus ring, a glow) keeps its margin as captured.
+  if (delta.some((d) => /^(outline|box-shadow)/.test(d.property))) return png;
   const w = png.readUInt32BE(16);
   const h = png.readUInt32BE(20);
   const scale = w / (it.el.w + CROP_MARGIN * 2);

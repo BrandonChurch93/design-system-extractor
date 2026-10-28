@@ -12,7 +12,7 @@ import { CaptureViewer } from '../CaptureViewer';
 import { ChipGroup } from '../ChipGroup';
 import { CodeBlock } from '../CodeBlock';
 import { FitPreview } from '../FitPreview';
-import { PreviewStage } from './PreviewStage';
+import { mainVariant, PreviewStage } from './PreviewStage';
 import { Tabs } from '../Tabs';
 import { Tag } from '../Tag';
 import { useToast } from '../Toast';
@@ -72,7 +72,8 @@ async function copy(text: string, toast: { show: (m: string) => void }) {
 export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel = 3 }: { doc: RunDocumentPartial; component: Component; base?: string; runUrl: string; headingLevel?: 2 | 3 }) {
   const H = headingLevel === 2 ? 'h2' : 'h3';
   const toast = useToast();
-  const [variantId, setVariantId] = useState(c.variants[0]!.id);
+  // The panel opens on the variant the card shows, whose states can be pinned (D-097).
+  const [variantId, setVariantId] = useState(mainVariant(c).id);
   const [tab, setTab] = useState<'html' | 'css' | 'tailwind'>('html');
   const [viewer, setViewer] = useState(false);
   const [allPages, setAllPages] = useState(false);

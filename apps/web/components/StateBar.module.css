@@ -21,6 +21,8 @@
     flex-wrap: nowrap;
     overflow-x: auto;
     scrollbar-width: none;
+    /* The 20 px edge fade SectionNav uses, so a chip that scrolls on reads as more to come. */
+    mask-image: linear-gradient(to right, #000 calc(100% - 20px), transparent);
   }
 
   .bar > :last-child:not(.chips) {
