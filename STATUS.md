@@ -183,6 +183,25 @@ On the production build against the local database: `/compare?a=tx4mehptdf&b=mhx
 | linear.app `9tgcgu3m6g` | 69 | 51 | 0 | 0 | 0 | 120 | 69 of 120 · 57.5% |
 | stripe.com `wjn7p14ocv` | 75 | 45 | 0 | 0 | 0 | 120 | 75 of 120 · 62.5% |
 
+### Second classification, after the first round (2026-10-28)
+
+The 96 captured previews of `9tgcgu3m6g` (linear.app, 51 captured, 43 core) and `wjn7p14ocv` (stripe.com, 45 captured, 41 core); fonts now load on both, so font metrics fell from 46 to 2.
+
+| Cause | linear.app (core) | stripe.com (core) | Handling (D-098) |
+| --- | --- | --- | --- |
+| page screenshot left unpainted (one tall capture at scale 2) | 13 (12) | 0 | the screenshot in 2,000 px clips |
+| reference mismatch | 4 (4) | 10 (10) | not handled |
+| ground (gradients, ancestor clips) | 4 (2) | 7 (6) | not handled |
+| box outside the viewport or a clip | 3 (3) | 6 (6) | the visible part compared |
+| image placeholder or resample | 5 (2) | 7 (6) | not handled further |
+| snapshot id collision (another element's markup) | 5 (5) | 0 | one id counter per page |
+| overlap | 3 (3) | 1 (1) | not handled |
+| script animation end state | 0 | 3 (3) | `commitStyles()` at the freeze |
+| variable in markup, background image | 2 (2) | 4 (3) | not handled |
+| inline root, media order | 4 | 0 | not handled |
+| one each (child combinator, control resets, `@container`, cascade layer, own transform, other) | 8 | 3 | the first four handled |
+| font metrics | 0 | 2 | (masked comparison) |
+
 ### Causes of the captured previews, classified (2026-10-28)
 
 Every captured preview of the three 15-minute runs, by its reference crop, its storage render and their pixel diff, one primary cause each (174 classified; the 42 boxes below the 8,000 px cut counted apart). Two findings change the baseline's reading: `pnpm pipeline:run` served previews as `file://` documents, which Chromium refuses fonts in, so every copied family fell back in these three runs (the owner's runs went through the worker and MinIO over HTTP and are the production-like baseline; P16's stripe.com check was measured the same flawed way); and linear.app's `InterVariable.woff2` is 352 KB with CORS, refused only by the 300 KB cap.
