@@ -1,5 +1,5 @@
 import type { Browser } from 'playwright';
-import { previewCounts, type Component, type Preview, type State } from '@dse/schema';
+import { previewCounts, viewportSize, type Component, type Preview, type State } from '@dse/schema';
 import { PNG } from 'pngjs';
 import { cropShot } from '../components/crop';
 import { groundOf } from '../components/ground';
@@ -7,7 +7,7 @@ import type { Item } from '../components/items';
 import { overBudget } from '../budget';
 import type { RunContext } from '../context';
 import { buildPreview, statePreview, type PreviewDoc } from '../previews/build';
-import { LIVE_MAX_DIFF_PCT } from '../previews/constants';
+import { IMAGE_CAP_BYTES, LIVE_MAX_DIFF_PCT } from '../previews/constants';
 import { FontCopier, fontsFor } from '../previews/fonts';
 import { diffPercent, maskBoxes, openRenderSession, renderPreview, textBoxes, type RenderSession } from '../previews/render';
 import type { CssPolicy } from '../previews/sanitize';
@@ -74,15 +74,28 @@ async function previewFor(ctx: RunContext, it: Item, htmlKey: string, existing: 
   const markup = it.revealed ? it.revealed.open.markup : it.vc.markup[it.el.d];
   const matched = it.revealed ? it.revealed.open.matched : it.vc.matched;
   if (!markup?.html) return { preview: { ...existing, mode: 'captured', capturedReason: 'css-too-large' } };
+  // The component's images keep their own pixels from the page screenshot, on their average color (D-098).
   const imageColors: Record<string, string> = {};
+  const imageUrls: Record<string, string> = {};
+  const dir = htmlKey.slice(0, htmlKey.lastIndexOf('/'));
+  const inside = (e: { p: number }) => {
+    for (let p = e.p; p >= 0; p = it.snapshot.elements[p]!.p) if (p === it.el.index) return true;
+    return false;
+  };
   for (const e of it.snapshot.elements) {
-    if (!['img', 'picture', 'video', 'canvas', 'iframe'].includes(e.tag) || it.revealed) continue;
-    const c = averageColor(cropShot(it.vc.screenshot, { x: e.x, y: e.y, w: e.w, h: e.h }));
+    if (!['img', 'picture', 'video', 'canvas', 'iframe'].includes(e.tag) || it.revealed || !(e === it.el || inside(e))) continue;
+    const crop = e.w >= 1 && e.h >= 1 ? cropShot(it.vc.screenshot, { x: e.x, y: e.y, w: e.w, h: e.h }) : null;
+    const c = averageColor(crop);
     if (c) imageColors[e.d] = c;
+    if (crop && crop.length <= IMAGE_CAP_BYTES && e.tag !== 'iframe' && e.tag !== 'video') {
+      const key = `${dir}/img-${e.d}.png`;
+      await ctx.files.put(key, crop, { contentType: 'image/png' });
+      imageUrls[e.d] = ctx.files.publicUrl(key);
+    }
   }
   const ground = groundOf(it);
   const fonts = await fontsFor(fontsUsed(it), it.vc.sheets, copier);
-  const doc = buildPreview({ markup: markup.html, vars: markup.vars, snapshot: it.snapshot, root: it.el, matched, imageColors, fonts, policy, siteVars });
+  const doc = buildPreview({ markup: markup.html, vars: markup.vars, snapshot: it.snapshot, root: it.el, matched, imageColors, imageUrls, fonts, policy, siteVars, viewport: viewportSize[it.viewport] });
   if (doc.tooLarge) return { preview: { ...existing, ground, mode: 'captured', capturedReason: 'css-too-large' }, doc, fonts: fonts.mode };
   await ctx.files.put(htmlKey, doc.html, { contentType: 'text/html; charset=utf-8' });
   const shot = await renderPreview(session, ctx.files.publicUrl(htmlKey), { w: it.el.w, h: it.el.h }, ground);

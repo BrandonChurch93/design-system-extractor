@@ -183,7 +183,8 @@ export type CaptureOutput = {
   loginWall?: { redirectedTo?: string; pageId: string };
 };
 
-export const freezeCss = `*, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; } html { scrollbar-width: none !important; } ::-webkit-scrollbar { display: none !important; }`;
+// Every CSS animation plays to its own end at once (an entrance with `forwards` stays visible), never removed (D-098).
+export const freezeCss = `*, *::before, *::after { animation-duration: 0s !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition: none !important; caret-color: transparent !important; } html { scrollbar-width: none !important; } ::-webkit-scrollbar { display: none !important; }`;
 
 // Never submit a form or let a dialog block the page (docs/specs/capture-and-states.md, Never).
 export const pageGuards = () => {

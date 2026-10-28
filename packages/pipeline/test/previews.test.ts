@@ -5,7 +5,8 @@ import { PNG } from 'pngjs';
 import { describe, expect, it } from 'vitest';
 import type { MatchedStyles } from '../src/capture/matched-css';
 import type { SheetScan } from '../src/capture/sheet-scan';
-import { buildPreview, rescope, statePreview } from '../src/previews/build';
+import { buildPreview, rescope, statePreview, viewportUnits, withPlaceholders } from '../src/previews/build';
+import { sanitizeMarkup } from '../src/previews/sanitize';
 import { FontCopier, fontsFor } from '../src/previews/fonts';
 import { diffPercent } from '../src/previews/render';
 import { snap } from './helpers/snap';
@@ -210,3 +211,39 @@ describe('the render comparison', () => {
     expect(diffPercent(stripes(0), png(60, 80, (x) => (x % 10 < 5 ? 0 : 255)))).toBeGreaterThan(40);
   });
 });
+
+describe('the builder handling the P17 measurement named (D-098)', () => {
+  it('resolves viewport units against the capture viewport', () => {
+    expect(viewportUnits('clamp(3.5rem, 8vw, 5.5rem)', { width: 1440, height: 900 })).toBe('clamp(3.5rem, 115.2px, 5.5rem)');
+    expect(viewportUnits('min(2rem, 2.75vw) calc(100dvh - 10svh)', { width: 1440, height: 900 })).toBe('min(2rem, 39.6px) calc(900px - 90px)');
+    expect(viewportUnits('12px', { width: 390, height: 844 })).toBe('12px');
+  });
+
+  it('rescopes the ancestors inside :where() and :is(), keeping the specificity', () => {
+    const dom = new JSDOM('<!doctype html><body><div class="dse-root"><button class="b">Go</button></div></body>');
+    const b = dom.window.document.querySelector('button')!;
+    expect(rescope(':where(.frame button)', b)).toBe(':where(.dse-root button)');
+    expect(rescope(':is(.nav .x, .frame button):hover', b)).toBeNull();
+    expect(rescope(':is(.nav .x, .frame button)', b)).toBe(':is(.dse-root .x, .dse-root button)');
+  });
+
+  it('inlines a use that points at a symbol inside the component, and prefixes url(#id) references', () => {
+    const snapshot = snap([{ tag: 'body', box: [0, 0, 100, 100] }]);
+    const { html, close } = withPlaceholders('<svg width="24" height="24"><defs><symbol id="qr" viewBox="0 0 10 10"><rect width="10" height="10" fill="url(#g)"/></symbol><linearGradient id="g"/></defs><use href="#qr"/></svg>', snapshot, {});
+    close();
+    const out = sanitizeMarkup(html, policy).html;
+    expect(out).not.toContain('<use');
+    expect(out).toMatch(/<svg viewBox="0 0 10 10" width="100%" height="100%"><rect width="10" height="10" fill="url\(#dse-g\)"/);
+    expect(out).toContain('id="dse-g"');
+  });
+
+  it('gives an image placeholder its own stored pixels over its average color', () => {
+    const snapshot = snap([{ tag: 'body', box: [0, 0, 200, 200] }, { tag: 'img', parent: 0, box: [0, 0, 40, 40] }]);
+    const { html, close } = withPlaceholders('<img data-dse-id="e1" src="https://cdn.example/a.png" alt="">', snapshot, { e1: 'rgb(10, 20, 30)' }, { e1: 'https://store.example/dse/runs/r/components/c/img-e1.png' });
+    close();
+    const out = sanitizeMarkup(html, policy).html;
+    expect(out).toContain("url('https://store.example/dse/runs/r/components/c/img-e1.png') center / 100% 100% no-repeat rgb(10, 20, 30)");
+    expect(out).not.toContain('cdn.example');
+  });
+});
+

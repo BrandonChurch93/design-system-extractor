@@ -8,6 +8,7 @@ import { launchBrowser } from '@dse/pipeline/crawl/browser';
 import { defaultRecordingsDir, ModelClient, type ModelMode } from '@dse/pipeline/models/client';
 import { DevSpendMeter } from '@dse/pipeline/models/meter';
 import { PIPELINE_VERSION, runPipeline } from '@dse/pipeline/run';
+import { startStorageServer } from './storage-serve';
 
 const { values, positionals } = parseArgs({ allowPositionals: true, options: { out: { type: 'string' }, through: { type: 'string' }, quiet: { type: 'boolean', default: false } } });
 const url = positionals[0];
@@ -16,6 +17,9 @@ const root = resolve(import.meta.dirname, '..');
 const runId = newRunId();
 const outDir = resolve(root, '.dse/runs', runId);
 mkdirSync(outDir, { recursive: true });
+// Previews and fonts load from HTTP, as from MinIO or Supabase: a file:// document refuses copied fonts (D-053, D-098).
+const storagePort = Number(process.env.DSE_STORAGE_PORT ?? 4403);
+const storageServer = await startStorageServer(resolve(root, '.dse/runs'), storagePort);
 const mode = (process.env.DSE_MODEL_MODE ?? 'live') as ModelMode;
 const models = new ModelClient({ mode, apiKey: process.env.ANTHROPIC_API_KEY, recordingsDir: defaultRecordingsDir(root), meter: DevSpendMeter.fromEnv(root) });
 const ctx = new MemoryRunContext(
@@ -32,7 +36,7 @@ const ctx = new MemoryRunContext(
     byo: false,
   },
   models,
-  new LocalStorage(outDir),
+  new LocalStorage(outDir, `http://localhost:${storagePort}/${runId}`),
   { id: runId, url, host: new URL(url).host, status: 'queued', createdAt: new Date().toISOString(), pipelineVersion: PIPELINE_VERSION, viewports: ['desktop', 'mobile'] },
   { info: () => {}, warn: () => {}, error: (o, m) => console.error(m, o) },
   values.quiet ? undefined : (e) => console.log(`${e.ts.slice(11, 19)}  ${e.message}`),
@@ -41,6 +45,7 @@ const browser = await launchBrowser();
 const through = values.through ? Stage.parse(values.through) : undefined;
 const outcome = await runPipeline(ctx, { browser, through });
 await browser.close();
+storageServer.close();
 const out = values.out ? resolve(process.cwd(), values.out) : resolve(outDir, 'run.json');
 writeFileSync(out, JSON.stringify(ctx.document, null, 2));
 console.log(`\n${outcome.status} · ${out}`);

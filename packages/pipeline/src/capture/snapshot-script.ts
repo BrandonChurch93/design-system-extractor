@@ -71,6 +71,20 @@ export const styleProps = [
   'transition-timing-function',
   'transition-delay',
   'box-sizing',
+  // Inherited text rendering the preview root carries from the element's parent (D-098).
+  'font-style',
+  'font-stretch',
+  'font-feature-settings',
+  'font-variation-settings',
+  'font-variant-ligatures',
+  'font-variant-numeric',
+  'font-kerning',
+  'font-optical-sizing',
+  '-webkit-font-smoothing',
+  'text-rendering',
+  'word-spacing',
+  'text-align',
+  'white-space',
 ] as const;
 
 /** Longhands the freeze removes, so they are kept from the snapshot taken before it (capture-and-states.md, 2b). */

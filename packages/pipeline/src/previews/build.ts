@@ -17,6 +17,10 @@ export type PreviewInput = {
   matched: Record<string, MatchedStyles>;
   /** Average color per image element (data-dse-id), sampled from the page screenshot. */
   imageColors: Record<string, string>;
+  /** The image's own pixels, cut from the page screenshot and stored, per image element (D-098). */
+  imageUrls?: Record<string, string>;
+  /** The capture viewport, against which `vw` and `vh` resolve in the preview's CSS (D-098). */
+  viewport?: { width: number; height: number };
   fonts: PreviewFonts;
   policy: CssPolicy;
   /** The site variables the exports declare by name; every other custom property is resolved in the code (D-083). */
@@ -96,6 +100,18 @@ export function universalCarry(rules: MatchedRule[], tags: Set<string>): { selec
   return out;
 }
 
+/**
+ * Viewport units resolved against the viewport the instance was captured at: the render check's page
+ * is only the element's size, so `8vw` would otherwise read against it (D-098). Preview CSS only; the
+ * exported code keeps the site's units.
+ */
+export function viewportUnits(value: string, vp: { width: number; height: number }): string {
+  return value.replace(/(-?\d*\.?\d+)(d|s|l)?(vw|vh|vmin|vmax)\b/g, (_, n: string, _k: string | undefined, unit: string) => {
+    const base = unit === 'vw' ? vp.width : unit === 'vh' ? vp.height : unit === 'vmin' ? Math.min(vp.width, vp.height) : Math.max(vp.width, vp.height);
+    return `${Math.round(((Number(n) * base) / 100) * 100) / 100}px`;
+  });
+}
+
 /** The end of a `var(` call, nested parentheses included. */
 function closing(text: string, open: number): number {
   let depth = 0;
@@ -133,7 +149,29 @@ export function resolveVars(value: string, vars: Record<string, string>, keep: R
   }
 }
 
-const inherited = ['font-family', 'font-size', 'color', 'line-height', 'letter-spacing'] as const;
+/** What the element inherits from its parent, carried onto the root: the text and its rendering (D-053, D-098). */
+const inherited = [
+  'font-family',
+  'font-size',
+  'color',
+  'line-height',
+  'letter-spacing',
+  'font-weight',
+  'font-style',
+  'font-stretch',
+  'font-feature-settings',
+  'font-variation-settings',
+  'font-variant-ligatures',
+  'font-variant-numeric',
+  'font-kerning',
+  'font-optical-sizing',
+  '-webkit-font-smoothing',
+  'text-rendering',
+  'text-transform',
+  'word-spacing',
+  'text-align',
+  'white-space',
+] as const;
 
 function isInside(s: Snapshot, e: SnapElement, root: SnapElement): boolean {
   for (let p = e.p; p >= 0; p = s.elements[p]!.p) if (p === root.index) return true;
@@ -142,7 +180,7 @@ function isInside(s: Snapshot, e: SnapElement, root: SnapElement): boolean {
 const placeholderTags = new Set(['img', 'picture', 'video', 'iframe', 'canvas', 'object', 'embed']);
 
 /** Images and embeds become sized blocks in the image's average color, before sanitization. */
-export function withPlaceholders(markup: string, snapshot: Snapshot, imageColors: Record<string, string>): { html: string; doc: Document; close: () => void } {
+export function withPlaceholders(markup: string, snapshot: Snapshot, imageColors: Record<string, string>, imageUrls: Record<string, string> = {}): { html: string; doc: Document; close: () => void } {
   const dom = new JSDOM(`<!doctype html><body><div class="dse-root">${markup}</div></body>`);
   const doc = dom.window.document;
   for (const el of [...doc.querySelectorAll([...placeholderTags].join(','))]) {
@@ -153,10 +191,37 @@ export function withPlaceholders(markup: string, snapshot: Snapshot, imageColors
     const w = snap ? Math.round(snap.w) : Number(el.getAttribute('width')) || 0;
     const h = snap ? Math.round(snap.h) : Number(el.getAttribute('height')) || 0;
     const radius = snap?.style['border-top-left-radius'] ?? '0px';
-    span.setAttribute('style', `display: inline-block; width: ${w}px; height: ${h}px; border-radius: ${radius}; background: ${imageColors[d] ?? '#E5E5E5'}; vertical-align: middle`);
+    const fill = imageUrls[d] ? `url('${imageUrls[d]}') center / 100% 100% no-repeat ${imageColors[d] ?? '#E5E5E5'}` : (imageColors[d] ?? '#E5E5E5');
+    span.setAttribute('style', `display: inline-block; width: ${w}px; height: ${h}px; border-radius: ${radius}; background: ${fill}; vertical-align: middle`);
     if (d) span.setAttribute('data-dse-id', d);
     for (const c of el.getAttribute('class')?.split(/\s+/).filter(Boolean) ?? []) span.classList.add(c);
     el.replaceWith(span);
+  }
+  // The sanitizer removes every `use`: one that points at a symbol inside the component is inlined first (D-098).
+  const SVG = 'http://www.w3.org/2000/svg';
+  for (const use of [...doc.querySelectorAll('use')]) {
+    const href = use.getAttribute('href') ?? use.getAttribute('xlink:href') ?? '';
+    const target = href.startsWith('#') ? doc.getElementById(href.slice(1)) : null;
+    if (!target || target.contains(use)) continue;
+    let node: Element;
+    if (target.localName === 'symbol') {
+      node = doc.createElementNS(SVG, 'svg');
+      for (const a of ['viewBox', 'preserveAspectRatio']) if (target.getAttribute(a)) node.setAttribute(a, target.getAttribute(a)!);
+      for (const a of ['x', 'y', 'width', 'height']) if (use.getAttribute(a)) node.setAttribute(a, use.getAttribute(a)!);
+      if (!node.getAttribute('width')) node.setAttribute('width', '100%');
+      if (!node.getAttribute('height')) node.setAttribute('height', '100%');
+      for (const c of [...target.childNodes]) node.append(c.cloneNode(true));
+    } else {
+      node = doc.createElementNS(SVG, 'g');
+      const x = use.getAttribute('x');
+      const y = use.getAttribute('y');
+      if (x || y) node.setAttribute('transform', `translate(${Number(x) || 0} ${Number(y) || 0})`);
+      const clone = target.cloneNode(true) as Element;
+      clone.removeAttribute('id');
+      node.append(clone);
+    }
+    for (const a of ['class', 'fill', 'stroke', 'style']) if (use.getAttribute(a) && !node.getAttribute(a)) node.setAttribute(a, use.getAttribute(a)!);
+    use.replaceWith(node);
   }
   // An unclosed window stays reachable after the run (D-075), so the caller closes it.
   return { html: doc.querySelector('.dse-root')!.innerHTML, doc, close: () => dom.window.close() };
@@ -232,7 +297,31 @@ export function rescope(selector: string, target: Element): string | null {
     const candidate = `.dse-root ${rest}`;
     if (test(candidate)) return ids(`${candidate}${pseudo}`);
   }
+  // Ancestors inside `:where()` or `:is()` are rescoped within it, which keeps the selector's specificity (D-098).
+  const inner = rescopeGroups(base);
+  if (inner !== base && test(inner)) return ids(`${inner}${pseudo}`);
   return null;
+}
+
+/** `:where(.frame button)` → `:where(.dse-root button)`: each argument's leading ancestors become `.dse-root`. */
+function rescopeGroups(selector: string): string {
+  let out = '';
+  let i = 0;
+  for (;;) {
+    const m = /:(where|is)\(/g;
+    m.lastIndex = i;
+    const hit = m.exec(selector);
+    if (!hit) return out + selector.slice(i);
+    const open = hit.index + hit[0].length - 1;
+    const end = closing(selector, open);
+    if (end < 0) return out + selector.slice(i);
+    const args = splitSelectorList(selector.slice(open + 1, end)).map((a) => {
+      const c = compounds(a);
+      return c.length > 1 ? `.dse-root ${c.at(-1)!.replace(/^[>+~]\s*/, '')}` : a;
+    });
+    out += `${selector.slice(i, open + 1)}${args.join(', ')})`;
+    i = end + 1;
+  }
 }
 
 type Placed = { key: string; rule: MatchedRule; selectors: string[]; pseudo?: string };
@@ -260,7 +349,7 @@ function mergeInOrder(lists: Placed[][]): Placed[] {
 }
 
 export function buildPreview(input: PreviewInput): PreviewDoc {
-  const { html: placed, doc, close } = withPlaceholders(input.markup, input.snapshot, input.imageColors);
+  const { html: placed, doc, close } = withPlaceholders(input.markup, input.snapshot, input.imageColors, input.imageUrls);
   try {
     return previewOf(input, placed, doc);
   } finally {
@@ -292,7 +381,7 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
       .map((d) => {
         const s = sanitizeDeclaration(d.name, d.value, policy);
         if (!s) return null;
-        if (!code) return `${s.name}: ${s.value}${d.important ? ' !important' : ''};`;
+        if (!code) return `${s.name}: ${input.viewport ? viewportUnits(s.value, input.viewport) : s.value}${d.important ? ' !important' : ''};`;
         // A custom property is code only when the exports declare it; every other is resolved where it is used.
         if (s.name.startsWith('--') && !keep.has(s.name)) return null;
         const value = resolveVars(s.value, input.vars, keep);
@@ -336,7 +425,7 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
   const parent = input.root.p >= 0 ? input.snapshot.elements[input.root.p] : undefined;
   const from = parent ?? input.root;
   const rootDecls = [
-    ...inherited.map((prop) => sanitizeDeclaration(prop, from.style[prop], policy)).filter(Boolean),
+    ...inherited.map((prop) => (from.style[prop] ? sanitizeDeclaration(prop, from.style[prop], policy) : null)).filter(Boolean),
     ...Object.entries(input.vars).map(([n, v]) => sanitizeDeclaration(n, v, policy)).filter(Boolean),
   ] as { name: string; value: string }[];
   // The element keeps the exact box it had on the page, whatever the page's layout gave it.

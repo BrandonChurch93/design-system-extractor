@@ -10,13 +10,13 @@ None.
 
 ## Current phase
 
-P17 · Second testing round (v1.2): showcase promotion, document upgrades, easings, touchable previews, check visibility. In progress: docs merged (D-091 to D-097), the root cause verified (D-092), the baseline preview measurement on three real sites running.
+P17 · Second testing round (v1.2). In progress. Done and committed: docs merged (D-091 to D-097), the upgrade on every read path with the v1.0 fixture document and `pnpm runs:parse`, the v1.2 schema, showcase `--add/--remove/--list`, the baseline live-rate table (below), ground and painted 4 px crops, clips below the 8,000 px cut, render order core first, the masked font comparison, the 1 MB font cap, animated state files, the security fix the state files found, checks up front (six cells, filter, Pills, opening line, exports and MCP), the ambient easing loops, the StateBar and PreviewStage, the halo band on `messy-after`, e2e for all of it (not yet run), traceability rows, version 1.2.0, CHANGELOG.
 
 v1.1 (P16) passed its gate and the Definition of Done on 2026-10-27; v1.0 (P0 to P15) on 2026-10-26.
 
 ## Next action
 
-Build P17 in the order of the plan below: the upgrade path first (step 2), then the baseline live-rate table once the three background runs finish (step 5), then the rest.
+Finish step 5 (classify the remaining captured previews by cause, add the builder handling, re-run the three real sites and record the after table), then reseed (`pnpm db:seed:fixtures`), run the new e2e, review `qa:design` at three viewports, update goldens once, then the real-site checks and `verify:all`.
 
 Environment note: the repository sits on an iCloud-synced Desktop and macOS evicts files (`ls -lO` shows `dataless`); a read then blocks while iCloud downloads. `find . -type f -flags +dataless -print0 | xargs -0 cat > /dev/null` brings them back.
 
@@ -158,6 +158,25 @@ Measured on the v1.1 code (the main tree before step 5, and a worktree at `a87c6
 | stripe.com `vj12gtw3u4` (15 min) | 33 | 83 | 0 | 4 | 0 | 120 | 33 of 120 · 27.5% |
 
 At the showcase timeout nothing is cut by the budget on any of the three: linear.app's fallbacks are fonts (71), stripe.com's and modernsoftworks.com's are render differences. The bare host modernsoftworks.com still answers Hostinger's 403 to the crawler (a 17 s sparse run); the owner's run and this one use `https://www.modernsoftworks.com/`.
+
+### Causes of the captured previews, classified (2026-10-28)
+
+Every captured preview of the three 15-minute runs, by its reference crop, its storage render and their pixel diff, one primary cause each (174 classified; the 42 boxes below the 8,000 px cut counted apart). Two findings change the baseline's reading: `pnpm pipeline:run` served previews as `file://` documents, which Chromium refuses fonts in, so every copied family fell back in these three runs (the owner's runs went through the worker and MinIO over HTTP and are the production-like baseline; P16's stripe.com check was measured the same flawed way); and linear.app's `InterVariable.woff2` is 352 KB with CORS, refused only by the 300 KB cap.
+
+| Cause | linear.app | stripe.com | modernsoftworks.com | All (core) | Handling (D-098) |
+| --- | --- | --- | --- | --- | --- |
+| below the 8,000 px cut (no reference) | 9 | 25 | 8 | 42 | clips below the cut for crops and references |
+| font metrics (font not loaded, or substituted) | 23 | 23 | 18 | 64 (45) | storage over HTTP in pipeline:run; 1 MB font cap; masked comparison; inherited text rendering on the root |
+| reference mismatch (entrance not played, closed menu, hidden tooltip, marquee, focus, occluded) | 7 | 15 | 15 | 37 (26) | the freeze settles animations at their end instead of removing them; the rest out of the builder's reach |
+| image placeholder | 8 | 6 | 2 | 16 (13) | the image's own pixels from the screenshot |
+| box outside the viewport or a clip, or 1 × 1 | 5 | 7 | 1 | 13 (12) | not handled |
+| ground | 6 | 5 | 0 | 11 (6) | the canvas color when nothing sets a background; gradients behind remain |
+| layout (`vw` units, empty serialized longhands, rule order) | 2 | 0 | 7 | 9 (7) | viewport units resolved; the rest not handled |
+| `:where()` reset dropped | 6 | 0 | 0 | 6 (6) | `:where()` and `:is()` rescoped |
+| variable used only in markup | 1 | 2 | 0 | 3 (3) | not handled |
+| SVG `use` | 2 | 0 | 0 | 2 (1) | a symbol inside the component inlined; `url(#id)` prefixed |
+| other (markup mismatch, cascade layers, ancestor transform, overlap, undetermined) | 7 | 4 | 0 | 11 (5) | not handled |
+| out of scope (video) | 1 | 0 | 0 | 1 (0) | out of scope |
 
 ## P16 real-site check
 

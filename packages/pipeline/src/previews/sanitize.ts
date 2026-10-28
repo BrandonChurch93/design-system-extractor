@@ -141,6 +141,11 @@ export function sanitizeMarkup(html: string, policy: CssPolicy): { html: string;
       data.attrValue = sanitizeStyleAttribute(data.attrValue, policy);
       return;
     }
+    // References to ids inside the component follow the ids' `dse-` prefix (D-098).
+    if (['fill', 'stroke', 'clip-path', 'mask', 'filter', 'marker-start', 'marker-mid', 'marker-end'].includes(name) && /url\(\s*['"]?#/.test(data.attrValue)) {
+      data.attrValue = data.attrValue.replace(/url\(\s*(['"]?)#(-?[_a-zA-Z][\w-]*)/g, 'url($1#dse-$2');
+      return;
+    }
     if (name === 'id' || name === 'for' || name === 'aria-labelledby' || name === 'aria-describedby' || name === 'aria-controls') {
       data.attrValue = data.attrValue
         .split(/\s+/)

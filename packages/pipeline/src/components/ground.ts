@@ -8,7 +8,7 @@ import type { Item } from './items';
 
 export const CROP_MARGIN = CROP_PAD;
 
-/** The four corners of the crop margin when they agree within ΔE 2; else the nearest opaque ancestor; else the body; else white. */
+/** The four corners of the crop margin when they agree within ΔE 2; else the nearest opaque ancestor; else the body; else the page's canvas; else white. */
 export function groundOf(it: Item): string {
   if (!it.revealed) {
     const m = padded({ x: it.el.x, y: it.el.y, w: it.el.w, h: it.el.h }, CROP_MARGIN);
@@ -34,7 +34,10 @@ export function groundOf(it: Item): string {
   }
   const body = s.elements.find((e) => e.tag === 'body');
   const bg = body ? parseRgb(body.style['background-color']) : null;
-  return bg && bg.a >= 1 ? hexOf(bg) : '#FFFFFF';
+  if (bg && bg.a >= 1) return hexOf(bg);
+  // No opaque background anywhere: the canvas the page paints on, read where nothing covers it (D-098).
+  const canvas = pixelAt(it.vc.screenshot, 1, Math.max(1, it.vc.screenshot.height - 2));
+  return canvas && canvas.a >= 1 ? hexOf({ ...canvas, a: 1 }) : '#FFFFFF';
 }
 
 /**
