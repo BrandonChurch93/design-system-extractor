@@ -18,6 +18,8 @@ import { PaletteStrip } from '../PaletteStrip';
 import { Pill } from '../Pill';
 import { Popover } from '../Popover';
 import { PreviewFrame } from '../PreviewFrame';
+import { FitPreview } from '../FitPreview';
+import { StateBar } from '../StateBar';
 import { SectionNav } from '../SectionNav';
 import { Sheet } from '../Sheet';
 import { Skeleton } from '../Skeleton';
@@ -48,6 +50,7 @@ export type Demo = {
   phone?: () => ReactNode;
 };
 
+const samplePreview = { mode: 'live' as const, cropKey: 'sample-crop.png', htmlKey: 'sample-preview.html', width: 128, height: 58 };
 const s = stateLabels;
 const sampleHost = 'tidewater.app';
 const palette = [
@@ -630,6 +633,23 @@ const primitiveDemos: Demo[] = [
     states: () => [
       { label: 'live', node: <div className={styles.previewGround}><PreviewFrame mode="live" src="/catalog/sample-preview.html" title="Primary button preview" width={128} height={58} /></div> },
       { label: runPage.captured, node: <div className={styles.previewGround}><PreviewFrame mode="captured" src="/catalog/sample-crop.png" title="Primary button preview" width={128} height={58} /></div> },
+      // On the source element's ground (D-094): the frame paints the extracted color behind the preview.
+      { label: runPage.preview.grounds.site, node: <div className={styles.fitBox}><FitPreview preview={samplePreview} base="/catalog" title="Primary button preview" ground="#0B0D10" /></div> },
+      { label: fill(runPage.preview.scale, { scale: '0.62' }), node: <div className={styles.fitBoxNarrow}><FitPreview preview={samplePreview} base="/catalog" title="Primary button preview" padding={4} /></div> },
+    ],
+  },
+  {
+    slug: 'state-bar',
+    name: 'StateBar',
+    tokens: ['chip', 'ink (selected)', 'inverse-ink', 'line', 'label'],
+    frameHeight: 360,
+    states: () => [
+      { label: stateLabels.default, node: <StateBar states={['default', 'hover', 'focus', 'active']} value="default" onChange={() => {}} onPlay={() => {}} /> },
+      { label: stateLabels.hover, node: <StateBar states={['default', 'hover', 'focus', 'active']} value="hover" onChange={() => {}} onPlay={() => {}} /> },
+      { label: 'Focus ring', node: <StateBar states={['default', 'hover', 'focus', 'active']} value="default" onChange={() => {}} forceState={{ value: 'focus', state: 'focus' }} /> },
+      { label: runPage.preview.play, node: <StateBar states={['default', 'hover', 'active']} value="active" onChange={() => {}} onPlay={() => {}} playing /> },
+      { label: runPage.captured, node: <StateBar states={['default', 'hover', 'disabled']} value="disabled" onChange={() => {}} /> },
+      { label: 'Many states', node: <StateBar states={['default', 'hover', 'focus', 'active', 'disabled', 'open']} value="open" onChange={() => {}} onPlay={() => {}} /> },
     ],
   },
   {

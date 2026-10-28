@@ -31,6 +31,8 @@ export function sanitizeDeclaration(name: string, value: string, policy: CssPoli
   if (!/^(--[\w-]+|-?[a-z][a-z-]*)$/.test(n)) return null;
   if (n === 'behavior' || n === '-moz-binding') return null;
   if (/expression\s*\(|-moz-binding|behavior\s*:|@import|javascript:|vbscript:/.test(v)) return null;
+  // Outside a quoted string no value has a brace or a `<`: they are how a value leaves its rule or its style element.
+  if (/[{}<]/.test(v.replace(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g, '""'))) return null;
   if (/image-set\s*\(|(^|[^-\w])src\s*\(/.test(v)) return null;
   for (const m of v.matchAll(/url\s*\(\s*([^)]*)\)/g)) if (!allowedUrl(m[1]!, policy)) return null;
   if (n === 'position' && /\b(fixed|sticky)\b/.test(v)) return { name, value: 'relative' };

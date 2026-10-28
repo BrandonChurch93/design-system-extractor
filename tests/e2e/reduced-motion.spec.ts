@@ -11,6 +11,8 @@ const probe = () => {
   const record = (what: string) => w.__dseTransforms.push(what);
   const scan = () => {
     for (const a of document.getAnimations()) {
+      // A paused animation never moves: the Motion section's still curves are drawn that way (D-093).
+      if (a.playState !== 'running') continue;
       const effect = a.effect as KeyframeEffect | null;
       const frames = effect?.getKeyframes?.() ?? [];
       const anim = a as Animation & { transitionProperty?: string };
@@ -95,7 +97,8 @@ test('the run page control: swatches, bars and cards do move without the prefere
   await context.close();
 });
 
-// docs/design/components.md, ReplayButton: under reduced motion the dot shows the end state still.
+// docs/design/motion.md, Ambient loops (D-093): the easings loop on one clock, pause off screen, and
+// are drawn still under reduced motion.
 async function motionSection(page: Page) {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('/r/seedclean0', { waitUntil: 'networkidle' });
@@ -105,36 +108,85 @@ async function motionSection(page: Page) {
   return page.locator('#motion');
 }
 
-test('Replay under reduced motion: the dot stays at its end, the buttons are off, one caption says why', async ({ browser }) => {
+const x = (el: Element) => new DOMMatrix(getComputedStyle(el).transform).m41;
+const y = (el: Element) => new DOMMatrix(getComputedStyle(el).transform).m42;
+
+test('the easings under reduced motion: still at 60% of the curve, nothing runs, the caption says why', async ({ browser }) => {
   const context = await browser.newContext({ reducedMotion: 'reduce' });
   const page = await context.newPage();
   const motion = await motionSection(page);
   const dot = motion.getByTestId('easing-dot').first();
-  const before = await dot.evaluate((el) => getComputedStyle(el).transform);
-  const replay = motion.getByRole('button', { name: 'Replay' }).first();
-  await expect(replay).toBeDisabled();
-  await replay.click({ force: true });
-  await page.waitForTimeout(400);
-  expect(await dot.evaluate((el) => getComputedStyle(el).transform)).toBe(before);
-  await expect(dot).toHaveAttribute('data-at', 'end');
-  await expect(motion.getByTestId('replay-reduced')).toHaveCount(1);
-  await expect(motion.getByTestId('replay-reduced')).toBeVisible();
+  const curve = motion.getByTestId('easing-curve-dot').first();
+  const before = [await dot.evaluate(x), await curve.evaluate(y)];
+  await page.waitForTimeout(900);
+  expect([await dot.evaluate(x), await curve.evaluate(y)]).toEqual(before);
+  // Somewhere along the track, not at either end: the still frame is drawn at 60% of the time.
+  expect(before[0]).toBeGreaterThan(0);
+  expect(before[0]).toBeLessThan(112);
+  expect(await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length)).toBe(0);
+  await expect(motion.getByTestId('easing-reduced')).toBeVisible();
+  await expect(motion.getByTestId('easing-caption')).toHaveCount(0);
   await context.close();
 });
 
-test('Replay control: without the preference the dot runs the curve and comes to rest at the end', async ({ browser }) => {
+test('the easings loop: every card on one start time, moving, paused off screen and back in step', async ({ browser }) => {
   const context = await browser.newContext({ reducedMotion: 'no-preference' });
   const page = await context.newPage();
   const motion = await motionSection(page);
+  await expect(motion.getByTestId('easing-caption')).toBeVisible();
   const dot = motion.getByTestId('easing-dot').first();
-  await expect(dot).toHaveAttribute('data-at', 'start');
-  await motion.getByRole('button', { name: 'Replay' }).first().click();
-  await page.waitForTimeout(60);
-  const mid = await dot.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).m41);
-  await page.waitForTimeout(1500);
-  const end = await dot.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).m41);
-  expect(end).toBe(112);
-  expect(mid).toBeLessThan(end);
-  await expect(motion.getByTestId('replay-reduced')).toHaveCount(0);
+  const a = await dot.evaluate(x);
+  await page.waitForTimeout(450);
+  const b = await dot.evaluate(x);
+  await page.waitForTimeout(450);
+  const c = await dot.evaluate(x);
+  expect(new Set([a, b, c]).size).toBeGreaterThan(1);
+  const clock = () => motion.evaluate((el) => [...el.querySelectorAll('[data-testid="easing-dot"], [data-testid="easing-curve-dot"], [data-testid="duration-dot"]')].flatMap((d) => d.getAnimations().map((an) => ({ start: an.startTime, state: an.playState }))));
+  const running = await clock();
+  expect(running.length).toBeGreaterThan(4);
+  expect(new Set(running.map((r) => r.start)).size).toBe(1);
+  expect(running.every((r) => r.state === 'running')).toBe(true);
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await page.waitForTimeout(400);
+  expect((await clock()).every((r) => r.state === 'paused')).toBe(true);
+  await motion.evaluate((el) => el.scrollIntoView({ block: 'start' }));
+  await page.waitForTimeout(400);
+  const back = await clock();
+  expect(back.every((r) => r.state === 'running')).toBe(true);
+  expect(new Set(back.map((r) => r.start))).toEqual(new Set(running.map((r) => r.start)));
+  await context.close();
+});
+
+test('no long task over 50 ms while twelve easings loop (the catalog sample)', async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: 'no-preference' });
+  const page = await context.newPage();
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/catalog', { waitUntil: 'networkidle' });
+  const grid = page.getByTestId('twelve-easings');
+  await grid.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+  await page.waitForTimeout(500);
+  expect(await grid.getByTestId('easing-card').count()).toBe(12);
+  const longest = await page.evaluate(
+    () =>
+      new Promise<number>((done) => {
+        let max = 0;
+        new PerformanceObserver((list) => {
+          for (const e of list.getEntries()) max = Math.max(max, e.duration);
+        }).observe({ type: 'longtask', buffered: false });
+        setTimeout(() => done(max), 4400);
+      }),
+  );
+  expect(longest).toBeLessThanOrEqual(50);
+  await context.close();
+});
+
+test('a pattern previews itself once when it scrolls into view, then offers Replay', async ({ browser }) => {
+  const context = await browser.newContext({ reducedMotion: 'no-preference' });
+  const page = await context.newPage();
+  const motion = await motionSection(page);
+  const row = motion.getByTestId('pattern-row').first();
+  await row.evaluate((el) => el.scrollIntoView({ block: 'center' }));
+  await expect(row).toHaveAttribute('data-previewed', 'true', { timeout: 15_000 });
+  await expect(row.getByRole('button', { name: 'Replay' })).toBeVisible();
   await context.close();
 });

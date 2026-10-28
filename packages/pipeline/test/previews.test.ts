@@ -145,6 +145,18 @@ describe('the preview builder', () => {
     expect(out).not.toMatch(/expression|javascript/);
   });
 
+  it('security: a state value that would leave its rule or its style element is dropped', () => {
+    const html = '<!doctype html><html><head><style>\n.x{}\n</style></head><body><div class="dse-root"><a>Go</a></div></body></html>';
+    const out = statePreview(html, [
+      { property: 'border-color', from: '#000', to: '#111</style><script>alert(1)</script><style>', transition: { durationMs: 100, easing: 'ease' } },
+      { property: 'color', from: '#000', to: 'red; } body { background: red', transition: { durationMs: 100, easing: 'ease' } },
+      { property: 'opacity', from: '1', to: '0.5' },
+    ], policy);
+    expect(out).not.toContain('<script');
+    expect(out).not.toContain('body {');
+    expect(out).toContain('opacity: 0.5;');
+  });
+
   it('turns images and embeds into aria-hidden blocks of their size, radius and average color', () => {
     const snapshot = snap([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'div', parent: 0, box: [0, 0, 200, 100] }, { tag: 'img', parent: 1, cls: ['avatar'], box: [8, 8, 48.4, 32], style: { 'border-top-left-radius': '50%' } }]);
     const out = buildPreview({ markup: '<div data-dse-id="e1"><img class="avatar" data-dse-id="e2" src="https://cdn.example/a.png" alt="Ada"><video width="120" height="60"></video></div>', vars: {}, snapshot, root: snapshot.elements[1]!, matched: {}, imageColors: { e2: 'rgb(120, 96, 80)' }, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy });

@@ -400,5 +400,5 @@ export function statePreview(html: string, delta: StateDelta[], policy: CssPolic
     ...blocks,
     ...(animations.length ? [`@media (prefers-reduced-motion: reduce) { ${STATE_TARGET} { animation: none; } }`] : []),
   ].join('\n');
-  return html.replace('</style></head>', `\n${css}\n</style></head>`);
+  return html.replace('</style></head>', `\n${css.replace(/<\/style/gi, '<\\/style')}\n</style></head>`);
 }

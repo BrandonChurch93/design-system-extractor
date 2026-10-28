@@ -114,7 +114,12 @@ ${after ? '' : '.hero .btn-primary, .pricing-card .btn-primary { padding: 0 21px
 .toast { position: fixed; right: 24px; bottom: 24px; z-index: 40; display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; background: #1F1F1F; color: #FFFFFF; font-size: 14px; line-height: 22px; }
 .stepper { display: flex; gap: 8px; }
 .step { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px; border: 1px solid #D1D1D1; border-radius: 999px; font-size: 14px; line-height: 22px; }
-.step[aria-current='step'] { background: #1C4EDB; border-color: #1C4EDB; color: #FFFFFF; }
+.step[aria-current='step'] { background: #1C4EDB; border-color: #1C4EDB; color: #FFFFFF; }${after ? `
+.dark-band { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; padding: 48px; border-radius: 16px; background: #0B0D10; }
+.band-button { display: inline-flex; align-items: center; height: 44px; padding: 0 24px; border-radius: 999px; background: #FFFFFF; color: #1F1F1F; font-size: 16px; line-height: 24px; font-weight: 600; text-decoration: none; }
+.band-card { display: flex; flex-direction: column; gap: 8px; max-width: 320px; padding: 24px; border-radius: 16px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.12); color: #FFFFFF; }
+.band-card h3 { margin: 0; font-size: 20px; line-height: 28px; font-weight: 600; color: #FFFFFF; }
+.band-card p { margin: 0; font-size: 16px; line-height: 26px; color: #FFFFFF; }` : ''}
 @media (max-width: 640px) { .newsletter { flex-wrap: wrap; } .newsletter-input { width: 100%; } .cookie-banner { flex-wrap: wrap; } }
 /* v1.1 · motion added by other hands: nine durations and seven easings in all (motion sprawl). */
 .nav-link { transition: color 100ms ease; }
@@ -155,7 +160,11 @@ function extras(after: boolean): Impl['extra'] {
       case 'features':
         // A card whose look depends on a background image that sanitization strips.
         return `<section ${a('promo')}><h3 style="color: #FFFFFF">Ship notes on Fridays</h3><p>Teams that publish weekly see twice the readers.</p></section>${
-          after ? `<ol ${a('stepper')} aria-label="Setup progress"><li ${a('step')}>1 Connect</li><li ${a('step')} aria-current="step">2 Write</li><li ${a('step')}>3 Publish</li></ol>` : ''
+          after
+            ? `<ol ${a('stepper')} aria-label="Setup progress"><li ${a('step')}>1 Connect</li><li ${a('step')} aria-current="step">2 Write</li><li ${a('step')}>3 Publish</li></ol>` +
+              // The halo material (D-094): a rounded button and a card on a dark ground, previewed on that ground.
+              `<section ${a('dark-band')} aria-label="Dark band"><a ${a('band-button')} href="${base}/signup">Start writing</a><article ${a('band-card')}><h3>Night mode digests</h3><p>Every digest reads on a dark ground too.</p></article></section>`
+            : ''
         }`;
       case 'contact':
         // A button that calls confirm(); the crawler dismisses the dialog.

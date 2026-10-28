@@ -1,7 +1,7 @@
 'use client';
 import type { ReactNode } from 'react';
-import type { ComponentType, MotionKind } from '@dse/schema';
-import { stateLabels } from '@dse/schema/labels';
+import { passesAll, type ComponentType, type MotionKind } from '@dse/schema';
+import { checkStatusLabels, fill, stateLabels } from '@dse/schema/labels';
 import { componentPanel, home, howItWorks, runPage } from '../../copy/strings';
 import type { RecentRun } from '../../lib/browser-store';
 import { tokenIndex } from '../../lib/doc';
@@ -286,7 +286,9 @@ export const pageDemos: Demo[] = [
       { label: runPage.captured, node: <div className={styles.cardBox}><ComponentCard component={comps[4]!} href="#" base={sampleBase} tokens={cardTokens(comps[4]!, names)} /></div> },
       { label: componentPanel.openAsPage, node: <div className={styles.cardBox}><ComponentCard component={comps[1]!} href="#" base={sampleBase} tokens={cardTokens(comps[1]!, names)} opened /></div> },
       { label: 'StatesStrip', node: <StatesStrip states={comps[0]!.states} base={sampleBase} name={comps[0]!.name} /> },
-      { label: 'CheckBadge', node: <div className={styles.row}><CheckBadge checks={comps[0]!.checks} name={comps[0]!.name} /><CheckBadge checks={comps.find((c) => c.checks.some((r) => r.status === 'fail'))?.checks ?? []} name="Icon button" /></div> },
+      { label: runPage.components.badgeAll, node: <CheckBadge checks={comps.find((c) => passesAll(c.checks))!.checks} name={comps.find((c) => passesAll(c.checks))!.name} /> },
+      { label: fill(runPage.components.badgeSome, { passed: '3', applicable: '4' }), node: <CheckBadge checks={comps.find((c) => c.checks.some((r) => r.status === 'fail'))?.checks ?? []} name="Icon button" /> },
+      { label: checkStatusLabels.na, node: <span className={styles.row} data-testid="check-badge-none"><CheckBadge checks={[]} name="Divider" /></span> },
     ],
   },
   {

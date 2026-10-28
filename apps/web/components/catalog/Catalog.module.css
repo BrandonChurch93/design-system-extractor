@@ -169,6 +169,19 @@
   border-radius: var(--dse-radius-lg);
 }
 
+.fitBox,
+.fitBoxNarrow {
+  height: 152px;
+  background: var(--dse-surface-tint);
+  border-radius: var(--dse-radius-lg);
+  overflow: hidden;
+}
+
+/* Narrower than the preview, so it scales down and shows its caption. */
+.fitBoxNarrow {
+  width: 88px;
+}
+
 .phone {
   padding: var(--dse-space-5) var(--dse-gutter-phone);
   background: var(--dse-bg);

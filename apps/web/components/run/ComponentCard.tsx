@@ -36,7 +36,7 @@ type Props = {
 /** A component: its preview, name, check badge, source line, states and up to four tokens. */
 export function ComponentCard({ component: c, href, base, tokens, opened, reveal, onOpen }: Props) {
   return (
-    <article className={styles.card} data-opened={opened || undefined}>
+    <article className={styles.card} data-opened={opened || undefined} data-testid="component-card">
       <div className={styles.preview}>
         <FitPreview preview={c.preview} base={base} title={fill(runPage.previewTitle, { name: c.name })} lazy ground={c.preview.ground ?? c.ground} />
       </div>
