@@ -159,6 +159,22 @@ Measured on the v1.1 code (the main tree before step 5, and a worktree at `a87c6
 
 At the showcase timeout nothing is cut by the budget on any of the three: linear.app's fallbacks are fonts (71), stripe.com's and modernsoftworks.com's are render differences. The bare host modernsoftworks.com still answers Hostinger's 403 to the crawler (a 17 s sparse run); the owner's run and this one use `https://www.modernsoftworks.com/`.
 
+### The owner's two runs after the upgrade (2026-10-28)
+
+On the production build against the local database: `/compare?a=tx4mehptdf&b=mhxvphzzfr` answers 200 and renders every row (two sites; Colors · 49 fewer; the Motion card's Durations 0 → 15, Easings 0 → 6, Keyframes 0 → 45, Patterns 0 → 43; the component table); `/r/tx4mehptdf` and `/api/runs/tx4mehptdf` answer 200; no page error. Before the upgrade all three threw (D-092).
+
+### Showcase promotion on the local database (2026-10-28)
+
+`pnpm showcase --add z1ud0oz4vu` (the sparse v1.0 modernsoftworks.com run) answered `z1ud0oz4vu is sparse (0 components). A sparse run is not added to the showcase.` and exited 1. `pnpm showcase --add mhxvphzzfr` made Modern Softworks the first card on the home page with the promoted caption (`Sites I have run it on. Yours stays private unless you share the link.`), `is_showcase` true and null retention, and warned `7 entries leave an orphan at 3 or 2 columns. Add 5 more or remove 1.`; `--list` showed it as promoted; `--remove mhxvphzzfr` took it down with its 90-day retention back.
+
+### After the first round of handling (2026-10-28, 15 min, storage over HTTP)
+
+| Run | live | diff | css-too-large | fonts-unavailable | not-checked | total | live of checked |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| www.modernsoftworks.com `366sqcl8tb` | 73 | 18 | 0 | 0 | 0 | 91 | 73 of 91 · 80.2% |
+| linear.app `9tgcgu3m6g` | 69 | 51 | 0 | 0 | 0 | 120 | 69 of 120 · 57.5% |
+| stripe.com `wjn7p14ocv` | 75 | 45 | 0 | 0 | 0 | 120 | 75 of 120 · 62.5% |
+
 ### Causes of the captured previews, classified (2026-10-28)
 
 Every captured preview of the three 15-minute runs, by its reference crop, its storage render and their pixel diff, one primary cause each (174 classified; the 42 boxes below the 8,000 px cut counted apart). Two findings change the baseline's reading: `pnpm pipeline:run` served previews as `file://` documents, which Chromium refuses fonts in, so every copied family fell back in these three runs (the owner's runs went through the worker and MinIO over HTTP and are the production-like baseline; P16's stripe.com check was measured the same flawed way); and linear.app's `InterVariable.woff2` is 352 KB with CORS, refused only by the 300 KB cap.
