@@ -165,7 +165,7 @@ Complete in 292 s. The budget cut fingerprints (48 of 59) and the states of late
 
 ### qa:design and the qa:visual goldens (2026-10-28)
 
-`pnpm qa:design` 165 of 165 captured on the final builder and seed, reviewed at 1440, 820 and 390 (run page, panel, Compare, home; the StateBar's chips scroll on phones with Play at the row's end as specified). `pnpm qa:visual` then differed on the v1.2 surfaces, and the goldens were updated once (`--update-snapshots=all`, 128 passed): 4 new (the catalog StateBar at three widths, one catalog entry), 128 resized (the six-cell stat strip, the checks opening line, the easing stages and the 12-easing catalog sample, the Compare Motion card, `messy-after`'s dark band, and 1 px rounding on section crops), the rest unchanged or under 3% of pixels (anti-aliasing and the seed's re-recorded content).
+`pnpm qa:design` 165 of 165 captured on the final builder and seed, reviewed at 1440, 820 and 390 (run page, panel, Compare, home; the StateBar's chips scroll on phones with Play at the row's end as specified). `pnpm qa:visual` then differed on the v1.2 surfaces, and the goldens were updated once (`--update-snapshots=all`, 128 passed): 3 new (the catalog StateBar at three widths), 128 resized (the six-cell stat strip, the checks opening line, the easing stages and the 12-easing catalog sample, the Compare Motion card, `messy-after`'s dark band, and 1 px rounding on section crops), the rest unchanged or under 3% of pixels (anti-aliasing and the seed's re-recorded content).
 
 ### axe (2026-10-28)
 
