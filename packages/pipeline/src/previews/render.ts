@@ -28,11 +28,15 @@ export async function openRenderSession(browser: Browser, storageBase: string): 
   return { context, page, refused, close: () => context.close() };
 }
 
-/** Loads a preview at the instance's size plus the pad, and screenshots its root. */
-export async function renderPreview(s: RenderSession, url: string, size: { w: number; h: number }): Promise<Buffer | null> {
+/**
+ * Loads a preview at the instance's size plus the pad, paints its ground behind the transparent
+ * document as the app's frame does (D-094), and screenshots its root.
+ */
+export async function renderPreview(s: RenderSession, url: string, size: { w: number; h: number }, ground?: string): Promise<Buffer | null> {
   await s.page.setViewportSize({ width: Math.max(1, Math.ceil(size.w + RENDER_PAD * 2)), height: Math.max(1, Math.ceil(size.h + RENDER_PAD * 2)) });
   try {
     await s.page.goto(url, { waitUntil: 'load', timeout: 15_000 });
+    if (ground && /^#[0-9A-F]{6}$/i.test(ground)) await s.page.addStyleTag({ content: `html { background: ${ground}; }` });
     await s.page.evaluate(() => document.fonts.ready.then(() => true)).catch(() => true);
     const root = s.page.locator('.dse-root');
     if ((await root.count()) === 0) return null;
@@ -40,6 +44,48 @@ export async function renderPreview(s: RenderSession, url: string, size: { w: nu
   } catch {
     return null;
   }
+}
+
+/** The boxes of the text in the loaded preview, in CSS px from its root (the masked font comparison, D-095). */
+export async function textBoxes(s: RenderSession): Promise<{ x: number; y: number; w: number; h: number }[]> {
+  return s.page
+    .evaluate(() => {
+      const root = document.querySelector('.dse-root');
+      if (!root) return [];
+      const o = root.getBoundingClientRect();
+      const out: { x: number; y: number; w: number; h: number }[] = [];
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+        if (!n.textContent?.trim()) continue;
+        const r = document.createRange();
+        r.selectNodeContents(n);
+        for (const b of r.getClientRects()) if (b.width > 0 && b.height > 0) out.push({ x: b.left - o.left, y: b.top - o.top, w: b.width, h: b.height });
+      }
+      return out;
+    })
+    .catch(() => []);
+}
+
+/** The image with each box (grown by 2 CSS px for glyph overhang) painted one flat color, so text alone cannot differ. */
+export function maskBoxes(png: Buffer, boxes: { x: number; y: number; w: number; h: number }[], cssWidth: number): Buffer {
+  const img = PNG.sync.read(png);
+  const scale = img.width / cssWidth;
+  for (const b of boxes) {
+    const x0 = Math.max(0, Math.floor((b.x - 2) * scale));
+    const y0 = Math.max(0, Math.floor((b.y - 2) * scale));
+    const x1 = Math.min(img.width, Math.ceil((b.x + b.w + 2) * scale));
+    const y1 = Math.min(img.height, Math.ceil((b.y + b.h + 2) * scale));
+    for (let y = y0; y < y1; y++) {
+      for (let x = x0; x < x1; x++) {
+        const i = (y * img.width + x) * 4;
+        img.data[i] = 255;
+        img.data[i + 1] = 0;
+        img.data[i + 2] = 255;
+        img.data[i + 3] = 255;
+      }
+    }
+  }
+  return PNG.sync.write(img);
 }
 
 /** Device pixels the comparison may shift by, and the size difference it forgives (fractional page boxes). */

@@ -79,7 +79,7 @@ export type Change = { name: string; change: 'new' | 'changed' | 'removed'; befo
 const variantsWord = (n: number) => (n === 1 ? runPage.components.oneVariant : fill(runPage.components.variants, { variants: count(n) }));
 const checksOf = (c: Component) => {
   const k = checkCounts(c.checks);
-  return fill(runPage.components.badge, { passed: k.passed, applicable: k.applicable });
+  return fill(runPage.passedOf, { passed: k.passed, applicable: k.applicable });
 };
 
 /** Components that are new, removed, or whose variants or checks changed; the rest are left out. */

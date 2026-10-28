@@ -60,6 +60,7 @@ export async function fontsFor(used: { family: string; weights: number[] }[], sh
   const links: string[] = [];
   const faces: FontFaceOut[] = [];
   let fallback = false;
+  const substituted = new Set<string>();
   for (const u of used) {
     if (google.has(u.family.toLowerCase())) {
       const weights = [...new Set(u.weights)].sort((a, b) => a - b).join(';');
@@ -72,6 +73,7 @@ export async function fontsFor(used: { family: string; weights: number[] }[], sh
       const url = await copier.copy(f.src);
       if (!url) {
         fallback = true;
+        substituted.add(u.family);
         continue;
       }
       const ext = /\.(woff2|woff|ttf|otf)/i.exec(f.src)?.[1]?.toLowerCase() ?? 'woff2';
@@ -79,5 +81,5 @@ export async function fontsFor(used: { family: string; weights: number[] }[], sh
     }
   }
   const mode = links.length ? 'google' : faces.length ? 'copied' : fallback ? 'fallback' : 'none';
-  return { googleLinks: links, faces, mode: fallback && mode !== 'none' ? 'fallback' : mode };
+  return { googleLinks: links, faces, mode: fallback && mode !== 'none' ? 'fallback' : mode, ...(substituted.size ? { substituted: [...substituted] } : {}) };
 }

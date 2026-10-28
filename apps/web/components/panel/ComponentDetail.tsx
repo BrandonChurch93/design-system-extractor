@@ -15,7 +15,7 @@ import { FitPreview } from '../FitPreview';
 import { Tabs } from '../Tabs';
 import { Tag } from '../Tag';
 import { useToast } from '../Toast';
-import { CheckList } from '../run/CheckBadge';
+import { CheckList, CheckPill } from '../run/CheckBadge';
 import { PatternRow } from '../run/PatternList';
 import { ReplayCaption } from '../run/ReplayButton';
 import { TokenPopover, tokenInfo } from '../run/TokenPopover';
@@ -97,6 +97,7 @@ export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel 
   const ownChecks = c.checks.filter((r) => !r.variantId || r.variantId === c.variants[0]!.id);
   const otherChecks = c.checks.filter((r) => r.variantId && r.variantId !== c.variants[0]!.id && r.status === 'fail');
   const counts = checkCounts(ownChecks);
+  const all = checkCounts(c.checks);
   const tokens = [...new Map(c.tokensUsed.map((u) => [u.tokenId, u])).values()];
   const variantName = (id: string) => c.variants.find((v) => v.id === id)?.name;
   // The CSS names tokens as tokens.css does; until the exporters load it shows the resolved rules.
@@ -240,9 +241,12 @@ export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel 
       </section>
 
       <section className={styles.section} aria-labelledby={`ch-${c.id}`}>
-        <H id={`ch-${c.id}`} className={styles.label}>
-          {fill(P.checks, { passed: count(counts.passed), applicable: count(counts.applicable), variant: c.variants[0]!.name })}
-        </H>
+        <div className={styles.checksHead}>
+          <H id={`ch-${c.id}`} className={styles.label}>
+            {fill(P.checks, { passed: count(counts.passed), applicable: count(counts.applicable), variant: c.variants[0]!.name })}
+          </H>
+          {all.applicable ? <CheckPill all={all.failed === 0} passed={all.passed} applicable={all.applicable} /> : null}
+        </div>
         <CheckList checks={ownChecks} />
         {otherChecks.length ? (
           <div className={styles.rule}>

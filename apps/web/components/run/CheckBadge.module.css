@@ -5,15 +5,29 @@
   display: inline-flex;
   align-items: center;
   gap: var(--dse-space-1);
-  padding: var(--dse-space-1) var(--dse-space-2);
-  margin: calc(-1 * var(--dse-space-1)) calc(-1 * var(--dse-space-2));
-  border: 0;
+  height: 24px;
+  padding-inline: var(--dse-space-3);
+  border: 1px solid var(--dse-ink);
+  border-radius: var(--dse-radius-pill);
   background: none;
   font-weight: 600;
   color: var(--dse-ink);
-  border-radius: var(--dse-radius-sm);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+}
+
+/* Every applicable check passed: filled, so it reads at a glance by weight (D-096, D-003). */
+.all {
+  background: var(--dse-ink);
+  color: var(--dse-inverse-ink);
+}
+
+.some {
+  border-color: var(--dse-line-strong);
+}
+
+button.badge {
+  cursor: pointer;
 }
 
 .list {

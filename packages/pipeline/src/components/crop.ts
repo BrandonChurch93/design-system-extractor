@@ -3,7 +3,9 @@ import type { BBox } from '@dse/schema';
 
 // Crops of the full-page screenshot, which is taken at device scale 2 (docs/specs/crawler.md).
 
-export type Shot = { png: Buffer; width: number; height: number };
+/** A clip below the screenshot's cut, where novel element candidates sit (capture-and-states.md, step 4). */
+export type ShotBand = { y: number; height: number; png: Buffer };
+export type Shot = { png: Buffer; width: number; height: number; bands?: ShotBand[] };
 
 const decoded = new WeakMap<Buffer, PNG>();
 
@@ -16,10 +18,28 @@ function decode(buf: Buffer): PNG {
   return p;
 }
 
-/** A region of the screenshot in CSS px, clipped to the page; null when nothing is left. */
+/** How far down the page the screenshot and its bands reach, in CSS px. */
+export function shotExtent(shot: Shot): number {
+  return Math.max(shot.height, ...(shot.bands ?? []).map((b) => b.y + b.height));
+}
+
+/**
+ * A region of the screenshot in CSS px, clipped to the page; null when nothing is left. A region
+ * below the cut is read from the band that holds it, else from the band it overlaps most.
+ */
 export function cropShot(shot: Shot, box: BBox): Buffer | null {
-  const src = decode(shot.png);
-  const scale = src.width / shot.width;
+  if (box.y + box.h > shot.height && shot.bands?.length) {
+    const overlap = (b: ShotBand) => Math.min(box.y + box.h, b.y + b.height) - Math.max(box.y, b.y);
+    const band = [...shot.bands].sort((a, b) => overlap(b) - overlap(a))[0]!;
+    const main = Math.min(box.y + box.h, shot.height) - box.y;
+    if (overlap(band) > main) return cropImage(band.png, shot.width, { ...box, y: box.y - band.y });
+  }
+  return cropImage(shot.png, shot.width, box);
+}
+
+function cropImage(png: Buffer, cssWidth: number, box: BBox): Buffer | null {
+  const src = decode(png);
+  const scale = src.width / cssWidth;
   const x0 = Math.max(0, Math.floor(box.x * scale));
   const y0 = Math.max(0, Math.floor(box.y * scale));
   const x1 = Math.min(src.width, Math.ceil((box.x + box.w) * scale));
@@ -30,7 +50,39 @@ export function cropShot(shot: Shot, box: BBox): Buffer | null {
   return PNG.sync.write(out);
 }
 
-/** The element's box plus a margin, as the state crops are taken (8 px). */
+/** One pixel of the screenshot or a band at a CSS px point, or null outside them. */
+export function pixelAt(shot: Shot, x: number, y: number): { r: number; g: number; b: number; a: number } | null {
+  const band = y >= shot.height ? shot.bands?.find((b) => y >= b.y && y < b.y + b.height) : undefined;
+  if (y >= shot.height && !band) return null;
+  const src = decode(band ? band.png : shot.png);
+  const scale = src.width / shot.width;
+  const px = Math.floor(x * scale);
+  const py = Math.floor((y - (band?.y ?? 0)) * scale);
+  if (px < 0 || py < 0 || px >= src.width || py >= src.height) return null;
+  const i = (py * src.width + px) * 4;
+  return { r: src.data[i]!, g: src.data[i + 1]!, b: src.data[i + 2]!, a: src.data[i + 3]! / 255 };
+}
+
+/** The crop's margin painted with the ground (D-094): everything outside the inner box, `margin` CSS px wide. */
+export function paintMargin(png: Buffer, margin: number, cssWidth: number, ground: string): Buffer {
+  const img = PNG.sync.read(png);
+  const scale = img.width / cssWidth;
+  const m = Math.round(margin * scale);
+  const [r, g, b] = [1, 3, 5].map((i) => Number.parseInt(ground.slice(i, i + 2), 16));
+  for (let y = 0; y < img.height; y++) {
+    for (let x = 0; x < img.width; x++) {
+      if (x >= m && x < img.width - m && y >= m && y < img.height - m) continue;
+      const i = (y * img.width + x) * 4;
+      img.data[i] = r!;
+      img.data[i + 1] = g!;
+      img.data[i + 2] = b!;
+      img.data[i + 3] = 255;
+    }
+  }
+  return PNG.sync.write(img);
+}
+
+/** The element's box plus a margin, as the state crops are taken (4 px since v1.2, D-094). */
 export function padded(b: BBox, margin: number): BBox {
   return { x: b.x - margin, y: b.y - margin, w: b.w + margin * 2, h: b.h + margin * 2 };
 }

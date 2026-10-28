@@ -7,7 +7,7 @@ import { sanitizeDeclaration, sanitizeMarkup, type CssPolicy, type SanitizeRepor
 // The preview builder (docs/specs/preview-fidelity.md, Building the preview).
 
 export type FontFaceOut = { family: string; url: string; weight: string; style: string; format: string };
-export type PreviewFonts = { googleLinks: string[]; faces: FontFaceOut[]; mode: 'google' | 'copied' | 'fallback' | 'none' };
+export type PreviewFonts = { googleLinks: string[]; faces: FontFaceOut[]; mode: 'google' | 'copied' | 'fallback' | 'none'; /** Families left on their fallback stack. */ substituted?: string[] };
 
 export type PreviewInput = {
   markup: string;
@@ -15,8 +15,6 @@ export type PreviewInput = {
   snapshot: Snapshot;
   root: SnapElement;
   matched: Record<string, MatchedStyles>;
-  /** The opaque color the element sat on, shown behind it as on the page. */
-  ground: string;
   /** Average color per image element (data-dse-id), sampled from the page screenshot. */
   imageColors: Record<string, string>;
   fonts: PreviewFonts;
@@ -333,7 +331,8 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
   const ruleText = textOf(false);
   const codeText = textOf(true);
 
-  // The root: what the element inherits, the custom properties it uses, its ground.
+  // The root: what the element inherits and the custom properties it uses. Its ground is painted
+  // behind the transparent document by the app and the render check alike (D-094).
   const parent = input.root.p >= 0 ? input.snapshot.elements[input.root.p] : undefined;
   const from = parent ?? input.root;
   const rootDecls = [
@@ -347,7 +346,7 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
   const inside = input.snapshot.elements.filter((e) => e.p >= 0 && isInside(input.snapshot, e, input.root));
   const borderBox = inside.length > 0 && inside.filter((e) => e.style['box-sizing'] === 'border-box').length * 2 > inside.length;
   const boxCss = borderBox ? '\n.dse-root *, .dse-root *::before, .dse-root *::after { box-sizing: border-box; }' : '';
-  const rootCss = `.dse-root { ${rootDecls.map((d) => `${d.name}: ${d.value};`).join(' ')} display: flex; flex-direction: column; align-items: flex-start; width: ${w}px; background: ${input.ground}; }\n.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: ${w}px !important; height: ${h}px !important; flex: none !important;${/^(absolute|fixed|sticky)$/.test(input.root.style.position) ? ' position: relative !important; inset: auto !important;' : ''} }${boxCss}`;
+  const rootCss = `.dse-root { ${rootDecls.map((d) => `${d.name}: ${d.value};`).join(' ')} display: flex; flex-direction: column; align-items: flex-start; width: ${w}px; }\n.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: ${w}px !important; height: ${h}px !important; flex: none !important;${/^(absolute|fixed|sticky)$/.test(input.root.style.position) ? ' position: relative !important; inset: auto !important;' : ''} }${boxCss}`;
   const fontCss = input.fonts.faces.map((f) => `@font-face { font-family: '${f.family}'; src: url('${f.url}') format('${f.format}'); font-weight: ${f.weight}; font-style: ${f.style}; font-display: block; }`).join('\n');
   const css = [fontCss, rootCss, ruleText].filter(Boolean).join('\n');
 
@@ -361,12 +360,45 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
   return { html, css, rules: ruleText, code: codeText, markup: sanitized.html, bytes, tooLarge: bytes > CSS_CAP_BYTES, report: sanitized.report };
 }
 
-/** The same document plus one rule that applies a state's computed-style diff to the root element. */
-export function statePreview(html: string, delta: { property: string; to: string }[], policy: CssPolicy): string {
-  const decls = delta
-    .map((d) => sanitizeDeclaration(d.property, d.to, policy))
-    .filter(Boolean)
-    .map((d) => `${d!.name}: ${d!.value} !important;`)
-    .join(' ');
-  return html.replace('</style></head>', `\n.dse-root > :first-child { ${decls} }\n</style></head>`);
+export type StateDelta = { property: string; from: string; to: string; transition?: { durationMs: number; easing: string } };
+
+/** The selector the state's values sit on: an id-level specificity no site class selector beats, without `!important`, so the animation plays over it (D-094, D-098). */
+const STATE_TARGET = '.dse-root > :first-child:not(#dse-state)';
+
+/**
+ * The same document plus the state: one rule with the state's values, and the entries the site
+ * transitions played from the default values with the recorded timing, one generated keyframes block
+ * per duration and easing, so loading the file shows the transition and reloading replays it (D-094).
+ * Under reduced motion the end values show at once.
+ */
+export function statePreview(html: string, delta: StateDelta[], policy: CssPolicy): string {
+  const decl = (property: string, value: string) => {
+    const d = sanitizeDeclaration(property, value, policy);
+    return d ? `${d.name}: ${d.value};` : '';
+  };
+  const values = delta.map((d) => decl(d.property, d.to)).filter(Boolean).join(' ');
+  const groups = new Map<string, { durationMs: number; easing: string; entries: StateDelta[] }>();
+  for (const d of delta) {
+    if (!d.transition || d.transition.durationMs <= 0) continue;
+    const easing = sanitizeDeclaration('animation-timing-function', d.transition.easing, policy)?.value ?? 'ease';
+    const k = `${d.transition.durationMs}|${easing}`;
+    const g = groups.get(k) ?? { durationMs: d.transition.durationMs, easing, entries: [] };
+    g.entries.push(d);
+    groups.set(k, g);
+  }
+  const blocks: string[] = [];
+  const animations: string[] = [];
+  [...groups.values()].forEach((g, i) => {
+    const from = g.entries.map((d) => decl(d.property, d.from)).filter(Boolean).join(' ');
+    const to = g.entries.map((d) => decl(d.property, d.to)).filter(Boolean).join(' ');
+    if (!from || !to) return;
+    blocks.push(`@keyframes dse-state-${i} { from { ${from} } to { ${to} } }`);
+    animations.push(`dse-state-${i} ${Math.round(g.durationMs)}ms ${g.easing} both`);
+  });
+  const css = [
+    `${STATE_TARGET} { ${values}${animations.length ? ` animation: ${animations.join(', ')};` : ''} }`,
+    ...blocks,
+    ...(animations.length ? [`@media (prefers-reduced-motion: reduce) { ${STATE_TARGET} { animation: none; } }`] : []),
+  ].join('\n');
+  return html.replace('</style></head>', `\n${css}\n</style></head>`);
 }

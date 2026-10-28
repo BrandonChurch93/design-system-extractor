@@ -4,7 +4,8 @@ import { deltaE, parseCssColor } from '../color/parse';
 import { px, radiusOf } from '../capture/snapshot';
 import { classify, type Guess } from '../components/classify';
 import { classesAllowMerge, clusterItems, exactKey, representative, toneOnly, type Cluster } from '../components/cluster';
-import { cropShot, downscale, padded, sourceRegion } from '../components/crop';
+import { cropShot, downscale, padded, shotExtent, sourceRegion } from '../components/crop';
+import { commonGround, CROP_MARGIN, groundOf, withGround } from '../components/ground';
 import { itemsFrom, type Item } from '../components/items';
 import { nameComponents, resolveCollisions, stylesAgree, type CollisionPair, type Draft, type Naming } from '../components/model';
 import { componentMotion, easingLink, patternOwners, withOwners } from '../components/motion';
@@ -49,10 +50,10 @@ function isNoise(c: Cluster): boolean {
   return !interactive && !image && !it.el.text.trim();
 }
 
-function crop(it: Item, margin = 8): Buffer | null {
+/** The element plus its 4 px margin, painted with its ground (D-094). */
+function crop(it: Item): Buffer | null {
   if (it.revealed) return it.revealed.open.crop ?? null;
-  const shot = it.vc.screenshot;
-  return cropShot(shot, padded({ x: it.el.x, y: it.el.y, w: it.el.w, h: it.el.h }, margin));
+  return withGround(cropShot(it.vc.screenshot, padded({ x: it.el.x, y: it.el.y, w: it.el.w, h: it.el.h }, CROP_MARGIN)), it, groundOf(it));
 }
 
 function rebuild(w: Working, tokens: Tokens) {
@@ -346,12 +347,15 @@ async function assemble(ctx: RunContext, w: Working, id: string, tokens: Tokens)
     bbox: { x: Math.round(it.el.x), y: Math.round(it.el.y), w: Math.round(it.el.w), h: Math.round(it.el.h) },
     variantId: variantIds.get(variantOf(it))!,
     ...(it.el.text.trim() ? { text: it.el.text.trim().slice(0, 80) } : {}),
+    ground: groundOf(it),
   }));
+
+  const ground = commonGround(instances.flatMap((i) => (i.ground ? [i.ground] : [])));
 
   // Provenance (D-008): the source crop is cut from the first-seen page's screenshot.
   const bbox = { x: Math.round(first.el.x), y: Math.round(first.el.y), w: Math.round(first.el.w), h: Math.round(first.el.h) };
   const shot = first.vc.screenshot;
-  const { region, outline } = sourceRegion(bbox, { width: shot.width, height: shot.height });
+  const { region, outline } = sourceRegion(bbox, { width: shot.width, height: shotExtent(shot) });
   const source = first.revealed ? null : await put(ctx, keys.componentSource(ctx.runId, id, first.viewport), cropShot(shot, region));
   const pageCounts = new Map<string, { pageId: string; path: string; order: number; desktop: number; mobile: number }>();
   for (const it of w.items) {
@@ -386,6 +390,7 @@ async function assemble(ctx: RunContext, w: Working, id: string, tokens: Tokens)
     states: await statesOf(ctx, w, id, first, instanceId),
     ...tokensUsedBy(first, tokens),
     preview: defaultShot ? capturedPreview(defaultShot) : capturedPreview({ key: keys.componentCrop(ctx.runId, id, 'default'), width: 0, height: 0 }),
+    ...(ground ? { ground } : {}),
     code: { html: '', css: '' },
     checks: [],
     ...(responsive ? { responsiveVariant: responsive } : {}),
@@ -404,7 +409,7 @@ async function statesOf(ctx: RunContext, w: Working, id: string, first: Item, in
     for (const it of ordered) {
       const rec = (it.vc.states[it.el.d] ?? []).find((r) => r.state === state);
       if (!rec || it.revealed) continue;
-      out.set(state, { state, captured: true, cropKey: await save(state, rec.crop), delta: rec.delta, ...(state === 'focus' ? { reachedByKeyboard: Boolean(rec.reachedByKeyboard) } : {}), instanceId: instanceId(it) });
+      out.set(state, { state, captured: true, cropKey: await save(state, withGround(rec.crop, it, groundOf(it))), delta: rec.delta, ...(state === 'focus' ? { reachedByKeyboard: Boolean(rec.reachedByKeyboard) } : {}), instanceId: instanceId(it) });
       break;
     }
     if (!out.has(state) && interactive && state !== 'scrolled') {

@@ -138,7 +138,7 @@ export const completeRun: RunDocumentComplete = {
     ],
     shadow: [{ id: 'sh000001', name: 'md', value: '0 4px 12px rgba(11, 31, 58, 0.12)', usage: 9, pages: [{ pageId: pricing, count: 9 }] }],
     duration: [{ id: 'du000001', name: 'duration-160', ms: 160, role: 'base', usage: 12, pages: [{ pageId: home, count: 12 }], rawValues: ['0.16s'] }],
-    easing: [{ id: 'ea000001', name: 'ease-out-quart', siteName: '--ease-out-quart', value: 'cubic-bezier(0.25, 1, 0.5, 1)', usage: 12, pages: [{ pageId: home, count: 12 }] }],
+    easing: [{ id: 'ea000001', name: 'ease-out-quart', siteName: '--ease-out-quart', value: 'cubic-bezier(0.25, 1, 0.5, 1)', usage: 12, pages: [{ pageId: home, count: 12 }], usedBy: { componentTypes: [{ type: 'button', count: 1 }], patternKinds: [{ kind: 'entrance', count: 1 }] } }],
     keyframes: [{ name: 'fade-up', css: '@keyframes fade-up { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }', used: true, usage: 1, pages: [{ pageId: home, count: 1 }], unresolved: [] }],
     breakpoints: [
       { value: 640, usage: 4 },

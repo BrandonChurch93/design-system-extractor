@@ -150,10 +150,11 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Preview controls (D-094): StateBar chips use the State labels (`Default` · `Hover` · `Focus` · `Active` · `Open` · `Disabled`, only the states captured) · `Play` · StateBar landmark label `States` · Ground toggle label `Ground` with `Site` · `Light` · `Dark` · scale caption `Shown at {scale}×` (two decimals at most, trailing zeros dropped: `0.8×`, `0.65×`) · font caption `Font substituted: {family} was not available.`
 - Preview titles (read by screen readers): `{name} preview` · `{name} · {state} preview`
 - Check badge (D-096): `All checks` when every applicable check passes · `{passed} of {applicable} checks` otherwise · nothing when no check applies
+- Passed counts (the Checks passed and Components passing cells, the ChecksTable's Passed column, Compare's Checks column): `{passed} of {applicable}`
 - Show all: `Show all {n} components`
 - Checks heading: `Automated checks`
 - Disclaimer sentence (required wherever checks are summarized): `The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.`
-- Checks opening line (D-096): `{passed} of {applicable} components pass every check that applies to them.` (`1 component passes` at one)
+- Checks opening line (D-096): `{passed} of {applicable} components pass every check that applies to them.` (when one component has checks that apply: `{passed} of 1 component passes every check that applies to it.`)
 - Checks summary: cells `Passed` · `Failed` · `Applicable`; caption `of {components} components × up to 5 checks`
 - Checks table headers: `Check` · `What it measures` · `Passed` · `Failing`; failing format `{component} · {detail}`; overflow button `· {n} more`; none `None`
 - Drift heading: `Drift report`; caption `Where the system is leaking, with a proposed clean set. Numbers first, proposal second, evidence last.`

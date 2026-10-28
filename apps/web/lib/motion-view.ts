@@ -1,4 +1,4 @@
-import type { MotionPattern, RunDocumentPartial } from '@dse/schema';
+import type { EasingToken, MotionPattern, RunDocumentPartial } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { runPage } from '../copy/strings';
 import { count } from './format';
@@ -49,3 +49,27 @@ export function baseDuration(doc: RunDocumentPartial): number {
 export function motionCounts(doc: RunDocumentPartial) {
   return { durations: doc.tokens?.duration?.length ?? 0, easings: doc.tokens?.easing?.length ?? 0, keyframes: doc.tokens?.keyframes?.length ?? 0, patterns: doc.motion?.patterns.length ?? 0 };
 }
+
+/** `a`, `a and b`, `a, b and c` (copy.md, the joining rule in words). */
+export function joinWords(parts: string[]): string {
+  return parts.length <= 1 ? (parts[0] ?? '') : `${parts.slice(0, -1).join(', ')} and ${parts.at(-1)}`;
+}
+
+/**
+ * What uses an easing (copy.md, Easing grid; D-097): the three most used of its component types and
+ * pattern kinds, types first on a tie, written types first then kinds, most used first. Null when
+ * nothing uses it.
+ */
+export function usageLine(usedBy: EasingToken['usedBy'] | undefined): string | null {
+  if (!usedBy) return null;
+  const all = [...usedBy.componentTypes.map((t) => ({ isType: true, count: t.count, word: M.typePlurals[t.type].toLowerCase() })), ...usedBy.patternKinds.map((k) => ({ isType: false, count: k.count, word: `${k.count} ${M.kindWords[k.kind][k.count === 1 ? 0 : 1]}` }))];
+  const top = all
+    .map((x, i) => ({ ...x, i }))
+    .sort((a, b) => b.count - a.count || a.i - b.i)
+    .slice(0, 3)
+    .sort((a, b) => Number(b.isType) - Number(a.isType) || b.count - a.count || a.i - b.i);
+  if (!top.length) return null;
+  const line = joinWords(top.map((x) => x.word));
+  return line.charAt(0).toUpperCase() + line.slice(1);
+}
+

@@ -1,15 +1,15 @@
 import type { Browser } from 'playwright';
-import type { Component, Preview, State } from '@dse/schema';
+import { previewCounts, type Component, type Preview, type State } from '@dse/schema';
 import { PNG } from 'pngjs';
-import { effectiveBackground } from '../capture/snapshot';
 import { cropShot } from '../components/crop';
+import { groundOf } from '../components/ground';
 import type { Item } from '../components/items';
 import { overBudget } from '../budget';
 import type { RunContext } from '../context';
 import { buildPreview, statePreview, type PreviewDoc } from '../previews/build';
 import { LIVE_MAX_DIFF_PCT } from '../previews/constants';
 import { FontCopier, fontsFor } from '../previews/fonts';
-import { diffPercent, openRenderSession, renderPreview, type RenderSession } from '../previews/render';
+import { diffPercent, maskBoxes, openRenderSession, renderPreview, textBoxes, type RenderSession } from '../previews/render';
 import type { CssPolicy } from '../previews/sanitize';
 import { keys } from '../storage/keys';
 import type { CaptureOutput } from './capture';
@@ -80,22 +80,47 @@ async function previewFor(ctx: RunContext, it: Item, htmlKey: string, existing: 
     const c = averageColor(cropShot(it.vc.screenshot, { x: e.x, y: e.y, w: e.w, h: e.h }));
     if (c) imageColors[e.d] = c;
   }
-  const bg = effectiveBackground(it.snapshot, it.el, false);
+  const ground = groundOf(it);
   const fonts = await fontsFor(fontsUsed(it), it.vc.sheets, copier);
-  const doc = buildPreview({ markup: markup.html, vars: markup.vars, snapshot: it.snapshot, root: it.el, matched, ground: `rgb(${Math.round(bg.r)}, ${Math.round(bg.g)}, ${Math.round(bg.b)})`, imageColors, fonts, policy, siteVars });
-  if (doc.tooLarge) return { preview: { ...existing, mode: 'captured', capturedReason: 'css-too-large' }, doc, fonts: fonts.mode };
+  const doc = buildPreview({ markup: markup.html, vars: markup.vars, snapshot: it.snapshot, root: it.el, matched, imageColors, fonts, policy, siteVars });
+  if (doc.tooLarge) return { preview: { ...existing, ground, mode: 'captured', capturedReason: 'css-too-large' }, doc, fonts: fonts.mode };
   await ctx.files.put(htmlKey, doc.html, { contentType: 'text/html; charset=utf-8' });
-  const shot = await renderPreview(session, ctx.files.publicUrl(htmlKey), { w: it.el.w, h: it.el.h });
+  const shot = await renderPreview(session, ctx.files.publicUrl(htmlKey), { w: it.el.w, h: it.el.h }, ground);
   const ref = referenceCrop(it);
   const diffPct = shot && ref ? diffPercent(shot, ref) : 100;
   const size = { width: Math.round(it.el.w), height: Math.round(it.el.h) };
-  if (diffPct <= LIVE_MAX_DIFF_PCT) return { preview: { ...existing, ...size, mode: 'live', htmlKey, diffPct }, doc, fonts: fonts.mode };
-  const webFontMissing = fonts.mode === 'fallback';
-  return { preview: { ...existing, mode: 'captured', capturedReason: webFontMissing ? 'fonts-unavailable' : 'diff', diffPct, htmlKey }, doc, fonts: fonts.mode };
+  if (diffPct <= LIVE_MAX_DIFF_PCT) return { preview: { ...existing, ...size, ground, mode: 'live', htmlKey, diffPct }, doc, fonts: fonts.mode };
+  // A substituted font alone never demotes a component: the comparison runs again with the text masked (D-095).
+  if (fonts.mode === 'fallback' && shot && ref) {
+    const boxes = await textBoxes(session);
+    const masked = boxes.length ? diffPercent(maskBoxes(shot, boxes, it.el.w), maskBoxes(ref, boxes, it.el.w)) : diffPct;
+    if (masked <= LIVE_MAX_DIFF_PCT) return { preview: { ...existing, ...size, ground, mode: 'live', htmlKey, diffPct, fontsSubstituted: fonts.substituted ?? [] }, doc, fonts: fonts.mode };
+    return { preview: { ...existing, ground, mode: 'captured', capturedReason: 'fonts-unavailable', diffPct, htmlKey }, doc, fonts: fonts.mode };
+  }
+  return { preview: { ...existing, ground, mode: 'captured', capturedReason: 'diff', diffPct, htmlKey }, doc, fonts: fonts.mode };
 }
 
 /** Render checks in flight at once, each on its own page: loading and drawing overlap the comparisons (D-066). */
 export const PREVIEW_LANES = 3;
+
+/** Core components first, then page-specific, most instances first within each, then grid order (D-095). */
+export function renderOrder(comps: Pick<Component, 'tier' | 'instances'>[]): number[] {
+  return comps.map((_, i) => i).sort((a, b) => Number(comps[a]!.tier !== 'core') - Number(comps[b]!.tier !== 'core') || comps[b]!.instances.length - comps[a]!.instances.length || a - b);
+}
+
+/** The previews event's reasons, each with a count above zero (preview-fidelity.md, Events). */
+export function reasonWords(c: ReturnType<typeof previewCounts>): string {
+  const parts: [number, string][] = [
+    [c.diff, 'render differed'],
+    [c['fonts-unavailable'], 'fonts unavailable'],
+    [c['css-too-large'], 'styles too large'],
+    [c['not-checked'], 'not checked in time'],
+  ];
+  return parts
+    .filter(([n]) => n > 0)
+    .map(([n, w]) => ` · ${n} ${w}`)
+    .join('');
+}
 
 export async function previews(ctx: RunContext, capture: CaptureOutput, comps: Component[], sources: ComponentSources, browser: Browser): Promise<Component[]> {
   const policy: CssPolicy = { storageBase: storageBaseOf(ctx) };
@@ -140,11 +165,12 @@ export async function previews(ctx: RunContext, capture: CaptureOutput, comps: C
   };
 
   try {
+    const order = renderOrder(comps);
     let next = 0;
     await Promise.all(
       sessions.map(async (session) => {
-        while (next < comps.length) {
-          const i = next++;
+        while (next < order.length) {
+          const i = order[next++]!;
           out[i] = await one(comps[i]!, session);
         }
       }),
@@ -159,8 +185,8 @@ export async function previews(ctx: RunContext, capture: CaptureOutput, comps: C
   if (unchecked) await ctx.emit({ stage: 'previews', level: 'warn', message: `time budget for render checks reached · ${unchecked} previews not checked` });
   await ctx.emit({
     stage: 'previews',
-    message: `${out.length} built · ${live} live · ${out.length - live} captured (median diff ${median.toFixed(1)} %)`,
-    data: { refused: refused.length, fonts: fontCases },
+    message: `${out.length} built · ${live} live · ${out.length - live} captured (median diff ${median.toFixed(1)} %)${reasonWords(previewCounts(out))}`,
+    data: { refused: refused.length, fonts: fontCases, previews: previewCounts(out) },
     patch: { components: out },
   });
   if (refused.length) ctx.log.warn({ refused: refused.slice(0, 10) }, 'preview requests outside the allowlist were refused');

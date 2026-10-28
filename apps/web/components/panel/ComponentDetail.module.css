@@ -24,6 +24,14 @@
   color: var(--dse-muted);
 }
 
+.checksHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dse-space-2);
+}
+
 .caption {
   composes: caption from '../../styles/type.module.css';
   color: var(--dse-muted);

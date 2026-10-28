@@ -1,7 +1,7 @@
 'use client';
 import { AnimatePresence, motion } from 'motion/react';
-import { useRef, useState } from 'react';
-import type { Component, ComponentGroup, RunDocumentPartial } from '@dse/schema';
+import { useEffect, useRef, useState } from 'react';
+import { passesAll, type Component, type ComponentGroup, type RunDocumentPartial } from '@dse/schema';
 import { componentGroupLabels, fill } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
 import { count } from '../../lib/format';
@@ -23,6 +23,8 @@ export const groupOrder = Object.keys(componentGroupLabels) as ComponentGroup[];
 const FIRST = 6;
 /** Above this many components the page-specific tier starts hidden (D-085). */
 const CORE_ONLY_ABOVE = 24;
+/** The stat strip's Components passing cell links here, which turns the filter on (D-096). */
+export const PASSING_ANCHOR = 'components-passing';
 
 type Props = {
   doc: RunDocumentPartial;
@@ -98,9 +100,22 @@ export function ComponentsSection({ doc, landed, base, hrefFor, opened, onOpen }
   const [coreOnly, setCoreOnly] = useState(list.length > CORE_ONLY_ABOVE);
   const [pageOpen, setPageOpen] = useState(false);
   const [changed, setChanged] = useState(false);
+  const [passing, setPassing] = useState(false);
+  useEffect(() => {
+    const read = () => {
+      if (window.location.hash === `#${PASSING_ANCHOR}`) {
+        setChanged(true);
+        setPassing(true);
+      }
+    };
+    read();
+    window.addEventListener('hashchange', read);
+    return () => window.removeEventListener('hashchange', read);
+  }, []);
   const names = tokenIndex(doc);
   const counts = groupOrder.map((g) => [g, list.filter((c) => c.group === g).length] as const).filter(([, n]) => n > 0);
-  const filtered = group === 'all' ? list : list.filter((c) => c.group === group);
+  const checked = list.some((c) => c.checks.length > 0);
+  const filtered = (group === 'all' ? list : list.filter((c) => c.group === group)).filter((c) => !passing || passesAll(c.checks));
   const core = filtered.filter((c) => c.tier !== 'page');
   const page = filtered.filter((c) => c.tier === 'page');
   const tiered = list.some((c) => c.tier === 'page') && list.some((c) => c.tier !== 'page');
@@ -111,7 +126,7 @@ export function ComponentsSection({ doc, landed, base, hrefFor, opened, onOpen }
     <Section id="components" title={C.heading} caption={landed ? fill(C.caption, { n: count(list.length) }) : undefined}>
       {landed ? (
         <>
-          <div className={styles.filter}>
+          <div className={styles.filter} id={PASSING_ANCHOR}>
             <ChipGroup
               label={C.heading}
               value={group}
@@ -131,15 +146,25 @@ export function ComponentsSection({ doc, landed, base, hrefFor, opened, onOpen }
                 }}
               />
             ) : null}
+            {checked ? (
+              <ToggleChip
+                label={C.passingAll}
+                pressed={passing}
+                onChange={(v) => {
+                  setChanged(true);
+                  setPassing(v);
+                }}
+              />
+            ) : null}
           </div>
           {!tiered ? (
-            <TierGrid key={group} list={filtered} {...grid} />
+            <TierGrid key={`${group}-${passing}`} list={filtered} {...grid} />
           ) : (
             <>
               {core.length ? (
                 <div className={styles.tier}>
                   <h3 className={styles.tierTitle}>{C.core}</h3>
-                  <TierGrid key={`core-${group}`} list={core} {...grid} />
+                  <TierGrid key={`core-${group}-${passing}`} list={core} {...grid} />
                 </div>
               ) : null}
               {!coreOnly && page.length ? (
@@ -156,7 +181,7 @@ export function ComponentsSection({ doc, landed, base, hrefFor, opened, onOpen }
                   )}
                   {!phone || pageOpen ? (
                     <div id={pageId} className={styles.tierBody}>
-                      <TierGrid key={`page-${group}`} list={page} {...grid} />
+                      <TierGrid key={`page-${group}-${passing}`} list={page} {...grid} />
                     </div>
                   ) : null}
                 </div>

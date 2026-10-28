@@ -1,3 +1,11 @@
+/* The opening line: body on the prose measure, above the summary (D-096). */
+.opening {
+  composes: body from '../../styles/type.module.css';
+  color: var(--dse-ink-2);
+  max-width: 600px;
+  margin-bottom: var(--dse-space-5);
+}
+
 .tableCard {
   padding: 0;
 }

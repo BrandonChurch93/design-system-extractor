@@ -131,7 +131,7 @@ Patterns:
 
 - Entrance · h1.display · on load · opacity 0 → 1, transform translateY(12px) → none · 480 ms · ease-out-quart
 - Scroll reveal · Feature card · when it enters the viewport at 15% from the bottom · opacity 0 → 1, transform translateY(16px) → none · 240 ms · ease-out-quart · 3 items · 60 ms apart
-- Scroll reveal · div.testimonial · when it enters the viewport at 30% from the bottom · opacity 0.08 → 1, transform translateY(14.7px) → translateY(0px) · about 382 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
+- Scroll reveal · div.testimonial · when it enters the viewport at 25% from the bottom · opacity 0.03 → 1, transform translateY(15.6px) → translateY(0px) · about 399 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
 - Scrolled header · Site header · after 400 px of scrolling · box-shadow none → 0px 12px 32px 0px #0B1F3A1F · 160 ms · ease-out-quad
 - Loop · Notice · loops every 1,600 ms · opacity 1 → 0.4 · 1,600 ms · ease-out-quart
 
@@ -157,6 +157,7 @@ States: Default, Hover, Focus, Active, Disabled.
 Tokens: color-text-primary for color, radius-sm for border-radius, space-20 for padding-right, space-20 for padding-left, type-text-14 for font, duration-160 for transition-duration, ease-out-quad for transition-timing-function.
 Default: text color-text-primary · border 1px rgba(0, 0, 0, 0) · radius radius-sm · padding 0px space-20 0px space-20 · font type-text-14
 Motion: hover · background-color · 160 ms · ease-out-quad; hover · box-shadow · 160 ms · ease-out-quad; hover · transform · 160 ms · ease-out-quad; active · background-color · 160 ms · ease-out-quad; active · box-shadow · 160 ms · ease-out-quad; active · transform · 160 ms · ease-out-quad
+Checks: all pass
 
 ```css
 a { color: var(--color-blue-600); text-decoration: none; }
@@ -177,6 +178,7 @@ States: Default, Hover, Focus, Active, Open.
 Tokens: color-text-primary for color, radius-sm for border-radius, space-12 for padding-right, space-12 for padding-left, type-text-14 for font.
 Default: text color-text-primary · radius radius-sm · padding 0px space-12 0px space-12 · font type-text-14
 Motion: none
+Checks: all pass
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
@@ -195,6 +197,7 @@ States: Default, Hover, Focus, Active, Open.
 Tokens: radius-sm for border-radius.
 Default: radius radius-sm
 Motion: none
+Checks: all pass
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
@@ -212,6 +215,7 @@ States: Default, Hover, Focus, Active, Selected.
 Tokens: color-blue-600 for color, space-16 for padding-right, space-16 for padding-left, type-text-14 for font.
 Default: text color-blue-600 · padding 0px space-16 0px space-16 · font type-text-14
 Motion: none
+Checks: all pass
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
@@ -230,6 +234,7 @@ States: Default, Hover, Focus, Active, Error.
 Tokens: color-gray-50 for background-color, color-gray-200 for border-color, radius-sm for border-radius, space-8 for padding-top, space-12 for padding-right, space-8 for padding-bottom, space-12 for padding-left.
 Default: background color-gray-50 · border 1px color-gray-200 · radius radius-sm · padding space-8 space-12 space-8 space-12
 Motion: none
+Checks: all pass
 
 ```css
 input { padding: 0px; padding: 0px; padding: 0px; }
@@ -245,6 +250,7 @@ States: Default, Hover, Focus, Active.
 Tokens: none.
 Default: background none
 Motion: none
+Checks: all pass
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
@@ -263,6 +269,7 @@ States: Default, Hover, Focus, Active.
 Tokens: color-gray-50 for background-color, color-text-primary for color, color-gray-200 for border-color, radius-sm for border-radius, space-8 for padding-top, space-40 for padding-right, space-8 for padding-bottom, space-12 for padding-left, type-body for font.
 Default: background color-gray-50 · text color-text-primary · border 1px color-gray-200 · radius radius-sm · padding space-8 space-40 space-8 space-12 · font type-body
 Motion: none
+Checks: all pass
 
 ```css
 select { padding: 0px; padding: 0px; padding: 0px; }
@@ -279,6 +286,7 @@ States: Default, Hover, Focus, Active.
 Tokens: radius-sm for border-radius.
 Default: radius radius-sm
 Motion: none
+Checks: all pass
 
 ```css
 input { padding: 0px; padding: 0px; padding: 0px; }
@@ -295,6 +303,7 @@ States: Default, Hover, Focus, Active.
 Tokens: color-gray-50 for background-color, color-gray-200 for border-color, radius-sm for border-radius, space-8 for padding-top, space-12 for padding-right, space-8 for padding-bottom, space-12 for padding-left.
 Default: background color-gray-50 · border 1px color-gray-200 · radius radius-sm · padding space-8 space-12 space-8 space-12
 Motion: none
+Checks: all pass
 
 ```css
 textarea { padding: 0px; padding: 0px; padding: 0px; }
@@ -311,6 +320,7 @@ States: Default, Scrolled.
 Tokens: color-gray-50 for background-color, color-text-primary for color, type-body for font, duration-160 for transition-duration, ease-out-quad for transition-timing-function.
 Default: background color-gray-50 · text color-text-primary · font type-body
 Motion: scrolled · box-shadow · 160 ms · ease-out-quad; 1 motion pattern in the Motion section
+Checks: all pass
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
@@ -345,6 +355,7 @@ States: Default.
 Tokens: color-text-primary for color, color-gray-200 for border-color, space-48 for padding-top, space-48 for padding-bottom, type-body for font.
 Default: text color-text-primary · border 1px color-gray-200 · padding space-48 0px space-48 0px · font type-body
 Motion: none
+Checks: all pass
 
 ```css
 p { margin: 0px; margin: 0px; margin: 0px; }
@@ -372,6 +383,7 @@ States: Default.
 Tokens: color-text-primary for color, type-body for font.
 Default: text color-text-primary · font type-body
 Motion: none
+Checks: all pass
 
 ```css
 .footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
@@ -389,6 +401,7 @@ States: Default.
 Tokens: color-text-primary for color, type-body for font.
 Default: text color-text-primary · font type-body
 Motion: none
+Checks: all pass
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
@@ -412,6 +425,7 @@ States: Default.
 Tokens: color-text-primary for color, type-body for font.
 Default: text color-text-primary · font type-body
 Motion: none
+Checks: all pass
 
 ```css
 ol { margin: 0px; margin: 0px; margin: 0px; }
@@ -433,6 +447,7 @@ States: Default.
 Tokens: color-gray-50 for background-color, color-text-primary for color, color-gray-200 for border-color, radius-md for border-radius, space-24 for padding-top, space-24 for padding-right, space-24 for padding-bottom, space-24 for padding-left, type-body for font, shadow-stack-low for box-shadow.
 Default: background color-gray-50 · text color-text-primary · border 1px color-gray-200 · radius radius-md · padding space-24 space-24 space-24 space-24 · font type-body · shadow shadow-stack-low
 Motion: 1 motion pattern in the Motion section
+Checks: all pass
 
 ```css
 h3, p { margin: 0px; margin: 0px; margin: 0px; }
@@ -456,6 +471,7 @@ States: Default.
 Tokens: color-success for background-color, color-gray-50 for color, radius-rounded for border-radius, space-8 for padding-right, space-8 for padding-left, type-caption for font.
 Default: background color-success · text color-gray-50 · radius radius-rounded · padding 0px space-8 0px space-8 · font type-caption
 Motion: none
+Checks: all pass
 
 ```css
 .badge { display: inline-flex; align-items: center; height: 24px; padding: 0px var(--space-8); border-radius: 999px; color: var(--color-gray-50); font-size: 12px; line-height: 16px; }
@@ -470,6 +486,7 @@ States: Default.
 Tokens: color-gray-50 for background-color, color-text-primary for color, color-success for border-color, radius-sm for border-radius, space-16 for padding-top, space-16 for padding-right, space-16 for padding-bottom, space-16 for padding-left, type-body for font.
 Default: background color-gray-50 · text color-text-primary · border 1px color-success · radius radius-sm · padding space-16 space-16 space-16 space-16 · font type-body
 Motion: pulse · 1600 ms · ease-out-quart · loops; 1 motion pattern in the Motion section
+Checks: all pass
 
 ```css
 p { margin: 0px; margin: 0px; margin: 0px; }
@@ -495,6 +512,7 @@ States: Default.
 Tokens: color-teal-500 for background-color, color-gray-50 for color, radius-rounded for border-radius, space-8 for padding-right, space-8 for padding-left, type-caption for font.
 Default: background color-teal-500 · text color-gray-50 · radius radius-rounded · padding 0px space-8 0px space-8 · font type-caption
 Motion: none
+Checks: 0 of 1
 
 ```css
 .tag-new { display: inline-flex; align-items: center; align-self: flex-start; height: 24px; padding: 0px var(--space-8); border-radius: 999px; background: var(--color-teal-500); color: var(--color-gray-50); font-size: 12px; line-height: 16px; }
@@ -508,6 +526,7 @@ States: Default.
 Tokens: color-text-primary for color, type-text-small for font.
 Default: text color-text-primary · font type-text-small
 Motion: none
+Checks: all pass
 
 ```css
 td, th { padding: 0px; padding: 0px; padding: 0px; }
@@ -524,6 +543,7 @@ States: Default.
 Tokens: color-text-primary for background-color, color-gray-50 for color, radius-sm for border-radius, space-16 for padding-top, space-24 for padding-right, space-16 for padding-bottom, space-24 for padding-left, type-code for font.
 Default: background color-text-primary · text color-gray-50 · border 1px rgba(8, 9, 10, 0.6) · radius radius-sm · padding space-16 space-24 space-16 space-24 · font type-code
 Motion: none
+Checks: all pass
 
 ```css
 pre { margin: 0px; margin: 0px; margin: 0px; }
@@ -554,6 +574,7 @@ States: Default, Hover, Focus, Active.
 Tokens: color-gray-200 for background-color, color-text-primary for color, radius-md for border-radius, space-16 for padding-right, space-16 for padding-left.
 Default: background color-gray-200 · text color-text-primary · radius radius-md · padding 0px space-16 0px space-16 · font 16px 500
 Motion: none
+Checks: all pass
 
 ### Icon button
 
@@ -565,6 +586,7 @@ States: Default, Hover, Focus, Active.
 Tokens: color-gray-50 for background-color, color-gray-200 for border-color, radius-sm for border-radius.
 Default: background color-gray-50 · border 1px color-gray-200 · radius radius-sm
 Motion: none
+Checks: 2 of 3
 
 ### Feature tabs
 
@@ -581,6 +603,7 @@ States: Default.
 Tokens: color-gray-50 for background-color, color-text-primary for color, color-gray-200 for border-color, radius-md for border-radius, space-32 for padding-top, space-32 for padding-right, space-32 for padding-bottom, space-32 for padding-left, type-body for font, shadow-stack-low for box-shadow.
 Default: background color-gray-50 · text color-text-primary · border 1px color-gray-200 · radius radius-md · padding space-32 space-32 space-32 space-32 · font type-body · shadow shadow-stack-low
 Motion: none
+Checks: all pass
 
 ### Not found panel
 
@@ -589,6 +612,7 @@ States: Default.
 Tokens: color-text-primary for color, color-gray-200 for border-color, radius-md for border-radius, space-96 for padding-top, space-24 for padding-right, space-96 for padding-bottom, space-24 for padding-left, type-body for font.
 Default: text color-text-primary · border 1px color-gray-200 · radius radius-md · padding space-96 space-24 space-96 space-24 · font type-body
 Motion: none
+Checks: all pass
 
 ### Resources menu
 
@@ -597,6 +621,7 @@ States: Default.
 Tokens: color-gray-50 for background-color, color-text-primary for color, color-gray-200 for border-color, radius-md for border-radius, space-8 for padding-top, space-8 for padding-right, space-8 for padding-bottom, space-8 for padding-left, type-body for font, shadow-md for box-shadow.
 Default: background color-gray-50 · text color-text-primary · border 1px color-gray-200 · radius radius-md · padding space-8 space-8 space-8 space-8 · font type-body · shadow shadow-md
 Motion: none
+Checks: all pass
 
 ### Mobile menu
 
@@ -605,12 +630,14 @@ States: Default.
 Tokens: color-text-primary for color, color-gray-200 for border-color, space-8 for padding-top, space-16 for padding-bottom, type-body for font.
 Default: text color-text-primary · border 1px color-gray-200 · padding space-8 0px space-16 0px · font type-body
 Motion: none
+Checks: all pass
 
 ## Rules
 
 - Use only these tokens. Do not invent colors, sizes, spacing, radii or shadows.
 - Keep every text and background pair at the contrast ratio it has here.
 - Match each component contract, including its states.
+- Keep every component that passes all checks passing: contrast pairs, focus visibility, tap target size.
 - Use only these durations and easings. Apply the entrance and scroll patterns to the equivalent elements of what you build; patterns marked observed were measured at runtime and their easing is the nearest token when none was recorded.
 - No em dashes in any copy you write.
 

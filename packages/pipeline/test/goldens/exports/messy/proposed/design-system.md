@@ -217,7 +217,7 @@ States captured: Default, Hover, Focus, Active, Disabled
 Tokens used: color-blue-900 (color), radius-sm (border-radius), space-20 (padding-right), space-20 (padding-left), type-text-14 (font), duration-160 (transition-duration), ease-out-quad (transition-timing-function)
 Unmapped: border-color rgba(0, 0, 0, 0)
 Motion: hover · background-color · 160 ms · ease-out-quad; active · background-color · 160 ms · ease-out-quad
-Checks: 4 of 4
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 88 × 44 at 390 px
@@ -241,7 +241,7 @@ Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Open
 Tokens used: color-blue-900 (color), radius-sm (border-radius), space-12 (padding-right), space-12 (padding-left), type-text-14 (font)
 Motion: none
-Checks: 2 of 2
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 
@@ -264,7 +264,7 @@ Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Open
 Tokens used: radius-sm (border-radius)
 Motion: none
-Checks: 3 of 3
+Checks: all pass
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 44 × 44 at 390 px
 - Label present · pass · aria-label
@@ -289,7 +289,7 @@ Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Selected
 Tokens used: color-blue-600 (color), space-16 (padding-right), space-16 (padding-left), type-text-14 (font), duration-250 (transition-duration), ease-custom-1 (transition-timing-function)
 Motion: none
-Checks: 4 of 4
+Checks: all pass
 - Contrast AA · pass · 5.8:1 on gray-50
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 69 × 44 at 390 px
@@ -391,7 +391,7 @@ Toggle · 1 variant: Default
 States captured: Default, Hover, Focus, Active
 Tokens used: none
 Motion: none
-Checks: 3 of 3
+Checks: all pass
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 52 × 44 at 390 px
 - Label present · pass · aria-label
@@ -416,7 +416,7 @@ Select · 1 variant: Default
 States captured: Default, Hover, Focus, Active
 Tokens used: color-gray-50 (background-color), color-blue-900 (color), color-gray-300 (border-color), radius-sm (border-radius), space-8 (padding-top), space-40 (padding-right), space-8 (padding-bottom), space-12 (padding-left), type-body (font)
 Motion: none
-Checks: 3 of 3
+Checks: all pass
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 342 × 44 at 390 px
 - Label present · pass · Label element
@@ -440,7 +440,7 @@ Checkbox · 1 variant: Default
 States captured: Default, Hover, Focus, Active
 Tokens used: radius-sm (border-radius)
 Motion: none
-Checks: 3 of 3
+Checks: all pass
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 44 × 44 at 390 px
 - Label present · pass · Label element
@@ -463,7 +463,7 @@ Textarea · 1 variant: Default
 States captured: Default, Hover, Focus, Active
 Tokens used: color-gray-50 (background-color), color-gray-300 (border-color), radius-sm (border-radius), space-8 (padding-top), space-12 (padding-right), space-8 (padding-bottom), space-12 (padding-left)
 Motion: none
-Checks: 3 of 3
+Checks: all pass
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 342 × 128 at 390 px
 - Label present · pass · Label element
@@ -487,7 +487,7 @@ Header · 1 variant: Default
 States captured: Default, Scrolled
 Tokens used: color-gray-50 (background-color), color-gray-900 (color), type-body (font), duration-160 (transition-duration), ease-out-quad (transition-timing-function)
 Motion: scrolled · box-shadow · 160 ms · ease-out-quad; 1 motion pattern in the Motion section
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 12.2:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -558,7 +558,7 @@ Footer · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-900 (color), color-gray-300 (border-color), space-48 (padding-top), space-48 (padding-bottom), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 4.7:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -615,7 +615,7 @@ Nav bar · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-900 (color), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 5.6:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -642,7 +642,7 @@ Nav bar · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-900 (color), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 8.0:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -683,7 +683,7 @@ Card · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-50 (background-color), color-gray-900 (color), color-gray-300 (border-color), radius-lg (border-radius), space-16 (padding-top), space-16 (padding-right), space-16 (padding-bottom), space-16 (padding-left), type-body (font), shadow-sm (box-shadow), duration-400 (transition-duration), ease-out (transition-timing-function)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 8.0:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -783,7 +783,6 @@ Avatar · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-300 (background-color), radius-pill (border-radius)
 Motion: none
-Checks: 0 of 0
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -827,7 +826,7 @@ Breadcrumb · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-900 (color), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 5.0:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -853,7 +852,6 @@ Tabs · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-900 (color), type-body (font)
 Motion: none
-Checks: 0 of 0
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -923,7 +921,7 @@ Card · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-50 (color), radius-lg (border-radius), space-32 (padding-top), space-32 (padding-right), space-32 (padding-bottom), space-32 (padding-left), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 11.2:1 on #1B3A6A
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -946,7 +944,7 @@ Alert · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-50 (background-color), color-blue-900 (color), color-success (border-color), radius-sm (border-radius), space-16 (padding-top), space-16 (padding-right), space-16 (padding-bottom), space-16 (padding-left), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -982,7 +980,7 @@ Empty state · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-900 (color), color-gray-300 (border-color), radius-lg (border-radius), space-96 (padding-top), space-24 (padding-right), space-96 (padding-bottom), space-24 (padding-left), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.4:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -1014,7 +1012,7 @@ Table · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-900 (color), type-body-xs (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 15.1:1 on gray-50b
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -1044,7 +1042,7 @@ States captured: Default
 Tokens used: color-blue-900 (background-color), color-gray-50 (color), radius-sm (border-radius), space-16 (padding-top), space-24 (padding-right), space-16 (padding-bottom), space-24 (padding-left)
 Unmapped: font 14px 400
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on blue-900
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -1066,7 +1064,7 @@ Dropdown · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-50 (background-color), color-gray-900 (color), color-gray-300b (border-color), radius-lg (border-radius), space-8 (padding-top), space-8 (padding-right), space-8 (padding-bottom), space-8 (padding-left), type-body (font), shadow-md (box-shadow)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -1091,7 +1089,7 @@ Dropdown · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-900 (color), color-gray-500 (border-color), space-8 (padding-top), space-16 (padding-bottom), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -1126,4 +1124,4 @@ The palette carries 14 grays where nine would do, and nine of them sit within Δ
 
 ## How this was made
 
-Extracted by Design System Extractor from localhost:4100 in run evalmessy0 on 2026-10-12. Tokens, motion, components and checks are measured from the rendered pages; motion marked observed was measured at runtime. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the proposed set.
+Extracted by Design System Extractor from localhost:4100 in run evalmessy0 on 2026-10-12. Tokens, motion, components and checks are measured from the rendered pages; motion marked observed was measured at runtime. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the proposed set. 29 of 31 components are live previews; 2 are captured images.

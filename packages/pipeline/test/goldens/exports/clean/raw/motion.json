@@ -151,17 +151,17 @@
       "instances": 1,
       "trigger": {
         "type": "in-view",
-        "value": 0.3
+        "value": 0.25
       },
       "start": {
-        "opacity": "0.08",
-        "transform": "translateY(14.7px)"
+        "opacity": "0.03",
+        "transform": "translateY(15.6px)"
       },
       "end": {
         "opacity": "1",
         "transform": "translateY(0px)"
       },
-      "durationMs": 382,
+      "durationMs": 399,
       "delayMs": 0,
       "easing": null,
       "iterations": 1,

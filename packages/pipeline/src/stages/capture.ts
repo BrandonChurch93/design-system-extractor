@@ -8,6 +8,7 @@ import { endScriptAnimations, motionInit, motionMarkScroll, motionReadout, type 
 import type { MatchedStyles } from '../capture/matched-css';
 import { scanSheets, type SheetScan } from '../capture/sheet-scan';
 import { buildSnapshot, compactSnapshot, descendants, type SnapElement, type Snapshot } from '../capture/snapshot';
+import type { ShotBand } from '../components/crop';
 import { buildSelectors, motionProps, styleProps, takeSnapshot } from '../capture/snapshot-script';
 import { activeState, cropOf, hoverState, neutral, readStyles, scrolledState, settle, splitList, STATE_WAIT_CAP, styleDelta, tabWalk, withTransitions, type StateRecord, type StyleDelta } from '../capture/states';
 import type { RunContext } from '../context';
@@ -93,9 +94,40 @@ function cssKey(s: Snapshot, e: SnapElement): string {
 
 /** The text of a stylesheet the page cannot read, fetched once per run. */
 type CssText = (href: string) => Promise<string | null>;
+
+/** Clip screenshots below the cut covering the given elements with 128 px around them, merged while one clip can hold them. */
+export function bandRegions(boxes: { y: number; h: number }[], reach: number): { y: number; height: number }[] {
+  const pad = 128;
+  const out: { y: number; height: number }[] = [];
+  for (const b of [...boxes].filter((x) => x.y < reach).sort((a, c) => a.y - c.y)) {
+    const start = Math.max(0, Math.floor(b.y - pad));
+    const end = Math.min(reach, Math.ceil(b.y + b.h + pad));
+    const last = out.at(-1);
+    if (last && end <= last.y + last.height) continue;
+    if (last && end - last.y <= BAND_MAX_HEIGHT) {
+      last.height = end - last.y;
+      continue;
+    }
+    out.push({ y: start, height: Math.min(end - start, SCREENSHOT_MAX_HEIGHT) });
+  }
+  return out.slice(0, BAND_MAX_COUNT);
+}
+
+async function bandsBelowCut(p: PwPage, els: { y: number; h: number }[], width: number, reach: number): Promise<ShotBand[]> {
+  const bands: ShotBand[] = [];
+  for (const r of bandRegions(els, reach)) {
+    const png = await p.screenshot({ fullPage: true, clip: { x: 0, y: r.y, width, height: r.height }, type: 'png', animations: 'disabled', caret: 'hide' }).catch(() => null);
+    if (png) bands.push({ ...r, png });
+  }
+  return bands;
+}
 const SHEET_MAX_BYTES = 2_000_000;
 
 export const SCREENSHOT_MAX_HEIGHT = 8000;
+/** Clips below the cut: each at most this tall, this many per page and viewport, reaching this far down. */
+export const BAND_MAX_HEIGHT = 2000;
+export const BAND_MAX_COUNT = 12;
+export const BAND_REACH = 24_000;
 export const TAB_WALK_MAX = 80;
 
 export type MotionProbe = { animation: boolean; transition: boolean };
@@ -125,7 +157,8 @@ export type ViewportCapture = {
   /** Stable selectors for the elements motion records name. */
   motionSelectors: Record<string, string>;
   opens: OpenCapture[];
-  screenshot: { key: string; width: number; height: number; cut: boolean; png: Buffer };
+  /** `bands`: clips below the cut where novel candidates sit, kept in memory for crops (D-098). */
+  screenshot: { key: string; width: number; height: number; cut: boolean; png: Buffer; bands?: ShotBand[] };
   submitAttempts: number;
   /** Forms that a submit handler marked as submitted; must stay 0. */
   submittedMarkers: number;
@@ -345,7 +378,6 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     const png = await p.screenshot({ fullPage: true, clip: { x: 0, y: 0, width: vp.width, height }, type: 'png', animations: 'disabled', caret: 'hide' });
     const shotKey = keys.pageScreenshot(ctx.runId, page.id, viewport);
     await ctx.files.put(shotKey, png, { contentType: 'image/png' });
-    if (cut) await ctx.emit({ stage: 'capture', message: `${page.path} · cut at ${SCREENSHOT_MAX_HEIGHT} px` });
     const snapshot = buildSnapshot(await p.evaluate(takeSnapshot, { props: [...styleProps], cap: SNAPSHOT_CAP }));
     const candidates = capCandidates(findCandidates(snapshot, viewport), CANDIDATE_CAP);
     const selectors = await p.evaluate(buildSelectors, candidates.map((c) => c.dse));
@@ -360,12 +392,14 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     const need = new Set<string>();
     const cssSeen = await ledger.before('css', viewport, index);
     const cssRead = new Set<string>();
+    const readHere: SnapElement[] = [];
     for (const c of candidates) {
       const e = snapshot.byDse.get(c.dse);
       if (!e) continue;
       const k = cssKey(snapshot, e);
       if (cssSeen.has(k) || cssRead.has(k)) continue;
       cssRead.add(k);
+      readHere.push(e);
       need.add(e.d);
       const stack = [...e.kids];
       while (stack.length) {
@@ -375,6 +409,10 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
       }
     }
     ledger.commit('css', viewport, index, cssRead);
+    // Below the cut, the candidates this page reads are clipped in bands, so their crops and the
+    // previews' reference exist (D-098).
+    const bands = cut ? await bandsBelowCut(p, readHere.filter((e) => e.y + e.h > height), vp.width, Math.min(docH, BAND_REACH)) : [];
+    if (cut) await ctx.emit({ stage: 'capture', message: `${page.path} · cut at ${SCREENSHOT_MAX_HEIGHT} px${bands.length ? ` · ${bands.length} ${bands.length === 1 ? 'clip' : 'clips'} below it for crops` : ''}` });
     const matched = await matchedFromCssom(p, [...need], cssText);
     const subtree = (d: string): string[] => {
       const e = snapshot.byDse.get(d);
@@ -508,7 +546,7 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
         motion,
         motionSelectors,
         opens,
-        screenshot: { key: shotKey, width: vp.width, height, cut, png },
+        screenshot: { key: shotKey, width: vp.width, height, cut, png, ...(bands.length ? { bands } : {}) },
         submitAttempts,
         submittedMarkers,
         dialogs,

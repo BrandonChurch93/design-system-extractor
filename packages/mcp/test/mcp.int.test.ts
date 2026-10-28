@@ -56,8 +56,11 @@ describe('the MCP server over stdio', () => {
   });
 
   it('list_components, get_component and get_checks describe the components', async () => {
-    const list = jsonOf(await client.callTool({ name: 'list_components', arguments: {} })) as { id: string; name: string; checksApplicable: number }[];
+    const list = jsonOf(await client.callTool({ name: 'list_components', arguments: {} })) as { id: string; name: string; checksPassed: number; checksApplicable: number; passedAll: boolean }[];
     expect(list).toHaveLength(doc.components!.length);
+    // passedAll is derived by the per-component rule (checks.md, D-096): every applicable check passed, false when none applies.
+    for (const c of list) expect(c.passedAll).toBe(c.checksApplicable > 0 && c.checksPassed === c.checksApplicable);
+    expect(list.some((c) => c.passedAll) && list.some((c) => !c.passedAll)).toBe(true);
     const buttons = jsonOf(await client.callTool({ name: 'list_components', arguments: { type: 'button' } })) as { id: string }[];
     expect(buttons.length).toBeGreaterThan(1);
     const one = jsonOf(await client.callTool({ name: 'get_component', arguments: { id: list[0]!.id } }));

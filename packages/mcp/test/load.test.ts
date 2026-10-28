@@ -22,6 +22,12 @@ afterEach(() => {
 });
 
 describe('the run the MCP server serves', () => {
+  it('upgrades a stored v1.0 document read with --file (D-092)', async () => {
+    const { doc } = await loadRun(['--file', resolve(import.meta.dirname, '../../pipeline/test/fixtures/runs/clean-v1-0.json')]);
+    expect(doc.pipelineVersion).toBe('1.0.0');
+    expect(doc.components!.every((c) => c.tier === 'core' && c.slug && c.motion === null)).toBe(true);
+  });
+
   it('fetches --run from the production app by default, once', async () => {
     const asked = stubFetch();
     const { doc, runUrl } = await loadRun(['--run', document.id], {});

@@ -167,6 +167,7 @@ States: Default, Hover, Focus, Active, Disabled.
 Tokens: color-blue-900 for color, radius-sm for border-radius, space-20 for padding-right, space-20 for padding-left, type-text-14 for font, duration-160 for transition-duration, ease-out-quad for transition-timing-function.
 Default: text color-blue-900 · border 1px rgba(0, 0, 0, 0) · radius radius-sm · padding 0px space-20 0px space-20 · font type-text-14
 Motion: hover · background-color · 160 ms · ease-out-quad; active · background-color · 160 ms · ease-out-quad
+Checks: all pass
 
 ```css
 a { color: var(--color-blue-600b); text-decoration: none; }
@@ -179,6 +180,7 @@ a { color: var(--color-blue-600b); text-decoration: none; }
 - Use only these tokens. Do not invent colors, sizes, spacing, radii or shadows.
 - Keep every text and background pair at the contrast ratio it has here.
 - Match each component contract, including its states.
+- Keep every component that passes all checks passing: contrast pairs, focus visibility, tap target size.
 - Use only these durations and easings. Apply the entrance and scroll patterns to the equivalent elements of what you build; patterns marked observed were measured at runtime and their easing is the nearest token when none was recorded.
 - No em dashes in any copy you write.
 

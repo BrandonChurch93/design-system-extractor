@@ -1,5 +1,6 @@
 'use client';
 import { Check, X } from 'lucide-react';
+import type React from 'react';
 import type { CheckResult } from '@dse/schema';
 import { checkLabels, checkStatusLabels, fill } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
@@ -27,24 +28,45 @@ export function CheckList({ checks, variantName }: { checks: CheckResult[]; vari
   );
 }
 
-/** "4 of 4" with a check, or a cross when any check fails; opens the check list. */
+/**
+ * The check mark (D-096), by weight not color (D-003): a filled ink Pill `All checks` when every
+ * applicable check passes, an outlined Pill `{passed} of {applicable} checks` otherwise, nothing when
+ * no check applies. Opens the check list.
+ */
 export function CheckBadge({ checks, name }: { checks: CheckResult[]; name: string }) {
   const { passed, applicable } = checkCounts(checks);
-  const ok = passed === applicable;
+  if (!applicable) return null;
+  const all = passed === applicable;
   return (
     <Popover
       label={`${name} · ${runPage.checks.heading}`}
       width={360}
       placement="bottom-end"
-      trigger={(t) => (
-        <button type="button" className={styles.badge} {...t}>
-          {ok ? <Check size={16} strokeWidth={1.75} aria-hidden="true" /> : <X size={16} strokeWidth={1.75} aria-hidden="true" />}
-          <span>{fill(runPage.components.badge, { passed, applicable })}</span>
-        </button>
-      )}
+      trigger={(t) => <CheckPill all={all} passed={passed} applicable={applicable} {...t} />}
     >
       <CheckList checks={checks} />
       <p className={styles.disclaimer}>{runPage.checks.disclaimer}</p>
     </Popover>
+  );
+}
+
+type PillProps = { all: boolean; passed: number; applicable: number } & React.ButtonHTMLAttributes<HTMLButtonElement> & { ref?: React.Ref<HTMLButtonElement> };
+
+/** The Pill alone: a button when it opens the list, a plain mark at the head of the panel's Checks block. */
+export function CheckPill({ all, passed, applicable, ...rest }: PillProps) {
+  const body = all ? (
+    <>
+      <Check size={16} strokeWidth={1.75} aria-hidden="true" />
+      <span>{runPage.components.badgeAll}</span>
+    </>
+  ) : (
+    <span>{fill(runPage.components.badgeSome, { passed, applicable })}</span>
+  );
+  const cls = `${styles.badge} ${all ? styles.all : styles.some}`;
+  if (!rest.onClick && !rest['aria-haspopup']) return <span className={cls}>{body}</span>;
+  return (
+    <button type="button" className={cls} {...rest}>
+      {body}
+    </button>
   );
 }

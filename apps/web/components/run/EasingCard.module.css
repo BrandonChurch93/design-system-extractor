@@ -34,14 +34,39 @@
   overflow-wrap: anywhere;
 }
 
-.curve {
+.uses {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+}
+
+.caption {
+  composes: caption from '../../styles/type.module.css';
+  color: var(--dse-muted);
+  margin-top: var(--dse-space-3);
+}
+
+.stage {
+  display: grid;
+  justify-items: start;
+  gap: var(--dse-space-3);
+  margin-top: var(--dse-space-1);
+}
+
+.plot {
+  position: relative;
   display: block;
-  overflow: visible;
+  width: 160px;
+  height: 96px;
   background: var(--dse-surface-tint);
   border-radius: var(--dse-radius-xs);
 }
 
-.baseline {
+.curve {
+  display: block;
+  overflow: visible;
+}
+
+.axis {
   stroke: var(--dse-line);
   stroke-width: 1;
 }
@@ -51,19 +76,32 @@
   stroke: var(--dse-ink);
   stroke-width: 1.5;
   stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.replay {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--dse-space-3);
+/* The curve dot: the wrapper moves in x, the dot in y; centered on the point with negative margins. */
+.curveX {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+}
+
+.curveDot {
+  position: absolute;
+  left: -3px;
+  top: -3px;
+  width: 6px;
+  height: 6px;
+  border-radius: var(--dse-radius-pill);
+  background: var(--dse-ink);
+  opacity: 0;
 }
 
 .track {
   position: relative;
   display: block;
-  flex: none;
   width: 120px;
   height: 8px;
 }
@@ -86,6 +124,7 @@
   height: 8px;
   border-radius: var(--dse-radius-pill);
   background: var(--dse-ink);
+  opacity: 0;
 }
 
 @media (max-width: 1023px) {

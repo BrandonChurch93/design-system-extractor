@@ -1,4 +1,4 @@
-import { checkLabels, componentTypeLabels, durationRoleLabels, motionKindLabels, stateLabels, type Component, type MotionPattern, type RunDocumentPartial } from '@dse/schema';
+import { checkCounts, checkLabels, componentTypeLabels, durationRoleLabels, motionKindLabels, stateLabels, type Component, type MotionPattern, type RunDocumentPartial } from '@dse/schema';
 import { assertVoice, byTier, exportTokens, runDate, tokenRef, type ExportTokens } from './model';
 import { triggerWords } from './motion';
 import { componentCss } from './substitute';
@@ -75,6 +75,19 @@ export function defaultLine(c: Component, t: ExportTokens): string {
   return parts.length ? `${head}: ${parts.join(' · ')}` : `${head}: ${DEFAULT_LINE.split(': ')[1]!.split(' · ')[0]!.replace(' {token}', '')} none`;
 }
 
+/** `Checks: all pass` or `Checks: 3 of 4`; nothing when no check applies (D-096, D-097). */
+export function checksLine(c: Component): string | null {
+  const k = checkCounts(c.checks);
+  if (!k.applicable) return null;
+  return k.failed === 0 ? 'Checks: all pass' : `Checks: ${k.passed} of ${k.applicable}`;
+}
+
+/** `{live} of {total} components are live previews; {captured} are captured images.` (copy.md, D-095). */
+export function liveRateLine(comps: Component[]): string {
+  const live = comps.filter((c) => c.preview.mode === 'live').length;
+  return `${live} of ${comps.length} components are live previews; ${comps.length - live} are captured images.`;
+}
+
 /** `Motion: hover · background-color · 160 ms · ease-out-quad; …`, or `Motion: none`. */
 export function motionLine(c: Component, t: ExportTokens): string {
   const m = c.motion;
@@ -92,7 +105,7 @@ function componentSection(c: Component, t: ExportTokens, depth = 3): string {
   const h = '#'.repeat(depth);
   const captured = c.states.filter((s) => s.captured).map((s) => stateLabels[s.state]);
   const applicable = c.checks.filter((r) => r.status !== 'na');
-  const passed = applicable.filter((r) => r.status === 'pass').length;
+  const checks = checksLine(c);
   const css = componentCss(c, t);
   const lines = [
     `${h} ${c.name}`,
@@ -102,7 +115,7 @@ function componentSection(c: Component, t: ExportTokens, depth = 3): string {
     `Tokens used: ${usedLine(c, t, (n, p) => `${n} (${p})`).join(', ') || 'none'}`,
     ...(c.unmapped.length ? [`Unmapped: ${c.unmapped.map((u) => `${u.property} ${u.value}`).join(', ')}`] : []),
     motionLine(c, t),
-    `Checks: ${passed} of ${applicable.length}`,
+    ...(checks ? [checks] : []),
     ...applicable.map((r) => `- ${checkLabels[r.check]} · ${r.status === 'pass' ? 'pass' : 'fail'} · ${r.detail}`),
     '',
     DISCLAIMER,
@@ -225,7 +238,7 @@ export function designSystemMd(doc: RunDocumentPartial, set: ExportSet): string 
     '',
     '## How this was made',
     '',
-    `Extracted by Design System Extractor from ${doc.host} in run ${doc.id} on ${runDate(doc)}. Tokens, motion, components and checks are measured from the rendered pages; motion marked observed was measured at runtime. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the ${set} set.`,
+    `Extracted by Design System Extractor from ${doc.host} in run ${doc.id} on ${runDate(doc)}. Tokens, motion, components and checks are measured from the rendered pages; motion marked observed was measured at runtime. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the ${set} set. ${liveRateLine(doc.components ?? [])}`,
     '',
   ];
   return assertProse(out.join('\n').replace(/\n{3,}/g, '\n\n'), 'design-system.md');
@@ -242,6 +255,7 @@ function contract(c: Component, t: ExportTokens, css: string | null): string {
     `Tokens: ${usedLine(c, t, (n, p) => `${n} for ${p}`).join(', ') || 'none'}.`,
     defaultLine(c, t),
     motionLine(c, t),
+    ...(checksLine(c) ? [checksLine(c)!] : []),
     ...(css ? ['', fence(css, 'css')] : []),
   ].join('\n');
 }
@@ -304,6 +318,7 @@ export function promptMd(doc: RunDocumentPartial, set: ExportSet, runUrl: string
     '- Use only these tokens. Do not invent colors, sizes, spacing, radii or shadows.',
     '- Keep every text and background pair at the contrast ratio it has here.',
     '- Match each component contract, including its states.',
+    '- Keep every component that passes all checks passing: contrast pairs, focus visibility, tap target size.',
     '- Use only these durations and easings. Apply the entrance and scroll patterns to the equivalent elements of what you build; patterns marked observed were measured at runtime and their easing is the nearest token when none was recorded.',
     '- No em dashes in any copy you write.',
     '',

@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import type { RunEvent, RunResponse } from '@dse/schema';
+import { componentsPassing, type RunEvent, type RunResponse } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { global, runPage, statePages } from '../../copy/strings';
 import { cost as formatCost } from '../../lib/format';
@@ -153,6 +153,7 @@ export function RunView({ initial, storageBase, appUrl, contactEmail, partial, l
     components: regions.components ? doc.components?.length : undefined,
     checksPassed: regions.checks ? doc.checks?.summary.passed : undefined,
     checksApplicable: regions.checks ? doc.checks?.summary.applicable : undefined,
+    componentsPassing: regions.checks && doc.components ? componentsPassing(doc.components) : undefined,
   });
   const source: ExportSource = local ? { kind: 'local', storageBase } : { kind: 'api', runId: id };
   const hrefFor = useCallback((cid: string) => `/r/${id}?c=${cid}`, [id]);

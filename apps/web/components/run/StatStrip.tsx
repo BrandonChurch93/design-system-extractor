@@ -7,9 +7,9 @@ import { CountUp } from '../motion/CountUp';
 import { Enter } from '../motion/Enter';
 import styles from './StatStrip.module.css';
 
-export type StatCell = { label: string; value?: number; of?: number };
+export type StatCell = { label: string; value?: number; of?: number; caption?: string; href?: string };
 
-/** Five cells; numbers count in as their stage lands, skeleton numbers before (docs/design/components.md). */
+/** Six cells on a run (three in the checks summary); numbers count in as their stage lands, skeleton numbers before (docs/design/components.md). */
 export function StatStrip({ cells, caption }: { cells: StatCell[]; caption?: string }) {
   return (
     <div className={styles.strip} data-cells={cells.length}>
@@ -21,11 +21,18 @@ export function StatStrip({ cells, caption }: { cells: StatCell[]; caption?: str
             ) : (
               <>
                 <CountUp value={c.value} className={styles.stat} />
-                {c.of !== undefined ? <span className={styles.of}>{fill(runPage.components.badge.replace('{passed}', ''), { applicable: count(c.of) })}</span> : null}
+                {c.of !== undefined ? <span className={styles.of}>{fill(runPage.passedOf.replace('{passed}', ''), { applicable: count(c.of) })}</span> : null}
               </>
             )}
           </span>
-          <span className={styles.label}>{c.label}</span>
+          {c.href && c.value !== undefined ? (
+            <a href={c.href} className={styles.link}>
+              {c.label}
+            </a>
+          ) : (
+            <span className={styles.label}>{c.label}</span>
+          )}
+          {c.caption ? <span className={styles.cellCaption}>{c.caption}</span> : null}
         </Enter>
       ))}
       {caption ? <p className={styles.caption}>{caption}</p> : null}
@@ -33,7 +40,9 @@ export function StatStrip({ cells, caption }: { cells: StatCell[]; caption?: str
   );
 }
 
-export function runStats(stats: { colors?: number; typeStyles?: number; spacingSteps?: number; components?: number; checksPassed?: number; checksApplicable?: number }): StatCell[] {
+export type RunStatsInput = { colors?: number; typeStyles?: number; spacingSteps?: number; components?: number; checksPassed?: number; checksApplicable?: number; componentsPassing?: { passed: number; applicable: number } };
+
+export function runStats(stats: RunStatsInput): StatCell[] {
   const L = runPage.statLabels;
   return [
     { label: L.colors, value: stats.colors },
@@ -41,5 +50,7 @@ export function runStats(stats: { colors?: number; typeStyles?: number; spacingS
     { label: L.spacingSteps, value: stats.spacingSteps },
     { label: L.components, value: stats.components },
     { label: L.checksPassed, value: stats.checksPassed, of: stats.checksApplicable },
+    // Links to the Components section with the Passing all checks filter on (D-096).
+    { label: L.componentsPassing, value: stats.componentsPassing?.passed, of: stats.componentsPassing?.applicable, caption: runPage.componentsPassingCaption, href: '#components-passing' },
   ];
 }

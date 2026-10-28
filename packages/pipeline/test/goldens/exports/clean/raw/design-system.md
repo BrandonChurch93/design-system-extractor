@@ -83,7 +83,7 @@ This design system was extracted from localhost:4100 across nine pages. It holds
 
 - Entrance · h1.display · on load · opacity 0 → 1, transform translateY(12px) → none · 480 ms · ease-out-quart
 - Scroll reveal · Feature card · when it enters the viewport at 15% from the bottom · opacity 0 → 1, transform translateY(16px) → none · 240 ms · ease-out-quart · 3 items · 60 ms apart
-- Scroll reveal · div.testimonial · when it enters the viewport at 30% from the bottom · opacity 0.08 → 1, transform translateY(14.7px) → translateY(0px) · about 382 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
+- Scroll reveal · div.testimonial · when it enters the viewport at 25% from the bottom · opacity 0.03 → 1, transform translateY(15.6px) → translateY(0px) · about 399 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
 - Scrolled header · Site header · after 400 px of scrolling · box-shadow none → 0px 12px 32px 0px #0B1F3A1F · 160 ms · ease-out-quad
 - Loop · Notice · loops every 1,600 ms · opacity 1 → 0.4 · 1,600 ms · ease-out-quart
 
@@ -198,7 +198,7 @@ States captured: Default, Hover, Focus, Active, Disabled
 Tokens used: color-text-primary (color), radius-sm (border-radius), space-20 (padding-right), space-20 (padding-left), type-text-14 (font), duration-160 (transition-duration), ease-out-quad (transition-timing-function)
 Unmapped: border-color rgba(0, 0, 0, 0)
 Motion: hover · background-color · 160 ms · ease-out-quad; hover · box-shadow · 160 ms · ease-out-quad; hover · transform · 160 ms · ease-out-quad; active · background-color · 160 ms · ease-out-quad; active · box-shadow · 160 ms · ease-out-quad; active · transform · 160 ms · ease-out-quad
-Checks: 4 of 4
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 88 × 44 at 390 px
@@ -224,7 +224,7 @@ Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Open
 Tokens used: color-text-primary (color), radius-sm (border-radius), space-12 (padding-right), space-12 (padding-left), type-text-14 (font)
 Motion: none
-Checks: 2 of 2
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 
@@ -249,7 +249,7 @@ Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Open
 Tokens used: radius-sm (border-radius)
 Motion: none
-Checks: 3 of 3
+Checks: all pass
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 44 × 44 at 390 px
 - Label present · pass · aria-label
@@ -274,7 +274,7 @@ Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Selected
 Tokens used: color-blue-600 (color), space-16 (padding-right), space-16 (padding-left), type-text-14 (font)
 Motion: none
-Checks: 3 of 3
+Checks: all pass
 - Contrast AA · pass · 5.8:1 on gray-50
 - Focus visible · pass · 2 px ring, 16.5:1 against gray-50
 - Tap target · pass · 69 × 44 at 390 px
@@ -299,7 +299,7 @@ Text input · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Error
 Tokens used: color-gray-50 (background-color), color-gray-border (border-color), radius-sm (border-radius), space-8 (padding-top), space-12 (padding-right), space-8 (padding-bottom), space-12 (padding-left)
 Motion: none
-Checks: 3 of 3
+Checks: all pass
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 342 × 44 at 390 px
 - Label present · pass · Label element
@@ -322,7 +322,7 @@ Toggle · 1 variant: Default
 States captured: Default, Hover, Focus, Active
 Tokens used: none
 Motion: none
-Checks: 3 of 3
+Checks: all pass
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 52 × 44 at 390 px
 - Label present · pass · aria-label
@@ -347,7 +347,7 @@ Select · 1 variant: Default
 States captured: Default, Hover, Focus, Active
 Tokens used: color-gray-50 (background-color), color-text-primary (color), color-gray-border (border-color), radius-sm (border-radius), space-8 (padding-top), space-40 (padding-right), space-8 (padding-bottom), space-12 (padding-left), type-body (font)
 Motion: none
-Checks: 3 of 3
+Checks: all pass
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 342 × 44 at 390 px
 - Label present · pass · Label element
@@ -371,7 +371,7 @@ Checkbox · 1 variant: Default
 States captured: Default, Hover, Focus, Active
 Tokens used: radius-sm (border-radius)
 Motion: none
-Checks: 3 of 3
+Checks: all pass
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 44 × 44 at 390 px
 - Label present · pass · Label element
@@ -394,7 +394,7 @@ Textarea · 1 variant: Default
 States captured: Default, Hover, Focus, Active
 Tokens used: color-gray-50 (background-color), color-gray-border (border-color), radius-sm (border-radius), space-8 (padding-top), space-12 (padding-right), space-8 (padding-bottom), space-12 (padding-left)
 Motion: none
-Checks: 3 of 3
+Checks: all pass
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 342 × 128 at 390 px
 - Label present · pass · Label element
@@ -418,7 +418,7 @@ Header · 1 variant: Default
 States captured: Default, Scrolled
 Tokens used: color-gray-50 (background-color), color-text-primary (color), type-body (font), duration-160 (transition-duration), ease-out-quad (transition-timing-function)
 Motion: scrolled · box-shadow · 160 ms · ease-out-quad; 1 motion pattern in the Motion section
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -491,7 +491,7 @@ Footer · 1 variant: Default
 States captured: Default
 Tokens used: color-text-primary (color), color-gray-border (border-color), space-48 (padding-top), space-48 (padding-bottom), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 6.0:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -542,7 +542,7 @@ Nav bar · 1 variant: Default
 States captured: Default
 Tokens used: color-text-primary (color), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -571,7 +571,7 @@ Nav bar · 1 variant: Default
 States captured: Default
 Tokens used: color-text-primary (color), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -614,7 +614,7 @@ Breadcrumb · 1 variant: Default
 States captured: Default
 Tokens used: color-text-primary (color), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 5.8:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -642,7 +642,7 @@ Card · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-50 (background-color), color-text-primary (color), color-gray-border (border-color), radius-md (border-radius), space-24 (padding-top), space-24 (padding-right), space-24 (padding-bottom), space-24 (padding-left), type-body (font), shadow-stack-low (box-shadow)
 Motion: 1 motion pattern in the Motion section
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -677,7 +677,7 @@ Badge · 3 variants: Warning, Success, Danger
 States captured: Default
 Tokens used: color-success (background-color), color-gray-50 (color), radius-rounded (border-radius), space-8 (padding-right), space-8 (padding-left), type-caption (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 5.0:1 on success
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -698,7 +698,7 @@ Alert · 2 variants: Warning, Success
 States captured: Default
 Tokens used: color-gray-50 (background-color), color-text-primary (color), color-success (border-color), radius-sm (border-radius), space-16 (padding-top), space-16 (padding-right), space-16 (padding-bottom), space-16 (padding-left), type-body (font)
 Motion: pulse · 1600 ms · ease-out-quart · loops; 1 motion pattern in the Motion section
-Checks: 2 of 2
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 - Reduced motion · pass · Stops under reduced motion
 
@@ -757,7 +757,7 @@ Table · 1 variant: Default
 States captured: Default
 Tokens used: color-text-primary (color), type-text-small (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -788,7 +788,7 @@ States captured: Default
 Tokens used: color-text-primary (background-color), color-gray-50 (color), radius-sm (border-radius), space-16 (padding-top), space-24 (padding-right), space-16 (padding-bottom), space-24 (padding-left), type-code (font)
 Unmapped: border-color rgba(8, 9, 10, 0.6)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on text-primary
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -812,7 +812,6 @@ Avatar · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-border (background-color), radius-rounded (border-radius)
 Motion: none
-Checks: 0 of 0
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -833,7 +832,7 @@ States captured: Default, Hover, Focus, Active
 Tokens used: color-gray-border (background-color), color-text-primary (color), radius-md (border-radius), space-16 (padding-right), space-16 (padding-left)
 Unmapped: font 16px 500
 Motion: none
-Checks: 3 of 3
+Checks: all pass
 - Contrast AA · pass · 13.3:1 on gray-border
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
 - Tap target · pass · 147 × 44 at 390 px
@@ -881,7 +880,6 @@ Tabs · 1 variant: Default
 States captured: Default
 Tokens used: color-text-primary (color), type-body (font)
 Motion: none
-Checks: 0 of 0
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -908,7 +906,7 @@ Card · 2 variants: Primary, Secondary
 States captured: Default
 Tokens used: color-gray-50 (background-color), color-text-primary (color), color-gray-border (border-color), radius-md (border-radius), space-32 (padding-top), space-32 (padding-right), space-32 (padding-bottom), space-32 (padding-left), type-body (font), shadow-stack-low (box-shadow)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -951,7 +949,7 @@ Empty state · 1 variant: Default
 States captured: Default
 Tokens used: color-text-primary (color), color-gray-border (border-color), radius-md (border-radius), space-96 (padding-top), space-24 (padding-right), space-96 (padding-bottom), space-24 (padding-left), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -986,7 +984,7 @@ Dropdown · 1 variant: Default
 States captured: Default
 Tokens used: color-gray-50 (background-color), color-text-primary (color), color-gray-border (border-color), radius-md (border-radius), space-8 (padding-top), space-8 (padding-right), space-8 (padding-bottom), space-8 (padding-left), type-body (font), shadow-md (box-shadow)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -1013,7 +1011,7 @@ Dropdown · 1 variant: Default
 States captured: Default
 Tokens used: color-text-primary (color), color-gray-border (border-color), space-8 (padding-top), space-16 (padding-bottom), type-body (font)
 Motion: none
-Checks: 1 of 1
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
@@ -1044,4 +1042,4 @@ Nothing drifts in this system. It holds nine colors, nine type styles and 11 spa
 
 ## How this was made
 
-Extracted by Design System Extractor from localhost:4100 in run evalclean0 on 2026-10-12. Tokens, motion, components and checks are measured from the rendered pages; motion marked observed was measured at runtime. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the raw set.
+Extracted by Design System Extractor from localhost:4100 in run evalclean0 on 2026-10-12. Tokens, motion, components and checks are measured from the rendered pages; motion marked observed was measured at runtime. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the raw set. 27 of 28 components are live previews; 1 are captured images.

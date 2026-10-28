@@ -46,7 +46,7 @@ describe('security · sanitized previews', () => {
   it('marks a preview with 250 KB of CSS as too large', () => {
     const snapshot = snap([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'div', parent: 0, box: [0, 0, 200, 100] }]);
     const declarations = Array.from({ length: 5000 }, (_, i) => ({ name: `--v${i}`, value: 'x'.repeat(40), important: false }));
-    const doc = buildPreview({ markup: '<div data-dse-id="e1">x</div>', vars: {}, snapshot, root: snapshot.elements[1]!, matched: { e1: { rules: [{ selector: 'div', matched: ['div'], origin: 'regular', media: [], supports: [], declarations }], inline: [], pseudo: [] } }, ground: 'rgb(255, 255, 255)', imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy });
+    const doc = buildPreview({ markup: '<div data-dse-id="e1">x</div>', vars: {}, snapshot, root: snapshot.elements[1]!, matched: { e1: { rules: [{ selector: 'div', matched: ['div'], origin: 'regular', media: [], supports: [], declarations }], inline: [], pseudo: [] } }, imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy });
     expect(doc.bytes).toBeGreaterThan(200_000);
     expect(doc.tooLarge).toBe(true);
   });

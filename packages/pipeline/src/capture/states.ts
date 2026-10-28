@@ -20,7 +20,8 @@ export type StateRecord = {
   animations?: RunningAnimation[];
 };
 
-export const CROP_PAD = 8;
+/** State crops carry 4 px around the element (D-094; 8 before v1.2). */
+export const CROP_PAD = 4;
 /** The longest a state waits for script-driven motion to end, the 150 ms settle included (D-089). */
 export const STATE_WAIT_CAP = 1200;
 export const SETTLE_MS = 150;

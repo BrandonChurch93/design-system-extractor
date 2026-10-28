@@ -1,6 +1,6 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { ComponentGroup, ComponentType, ExportSet, TokenKind, type RunDocumentPartial, type TokensJson } from '@dse/schema';
+import { passesAll, ComponentGroup, ComponentType, ExportSet, TokenKind, type RunDocumentPartial, type TokensJson } from '@dse/schema';
 import { componentCss, exportTokens, generateExport, motionJson, tokensJson } from '@dse/pipeline/exports';
 
 // The MCP server (docs/specs/exports-and-mcp.md): one run, read once, served over stdio. No network
@@ -49,7 +49,7 @@ export function createServer(doc: RunDocumentPartial, runUrl: string): McpServer
           .filter((c) => (!group || c.group === group) && (!type || c.type === type))
           .map((c) => {
             const applicable = c.checks.filter((r) => r.status !== 'na');
-            return { id: c.id, name: c.name, type: c.type, group: c.group, tier: c.tier, variants: c.variants.length, states: c.states.filter((s) => s.captured).length, checksPassed: applicable.filter((r) => r.status === 'pass').length, checksApplicable: applicable.length };
+            return { id: c.id, name: c.name, type: c.type, group: c.group, tier: c.tier, variants: c.variants.length, states: c.states.filter((s) => s.captured).length, checksPassed: applicable.filter((r) => r.status === 'pass').length, checksApplicable: applicable.length, passedAll: passesAll(c.checks) };
           }),
       ),
   );

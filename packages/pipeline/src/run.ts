@@ -1,5 +1,5 @@
 import type { Browser, BrowserContext } from 'playwright';
-import type { BlockedDetail, BlockedReason, RunDocumentPartial, Stage, Stats } from '@dse/schema';
+import { componentsPassing, previewCounts, type BlockedDetail, type BlockedReason, type RunDocumentPartial, type Stage, type Stats } from '@dse/schema';
 import type { RunContext } from './context';
 import { adoptContext, createRunContext, type RunBrowserContext } from './crawl/browser';
 import { Throttle } from './crawl/throttle';
@@ -165,6 +165,7 @@ export function statsOf(doc: RunDocumentPartial): Stats | undefined {
     components: doc.components?.length ?? 0,
     checksPassed: doc.checks?.summary.passed ?? 0,
     checksApplicable: doc.checks?.summary.applicable ?? 0,
+    ...(doc.components ? { componentsPassing: componentsPassing(doc.components), previews: previewCounts(doc.components) } : {}),
   };
 }
 

@@ -13,6 +13,8 @@
 }
 
 .filter {
+  /* Clears the sticky SectionNav when the stat strip links here, as each section does. */
+  scroll-margin-top: 72px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;

@@ -1,5 +1,5 @@
 'use client';
-import type { Check, RunDocumentPartial } from '@dse/schema';
+import { componentsPassing, type Check, type RunDocumentPartial } from '@dse/schema';
 import { checkDescriptions, checkLabels, fill } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
 import { count } from '../../lib/format';
@@ -13,7 +13,14 @@ import styles from './ChecksSection.module.css';
 
 const K = runPage.checks;
 
-/** Automated checks: the summary strip and one row per check (docs/design/components.md). */
+/** The ratio in words, before the summary (D-096). */
+function Opening({ doc }: { doc: RunDocumentPartial }) {
+  const k = componentsPassing(doc.components ?? []);
+  if (!k.applicable) return null;
+  return <p className={styles.opening}>{fill(k.applicable === 1 ? K.openingOne : K.opening, { passed: count(k.passed), applicable: count(k.applicable) })}</p>;
+}
+
+/** Automated checks: the opening line, the summary strip and one row per check (docs/design/components.md). */
 export function ChecksSection({ doc }: { doc: RunDocumentPartial }) {
   const checks = doc.checks;
   const comps = doc.components ?? [];
@@ -23,6 +30,7 @@ export function ChecksSection({ doc }: { doc: RunDocumentPartial }) {
     <Section id="checks" title={K.heading} caption={K.disclaimer}>
       {checks ? (
         <>
+          <Opening doc={doc} />
           <StatStrip
             cells={[
               { label: K.passed, value: checks.summary.passed },
@@ -52,7 +60,7 @@ export function ChecksSection({ doc }: { doc: RunDocumentPartial }) {
                         </Enter>
                       </th>
                       <td className={styles.measures}>{checkDescriptions[b.check]}</td>
-                      <td className={styles.passed}>{fill(runPage.components.badge, { passed: count(b.passed), applicable: count(b.applicable) })}</td>
+                      <td className={styles.passed}>{fill(runPage.passedOf, { passed: count(b.passed), applicable: count(b.applicable) })}</td>
                       <td className={styles.failing}>
                         {failing.length ? (
                           <>

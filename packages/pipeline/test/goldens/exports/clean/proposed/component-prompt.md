@@ -131,7 +131,7 @@ Patterns:
 
 - Entrance · h1.display · on load · opacity 0 → 1, transform translateY(12px) → none · 480 ms · ease-out-quart
 - Scroll reveal · Feature card · when it enters the viewport at 15% from the bottom · opacity 0 → 1, transform translateY(16px) → none · 240 ms · ease-out-quart · 3 items · 60 ms apart
-- Scroll reveal · div.testimonial · when it enters the viewport at 30% from the bottom · opacity 0.08 → 1, transform translateY(14.7px) → translateY(0px) · about 382 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
+- Scroll reveal · div.testimonial · when it enters the viewport at 25% from the bottom · opacity 0.03 → 1, transform translateY(15.6px) → translateY(0px) · about 399 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
 - Scrolled header · Site header · after 400 px of scrolling · box-shadow none → 0px 12px 32px 0px #0B1F3A1F · 160 ms · ease-out-quad
 - Loop · Notice · loops every 1,600 ms · opacity 1 → 0.4 · 1,600 ms · ease-out-quart
 
@@ -157,6 +157,7 @@ States: Default, Hover, Focus, Active, Disabled.
 Tokens: color-text-primary for color, radius-sm for border-radius, space-20 for padding-right, space-20 for padding-left, type-text-14 for font, duration-160 for transition-duration, ease-out-quad for transition-timing-function.
 Default: text color-text-primary · border 1px rgba(0, 0, 0, 0) · radius radius-sm · padding 0px space-20 0px space-20 · font type-text-14
 Motion: hover · background-color · 160 ms · ease-out-quad; hover · box-shadow · 160 ms · ease-out-quad; hover · transform · 160 ms · ease-out-quad; active · background-color · 160 ms · ease-out-quad; active · box-shadow · 160 ms · ease-out-quad; active · transform · 160 ms · ease-out-quad
+Checks: all pass
 
 ```css
 a { color: var(--color-blue-600); text-decoration: none; }
@@ -171,6 +172,7 @@ a { color: var(--color-blue-600); text-decoration: none; }
 - Use only these tokens. Do not invent colors, sizes, spacing, radii or shadows.
 - Keep every text and background pair at the contrast ratio it has here.
 - Match each component contract, including its states.
+- Keep every component that passes all checks passing: contrast pairs, focus visibility, tap target size.
 - Use only these durations and easings. Apply the entrance and scroll patterns to the equivalent elements of what you build; patterns marked observed were measured at runtime and their easing is the nearest token when none was recorded.
 - No em dashes in any copy you write.
 
