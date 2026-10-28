@@ -8,6 +8,7 @@ import { cropShot, downscale, padded, sourceRegion } from '../components/crop';
 import { itemsFrom, type Item } from '../components/items';
 import { nameComponents, resolveCollisions, stylesAgree, type CollisionPair, type Draft, type Naming } from '../components/model';
 import { componentMotion, easingLink, patternOwners, withOwners } from '../components/motion';
+import { easingUsedBy } from '../components/used-by';
 import { endsInDigit, slugsOf, uniqueNames } from '../components/naming';
 import { nameVariants, sized, splitVariants, stateOf, type VariantDraft } from '../components/variants';
 import type { RunContext } from '../context';
@@ -279,10 +280,11 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
   });
   const built = tokens.motionBuild?.motion ?? { patterns: [], truncatedPages: [], intersectionObservers: 0 };
   const motion = { ...built, patterns: withOwners(built.patterns, owned) };
+  const easing = easingUsedBy(tokens.easing ?? [], out, motion.patterns);
   for (const v of out.flatMap((c) => c.variants)) if (endsInDigit(v.name)) throw new Error(`variant name ends in a number: ${v.name}`);
 
   const byModel = list.filter((w) => w.naming!.by !== 'fallback').length;
-  await ctx.emit({ stage: 'components', message: `${out.length} found from ${items.length.toLocaleString('en-US')} element candidates · ${byModel} by model`, data: { calls: named.calls, collisions: collisions.by }, patch: { components: out, motion } });
+  await ctx.emit({ stage: 'components', message: `${out.length} found from ${items.length.toLocaleString('en-US')} element candidates · ${byModel} by model`, data: { calls: named.calls, collisions: collisions.by }, patch: { components: out, motion, tokens: { easing } } });
   for (const r of renamed) await ctx.emit({ stage: 'components', message: `renamed ${r.from} to ${r.to}` });
   const core = out.filter((c) => c.tier === 'core').length;
   await ctx.emit({ stage: 'components', message: `${core} core · ${out.length - core} page-specific` });

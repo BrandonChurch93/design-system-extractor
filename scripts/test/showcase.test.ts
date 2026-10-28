@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { RunDocumentPartial, ShowcaseCategory, ShowcaseContent, type ShowcaseEntry } from '@dse/schema';
-import { entryFor, nextAlternate, refreshLinks, toMultipleOfSix, unusable, withEntry } from '../showcase/plan';
+import { demote, entryFor, knownSite, nextAlternate, orphanWarning, promote, refreshLinks, refusal, toMultipleOfSix, unusable, withEntry } from '../showcase/plan';
 import { alternates, roster } from '../showcase/roster';
 
 // The showcase script's decisions (docs/specs/showcase.md, D-063).
@@ -87,3 +87,47 @@ describe('the plan', () => {
     expect(next.generatedAt).toBe('2026-10-27T00:00:00.000Z');
   });
 });
+
+describe('promoting a run (D-091)', () => {
+  const content = () => ShowcaseContent.parse({ generatedAt: '2026-10-26T00:00:00.000Z', appUrl: 'https://a.app', entries: [entry(1), entry(2), entry(3)] });
+
+  it('refuses a run that is not complete, or is sparse, in the words of showcase.md', () => {
+    expect(refusal('abcdefghij', 'running', doc())).toBe('abcdefghij is running, not complete. Only a complete run can be added.');
+    expect(refusal('abcdefghij', 'complete', doc({ sparse: true, components: [] }))).toBe('abcdefghij is sparse (0 components). A sparse run is not added to the showcase.');
+    expect(refusal('abcdefghij', 'complete', doc())).toBeNull();
+  });
+
+  it('puts the promoted entry first with order 1, renumbers the rest, and marks it promoted', () => {
+    const { content: next, replaced } = promote(content(), { ...entry(9), runId: 'promoted00' }, '2026-10-28T00:00:00.000Z');
+    expect(next.entries.map((e) => [e.runId, e.order, e.promoted ?? false])).toEqual([
+      ['promoted00', 1, true],
+      ['run0000001', 2, false],
+      ['run0000002', 3, false],
+      ['run0000003', 4, false],
+    ]);
+    expect(replaced).toBeUndefined();
+  });
+
+  it('moves a run already listed to the top, and replaces the card of the same site', () => {
+    expect(promote(content(), entry(3), '2026-10-28T00:00:00.000Z').content.entries.map((e) => e.runId)).toEqual(['run0000003', 'run0000001', 'run0000002']);
+    const same = promote(content(), { ...entry(2, 'www.site2.com'), runId: 'newer00000' }, '2026-10-28T00:00:00.000Z');
+    expect(same.replaced!.runId).toBe('run0000002');
+    expect(same.content.entries.map((e) => e.runId)).toEqual(['newer00000', 'run0000001', 'run0000003']);
+  });
+
+  it('removes an entry and renumbers, or says it is not listed', () => {
+    expect(demote(content(), 'run0000002', '2026-10-28T00:00:00.000Z')!.entries.map((e) => [e.runId, e.order])).toEqual([
+      ['run0000001', 1],
+      ['run0000003', 2],
+    ]);
+    expect(demote(content(), 'nope000000', '2026-10-28T00:00:00.000Z')).toBeNull();
+  });
+
+  it('warns when the count leaves an orphan, and names the site from the roster by host', () => {
+    expect(orphanWarning(6)).toBeNull();
+    expect(orphanWarning(7)).toBe('7 entries leave an orphan at 3 or 2 columns. Add 5 more or remove 1.');
+    expect(knownSite('www.modernsoftworks.com')).toMatchObject({ name: 'Modern Softworks', category: 'Personal' });
+    expect(knownSite('example.org')).toBeUndefined();
+  });
+});
+

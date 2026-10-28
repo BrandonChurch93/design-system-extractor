@@ -186,6 +186,11 @@ export const EasingToken = z.object({
   siteName: SiteName.optional(),
   usage: count,
   pages: z.array(PageCount),
+  /** What uses it, most used first: filled when motion is attached to components (D-093, D-097). */
+  usedBy: z.object({
+    componentTypes: z.array(z.object({ type: ComponentType, count: count })),
+    patternKinds: z.array(z.object({ kind: MotionKind, count: count })),
+  }),
 });
 export type EasingToken = z.infer<typeof EasingToken>;
 
@@ -269,6 +274,10 @@ export const Preview = z.object({
   diffPct: nonNeg.optional(),
   htmlKey: z.string().optional(),
   stateHtmlKeys: z.partialRecord(State, z.string()).optional(),
+  /** The ground of the instance the preview was built from, painted behind it (D-094). */
+  ground: Hex.optional(),
+  /** Families a live preview renders in their fallback stack (D-095). */
+  fontsSubstituted: z.array(z.string().min(1)).optional(),
 });
 export type Preview = z.infer<typeof Preview>;
 
@@ -289,6 +298,8 @@ export const Instance = z.object({
   bbox: BBox,
   variantId: EntityId,
   text: z.string().optional(),
+  /** The effective background the instance sat on, read at capture (D-094). */
+  ground: Hex.optional(),
 });
 export type Instance = z.infer<typeof Instance>;
 
@@ -379,6 +390,8 @@ export const Component = z.object({
   responsiveVariant: z.object({ mobilePreview: Preview, note: z.string() }).optional(),
   /** The first-seen instance's border width in px when it has a visible border, for the exports' Default line. */
   borderWidth: nonNeg.optional(),
+  /** The most common instance ground (D-094). */
+  ground: Hex.optional(),
   tier: ComponentTier,
   /** The kebab case of the name, unique in the run: `motion.css` and the prompt use it. */
   slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
@@ -537,6 +550,12 @@ export const Stats = z.object({
   components: count,
   checksPassed: count,
   checksApplicable: count,
+  /** Since v1.2; optional because showcase entries and older rows carry stats without them (D-096). */
+  componentsPassing: z.object({ passed: count, applicable: count }).optional(),
+  /** Previews by mode and captured reason, since v1.2 (D-095). */
+  previews: z
+    .object({ live: count, diff: count, 'css-too-large': count, 'fonts-unavailable': count, 'not-checked': count })
+    .optional(),
 });
 export type Stats = z.infer<typeof Stats>;
 

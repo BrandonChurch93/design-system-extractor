@@ -16,6 +16,8 @@ export const ShowcaseEntry = z.object({
   order: z.number().int().positive(),
   stats: Stats,
   palette: z.array(z.object({ value: Hex, share: z.number().min(0).max(1) })).max(8),
+  /** Added by the owner with `pnpm showcase --add` (D-091). */
+  promoted: z.boolean().optional(),
 });
 export type ShowcaseEntry = z.infer<typeof ShowcaseEntry>;
 

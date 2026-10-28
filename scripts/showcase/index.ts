@@ -1,9 +1,12 @@
 // pnpm showcase [--remote] [--only host] [--alternates] [--refresh-links] [--dry-run] (docs/specs/showcase.md, D-063)
+// pnpm showcase --add <runId> [--category <name>] [--name <text>] | --remove <runId> | --list, each with [--remote] (D-091)
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { eq } from 'drizzle-orm';
 import { pino } from 'pino';
-import { allowedPrivateHosts, RunDocumentPartial, RunResponse, ShowcaseContent, type RunStatus, type ShowcaseEntry } from '@dse/schema';
+import { allowedPrivateHosts, RunDocumentPartial, RunResponse, ShowcaseCategory, ShowcaseContent, type RunStatus, type ShowcaseEntry } from '@dse/schema';
+import { upgradeRunDocument } from '@dse/pipeline/upgrade';
+import { paletteOf } from '../../apps/web/lib/palette';
 import { closeDb, isTerminal, setShowcase, syncShowcase, tables } from '@dse/pipeline/db';
 import { defaultRecordingsDir } from '@dse/pipeline/models/client';
 import { createRedis } from '@dse/pipeline/queue';
@@ -12,7 +15,7 @@ import { BrowserPool } from '../../apps/worker/src/browser';
 import { createRunWorker } from '../../apps/worker/src/worker';
 import { admitRun } from '../../apps/web/lib/server/runs';
 import { servicesFromEnv } from '../../apps/web/lib/server/services';
-import { entryFor, nextAlternate, refreshLinks, toMultipleOfSix, unusable, withEntry, type Finished } from './plan';
+import { demote, entryFor, knownSite, listing, nextAlternate, orphanWarning, promote, refreshLinks, refusal, toMultipleOfSix, unusable, withEntry, type Finished } from './plan';
 import { alternates, roster, type Site } from './roster';
 
 const root = resolve(import.meta.dirname, '../..');
@@ -20,7 +23,8 @@ const contentFile = resolve(root, process.env.DSE_SHOWCASE_CONTENT ?? 'apps/web/
 const reportFile = resolve(root, process.env.DSE_SHOWCASE_REPORT ?? '.dse/showcase-report.md');
 const args = process.argv.slice(2);
 const flag = (name: string) => args.includes(`--${name}`);
-const only = args.includes('--only') ? args[args.indexOf('--only') + 1] : undefined;
+const valueOf = (name: string) => (args.includes(`--${name}`) ? args[args.indexOf(`--${name}`) + 1] : undefined);
+const only = valueOf('only');
 const env = process.env;
 const appUrl = (env.NEXT_PUBLIC_APP_URL ?? '').replace(/\/$/, '');
 if (!appUrl) throw new Error('NEXT_PUBLIC_APP_URL is not set');
@@ -90,7 +94,7 @@ async function localBackend(): Promise<Backend> {
       for (;;) {
         const [row] = await svc.db.select().from(tables.runs).where(eq(tables.runs.id, id));
         if (row && isTerminal(row.status as RunStatus)) {
-          const doc = RunDocumentPartial.parse(row.document);
+          const doc = RunDocumentPartial.parse(upgradeRunDocument(row.document));
           return { id, status: row.status as RunStatus, doc, costUsd: doc.cost?.usd ?? 0 };
         }
         await new Promise((ok) => setTimeout(ok, 3000));
@@ -133,7 +137,8 @@ function remoteBackend(): Backend {
       if (!body.id) return { id: null, reason: `blocked · ${body.blocked ?? 'unknown'}` };
       for (;;) {
         await new Promise((ok) => setTimeout(ok, 5000));
-        const r = RunResponse.parse(await call(`/api/runs/${body.id}`));
+        const raw = (await call(`/api/runs/${body.id}`)) as { document: unknown };
+        const r = RunResponse.parse({ ...raw, document: upgradeRunDocument(raw.document) });
         if (isTerminal(r.status)) return { id: body.id, status: r.status, doc: r.document, costUsd: r.document.cost?.usd ?? 0 };
       }
     },
@@ -146,6 +151,109 @@ function remoteBackend(): Backend {
     discard: async () => {},
     close: async () => {},
   };
+}
+
+/** Reading runs and the content and writing it, without running anything: the promotion commands. */
+type Store = {
+  run(id: string): Promise<{ status: RunStatus; doc: RunDocumentPartial } | null>;
+  content(): Promise<ShowcaseContent>;
+  publish(content: ShowcaseContent): Promise<void>;
+  close(): Promise<void>;
+};
+
+function localStore(): Store {
+  if (env.NODE_ENV === 'production') throw new Error('the local showcase path is for development; use --remote');
+  const svc = servicesFromEnv(env);
+  return {
+    async run(id) {
+      const [row] = await svc.db.select().from(tables.runs).where(eq(tables.runs.id, id));
+      return row ? { status: row.status as RunStatus, doc: RunDocumentPartial.parse(upgradeRunDocument(row.document)) } : null;
+    },
+    content: async () => readContent(),
+    async publish(content) {
+      const synced = await syncShowcase(svc.db, content.entries.map((e) => e.runId));
+      if (!synced.ok) throw new Error(`not complete: ${synced.missing.join(', ')}`);
+      writeContent(content);
+    },
+    async close() {
+      await svc.queue.close();
+      svc.redis.disconnect();
+      await closeDb(svc.db);
+    },
+  };
+}
+
+function remoteStore(): Store {
+  const backend = remoteBackend();
+  const storage = (env.STORAGE_PUBLIC_BASE_URL ?? '').replace(/\/$/, '');
+  return {
+    async run(id) {
+      const res = await fetch(`${appUrl}/api/runs/${id}`, { signal: AbortSignal.timeout(30_000) });
+      if (res.status === 404) return null;
+      if (!res.ok) throw new Error(`/api/runs/${id} answered ${res.status}`);
+      const body = (await res.json()) as { document: unknown };
+      const r = RunResponse.parse({ ...body, document: upgradeRunDocument(body.document) });
+      return { status: r.status, doc: r.document };
+    },
+    async content() {
+      // The live content is the storage object; the committed file is its seed and fallback (D-020).
+      const res = storage ? await fetch(`${storage}/showcase/showcase.json`, { signal: AbortSignal.timeout(30_000) }).catch(() => null) : null;
+      return res?.ok ? ShowcaseContent.parse(await res.json()) : readContent();
+    },
+    publish: (content) => backend.publish(content),
+    close: async () => {},
+  };
+}
+
+async function promotion(store: Store): Promise<number> {
+  const now = new Date().toISOString();
+  if (flag('list')) {
+    console.log(listing(await store.content()));
+    return 0;
+  }
+  const removeId = valueOf('remove');
+  if (removeId) {
+    const next = demote(await store.content(), removeId, now);
+    if (!next) {
+      console.error(`${removeId} is not in the showcase.`);
+      return 1;
+    }
+    await store.publish(next);
+    console.log(`showcase · ${removeId} removed · ${next.entries.length} entries; its retention is back to 90 days`);
+    const warn = orphanWarning(next.entries.length);
+    if (warn) console.warn(`showcase · ${warn}`);
+    return 0;
+  }
+  const id = valueOf('add')!;
+  const run = await store.run(id);
+  if (!run) {
+    console.error(`No run with the id ${id}.`);
+    return 1;
+  }
+  const why = refusal(id, run.status, run.doc);
+  if (why) {
+    console.error(why);
+    return 1;
+  }
+  const host = run.doc.host!;
+  const known = knownSite(host);
+  const asked = valueOf('category');
+  const category = asked ? ShowcaseCategory.safeParse(asked) : null;
+  if (category && !category.success) {
+    console.error(`--category takes one of: ${ShowcaseCategory.options.join(', ')}.`);
+    return 1;
+  }
+  if (!category && !known) {
+    console.error(`${host} is not in the roster or the alternates. Give --category <name>, one of: ${ShowcaseCategory.options.join(', ')}.`);
+    return 1;
+  }
+  const entry: ShowcaseEntry = { runId: id, url: `${appUrl}/r/${id}`, host, name: valueOf('name') ?? known?.name ?? host, category: category?.data ?? known!.category, order: 1, stats: run.doc.stats!, palette: paletteOf(run.doc), promoted: true };
+  const { content, replaced } = promote(await store.content(), entry, now);
+  await store.publish(content);
+  console.log(`showcase · ${host} (${id}) is now the first card${replaced ? (replaced.runId === id ? ', moved from order ' + replaced.order : `, replacing run ${replaced.runId}`) : ''} · ${content.entries.length} entries`);
+  const warn = orphanWarning(content.entries.length);
+  if (warn) console.warn(`showcase · ${warn}`);
+  return 0;
 }
 
 type Row = { order: number; host: string; result: string; doc?: RunDocumentPartial; costUsd: number; replacedBy?: string };
@@ -169,6 +277,15 @@ async function main() {
     return;
   }
   const remote = flag('remote');
+  if (flag('add') || flag('remove') || flag('list')) {
+    const store = remote ? remoteStore() : localStore();
+    try {
+      process.exitCode = await promotion(store);
+    } finally {
+      await store.close();
+    }
+    return;
+  }
   if (flag('refresh-links')) {
     const content = refreshLinks(readContent(), appUrl);
     if (remote) await remoteBackend().publish(content);

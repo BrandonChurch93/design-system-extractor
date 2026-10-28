@@ -4,6 +4,7 @@ import { appendEvent, finishOpenRun, getRunForViewer, insertRun, isTerminal, lis
 import { checkTarget, validateUrlShape } from '@dse/pipeline/net/private-ranges';
 import { encryptSecret, enqueueRun, RunJobData, type Counted } from '@dse/pipeline/queue';
 import { PIPELINE_VERSION } from '@dse/pipeline/version';
+import { upgradeRunDocument } from '@dse/pipeline/upgrade';
 import { check, limitsFor, type ResolvedViewer } from '../entitlements';
 import type { Services } from './services';
 
@@ -145,6 +146,18 @@ export async function admitRun(svc: Services, input: AdmitInput): Promise<AdmitR
 }
 
 /** `GET /api/runs/{id}`: the row as the poller reads it, or null for a run that is not there. */
+/** A stored document the upgrade could not bring to the current shape. */
+export class UnreadableRunError extends Error {
+  constructor(
+    readonly runId: string,
+    readonly host: string,
+    readonly createdAt: string,
+    readonly issues: number,
+  ) {
+    super(`run ${runId} could not be read: ${issues} schema issues after upgrade`);
+  }
+}
+
 export async function runPayload(db: Db, runId: string): Promise<RunResponse | null> {
   if (!/^[0-9a-z]{10}$/.test(runId)) return null;
   const row = await getRunForViewer(db, runId, null);
@@ -152,7 +165,10 @@ export async function runPayload(db: Db, runId: string): Promise<RunResponse | n
   const events = (await listEvents(db, runId)).map((e) =>
     RunEvent.parse({ id: e.id, runId: e.runId, ts: new Date(e.ts).toISOString(), stage: e.stage, substage: e.substage, level: e.level, message: e.message, data: e.data }),
   );
-  const body: RunResponse = { id: row.id, status: row.status, isShowcase: row.isShowcase, document: RunDocumentPartial.parse(row.document), events };
+  // Stored documents keep the shape of the build that wrote them (D-092).
+  const parsed = RunDocumentPartial.safeParse(upgradeRunDocument(row.document));
+  if (!parsed.success) throw new UnreadableRunError(row.id, row.host, row.createdAt, parsed.error.issues.length);
+  const body: RunResponse = { id: row.id, status: row.status, isShowcase: row.isShowcase, document: parsed.data, events };
   if (row.status === 'queued') body.queuePosition = await queuePosition(db, row);
   return body;
 }

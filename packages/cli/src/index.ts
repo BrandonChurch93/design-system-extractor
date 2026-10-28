@@ -13,6 +13,7 @@ import { launchBrowser } from '@dse/pipeline/crawl/browser';
 import { allZip, generateExport } from '@dse/pipeline/exports';
 import { ModelClient } from '@dse/pipeline/models/client';
 import { PIPELINE_VERSION, runPipeline } from '@dse/pipeline/run';
+import { upgradeRunDocument } from '@dse/pipeline/upgrade';
 import { FolderStorage, serveFolder } from './folder';
 
 // The dse command (docs/specs/exports-and-mcp.md, The CLI): extract, export, serve.
@@ -143,7 +144,7 @@ export async function exportCommand(argv: string[], io: Io = defaultIo): Promise
   if (!file || !values.format) throw new Error(usage);
   const format = ExportFormat.parse(values.format);
   const set = ExportSet.parse(values.set);
-  const doc = RunDocumentPartial.parse(JSON.parse(readFileSync(file, 'utf8')));
+  const doc = RunDocumentPartial.parse(upgradeRunDocument(JSON.parse(readFileSync(file, 'utf8'))));
   const runUrl = resolve(dirname(file));
   if (format === 'all.zip') {
     const folder = new FolderStorage(dirname(resolve(file)));
@@ -163,7 +164,7 @@ export async function serveCommand(argv: string[], io: Io = defaultIo): Promise<
   const dir = resolve(positionals[0] ?? '.');
   const port = Number(values.port);
   const runFile = join(dir, 'run.json');
-  const doc = RunDocumentPartial.parse(JSON.parse(readFileSync(runFile, 'utf8')));
+  const doc = RunDocumentPartial.parse(upgradeRunDocument(JSON.parse(readFileSync(runFile, 'utf8'))));
   const base = `http://localhost:${port}`;
   writeFileSync(runFile, `${JSON.stringify({ ...doc, local: { base } }, null, 2)}\n`);
   const server = await serveFolder(dir, port, 'localhost');

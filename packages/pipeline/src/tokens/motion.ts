@@ -154,7 +154,7 @@ export function buildEasings(acc: Map<string, EaseAcc>, vars: SiteVariable[]): E
       else if (linear) name = 'linear';
       else name = `ease-custom-${++custom}`;
     }
-    return { id: stableId(`easing:${e.value}`), name, value: e.value, usage: e.usage, pages: pagesOf(e.pages) };
+    return { id: stableId(`easing:${e.value}`), name, value: e.value, usage: e.usage, pages: pagesOf(e.pages), usedBy: { componentTypes: [], patternKinds: [] } };
   });
   nameBySite('easing', tokens, (t) => t.value, vars);
   return tokens;

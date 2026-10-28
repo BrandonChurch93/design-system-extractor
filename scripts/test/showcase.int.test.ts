@@ -111,6 +111,7 @@ describe('the showcase script, its other paths', () => {
     const clean = JSON.parse(readFileSync(resolve(root, 'packages/pipeline/test/fixtures/runs/clean.json'), 'utf8'));
     const seen: { method: string; path: string; auth?: string; body?: unknown }[] = [];
     let n = 0;
+    let sparse = false;
     const sites = new Map<string, string>();
     const api = createServer((req, res) => {
       let raw = '';
@@ -129,7 +130,8 @@ describe('the showcase script, its other paths', () => {
         if (req.url?.startsWith('/api/runs/')) {
           const id = req.url.split('/').pop()!;
           const url = sites.get(id)!;
-          return send({ id, status: 'complete', isShowcase: true, document: { ...clean, id, url, host: new URL(url).host }, events: [] });
+          if (!url) return res.writeHead(404).end();
+          return send({ id, status: 'complete', isShowcase: true, document: { ...clean, id, url, host: new URL(url).host, ...(sparse ? { sparse: true } : {}) }, events: [] });
         }
         if (req.url === '/api/admin/showcase/content') return send({ stored: 'showcase/showcase.json', entries: (body as { entries: unknown[] }).entries.length, removed: 0 });
         res.writeHead(404).end();
@@ -163,6 +165,27 @@ describe('the showcase script, its other paths', () => {
       expect(content().appUrl).toBe('https://dse.example');
       expect(content().entries.every((e) => e.url.startsWith('https://dse.example/r/'))).toBe(true);
       expect(seen.filter((s) => s.path === '/api/admin/showcase/run').length).toBe(runs);
+
+      // --add promotes an existing run without running anything; --list shows it; --remove takes it down (D-091).
+      sites.set('ownerrun00', 'https://www.ownsite.example/');
+      const penv = { ...env, STORAGE_PUBLIC_BASE_URL: appUrl };
+      const refused = await showcase(['--remote', '--add', 'ownerrun00'], penv);
+      expect(refused.status).toBe(1);
+      expect(refused.out).toContain('www.ownsite.example is not in the roster or the alternates. Give --category <name>');
+      const added = await showcase(['--remote', '--add', 'ownerrun00', '--category', 'Personal', '--name', 'Own site'], penv);
+      expect(added.status, added.out).toBe(0);
+      expect(added.out).toContain('7 entries leave an orphan at 3 or 2 columns. Add 5 more or remove 1.');
+      expect(content().entries[0]).toMatchObject({ runId: 'ownerrun00', order: 1, name: 'Own site', category: 'Personal', promoted: true });
+      expect(content().entries.map((e) => e.order)).toEqual([1, 2, 3, 4, 5, 6, 7]);
+      expect(seen.filter((s) => s.path === '/api/admin/showcase/run').length).toBe(runs);
+      const listed = await showcase(['--remote', '--list'], penv);
+      expect(listed.out).toContain('| 1 | www.ownsite.example | Own site | Personal | ownerrun00 | promoted |');
+      expect((await showcase(['--remote', '--remove', 'ownerrun00'], penv)).status).toBe(0);
+      expect(content().entries.map((e) => e.runId)).not.toContain('ownerrun00');
+      sparse = true;
+      const sparseRun = await showcase(['--remote', '--add', 'ownerrun00', '--category', 'Personal'], penv);
+      expect(sparseRun.status).toBe(1);
+      expect(sparseRun.out).toContain('ownerrun00 is sparse (');
     } finally {
       api.close();
     }

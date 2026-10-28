@@ -143,6 +143,22 @@ Read for P11: pages, components, copy, motion, quality-bar, design-system, expor
 10. Catalog entries for every page-level component.
 11. QA: `tests/qa/pages.ts` with every page and state, goldens, axe, no horizontal scroll at 390, Lighthouse script and thresholds, `/open` test, polling mutation bound test, reduced-motion on the run page, a recorded video of the in-progress page reviewed, the Compare deltas test (messy to messy-after).
 
+## P17 real-site check
+
+### Baseline, before any preview builder change (2026-10-28)
+
+Measured on the v1.1 code (the main tree before step 5, and a worktree at `a87c663` for the modernsoftworks.com re-run) with `env DSE_MODEL_MODE=live DSE_RUN_TIMEOUT_MS=900000 pnpm pipeline:run <url>`, the showcase timeout, so `not-checked` measures the budget and not fidelity; counted by `pnpm live-rate`. The owner's two runs are the addendum's starting point (visitor timeout).
+
+| Run | live | diff | css-too-large | fonts-unavailable | not-checked | total | live of checked |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| modernsoftworks.com `mhxvphzzfr` (owner, v1.1, 6 min) | 45 | 44 | 0 | 0 | 0 | 89 | 45 of 89 · 50.6% |
+| linear.app `tx4mehptdf` (owner, v1.0, 6 min) | 17 | 1 | 0 | 26 | 76 | 120 | 17 of 44 · 38.6% |
+| www.modernsoftworks.com `yogi9d534h` (15 min) | 24 | 51 | 0 | 0 | 0 | 75 | 24 of 75 · 32.0% |
+| linear.app `ish379diwx` (15 min) | 42 | 7 | 0 | 71 | 0 | 120 | 42 of 120 · 35.0% |
+| stripe.com `vj12gtw3u4` (15 min) | 33 | 83 | 0 | 4 | 0 | 120 | 33 of 120 · 27.5% |
+
+At the showcase timeout nothing is cut by the budget on any of the three: linear.app's fallbacks are fonts (71), stripe.com's and modernsoftworks.com's are render differences. The bare host modernsoftworks.com still answers Hostinger's 403 to the crawler (a 17 s sparse run); the owner's run and this one use `https://www.modernsoftworks.com/`.
+
 ## P16 real-site check
 
 A fresh local run of stripe.com (`env DSE_MODEL_MODE=live pnpm pipeline:run https://stripe.com`, run `uno14531eh`, 2026-10-27): complete in 324 s for $0.0097, 12 pages, 120 components (95 core, 25 page-specific), 80 patterns, 46 of them observed. The prompt export has a Motion section, zero `var(--` references to undeclared names in any export of either set or any component prompt, no component or variant name ending in a digit, no type token named `other`, and every component has a tier and a slug. Naming reached its time budget on this site, so the components carry the rules' names (D-066, D-078). The first run of this check failed validation on a 0 ms duration and the exports named stripe's theme and runtime variables without declaring them; both are fixed (D-090). The whole prompt (125 KB) is `docs/real-site-check/stripe-prompt.md`; STATUS holds its opening, the Motion section with the first patterns, and the first contract, because the whole file would bury this one (D-090).

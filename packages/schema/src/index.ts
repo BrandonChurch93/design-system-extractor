@@ -1,6 +1,7 @@
 export * from './enums';
 export * from './ids';
 export * from './run-document';
+export * from './derive';
 export * from './events';
 export * from './api';
 export * from './entitlements';

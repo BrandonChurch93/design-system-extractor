@@ -1,7 +1,9 @@
 // Parses stored run documents through the current schema, as every read path does.
-// `pnpm runs:parse <runId>…` (or `--all` for every complete run in the local database).
+// `pnpm runs:parse <runId>…` (or `--all` for every complete run in the local database); each line also
+// says whether the document parses once upgraded (D-092). Exits 1 when an upgraded document fails.
 import { RunDocumentPartial } from '@dse/schema';
 import { closeDb, createDb, getRun, tables } from '@dse/pipeline/db';
+import { upgradeRunDocument } from '@dse/pipeline/upgrade';
 import { eq } from 'drizzle-orm';
 
 const args = process.argv.slice(2);
@@ -18,13 +20,16 @@ try {
     }
     const doc = row.document as { pipelineVersion?: string; host?: string };
     const parsed = RunDocumentPartial.safeParse(row.document);
+    const upgraded = RunDocumentPartial.safeParse(upgradeRunDocument(row.document));
+    const after = upgraded.success ? 'upgraded: parses clean' : `upgraded: ${upgraded.error.issues.length} issues, first ${JSON.stringify(upgraded.error.issues[0]!.path)} · ${upgraded.error.issues[0]!.message}`;
+    if (!upgraded.success) process.exitCode = 1;
     if (parsed.success) {
-      console.log(`${id} · ${doc.host} · pipeline ${doc.pipelineVersion} · parses clean`);
+      console.log(`${id} · ${doc.host} · pipeline ${doc.pipelineVersion} · parses clean · ${after}`);
       continue;
     }
     const issues = parsed.error.issues;
     const first = issues[0]!;
-    console.log(`${id} · ${doc.host} · pipeline ${doc.pipelineVersion} · ${issues.length} issues`);
+    console.log(`${id} · ${doc.host} · pipeline ${doc.pipelineVersion} · ${issues.length} issues · ${after}`);
     console.log(`  first: ${JSON.stringify(first.path)} · ${first.message}`);
     const groups = new Map<string, number>();
     for (const i of issues) {

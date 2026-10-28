@@ -1,4 +1,4 @@
-import type { CheckResult, Component, RunDocumentPartial } from '@dse/schema';
+import type { Component, RunDocumentPartial } from '@dse/schema';
 
 // Lookups over a run document that several regions share.
 
@@ -26,11 +26,7 @@ export function pagePaths(doc: RunDocumentPartial): Map<string, string> {
   return new Map((doc.pages ?? []).map((p) => [p.id, p.path]));
 }
 
-export function checkCounts(checks: CheckResult[]): { passed: number; applicable: number; failed: number } {
-  const applicable = checks.filter((c) => c.status !== 'na');
-  const passed = applicable.filter((c) => c.status === 'pass').length;
-  return { passed, applicable: applicable.length, failed: applicable.length - passed };
-}
+export { checkCounts } from '@dse/schema';
 
 /** Components in grid order: by group in the enum's order, then as the document lists them. */
 export function orderedComponents(doc: RunDocumentPartial, groups: readonly string[]): Component[] {

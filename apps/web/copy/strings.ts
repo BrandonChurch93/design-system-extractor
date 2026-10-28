@@ -349,6 +349,13 @@ export const compare = {
   open: 'Open the {date} run',
   picker: { title: 'Pick a run to compare against', paste: 'Paste another run link' },
   footer: 'Compare is desktop only. On a phone, open either run.',
+  unavailable: {
+    title: 'We could not compare these runs.',
+    notFound: 'No run with the link {id}.',
+    unreadable: 'The {host} run of {date} could not be read.',
+    unfinished: 'The {host} run of {date} has not finished.',
+    open: 'Open {host}',
+  },
 } as const;
 
 export const recent = {

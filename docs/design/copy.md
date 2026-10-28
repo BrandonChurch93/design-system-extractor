@@ -206,7 +206,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Buttons: `Open the {date} run`
 - Picker: `Pick a run to compare against` · `Paste another run link`
 - Footer: `Compare is desktop only. On a phone, open either run.`
-- Could not compare (D-092): StateCard title `We could not compare these runs.` · body `{reason}` with reasons `No run with the link {id}.` · `The {host} run of {date} could not be read.` · ghost Buttons `Open {host}`, one for each run that exists
+- Could not compare (D-092): StateCard title `We could not compare these runs.` · body `{reason}` with reasons `No run with the link {id}.` · `The {host} run of {date} could not be read.` · `The {host} run of {date} has not finished.` (a run that is not complete; D-098) · ghost Buttons `Open {host}`, one for each run that exists
 
 ## Recent runs
 

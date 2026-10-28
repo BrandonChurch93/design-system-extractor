@@ -2,6 +2,7 @@
 import { FileJson } from 'lucide-react';
 import { useState } from 'react';
 import { RunDocumentComplete, type RunResponse } from '@dse/schema';
+import { upgradeRunDocument } from '@dse/pipeline/upgrade';
 import { componentGroupLabels } from '@dse/schema/labels';
 import { global, openPage as O } from '../../copy/strings';
 import { orderedComponents } from '../../lib/doc';
@@ -22,7 +23,7 @@ export function OpenView() {
     if (!file) return;
     setError(null);
     try {
-      const doc = RunDocumentComplete.parse(JSON.parse(await file.text()));
+      const doc = RunDocumentComplete.parse(upgradeRunDocument(JSON.parse(await file.text())));
       setRun({ id: doc.id, status: doc.status, isShowcase: false, document: doc, events: [] });
     } catch {
       setError(global.validation);
