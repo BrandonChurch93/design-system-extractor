@@ -49,7 +49,9 @@ test.describe('hover and press', () => {
     await homePage(page);
     const chip = page.getByRole('radio', { name: home.categories.Finance });
     const border = await style(chip, 'border-color');
-    const box = await chip.boundingBox();
+    // Where the chip sits in the document: filtering shortens the grid, and the browser may clamp the scroll.
+    const place = () => chip.evaluate((el) => { const r = el.getBoundingClientRect(); return { x: r.x + window.scrollX, y: r.y + window.scrollY, width: r.width, height: r.height }; });
+    const box = await place();
     await chip.hover();
     await page.waitForTimeout(400);
     expect(await style(chip, 'border-color')).not.toBe(border);
@@ -63,7 +65,7 @@ test.describe('hover and press', () => {
     const rgb = (hex: string) => `rgb(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(', ')})`;
     expect(await style(chip, 'background-color')).toBe(rgb(selected[0]!));
     expect(await style(chip, 'color')).toBe(rgb(selected[1]!));
-    expect(await chip.boundingBox()).toEqual(box);
+    expect(await place()).toEqual(box);
   });
 
   test('a ghost button takes the strong border, and a row extends its tint from the left and hides its hairline', async ({ page }) => {
