@@ -152,7 +152,7 @@ test('RegionSkeleton: every region before its stage lands has the documented sha
       componentsParts: roots(document.getElementById('components')!)[0]!.children.length,
       components: shape(roots(document.getElementById('components')!)[0]!.children[2]!),
       motion: (([m]) => ({ parts: m!.children.length, easings: m!.children[1]!.children.length, rows: m!.children[2]!.children.length }))(roots(document.getElementById('motion')!)),
-      checks: { summary: Math.round(box(checks!.children[0]!).height), rows: checks!.children[1]!.children.length },
+      checks: { opening: Math.round(box(checks!.children[0]!).height), summary: Math.round(box(checks!.children[1]!).height), rows: checks!.children[2]!.children.length },
       drift: { numbers: drift!.children[0]!.children.length },
       exports: { cards: exportsRoot!.children[1]!.children.length, grid: Math.round(box(exportsRoot!.children[1]!).width), mcp: Math.round(box(exportsRoot!.children[2]!).width), parts: exportsRoot!.children.length },
     };
@@ -171,6 +171,8 @@ test('RegionSkeleton: every region before its stage lands has the documented sha
   expect(shapes.components.rows).toBe(6);
   expect(shapes.components.tops).toHaveLength(2);
   expect(shapes.components.heights.every((h) => h === 152)).toBe(true);
+  // The opening line (D-096), the summary, the five rows.
+  expect(shapes.checks.opening).toBe(43);
   expect(shapes.checks.summary).toBeGreaterThan(0);
   expect(shapes.checks.rows).toBe(5);
   expect(shapes.drift.numbers).toBe(3);
