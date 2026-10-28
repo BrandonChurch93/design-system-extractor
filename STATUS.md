@@ -159,6 +159,10 @@ Measured on the v1.1 code (the main tree before step 5, and a worktree at `a87c6
 
 At the showcase timeout nothing is cut by the budget on any of the three: linear.app's fallbacks are fonts (71), stripe.com's and modernsoftworks.com's are render differences. The bare host modernsoftworks.com still answers Hostinger's 403 to the crawler (a 17 s sparse run); the owner's run and this one use `https://www.modernsoftworks.com/`.
 
+### linear.app at the visitor timeout (2026-10-28, 6 min, `3niiwooj5r`)
+
+Complete in 292 s. The budget cut fingerprints (48 of 59) and the states of later pages; previews were not cut: 86 live, 33 render differed, 1 styles too large, 0 not checked of 120 (71.7% of the checked), and all 87 core components checked (57 live), since render checks run core first by use (D-095). The owner's v1.0 run of this site at the same timeout left 76 unchecked.
+
 ### The halo check (2026-10-28)
 
 `messy-after`'s dark band: the Band button (`t8l06oxn`) and the Feature card (night mode) are live with ground `#0B0D10`; at device scale 2 the rounded white button sits on its own dark ground in the panel's PreviewStage and on its card, with no ring of another color at its corners (screenshot review).
