@@ -89,7 +89,7 @@ const invisible = new RegExp(`[${String.fromCharCode(0)}-${String.fromCharCode(3
 
 const forbiddenTags = ['script', 'noscript', 'template', 'iframe', 'frame', 'frameset', 'object', 'embed', 'applet', 'link', 'meta', 'base', 'style', 'foreignobject', 'animate', 'animatemotion', 'animatetransform', 'set', 'portal'];
 const urlAttributes = ['href', 'src', 'srcset', 'xlink:href', 'formaction', 'poster', 'action', 'background', 'lowsrc', 'ping', 'cite', 'longdesc', 'dynsrc', 'data'];
-const textLikeTypes = ['text', 'email', 'password', 'search', 'tel', 'url', 'number', 'date', 'time', 'checkbox', 'radio', 'submit', 'button'];
+const textLikeTypes = ['hidden', 'text', 'email', 'password', 'search', 'tel', 'url', 'number', 'date', 'time', 'checkbox', 'radio', 'submit', 'button'];
 
 function safeUrl(value: string): 'keep' | 'relative' | 'drop' {
   const v = value.trim().replace(invisible, '').toLowerCase();

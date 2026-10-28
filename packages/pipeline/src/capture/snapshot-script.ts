@@ -90,6 +90,7 @@ export const styleProps = [
   'overflow-y',
   // Container query units resolve against the nearest container (D-098).
   'container-type',
+  'container-name',
 ] as const;
 
 /** Longhands the freeze removes, so they are kept from the snapshot taken before it (capture-and-states.md, 2b). */
@@ -241,7 +242,18 @@ export function takeSnapshot(args: { props: string[]; cap: number; root?: string
         });
       }
     }
-    if (el.tagName.toLowerCase() === 'svg') return;
+    if (el.tagName.toLowerCase() === 'svg') {
+      // Svg children are not in the snapshot, so the paint a class rule or a custom property gave them is written on them (D-098).
+      for (const c of el.querySelectorAll('*')) {
+        const ccs = getComputedStyle(c);
+        const pcs = c.parentElement ? getComputedStyle(c.parentElement) : cs;
+        for (const a of ['fill', 'stroke'] as const) {
+          const v = ccs.getPropertyValue(a);
+          if (/var\(/.test(c.getAttribute(a) ?? '') || (c.getAttribute('class') && v !== pcs.getPropertyValue(a) && v !== ccs.color)) c.setAttribute(`data-dse-${a}`, v);
+        }
+      }
+      return;
+    }
     for (const c of [...el.children]) walk(c, me);
   };
   const start = args.root ? document.querySelector(args.root) : document.body;

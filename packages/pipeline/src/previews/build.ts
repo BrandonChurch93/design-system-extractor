@@ -92,13 +92,17 @@ const uaDefaults: { prop: RegExp; tags: Set<string> }[] = [
  * component's own tags (a heading's margin, a list's padding) is kept as a plain rule on those tags,
  * so the preview and the code keep the layout the page had (D-090).
  */
-export function universalCarry(rules: MatchedRule[], tags: Set<string>): { selector: string; declarations: MatchedRule['declarations'] }[] {
-  const out: { selector: string; declarations: MatchedRule['declarations'] }[] = [];
-  const decls = rules.filter(isUniversal).flatMap((r) => r.declarations.filter(keepDecl));
-  for (const ua of uaDefaults) {
-    const own = [...tags].filter((t) => ua.tags.has(t)).sort();
-    const d = decls.filter((x) => ua.prop.test(x.name));
-    if (own.length && d.length) out.push({ selector: own.join(', '), declarations: d });
+export function universalCarry(rules: MatchedRule[], tags: Set<string>): { selector: string; declarations: MatchedRule['declarations']; layerRank?: number }[] {
+  const out: { selector: string; declarations: MatchedRule['declarations']; layerRank?: number }[] = [];
+  // Each carry keeps the cascade layer of the reset it came from, so the site's layered rules still beat it (D-098).
+  const ranks = [...new Set(rules.filter(isUniversal).map((r) => r.layerRank))];
+  for (const rank of ranks) {
+    const decls = rules.filter((r) => isUniversal(r) && r.layerRank === rank).flatMap((r) => r.declarations.filter(keepDecl));
+    for (const ua of uaDefaults) {
+      const own = [...tags].filter((t) => ua.tags.has(t)).sort();
+      const d = decls.filter((x) => ua.prop.test(x.name));
+      if (own.length && d.length) out.push({ selector: own.join(', '), declarations: d, ...(rank !== undefined ? { layerRank: rank } : {}) });
+    }
   }
   return out;
 }
@@ -232,15 +236,17 @@ export function withPlaceholders(markup: string, snapshot: Snapshot, imageColors
     for (const a of ['class', 'fill', 'stroke', 'style']) if (use.getAttribute(a) && !node.getAttribute(a)) node.setAttribute(a, use.getAttribute(a)!);
     use.replaceWith(node);
   }
-  // A presentation attribute reading a custom property takes the value the page computed (D-098).
+  // A presentation attribute reading a custom property takes the value the page computed, and an svg
+  // child takes the paint its class rules gave it, written on it at capture (D-098).
   // Walked, not queried: jsdom's selector engine misses a parenthesis inside an attribute value.
-  for (const el of [...doc.querySelectorAll('[fill], [stroke]')].filter((e) => /var\(/.test(`${e.getAttribute('fill') ?? ''}${e.getAttribute('stroke') ?? ''}`))) {
+  for (const el of [...doc.querySelectorAll('.dse-root *')]) {
     const snap = snapshot.byDse.get(el.getAttribute('data-dse-id') ?? '');
     for (const a of ['fill', 'stroke'] as const) {
-      if (!el.getAttribute(a)?.includes('var(')) continue;
-      const v = snap?.style[a];
-      if (v) el.setAttribute(a, v);
-      else el.removeAttribute(a);
+      const painted = el.getAttribute(`data-dse-${a}`);
+      el.removeAttribute(`data-dse-${a}`);
+      const v = painted || (el.getAttribute(a)?.includes('var(') ? snap?.style[a] : undefined);
+      // A paint server outside the component is never fetched.
+      if (v && (!/url\(/i.test(v) || /^url\(\s*['"]?#/i.test(v))) el.setAttribute(a, v);
     }
   }
   // An unclosed window stays reachable after the run (D-075), so the caller closes it.
@@ -382,6 +388,57 @@ export function buildPreview(input: PreviewInput): PreviewDoc {
   }
 }
 
+type Box = { width: number; height: number };
+
+function contentBox(e: SnapElement): Box {
+  const n = (v: string | undefined) => Number.parseFloat(v ?? '0') || 0;
+  const st = e.style;
+  return {
+    width: e.w - n(st['padding-left']) - n(st['padding-right']) - n(st['border-left-width']) - n(st['border-right-width']),
+    height: e.h - n(st['padding-top']) - n(st['padding-bottom']) - n(st['border-top-width']) - n(st['border-bottom-width']),
+  };
+}
+
+const isContainer = (e: SnapElement, name: string | undefined) => {
+  const type = e.style['container-type'];
+  if (!type || type === 'normal') return false;
+  return !name || (e.style['container-name'] ?? '').split(/\s+/).includes(name);
+};
+
+/**
+ * A size container query read against the container the page had: true or false when the condition is
+ * a name and `and`-joined width or height features in px, rem or em, null for anything else (D-098).
+ */
+export function containerHolds(condition: string, find: (name: string | undefined) => (Box & { inline: boolean }) | null): boolean | null {
+  const m = /^\s*(?:(-?[_a-zA-Z][\w-]*)\s+)?(\(.*\))\s*$/.exec(condition);
+  if (!m || (m[1] && /^(not|and|or|style|scroll-state)$/i.test(m[1]))) return null;
+  const parts = m[2]!.split(/\)\s+and\s+\(/i).map((x) => x.replace(/^\(|\)$/g, '').trim());
+  const box = find(m[1]);
+  const len = (v: string) => {
+    const u = /^(-?\d*\.?\d+)(px|rem|em)$/.exec(v.trim());
+    return u ? Number(u[1]) * (u[2] === 'px' ? 1 : 16) : null;
+  };
+  let ok = true;
+  for (const part of parts) {
+    if (/[()]/.test(part)) return null;
+    let axis: string;
+    let op: string;
+    let value: number | null;
+    const colon = /^(min|max)-(width|height|inline-size|block-size)\s*:\s*(.+)$/i.exec(part);
+    const range = /^(width|height|inline-size|block-size)\s*(>=|<=|>|<)\s*(.+)$/i.exec(part);
+    if (colon) [axis, op, value] = [colon[2]!.toLowerCase(), colon[1]!.toLowerCase() === 'min' ? '>=' : '<=', len(colon[3]!)];
+    else if (range) [axis, op, value] = [range[1]!.toLowerCase(), range[2]!, len(range[3]!)];
+    else return null;
+    if (value === null) return null;
+    if (!box) return false;
+    const vertical = axis === 'height' || axis === 'block-size';
+    if (vertical && box.inline) return false;
+    const size = vertical ? box.height : box.width;
+    ok &&= op === '>=' ? size >= value : op === '<=' ? size <= value : op === '>' ? size > value : size < value;
+  }
+  return ok;
+}
+
 function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewDoc {
   const policy = input.policy;
   const lists: Placed[][] = [];
@@ -394,7 +451,7 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
     const add = (rule: MatchedRule, pseudo?: string) => {
       const selectors = (rule.matched.length ? rule.matched : splitSelectorList(rule.selector)).map((s) => rescope(s, el)).filter((s): s is string => Boolean(s));
       if (!selectors.length) return;
-      list.push({ key: `${pseudo ?? ''}|${rule.selector}|${JSON.stringify(rule.declarations)}`, rule, selectors, pseudo });
+      list.push({ key: `${pseudo ?? ''}|${rule.selector}|${JSON.stringify([rule.media, rule.supports, rule.container, rule.layerRank, rule.declarations])}`, rule, selectors, pseudo });
     };
     for (const r of m.rules) add(r);
     for (const p of m.pseudo) for (const r of p.rules) add(r, p.pseudo);
@@ -415,24 +472,26 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
       .filter(Boolean)
       .join(' ');
   const keep = input.siteVars ?? new Set<string>();
-  let container: { width: number; height: number } | undefined;
-  for (let a = input.root.p; a >= 0 && !container; a = input.snapshot.elements[a]!.p) {
-    const e = input.snapshot.elements[a]!;
-    const type = e.style['container-type'];
-    if (type && type !== 'normal') {
-      const n = (v: string | undefined) => Number.parseFloat(v ?? '0') || 0;
-      const st = e.style;
-      container = {
-        width: e.w - n(st['padding-left']) - n(st['padding-right']) - n(st['border-left-width']) - n(st['border-right-width']),
-        height: e.h - n(st['padding-top']) - n(st['padding-bottom']) - n(st['border-top-width']) - n(st['border-bottom-width']),
-      };
-    }
-  }
+  const ancestors: SnapElement[] = [];
+  for (let a = input.root.p; a >= 0; a = input.snapshot.elements[a]!.p) ancestors.push(input.snapshot.elements[a]!);
+  const nearest = ancestors.find((e) => isContainer(e, undefined));
+  const container = nearest ? contentBox(nearest) : undefined;
+  // A container inside the component answers its own queries in the preview; one outside it is not there,
+  // so its conditions are read against the box it had on the page (D-098).
+  const own = [input.root, ...input.snapshot.elements.filter((e) => e.p >= 0 && isInside(input.snapshot, e, input.root))];
+  const queried = (c: string) => {
+    const name = /^\s*(-?[_a-zA-Z][\w-]*)\s+\(/.exec(c)?.[1];
+    if (own.some((e) => isContainer(e, name))) return null;
+    return containerHolds(c, (n) => {
+      const e = ancestors.find((x) => isContainer(x, n));
+      return e ? { ...contentBox(e), inline: e.style['container-type'] === 'inline-size' } : null;
+    });
+  };
   const tags = new Set([...doc.querySelectorAll('.dse-root *')].map((e) => e.localName));
   const carried = universalCarry(
     rules.map((p) => p.rule),
     tags,
-  ).map((c) => ({ p: { key: `carry|${c.selector}`, rule: { selector: c.selector, matched: [c.selector], origin: 'regular', media: [], supports: [], declarations: c.declarations }, selectors: [c.selector] } as Placed, decls: c.declarations }));
+  ).map((c) => ({ p: { key: `carry|${c.layerRank ?? ''}|${c.selector}`, rule: { selector: c.selector, matched: [c.selector], origin: 'regular', media: [], supports: [], declarations: c.declarations, ...(c.layerRank !== undefined ? { layerRank: c.layerRank } : {}) }, selectors: [c.selector] } as Placed, decls: c.declarations }));
   const root = doc.querySelector('.dse-root')!;
   const tagsOf = (p: Placed) => {
     const out = new Set<string>();
@@ -460,7 +519,11 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
         if (code) return rule;
         // A condition is the site's text: one that could leave its block drops the rule.
         if ((p.rule.container ?? []).some((c) => /[{}<;]/.test(c))) return '';
-        for (const c of [...(p.rule.container ?? [])].reverse()) rule = `@container ${c} { ${rule} }`;
+        for (const c of [...(p.rule.container ?? [])].reverse()) {
+          const holds = queried(c);
+          if (holds === false) return '';
+          if (holds === null) rule = `@container ${c} { ${rule} }`;
+        }
         return p.rule.layerRank !== undefined ? `@layer dse-l${p.rule.layerRank} { ${rule} }` : rule;
       }),
     ]
@@ -488,7 +551,19 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
   // A computed transform of `none` is what the page applied, whatever the matched rules say (D-098).
   const shift = /^(none|matrix\(1, 0, 0, 1, [-\d.e]+, [-\d.e]+\))$/.test(input.root.style.transform ?? '');
   const ownTranslate = input.root.style.translate && input.root.style.translate !== 'none';
-  const unshift = shift || ownTranslate ? `\n.dse-root > :first-child:not(#dse-shift) { ${shift ? 'transform: none; ' : ''}${ownTranslate ? 'translate: none; ' : ''}}` : '';
+  const unshift = shift || ownTranslate ? `\n.dse-root > :first-child:not(#dse-shift) { ${shift ? 'transform: none !important; ' : ''}${ownTranslate ? 'translate: none !important; ' : ''}}` : '';
+  // An ancestor's scale drew the element smaller than it was laid out: the preview lays it out at its own size and scales it the same (D-098).
+  let scale = 1;
+  for (const e of ancestors) {
+    if (e.tag === 'body' || e.tag === 'html') break;
+    const m = /^matrix\(([^)]+)\)$/.exec(e.style.transform ?? '');
+    if (!m) continue;
+    const [a, b, c, d] = m[1]!.split(',').map(Number) as [number, number, number, number];
+    if (b !== 0 || c !== 0 || Math.abs(a - d) > 0.001 || !(a > 0)) continue;
+    scale *= a;
+  }
+  const r2 = (v: number) => Math.round(v * 100) / 100;
+  const scaled = Math.abs(scale - 1) > 0.002 && scale > 0.2 ? `\n.dse-root { height: ${h}px; }\n.dse-root > :first-child:not(#dse-shift) { width: ${r2(w / scale)}px !important; height: ${r2(h / scale)}px !important; transform: scale(${Math.round(scale * 10000) / 10000}) !important; transform-origin: 0 0 !important; }` : '';
   // The ancestors' opacity the element shows through, above a floor so a mid-entrance capture never hides it (D-098).
   let faded = 1;
   for (let a = input.root.p; a >= 0; a = input.snapshot.elements[a]!.p) {
@@ -502,7 +577,7 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
   const px = (v: string | undefined) => Number.parseFloat(v ?? '0') || 0;
   const st = input.root.style;
   const inlineLine = st.display === 'inline' ? ` line-height: ${Math.round((input.root.h - px(st['padding-top']) - px(st['padding-bottom']) - px(st['border-top-width']) - px(st['border-bottom-width'])) * 100) / 100}px !important;` : '';
-  const rootCss = `.dse-root { ${rootDecls.map((d) => `${d.name}: ${d.value};`).join(' ')}${fade} display: flex; flex-direction: column; align-items: flex-start; width: ${w}px; }\n.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: ${w}px !important; height: ${h}px !important; flex: none !important;${inlineLine}${/^(absolute|fixed|sticky)$/.test(input.root.style.position) ? ' position: relative !important; inset: auto !important;' : ''} }${boxCss}${unshift}`;
+  const rootCss = `.dse-root { ${rootDecls.map((d) => `${d.name}: ${d.value};`).join(' ')}${fade} display: flex; flex-direction: column; align-items: flex-start; width: ${w}px; }\n.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: ${w}px !important; height: ${h}px !important; flex: none !important;${inlineLine}${/^(absolute|fixed|sticky)$/.test(input.root.style.position) ? ' position: relative !important; inset: auto !important;' : ''} }${boxCss}${unshift}${scaled}`;
   const fontCss = input.fonts.faces.map((f) => `@font-face { font-family: '${f.family}'; src: url('${f.url}') format('${f.format}'); font-weight: ${f.weight}; font-style: ${f.style}; font-display: block; }`).join('\n');
   const css = [fontCss, rootCss, ruleText].filter(Boolean).join('\n');
 
