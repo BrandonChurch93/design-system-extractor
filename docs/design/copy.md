@@ -100,7 +100,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Caps caption: `Free · {runsPerDay} runs a day per visitor · up to {pageCap} pages per run · Use your own key for more`
 - Include disclosure: `Also include pages` · textarea placeholder `https://your-product.com/app/settings` · caption `Pages the crawler might not find. Same site only, up to 5.`
 - Key popover: label `Your Anthropic API key` · placeholder `sk-ant-…` · button `Save in this browser` · saved state `Key saved · Remove` · caption `Stays in this browser. Sent only with your own runs. Never stored on the server. Lifts the per-visitor limit and raises the page cap to {byoPageCap}.`
-- Showcase heading: `Showcase` · caption `Runs on sites we picked. Every run page has a share link.`
+- Showcase heading: `Showcase` · caption `Runs on sites we picked. Every run page has a share link.`, or, when the content holds at least one promoted entry (D-091), `Sites I have run it on. Yours stays private unless you share the link.`
 - Category chips: `All` · `SaaS` · `Developer tools` · `Commerce` · `Finance` · `Government` · `Media` · `Personal`
 - Showcase card stats: `{colors} colors · {typeStyles} type styles · {components} components` · checks `{passed} of {applicable} checks`
 - Footer context: `Runs on a daily budget, paused when it runs out.`
@@ -115,7 +115,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Meta after crawling: `{pages} pages · 2 viewports · {elapsed} elapsed · {stage phrase}` with stage phrases `clustering tokens` · `detecting components` · `building previews` · `running checks` · `computing drift` · `writing exports`
 - Eyebrow in progress: `Extracting`
 - Buttons: `Share` · `Run again` · `Compare` · `Export` · in progress `Cancel`
-- Stat labels: `Colors` · `Type styles` · `Spacing steps` · `Components` · `Checks passed`
+- Stat labels: `Colors` · `Type styles` · `Spacing steps` · `Components` · `Checks passed` · `Components passing`; the Components passing cell's caption `pass every check that applies` (D-096)
 - Palette label: `Palette`; swatch caption `{name} · {uses} uses`
 - Token popover: usage `{n} uses` (`1 use`) · `Seen on` with lines `{path} · {n}` · `Raw values` with lines `{value} · {n}` · `Contrast` with lines `{fg} on {bg} · {ratio}` · `Contexts` with lines `padding {padding} · margin {margin} · gap {gap}`
 - Drift headline patterns, by kind: grays `{n} grays across {pages} pages. {m} would do.` · variants `{n} variants across {k} components. {m} would do.` · spacing `{n} spacing values, {k} of them off the {base} px grid.` · type `{n} type styles where {m} would do.` · nothing to collapse `Nothing to collapse. {colors} colors, {steps} spacing steps, all on the grid.`
@@ -130,11 +130,14 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Dark theme caption: `A dark theme was detected and not extracted.`
 - Overlays: label `Overlays` · caption `Translucent colors, as a base color and an alpha.`
 - Site names (D-082): Pill `Named by the site` · provenance line `Named by {variable}` · type tags line `Found on {tags}` (tags joined by ·)
+- Easing grid (D-093): caption `Every curve runs the same distance in the same time, so the differences are the point.` · reduced motion caption `Curves are shown still because your system prefers reduced motion.` · usage line `{uses}`: at most three parts, the component types first then the pattern kinds, most used first, joined with commas and `and` (`Buttons, cards and 2 scroll reveals`, `Buttons and links`, `1 entrance`), the first word capitalized; a component type is written by its plural word below in lowercase, a pattern kind as `{n} {kind}` with the singular word at one
+- Component type plurals (usage lines): `Buttons` · `Links` · `Text inputs` · `Selects` · `Textareas` · `Checkboxes` · `Radios` · `Toggles` · `Forms` · `Nav bars` · `Headers` · `Footers` · `Breadcrumbs` · `Tabs` · `Pagination` · `Menus` · `Cards` · `List rows` · `Heroes` · `Section headers` · `Badges` · `Tags` · `Alerts` · `Toasts` · `Empty states` · `Tables` · `Code blocks` · `Modals` · `Tooltips` · `Dropdowns` · `Avatars` · `Other components`
+- Pattern kinds in usage lines, singular and plural: `entrance` · `entrances`, `scroll reveal` · `scroll reveals`, `scroll progress pattern` · `scroll progress patterns`, `scrolled header` · `scrolled headers`, `hover pattern` · `hover patterns`, `loop` · `loops`, `open pattern` · `open patterns`
 - Motion section (D-081): title `Motion` · caption `{durations} durations · {easings} easings · {keyframes} keyframes · {patterns} patterns` · empty `No transitions or animations found.` with caption `This site does not move, or its motion is driven by scripts the crawler could not observe.` · card heads `Durations` · `Easings` · `Keyframes` · `Patterns`, the Compare row words, each with its count as meta (D-090)
 - Duration role labels: `Faster` · `Fast` · `Base` · `Slow` · `Slower`
 - Easing card: value caption `{value}` · site-named caption `Named by the site`
 - Keyframes: `{n} uses` (`1 use`) · unused Pill `Unused`
-- Replay button: `Replay` · while playing `Stop` · reduced motion caption `Replay is off because your system prefers reduced motion.`
+- Replay button (pattern rows only; the easing and duration loops have no button, D-093): `Replay` · while playing `Stop` · reduced motion caption `Replay is off because your system prefers reduced motion.`
 - Pattern trigger phrases: load `On load` · in-view `When it enters the viewport at {pct}% from the bottom` · scroll `Over {range} viewport heights of scrolling` · scrolled header `After {px} px of scrolling` (D-089) · hover `On hover` · open `When it opens` · loop `Loops every {duration}`
 - Stagger phrase: `{count} items · {step} ms apart`
 - Observed tag `Observed` · observed caption `Measured at runtime. Easing not recorded; nearest token: {name}.` · inline-style duration phrase `about {ms} ms` · a measured duration `{ms} ms`
@@ -143,11 +146,14 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Component chips: `All · {n}` then `{group} · {n}` for each group with a count
 - Component card source line: `First seen on {path} · {pages} pages · {variants} variants` (singular forms `1 page`, `1 variant`)
 - Captured label: `Captured`
+- Filter chip `Passing all checks` (D-096)
+- Preview controls (D-094): StateBar chips use the State labels (`Default` · `Hover` · `Focus` · `Active` · `Open` · `Disabled`, only the states captured) · `Play` · StateBar landmark label `States` · Ground toggle label `Ground` with `Site` · `Light` · `Dark` · scale caption `Shown at {scale}×` (two decimals at most, trailing zeros dropped: `0.8×`, `0.65×`) · font caption `Font substituted: {family} was not available.`
 - Preview titles (read by screen readers): `{name} preview` · `{name} · {state} preview`
-- Check badge: `{passed} of {applicable}`
+- Check badge (D-096): `All checks` when every applicable check passes · `{passed} of {applicable} checks` otherwise · nothing when no check applies
 - Show all: `Show all {n} components`
 - Checks heading: `Automated checks`
 - Disclaimer sentence (required wherever checks are summarized): `The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.`
+- Checks opening line (D-096): `{passed} of {applicable} components pass every check that applies to them.` (`1 component passes` at one)
 - Checks summary: cells `Passed` · `Failed` · `Applicable`; caption `of {components} components × up to 5 checks`
 - Checks table headers: `Check` · `What it measures` · `Passed` · `Failing`; failing format `{component} · {detail}`; overflow button `· {n} more`; none `None`
 - Drift heading: `Drift report`; caption `Where the system is leaking, with a proposed clean set. Numbers first, proposal second, evidence last.`
@@ -158,7 +164,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Export cards: `CSS variables` / `tokens.css · {size}` · `JSON` / `tokens.json · {size}` · `Tailwind config` / `tailwind.tokens.js · {size}` · `W3C design tokens` / `tokens.w3c.json · {size}` · `Motion CSS` / `motion.css · {size}` · `Motion JSON` / `motion.json · {size}` · `design-system.md` / `For a repo's CLAUDE.md or docs · {size}` · `Prompt` / `Whole system or one component, for Claude, ChatGPT or any model`; buttons `Download` · `Copy prompt`
 - Component Default line (exports only, not UI; D-083): `Default: background {token} · text {token} · border {width} {token} · radius {value} · padding {values} · font {token} · shadow {token}` with absent parts omitted
 - MCP card: `MCP server` · caption `Claude Code and Claude Desktop read this run directly. No pasting.` · install line `claude mcp add design-system-extractor -- npx -y @design-system-extractor/mcp --run {id}` · tools caption `Tools exposed: get_tokens · list_components · get_component · get_checks · get_drift · get_prompt · get_motion`
-- Footer context: `Run {id} · cost {cost} · Haiku for naming, Sonnet for the report · How it works` and `Share link: {url}` and `Report a problem with this run` and `Show log`
+- Footer context: `Run {id} · cost {cost} · Haiku for naming, Sonnet for the report · How it works` and `Share link: {url}` and `Report a problem with this run` and `Show log`, and the live-rate line `{live} of {total} components are live previews; {captured} are captured images.` (D-095; also the last sentence of the design-system.md export's How this was made paragraph)
 - Sparse caption: `A small site. The showcase has larger systems to compare against.`
 - Login wall caption: `Only the sign-in page was public. One page, {n} components.`
 - Failed: `Something broke on our side.` / `Run {id}. This did not count toward your runs today.` / `Run again` · `Browse the showcase`
@@ -200,6 +206,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Buttons: `Open the {date} run`
 - Picker: `Pick a run to compare against` · `Paste another run link`
 - Footer: `Compare is desktop only. On a phone, open either run.`
+- Could not compare (D-092): StateCard title `We could not compare these runs.` · body `{reason}` with reasons `No run with the link {id}.` · `The {host} run of {date} could not be read.` · ghost Buttons `Open {host}`, one for each run that exists
 
 ## Recent runs
 

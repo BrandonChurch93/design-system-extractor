@@ -1,6 +1,6 @@
 # Plan
 
-Seventeen phases, P0 to P16, in order. P16 is v1.1. Each phase lists what it builds, which documents it follows, and its gate: the exit criteria that must all pass before the next phase starts. There are no time estimates anywhere in this plan; a phase takes as long as its gate takes.
+Eighteen phases, P0 to P17, in order. P16 is v1.1; P17 is v1.2. Each phase lists what it builds, which documents it follows, and its gate: the exit criteria that must all pass before the next phase starts. There are no time estimates anywhere in this plan; a phase takes as long as its gate takes.
 
 Every gate also includes, without repeating it below: the handoff consistency sweep (`docs/handoff.md`), `pnpm check` green, `pnpm qa:copy` green, `pnpm verify:all` green as far as it is wired at that phase (see `docs/specs/architecture.md`: until P8 the evals step runs `--through` the last completed stage), a local commit with a message naming the phase, and the STATUS update. From P2 on, every gate includes `pnpm qa:design` with a screenshot self-review of every page or catalog section the phase touched at 1440, 820 and 390, against `docs/design/*` and `docs/quality-bar.md`. From P6 on, every gate includes `pnpm test:security`.
 
@@ -260,6 +260,30 @@ Gate:
 - A fresh local run against one real site the owner names in `docs/specs/showcase.md` (the first roster entry that is not his own: stripe.com) produces a prompt export with a Motion section, at least one observed pattern, zero `var(--` references to undeclared names, and no numeric names; the prompt is pasted into STATUS under a heading `P16 real-site check` for the owner to read.
 - `pnpm verify:all` green; goldens updated once and logged; Definition of Done re-run in full.
 
+## P17 · The second testing round: showcase promotion, document upgrades, easings, touchable previews, check visibility
+
+Follows: `docs/specs/showcase.md` (Promoting a run), `docs/specs/data-model.md` (Upgrading stored documents, Stats, Instance, Preview, EasingToken), `docs/specs/preview-fidelity.md` (Order of render checks, Fonts substituted, Preview ground, Sizing, State files, Why previews fall back, measured), `docs/specs/capture-and-states.md` (Ground), `docs/specs/checks.md` (Per-component result), `docs/specs/exports-and-mcp.md`, `docs/evals.md`, `docs/design/pages.md`, `docs/design/components.md`, `docs/design/motion.md` (Ambient loops), `docs/design/copy.md`, `docs/deploy-runbook.md` (step 11), decisions D-091 to D-097.
+
+Build:
+
+- Merge `docs/v1-2-addendum.md` into the named documents, log its six decisions (D-091 to D-096) and the merge rulings (D-097) in `docs/decisions.md`, delete the addendum, commit (`P17 · docs merged`).
+- Showcase: `--add`, `--remove`, `--list`, the promotion rules, the runbook line, the caption variant.
+- Documents: `upgradeRunDocument` by `pipelineVersion`, the v1.0 fixture document from `0ff300f`, every read path upgrading; the confirmed root cause verified on the owner's two local runs first (a schema parse), recorded, fixed, regression tests.
+- Motion UI: EasingStage, the shared clock, the usage lines (`usedBy`), DurationStrip ticks, PatternRow auto-preview, the ambient-loop rules in `motion.md`, reduced motion, the long-task test; the catalog updated.
+- Previews: the measured investigation on three real sites at the showcase timeout with per-reason fixes, render checks core first by usage, the thresholds, `ground` capture and painting, the halo band on `messy-after`, the per-state preview files animating on load, the StateBar with pins and Play, the Ground toggle, the scale caption, the catalog, the security suite extended to the state files (still no scripts, still zero outbound requests).
+- Checks: the derived pass-all state, `componentsPassing`, the sixth stat cell, the filter, the CheckBadge restyle, the Checks section opening line, the export and MCP additions.
+- Copy, goldens (updated once and logged), traceability regenerated, README updated, CHANGELOG `1.2.0`.
+
+Gate:
+
+- `pnpm showcase --add` on a local run puts it first on the home page; `--remove` takes it down; a sparse run is refused with the stated message.
+- Compare renders the owner's two local runs (`tx4mehptdf`, a v1.0 document, and `mhxvphzzfr`, v1.1) with every row, and `/r/tx4mehptdf` renders; the v1.0 fixture document test passes; `upgradeRunDocument` is idempotent (upgrading twice equals upgrading once).
+- The Motion section loops in sync, pauses off screen, passes the long-task test, and shows the static fallback under reduced motion (Playwright asserts the dot does not move); screenshots at 1440, 820 and 390 reviewed.
+- Live rate meets the new thresholds on the three fixtures and the three real sites; the per-reason table is in STATUS; the linear.app run re-run under the visitor timeout has a checked preview (live, or captured with a reason other than `not-checked`) for every core component; the dark-band button on `messy-after` renders with no halo at 2× zoom in the screenshot review; pinning `Hover` in a live preview loads the hover file and its root reaches the recorded values after the recorded duration (Playwright reads the computed style inside the frame before and after); `pnpm test:security` passes on the state files.
+- The stat strip shows six cells at every viewport with no orphan; the `Passing all checks` filter and the restyled CheckBadge render per spec; `pnpm qa:copy` passes with the new strings.
+- Real-site check: the owner's own site, run fresh, is pasted into STATUS under `P17 real-site check` with the live-rate table, the components-passing ratio and the Compare link against its previous run.
+- `pnpm verify:all` green; Definition of Done re-run in full.
+
 ## Definition of Done
 
 All true at once, on a clean checkout, with Docker services running and `DSE_MODEL_MODE=replay`:
@@ -275,3 +299,4 @@ All true at once, on a clean checkout, with Docker services running and `DSE_MOD
 9. The working tree is clean, committed, never pushed.
 10. STATUS says `Build complete` and the owner's end list is exactly what remains.
 11. The prompt export of every fixture run contains a Motion section, a Site variables block, a Default line per component, core components before page components, and no `var(--` reference to an undeclared name.
+12. Every read path upgrades stored run documents to the current shape by their `pipelineVersion`, and Compare renders any two complete runs of any version.

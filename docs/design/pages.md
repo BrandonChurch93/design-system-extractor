@@ -8,7 +8,7 @@ Routes are Next.js App Router routes under `apps/web/app/`. Every page has a `ti
 
 1. TopNav.
 2. Headline block: `headline` "Paste a URL. Get its design system back.", the `body` subline, UrlForm, the caps caption. `space-9` top padding at desktop, `space-7` at phone.
-3. Showcase: heading row (`h2` "Showcase" left, the caption right), CategoryFilter, ShowcaseGrid of the showcase content (`docs/specs/showcase.md`), reveal entrance in viewport.
+3. Showcase: heading row (`h2` "Showcase" left, the caption right; the promoted caption variant from copy when the content holds a promoted entry, D-091), CategoryFilter, ShowcaseGrid of the showcase content (`docs/specs/showcase.md`), reveal entrance in viewport.
 4. When `BILLING_ENABLED`: PricingSection between Showcase and Footer with the `h2` "Plans". Never rendered otherwise, and no anchor, link or nav item references it when off.
 5. Footer with the home context line.
 
@@ -39,19 +39,19 @@ Sections, in order:
 1. TopNav.
 2. RunHeader. In progress, the breadcrumb line is replaced by the eyebrow "Extracting" (`label` `muted`) and the meta line follows the in-progress patterns in copy; the actions are Cancel (ghost) only. Complete: as specified in components, with the breadcrumb.
 3. StageRail (in progress only), then PagesCard (in progress only, D-058).
-4. StatStrip. In progress: cells fill as their stage lands; unknown cells show a skeleton number.
+4. StatStrip. Six cells in the one Card: Colors, Type styles, Spacing steps, Components, Checks passed (`95 of 167`) and Components passing (`20 of 30` with the caption from copy, D-096). At tablet the strip wraps to 3 + 3; at phone to 2 columns, three rows, no spanning cell. The Components passing cell links to the Components section with the `Passing all checks` filter applied. In progress: cells fill as their stage lands; unknown cells show a skeleton number.
 5. PaletteRow.
 6. DriftHeadline (lands with the drift stage; skeleton before).
 7. SectionNav, sticky from here down.
 8. **Tokens** (`h2`, caption from copy): a Color Card with TokenGroup Brand, Neutral, Semantic; then a two-column row: Type Card (TypeScaleRow list, families line) and a stack of Spacing Card (SpacingBar list), Radius Card (RadiusSample), Shadow Card (ShadowSample); a Radius or Shadow card with no tokens is left out (D-059). Breakpoints found are listed as a caption at the bottom of the Spacing Card. Dark theme detection, when present, is a caption under the Color Card. A web font that did not load is a caption under the Type Card. Overlays render as their own PaletteStrip at the bottom of the Color Card, labeled `Overlays`, with the overlays caption (D-086). Tokens that took a site name show the `Named by the site` Pill and the provenance line `Named by {variable}` in their TokenPopover (D-082, D-089).
-9. **Motion** (`h2` "Motion", caption from copy; D-081): a DurationStrip (every duration as a labeled tick on one horizontal scale, the most used marked with its role), an EasingGrid (one EasingCard per easing: the name, the value in mono, a 64 × 40 SVG of the curve, a Replay button that moves a dot across a 120 px track with that easing over the run's base duration), a KeyframesList (name, usage, a CodeBlock that expands), and a PatternList (one PatternRow per pattern: kind Pill, the selector or component name as a link to the panel when attached, trigger in words, start → end as two token-sized swatches when color or two value chips otherwise, duration and easing, `Observed` Tag when observed, a Replay button that plays start → end on the row's preview chip). Patterns with `stagger` say "{count} items · {step} ms apart". Empty: "No transitions or animations found." with the caption from copy.
-10. **Components** (`h2`, caption from copy): ComponentFilter, then, when both tiers exist, two headings "Core components" and "Page-specific components" (`h3`), each over its own ComponentGrid and "Show all" Button; the page-specific group is collapsed by default on phones, its heading a disclosure (D-085, D-089). ComponentFilter gains a `Core only` Chip, on by default when the run has more than 24 components.
-11. **Automated checks** (`h2`, caption is the disclaimer sentence): ChecksSummary, ChecksTable.
+9. **Motion** (`h2` "Motion", caption from copy; D-081): a DurationStrip (every duration as a labeled tick on one horizontal scale, the most used marked with its role, each tick's dot running its real length on the grid's shared clock), an EasingGrid (one EasingCard per easing: the name, the value in mono, the usage line, and an EasingStage where the curve and a track run on one shared clock with every other card, forever, while the section is in view; the grid caption from copy beneath; D-093), a KeyframesList (name, usage, a CodeBlock that expands), and a PatternList (one PatternRow per pattern: kind Pill, the selector or component name as a link to the panel when attached, trigger in words, start → end as two token-sized swatches when color or two value chips otherwise, duration and easing, `Observed` Tag when observed, the row's preview chip plays start → end once when the row scrolls into view, then a Replay button plays it again). Patterns with `stagger` say "{count} items · {step} ms apart". Empty: "No transitions or animations found." with the caption from copy.
+10. **Components** (`h2`, caption from copy): ComponentFilter (with the `Passing all checks` toggle Chip beside `Core only`, D-096), then, when both tiers exist, two headings "Core components" and "Page-specific components" (`h3`), each over its own ComponentGrid and "Show all" Button; the page-specific group is collapsed by default on phones, its heading a disclosure (D-085, D-089). ComponentFilter gains a `Core only` Chip, on by default when the run has more than 24 components. Cards render their previews on the component's `ground`, live previews in their frames (D-094); the CheckBadge on each card, beside the name, reads at a glance: a filled `ink` Pill with the check glyph and `All checks` when every applicable check passes, an outlined Pill `{passed} of {applicable} checks` otherwise, nothing when no check applies; it keeps its Popover with the per-check list. The `Captured` tag stays on the preview.
+11. **Automated checks** (`h2`, caption is the disclaimer sentence): the opening line from copy (`{passed} of {applicable} components pass every check that applies to them.`, D-096), ChecksSummary, ChecksTable. The section keeps its place in the order (Tokens, Motion, Components, Checks, Drift, Exports).
 12. **Drift report** (`h2`, caption from copy): the narrative paragraph (D-058), DriftNumbers, DriftProposal, VariantCollapseList (when any), EvidenceTable.
 13. **Exports** (`h2`, caption from copy): the set toggle and "Download all" row, eight ExportCards in a 3 / 2 / 1 grid (CSS variables, JSON, Tailwind config, W3C design tokens, Motion CSS, Motion JSON, design-system.md, Prompt; the Tailwind config card is always offered; eight cards leave no single-card row, D-089), the MCP ExportCard full width.
 The LiveLog (in progress) sits after Exports, above the footer.
 
-14. Footer, context line and share link from copy, plus "Report a problem with this run" (a `mailto:` to `DSE_CONTACT_EMAIL`, D-013).
+14. Footer, context line, the live-rate line (D-095) and share link from copy, plus "Report a problem with this run" (a `mailto:` to `DSE_CONTACT_EMAIL`, D-013).
 
 Breadcrumb rule for RunHeader: `is_showcase` → "Showcase / {host}"; else if the run id is in this browser's `dse_recent` → "Recent runs / {host}"; else "{host}" alone; a local run → "Local run". Breadcrumb segments before the last are links (Showcase to `/`, Recent runs to `/recent`).
 
@@ -86,6 +86,8 @@ States of the run page:
 - **Cancelled**: the header with a StateCard from copy: "This run was cancelled.", "Run again" primary, "Browse the showcase" ghost.
 - **Not found**: a StateCard "No run with that link." with "Browse the showcase".
 
+The component panel shows the PreviewFrame with its StateBar and Ground toggle above the states list; the states list stays as the record of what changed, and the StateBar is how it is seen (D-094). The panel's Checks block gets the same CheckBadge Pill at its head.
+
 The component panel: `app/r/[id]/@panel/page.tsx` is a parallel-route slot that reads `searchParams.c` and renders ComponentPanel for that component, or nothing (`@panel/default.tsx` returns null). Opening a component pushes `?c={componentId}` so a refresh or a shared link reopens the panel; closing removes it. "Open as page" goes to `/r/{id}/c/{componentId}`.
 
 ## `/r/{id}/c/{componentId}` · Component page
@@ -95,6 +97,8 @@ TopNav, the component breadcrumb from copy ("{host} / Components / {name}", the 
 ## `/compare?a={runId}&b={runId}` · Compare
 
 TopNav; header with the compare breadcrumb from copy ("{host} / Compare" for one host, "Compare" alone for two) and `title-sm` from the compare title patterns in copy; CompareModeToggle (preselected by whether the two hosts match); CompareColumns; DeltaStrip; Tokens (`h2-sm`) with TokenDiff; Motion (`h2-sm`) with a MotionDiff table, rows Durations, Easings, Keyframes and Patterns with their counts before and after (D-089); Components (`h2-sm`) with ChangeTable; two Buttons "Open the {date} run" (ghost for the first, primary for the second); Footer with the compare footer line and the compare share link.
+
+Compare never throws on a document it can upgrade (D-092). If either run cannot be loaded or upgraded, the page renders the StateCard `We could not compare these runs.` with the reason and a ghost Button `Open {host}` for each run that exists, never a blank page or a stack trace.
 
 Opened from a run page's Compare Button with only one run known (`?a={runId}`): the page shows CompareColumns with the known run on the left and a picker on the right: a list of the visitor's recent runs of the same host first, then of other hosts, each a RecentRunRow with a "Compare" Button; or an Input "Paste another run link".
 

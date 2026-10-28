@@ -44,6 +44,8 @@ Proves: components map to recognizable names, library-style selectors scope corr
 
 The messy site with roughly half of its drift fixed: grays reduced from 14 to 9, the off-grid spacing kept, two button variants collapsed, two of the five planted failures fixed, and a toast and a stepper component added. It exists so `pnpm db:seed:fixtures` yields six showcase entries (no orphan grid rows) and so the Compare page has a real before-and-after pair on one host. It has no `expected.json` thresholds; the Compare e2e test asserts the expected deltas (grays 14 → 9, two new components, one collapsed variant pair, checks passed increasing by exactly the two fixes).
 
+Since v1.2 it also carries the halo material (D-094): a dark-ground section, a `#0B0D10` band holding a rounded primary button and a card, so a preview on a dark ground can be seen with no halo. It is not scored, so no `expected.json` or eval recording is re-derived; its extra recordings are re-recorded with `scripts/record-extra.ts messy-after`, and its seed, its showcase entry, the goldens that show it and the Compare e2e's expected deltas are re-checked and updated once if the band changes them, logged in STATUS.
+
 ## expected.json
 
 ```
@@ -87,7 +89,7 @@ Computed by `pnpm evals` into `fixtures/results.json` with a per-fixture row:
 - **State capture rate**: captured states / expected states, over matched components.
 - **Check accuracy**: planted failures found / planted; planted passes not flagged / planted. Both must be 100%.
 - **Drift recall**: planted findings found / planted; **false drift**: findings on `expectNone` fixtures (must be 0; raw-spread evidence rows are not findings).
-- **Preview live rate**: live components / components. On the How it works page this is shown as "Live previews" with the counts, "38 of 46". A component listed under `previews.captured` (the messy fixture's planted promo card) must come out captured with that reason, or the metric fails.
+- **Preview live rate**: live components / components. On the How it works page this is shown as "Live previews" with the counts, "38 of 46". A component listed under `previews.captured` (the messy fixture's planted promo card) must come out captured with that reason, or the metric fails. On a real site (the P17 real-site check, not an eval fixture) the rate is counted over the components whose preview was checked, `not-checked` excluded with its count stated (D-095).
 - **Selection exactness**: selected pages equal expected pages.
 - **Motion** (v1.1): duration and easing token recall (by value, and by name where `expected.json` names it); keyframes recall by name; pattern recall with kind and trigger type exact, duration within ±40 ms and the `observed` flag exact; hover delta completeness over the planted properties, each carrying its transition timing; outline-noise entries (outline entries on a planted `outline: none` element) must be 0.
 - **Naming** (v1.1): site-variable naming over the planted variables; tokens named by a hashed variable (must be 0); overlay split (every expected overlay found with its base and alpha, and no translucent value in the palette); type role names against the `name` of each `tokens.type` entry, with no token named `other`; variant names on the planted pairs; component and variant names ending in a digit (must be 0); tier assignment against `tiers`. Fallback names are scored by `pnpm evals --fallback`; tiers are not, since a fallback run never merges clusters by name across pages and tiers follow that merge (D-090).
@@ -100,7 +102,7 @@ Computed by `pnpm evals` into `fixtures/results.json` with a per-fixture row:
 | clean | 1.00 / 0.98 | 0.95 / 0.95 | 0.95 | 0.95 | 100% · 100% | n/a · 0 | 0.90 |
 | messy | 0.97 / 0.98 | 0.90 / 0.90 | 0.90 | 0.90 | 100% · 100% | 100% · n/a | 0.85 |
 | tailwind | 0.98 / 0.96 | 0.92 / 0.90 | 0.90 | 0.90 | 100% · 100% | n/a · 0 | 0.90 |
-| css-in-js | 0.96 / 0.95 | 0.88 / 0.87 | 0.85 | 0.90 | 100% · 100% | n/a · 0 | 0.75 |
+| css-in-js | 0.96 / 0.95 | 0.88 / 0.87 | 0.85 | 0.90 | 100% · 100% | n/a · 0 | 0.85 |
 | library | 0.99 / 0.97 | 0.95 / 0.93 | 0.90 | 0.90 | 100% · 100% | n/a · 0 | 0.90 |
 
 Motion, naming and export integrity (v1.1), on every fixture where the column applies (a fixture without the planted item reports n/a):
@@ -119,9 +121,17 @@ Motion, naming and export integrity (v1.1), on every fixture where the column ap
 | Export variable resolution | 100% | 100% | 100% | 100% | 100% |
 | Tiers | match | match | match | match | match |
 
+Live rate (v1.2, D-095): at least 85% on the clean, tailwind and css-in-js fixtures, keeping the existing floor where it is already higher (clean and tailwind stay at 0.90; css-in-js rises from 0.75 to 0.85). On real sites, at least 70% on each of the three sites of the P17 real-site check, counted over the checked components, with the per-reason counts pasted into STATUS; a real site below 70% passes only when every remaining captured preview on it has a named cause that `preview-fidelity.md` (Why previews fall back, measured) lists as out of scope (a background video, a canvas, a third-party embed), with the counts.
+
 The site names of the tailwind (its `@theme` variables), css-in-js (its `--c-*` variables) and library (Bulma's `--bulma-*`) fixtures are expected too: they are the sites' own names. The library's planted pair is its pagination links, `Outlined wide` and `Outlined tight` (D-052).
 
 Selection exactness is 100% on all five. The `pnpm evals` command fails if any cell is below its floor. With `--through <stage>` it scores only the metrics available up to that stage (selection through `capture`; tokens through `tokens`; components, variants and states through `components`; live rate through `previews`; checks through `checks`; drift through `drift`) and reports the rest as not yet measured. The How it works page shows the current numbers from `results.json`, never these floors.
+
+## Document upgrades and the Motion loops (v1.2)
+
+- `packages/pipeline/test/fixtures/runs/clean-v1-0.json` is a complete v1.0 document of the clean fixture, produced by checking out `0ff300f` in a worktree and running the clean fixture through it in replay (D-092). `upgradeRunDocument` is tested against it (the result parses as `RunDocumentComplete`, upgrading twice equals upgrading once, component token references still resolve), and against every v1.0 document in the local database by `pnpm runs:parse --all`.
+- The seed stores that document as the complete run `seedv10cln` (its storage files are the clean seed run's, copied under its id), and a Playwright test opens Compare with it against `seedclean0` and asserts every row renders, the Motion rows included, which read `0` for the old run; `/r/seedv10cln` renders.
+- The catalog has a sample run with 12 easings (no fixture has more than seven), and a Playwright test asserts no long task over 50 ms while the grid loops with all 12, that the loops pause off screen, that every card's animations share one start time, and that under reduced motion the dot does not move.
 
 ## Visual regression
 

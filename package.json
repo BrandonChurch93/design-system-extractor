@@ -37,6 +37,7 @@
     "doctor": "node scripts/run.mjs tsx scripts/doctor.ts",
     "prompts:build": "node scripts/run.mjs tsx scripts/prompts-build.ts",
     "fixtures:runs": "node scripts/run.mjs tsx scripts/fixture-runs.ts",
+    "runs:parse": "node scripts/run.mjs tsx scripts/runs-parse.ts",
     "db:seed:check": "node scripts/run.mjs tsx scripts/db-seed-fixtures.ts --if-missing",
     "qa:billing": "node scripts/run.mjs playwright test --config playwright.billing.config.ts",
     "soak": "node scripts/run.mjs node --expose-gc --import tsx scripts/soak.ts",

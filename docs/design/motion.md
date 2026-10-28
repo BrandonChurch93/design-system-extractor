@@ -69,6 +69,17 @@ Navigating between runs: the new page's header wipes in; sections below reveal a
 - Chip select: ground and text swap over `motion-fast`; the chip does not move.
 - Row hover: the tint ground extends from the left over `motion-fast`; the hairline below hides.
 
+## Ambient loops
+
+The Motion section shows a site's easings and durations as loops that run on their own, because one short replay is over before the eye registers it and one curve at a time gives nothing to compare against (D-093). They are the one place the app moves without a cause from the reader, and they follow these rules:
+
+- **Shared clock.** Every loop in the EasingGrid and the DurationStrip is created with the same `startTime` on `document.timeline`, so no two drift apart however long the page is open.
+- **Equal distance, equal time.** Each easing travels the same distance in 1,400 ms, one direction only, never `alternate` (which would play an ease-out as an ease-in on the way back). Each duration tick runs its real length, capped at the 1,400 ms travel.
+- **Hold and reset.** After the travel the dots hold at the end for 500 ms, fade out over 150 ms, reset, fade in over 150 ms and run again.
+- **Pause off screen.** An IntersectionObserver pauses every loop when the section leaves the viewport and resumes it on the shared clock when it returns.
+- **Compositor only.** Loops animate `transform` and `opacity` and nothing else, so they run on the compositor and cost the main thread nothing; a test holds the page to no long task over 50 ms while twelve easings loop.
+- **Reduced motion.** Under `prefers-reduced-motion: reduce` no loop runs: each curve is drawn still with its dot at 60% of the time and the track dot at the matching position, and the caption from copy says why.
+
 ## Reduced motion
 
 `prefers-reduced-motion: reduce` collapses every move to a 200 ms opacity change, stops the count (numbers appear at their value), stops the stagger, and keeps layout animations instant. The in-progress page still fills stage by stage; it just does not perform. Implementation (D-039): an element that moves on first paint carries `data-move`, and a reduced-motion stylesheet rule removes its transform and clip and fades it in over 200 ms, because its variants are rendered on the server before the preference is known; elements that mount later (a toast, a sheet, a menu, a poll's new content) read the preference in JavaScript and use opacity-only variants.
@@ -76,7 +87,7 @@ Navigating between runs: the new page's header wipes in; sections below reveal a
 ## Performance rules
 
 - Movement and reveals animate only `transform`, `opacity`, `clip-path`, and `stroke-dashoffset`. Hover and focus may also change colors over `motion-fast`: `color`, `background-color`, `border-color`, `outline-color`, `text-decoration-color` and `box-shadow`; the opened card's ring is the one color keyframe, `outline-color` fading over `motion-slow` (D-078). `height` is animated only through Motion `layout` on regions, never on list items.
-- A Replay on the run page (EasingCard, PatternRow) plays a site's own motion: the dot moves by `transform`, and a pattern's preview chip plays the pattern's own properties inside its 40 × 40 chip, once, on the reader's click. It is the subject being shown, not the chrome moving, and it respects reduced motion like everything else (D-089).
+- A pattern's preview chip on the run page (PatternRow) plays a site's own motion: the pattern's own properties inside its 40 × 40 chip, once when the row scrolls into view and again on the reader's Replay (D-093). The easing loops follow Ambient loops above. A state file in a PreviewFrame plays the component's own recorded transition when the reader pins a state (D-094). It is the subject being shown, not the chrome moving, and it respects reduced motion like everything else (D-089).
 - `will-change` is set by Motion and GSAP, never by hand.
 - No animation runs on an element that is off screen.
 - The page must hold 60 fps on a mid-range laptop with 46 component cards revealing. Measure in P11 with the Chrome performance trace; drop the stagger cap, not the moves, if it does not.

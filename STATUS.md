@@ -10,15 +10,32 @@ None.
 
 ## Current phase
 
-Build complete. v1.1 (P16 · Fidelity: motion, site variables, naming, export integrity) passed its gate and the Definition of Done in full on a fresh clone on 2026-10-27. v1.0 (P0 to P15) passed on 2026-10-26.
+P17 · Second testing round (v1.2): showcase promotion, document upgrades, easings, touchable previews, check visibility. In progress: docs merged (D-091 to D-097), the root cause verified (D-092), the baseline preview measurement on three real sites running.
+
+v1.1 (P16) passed its gate and the Definition of Done on 2026-10-27; v1.0 (P0 to P15) on 2026-10-26.
 
 ## Next action
 
-None. The build is complete; what remains is the owner's list at the end of this file. A future session starts from `docs/plan.md` and this file as usual.
-
-P16 in short: the addendum merged into the documents (D-081 to D-089) and deleted; schema; capture's motion pass and state diff; site variables, overlays, type role words, breakpoint twins and motion tokens; component tiers, slugs, context names, third words and motion; reset filtering; motion drift; `motion.css`, `motion.json` and the export rewrite with variable resolution; MCP `get_motion`; CLI formats; eval rows for motion, naming and export integrity; the fixtures' v1.1 layer; the web app's Motion section, overlays strip, site names, tiers and Core only, panel Motion block, eight export cards, Compare's Motion table and catalog entries; the stripe.com check. The build's own rulings are D-090.
+Build P17 in the order of the plan below: the upgrade path first (step 2), then the baseline live-rate table once the three background runs finish (step 5), then the rest.
 
 Environment note: the repository sits on an iCloud-synced Desktop and macOS evicts files (`ls -lO` shows `dataless`); a read then blocks while iCloud downloads. `find . -type f -flags +dataless -print0 | xargs -0 cat > /dev/null` brings them back.
+
+### P17 plan
+
+Read for P17: CLAUDE.md, STATUS, decisions D-001 to D-090, handoff, plan, the v1.2 addendum, partner.md, partner-log.md, and every document it amends (showcase, data-model, preview-fidelity, capture-and-states, checks, exports-and-mcp, evals, pages, components, motion, copy, runbook, glossary).
+
+1. Docs merged (done): D-091 to D-096 (the addendum's six, in its order) and D-097 (merge rulings); the addendum deleted; `pnpm runs:parse` added and the root cause verified on `tx4mehptdf` and `mhxvphzzfr` (447 issues and a clean parse, recorded in D-092).
+2. Upgrade (`packages/pipeline/src/upgrade.ts` new, `version.ts` to 1.2.0, `apps/web/lib/server/runs.ts`, `apps/web/app/compare/page.tsx` and CompareView's StateCard, `apps/web/components/open/OpenView.tsx`, `packages/mcp/src/index.ts`, `packages/cli/src/index.ts`): the v1.0 fixture document from `0ff300f` in a worktree (`packages/pipeline/test/fixtures/runs/clean-v1-0.json`); tests: `upgrade.test.ts` (complete parse, idempotent, references resolve, roles recomputed, slugs unique), `pnpm runs:parse --all` clean after upgrade, the seed's `seedv10cln`, e2e Compare v1.0 against v1.1 with Motion rows at 0, `/r/tx4mehptdf` and Compare on the owner's two runs.
+3. Schema (`packages/schema/src/run-document.ts`, `showcase.ts`, `labels.ts`, a shared `checkCounts`): `usedBy`, `ground`, `Preview.ground`, `fontsSubstituted`, `stats.previews`, `stats.componentsPassing`, `promoted`. Tests: schema and labels.
+4. Showcase (`scripts/showcase/index.ts`, `plan.ts`): `--add`, `--remove`, `--list`, local and `--remote`; tests in `scripts/test/showcase*.test.ts` (first card, renumbering, sparse and incomplete refusals, orphan warning, retention through the sync, remote paths against the stub). Home caption variant.
+5. Previews, measured: the baseline table (three real sites at 15 min, before any builder change) into STATUS; classify every captured result by cause (a `scripts/previews-inspect.ts` mode for real runs); per-cause handling in `previews/build.ts`; the masked font comparison; the CSS cap measured; render check order core first by usage (`stages/previews.ts`); `stats.previews` and the event line; re-run and record.
+6. Ground and state files (`capture/states.ts`, `capture/crop` and the instance writer, `stages/capture.ts`, `components` stage, `previews/build.ts`, `previews/render-check`): ground sampling and the 4 px painted margin; transparent preview documents with the ground painted by the app and the check; state files with generated keyframes and no `!important`; the security suite on state files; the halo band on `messy-after` with its extra recordings, seed and goldens.
+7. Web, previews (`PreviewFrame`, `StateBar` new, Ground toggle, scale caption, ComponentCard ground, panel): catalog entries; e2e: pinning Hover reaches the recorded values after the recorded duration.
+8. Motion UI (`apps/web/components/run/motion/*`: EasingStage new, EasingGrid clock, EasingCard, DurationStrip, PatternRow auto-preview, ReplayButton for patterns only; `components/motion.ts` `usedBy`): catalog sample with 12 easings; e2e: long tasks, shared start, pause off screen, reduced motion still.
+9. Checks (`checkCounts` shared, `stats.componentsPassing`, StatStrip sixth cell, ComponentFilter `Passing all checks`, CheckBadge restyle, ChecksSection opening line, exports `Checks:` line and rule, MCP `passedAll`): tests and goldens.
+10. Copy (`strings.ts` from copy.md), qa:copy; evals thresholds (css-in-js 0.85) and the live-rate floor on the three fixtures.
+11. Screenshot review at 1440, 820, 390 (Motion, components, panel, stat strip, Compare, home), goldens updated once and logged; axe.
+12. Real-site check: modernsoftworks.com fresh through the queue, with the live-rate table, components passing and the Compare link against `mhxvphzzfr`; linear.app at the visitor timeout with every core component checked; traceability, README, CHANGELOG 1.2.0, verify:all on a fresh clone, the Definition of Done (twelve items).
 
 ### P16 plan
 
@@ -244,6 +261,16 @@ a { text-decoration: none; }
 
 ## Phase checklist
 
+P17 gate (docs/plan.md):
+
+- [ ] `pnpm showcase --add` on a local run puts it first on the home page; `--remove` takes it down; a sparse run is refused with the stated message.
+- [ ] Compare renders `tx4mehptdf` (v1.0) against `mhxvphzzfr` (v1.1) with every row; `/r/tx4mehptdf` renders; the v1.0 fixture document test passes; `upgradeRunDocument` is idempotent.
+- [ ] The Motion section loops in sync, pauses off screen, passes the long-task test, and is still under reduced motion (Playwright: the dot does not move); screenshots at 1440, 820, 390 reviewed.
+- [ ] Live rate meets the thresholds on clean, tailwind and css-in-js and on the three real sites; the per-reason table below; linear.app at the visitor timeout has every core component checked; the `messy-after` dark-band button has no halo at 2× zoom; pinning Hover reaches the recorded values after the recorded duration; `pnpm test:security` passes on the state files.
+- [ ] The stat strip shows six cells at every viewport with no orphan; the `Passing all checks` filter and the restyled CheckBadge render per spec; `pnpm qa:copy` passes.
+- [ ] Real-site check: modernsoftworks.com fresh, pasted under `P17 real-site check` with the live-rate table, components passing and the Compare link against `mhxvphzzfr`.
+- [ ] `pnpm verify:all` green; goldens updated once and logged; Definition of Done re-run in full (twelve items).
+
 P16 gate (docs/plan.md):
 
 - [x] `pnpm evals` passes every threshold in `docs/evals.md` including the new rows: final live (record) run 55 of 55, replay 55 of 55, fallback 55 of 55 (2026-10-27).
@@ -314,6 +341,14 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 ## Decisions made during this build
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
+
+- D-097 · Rulings from merging the v1.2 addendum: ids and the 1.2.0 upgrade step, the showcase entry's shape and `promoted`, the upgrade on every read path including MCP `--run` and CLI `serve`, Compare's StateCard reasons, `usedBy` with counts, the EasingStage's two animations and 2,200 ms cycle, the duration tick's path, shadowed crops keep their margin, the Ground toggle's two app grounds, reduced motion in state files, `fontsSubstituted` as a list, `checkCounts` in the schema, the previews event words, `seedv10cln`, stripe.com as the third real site.
+- D-096 · Check results are a component-level metric and a monochrome mark (D-003 and D-018 stand).
+- D-095 · Live rate is measured per reason, render checks run core first by usage, and real sites have thresholds.
+- D-094 · Previews render on the source element's ground and expose state pins.
+- D-093 · Easings are shown as synchronized ambient loops.
+- D-092 · Every read path upgrades stored run documents by their pipeline version; the root cause verified by a parse (447 issues on `tx4mehptdf`, clean on `mhxvphzzfr`, and on all 18 v1.0 documents in the local database).
+- D-091 · The owner promotes runs to the showcase.
 
 - D-090 · Rulings from building v1.1: type role words and order, motion reads (grouping, gaps, stagger of three, loop ends, one pattern per element across viewports, instant timings make no duration), naming made deterministic where it decides structure (context in both model calls, badge and tag by the rule, notices merged by their box before and after naming, page segments read as words), export variable resolution found on stripe.com (theme values, chains, fallbacks, literal tokens.json, runtime properties left out with a comment), preview reset carry and box model, UI wording (card heads, graded type names, staggered duration roles, shared Replay caption, overlays ground), skeleton heights, QA (sampled readings masked, the catalog compared section by section), capture stopping both workers on a failure, the real-site prompt excerpted in STATUS.
 - D-089 · Rulings from merging the v1.1 addendum: ids, pointers, the freeze stays before states, delays are not durations, pattern fields, Motion before Breakpoints, `toggle` in the tier list, fallback, variant and type words, site names per kind, BreakpointToken, opaque contrast pairs, eight rail rings and export cards, Compare's Motion card, copy labels, hashed names.
@@ -444,6 +479,7 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-28 · Session started · P17 · read CLAUDE.md, STATUS, decisions (D-001 to D-090), handoff, plan, the v1.2 addendum, partner.md, partner-log.md, showcase, data-model, preview-fidelity, capture-and-states, checks, exports-and-mcp, pages, components, motion, copy, evals, the runbook's step 11, glossary · tree reconciled (`apps/web/next-env.d.ts` rewritten by the dev server, restored; the addendum and prompts/v1-2.md committed by the Partner in `6b25fc6`) · `pnpm check` green.
 - 2026-10-27 · Build complete · v1.1 · the Definition of Done is green on a fresh clone; nothing pushed.
 - 2026-10-27 · Gate passed · P16 · evals 55 of 55 live, replay and fallback, stripe.com check, screenshot review, verify:all on a fresh clone.
 - 2026-10-27 · Session continued (after compaction) · P16 · re-read CLAUDE.md, STATUS, decisions D-081 to D-089, plan P16, motion-capture, pages, components, copy, component-detection, model-calls · first live recording: 53 of 55 rows, naming variance on tailwind and css-in-js, fixed by D-090's deterministic rules.

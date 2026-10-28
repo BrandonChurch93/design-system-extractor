@@ -121,6 +121,14 @@ git push
 
 Open the home page; the showcase is live. Read through two or three runs on your phone.
 
+To publish any run you did yourself:
+
+```
+env DOTENV_FILE=.env.production.local pnpm showcase --add <runId> --remote
+```
+
+The run must be complete and not sparse; add `--category <name>` when the site is not in the roster. `--remove <runId> --remote` takes it down, and `--list --remote` shows what is listed (D-091).
+
 When the build checked the roster (STATUS, P13 dry run), modernsoftworks.com answered every request with Hostinger's 403 page, so the script replaced it with an alternate. Once the site serves pages again, put it back without re-running the rest:
 
 ```

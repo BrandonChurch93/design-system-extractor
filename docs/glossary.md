@@ -6,7 +6,7 @@ Use these names exactly, in code, docs, copy and commit messages. A concept with
 
 - **Run** · one extraction of one site at one moment. Has an id, a status, and a run document. URL `/r/{runId}`.
 - **Run id** · 10 characters, lowercase letters and digits, generated with nanoid from the alphabet `0123456789abcdefghijklmnopqrstuvwxyz`. Unguessable; this is the only access control on a run in v1.
-- **Run document** · the full result of a run as served by `GET /api/runs/{id}`: pages, tokens, components, checks, drift, cost, status. Partial while running.
+- **Run document** · the full result of a run as served by `GET /api/runs/{id}`: pages, tokens, components, checks, drift, cost, status. Partial while running. Stored in the shape of the build that wrote it (`pipelineVersion`) and **upgraded** to the current shape on every read (D-092).
 - **Site** · the host that was crawled, normalized (`www.` stripped, lowercase, no port for 80/443).
 - **Page** · one URL captured during a run, at both viewports.
 - **Page candidate** · a URL discovered during crawl that may be selected as a page. Never shortened to "candidate" in a document that also discusses elements.
@@ -28,11 +28,15 @@ Use these names exactly, in code, docs, copy and commit messages. A concept with
 - **Instance** · one occurrence of a component on one page: selector, bounding box, viewport.
 - **Provenance** · a component's source data: first-seen page, pages with counts, selector, bounding box, viewport, crop. The panel section that shows it is named "Source".
 - **Preview** · the visual shown for a component: `live` (sanitized re-render) or `captured` (the crop). See `docs/specs/preview-fidelity.md`.
+- **Ground** · the effective background a component's instance sat on, captured as hex and painted behind its preview so it shows on its own ground (D-094).
+- **State file** · a live component's `preview-{state}.html`, which plays that state's recorded transition on load; the **StateBar** pins one (D-094).
+- **Live rate** · live previews over previews; on a real site, over the previews that were checked (D-095).
+- **Passing all checks** · a component whose every applicable check passed; the run's count is `componentsPassing` (D-096).
 - **Check** · one of five measurements: `contrast`, `focus-visible`, `tap-target`, `label`, `reduced-motion`. Status `pass`, `fail`, `na`. The run page section is headed "Automated checks" and its nav label is "Checks"; the drift section is headed "Drift report" with the nav label "Drift".
 - **Drift** · findings about leakage in a site's system: near-duplicate tokens, off-grid values, collapsible variants, plus a proposed clean set and a narrative.
 - **Proposed set** · the clean tokens the drift report derives. Exports default to it; the raw set is one switch away.
 - **Export** · a generated file or text: `tokens.css`, `tokens.json`, `tailwind.tokens.js`, `tokens.w3c.json`, `motion.css`, `motion.json`, `design-system.md`, the prompt, the zip.
-- **Showcase** · the owner-curated runs listed on the home page. See `docs/specs/showcase.md`.
+- **Showcase** · the owner-curated runs listed on the home page: the roster's, and any run he **promotes** with `pnpm showcase --add` (D-091). See `docs/specs/showcase.md`.
 - **Recent runs** · the visitor's own runs, remembered in their browser only.
 - **Compare** · two runs side by side. Same site over time, or two sites.
 - **Blocked** · a run that could not proceed: `bot`, `login`, `unreachable`, `robots`, `budget`, `busy`, `visitor-cap`, `invalid-url`, `private-address`. A blocked run never counts against the visitor cap.

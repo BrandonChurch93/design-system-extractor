@@ -52,6 +52,10 @@ Detail strings: pass `Stops under reduced motion` · fail `Animation still runs 
 
 When a measurement could not be taken (no focus capture because the capture cap was hit, no mobile instance), the check is `na` with detail `Not measured: capture cap` or the na string above. Never a pass.
 
+## Per-component result
+
+A component passes all checks when every applicable check passed; a component with no applicable check is excluded from the ratio (D-096). This is derived from `components[].checks` by `checkCounts` (`apps/web/lib/doc.ts`, and the same counting in the pipeline and the MCP server, one function in `packages/schema`), never stored per component, because `checks` is an array of results. The stored addition is the run-level `stats.componentsPassing: { passed, applicable }`, written with the other stats. The CheckBadge, the `Passing all checks` filter, the stat strip's Components passing cell, the Checks section's opening line, `list_components`' `passedAll` and the exports' `Checks:` line all read this one rule.
+
 ## Per-run summary
 
 `checks.summary = { passed, failed, applicable, total }` where `total` is `components × 5` and `applicable` excludes `na`. `checks.byCheck` lists per check: the check id, passed, applicable, and the failing component names with their detail, the worst 8 by measured shortfall; the full list for any check is derived in the app from `components[].checks`, which carries every result. The stat strip's "Checks passed" and the stats column `checksApplicable` use `applicable`.
