@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.2.0 · 2026-10-28
+
+The second testing round: runs from any version open, easings you can see, previews you can play with, and the check results up front.
+
+- Showcase: `pnpm showcase --add <runId>`, `--remove` and `--list`, locally or `--remote`, put any complete run the owner made on the home page without re-crawling; a promoted run is the first card and is never deleted; the caption says so.
+- Stored runs: every read path (the run page and its API, Compare, /open, the MCP server, the CLI) upgrades a document written by an earlier build to the current shape by its pipeline version, so v1.0 and v1.1 runs open and compare. Compare shows a StateCard, never an error page, for a run it cannot read. `pnpm runs:parse` checks the local database.
+- Motion: the easings run on one shared clock, curve and track side by side, the same distance in the same time, so the differences between curves are what you see; each easing names what uses it; duration ticks run their real length; patterns preview themselves when they scroll into view. Still under reduced motion.
+- Previews: every preview sits on the ground its element sat on, so a dark site's button has no halo; crops keep 4 px around the element, painted with that ground; elements below the 8,000 px screenshot cut get their own crops; a substituted font alone no longer demotes a preview; variable fonts up to 1 MB are copied; render checks run core components first, by use. The panel pins a state (each state's file plays the site's own transition), plays Default, Hover, Active, and switches the ground between the site's, light and dark. Previews scaled to fit say by how much.
+- Measured: every run counts its previews by mode and reason, and the live log says why the rest were captured.
+- Checks up front: a Components passing cell in the stat strip, a Passing all checks filter, a filled All checks mark on every component that passes every check that applies, the ratio in words at the head of the Checks section, `passedAll` in the MCP server, and a `Checks:` line on every component in design-system.md and the prompt. Monochrome, as everything else.
+- Security: a state value that would leave its rule or its style element is refused.
+
 ## 1.1.0 · 2026-10-27
 
 Fidelity: what a rebuild needs to feel like the original, not only look like it.

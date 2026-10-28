@@ -39,7 +39,7 @@ Sections, in order:
 1. TopNav.
 2. RunHeader. In progress, the breadcrumb line is replaced by the eyebrow "Extracting" (`label` `muted`) and the meta line follows the in-progress patterns in copy; the actions are Cancel (ghost) only. Complete: as specified in components, with the breadcrumb.
 3. StageRail (in progress only), then PagesCard (in progress only, D-058).
-4. StatStrip. Six cells in the one Card: Colors, Type styles, Spacing steps, Components, Checks passed (`95 of 167`) and Components passing (`20 of 30` with the caption from copy, D-096). At tablet the strip wraps to 3 + 3; at phone to 2 columns, three rows, no spanning cell. The Components passing cell links to the Components section with the `Passing all checks` filter applied. In progress: cells fill as their stage lands; unknown cells show a skeleton number.
+4. StatStrip. Six cells in the one Card: Colors, Type styles, Spacing steps, Components, Checks passed (`95 of 167`) and Components passing (`20 of 30` with the caption from copy, D-096). At tablet the strip wraps to 3 + 3; at phone to 2 columns, three rows, no spanning cell. The Components passing cell links to the Components section's filter row (`#components-passing`) with the `Passing all checks` filter applied. In progress: cells fill as their stage lands; unknown cells show a skeleton number.
 5. PaletteRow.
 6. DriftHeadline (lands with the drift stage; skeleton before).
 7. SectionNav, sticky from here down.
