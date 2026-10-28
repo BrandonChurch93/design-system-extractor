@@ -163,8 +163,8 @@ describe('the preview builder', () => {
     const snapshot = snap([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'div', parent: 0, box: [0, 0, 200, 100] }, { tag: 'img', parent: 1, cls: ['avatar'], box: [8, 8, 48.4, 32], style: { 'border-top-left-radius': '50%' } }]);
     const out = buildPreview({ markup: '<div data-dse-id="e1"><img class="avatar" data-dse-id="e2" src="https://cdn.example/a.png" alt="Ada"><video width="120" height="60"></video></div>', vars: {}, snapshot, root: snapshot.elements[1]!, matched: {}, imageColors: { e2: 'rgb(120, 96, 80)' }, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy });
     expect(out.markup).toBe(
-      '<div><span aria-hidden="true" style="display: inline-block; width: 48px; height: 32px; border-radius: 50%; background: rgb(120, 96, 80); vertical-align: middle" class="avatar"></span>' +
-        '<span aria-hidden="true" style="display: inline-block; width: 120px; height: 60px; border-radius: 0px; background: #E5E5E5; vertical-align: middle"></span></div>',
+      '<div><span aria-hidden="true" style="display: inline-block; width: 48px; height: 32px; border-radius: 50%; background: rgb(120, 96, 80); background-origin: border-box; vertical-align: middle" class="avatar"></span>' +
+        '<span aria-hidden="true" style="display: inline-block; width: 120px; height: 60px; border-radius: 0px; background: #E5E5E5; background-origin: border-box; vertical-align: middle"></span></div>',
     );
   });
 

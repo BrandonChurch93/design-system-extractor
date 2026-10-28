@@ -32,7 +32,13 @@ export async function openRenderSession(browser: Browser, storageBase: string): 
  * Loads a preview at the instance's size plus the pad, paints its ground behind the transparent
  * document as the app's frame does (D-094), and screenshots its root.
  */
-export async function renderPreview(s: RenderSession, url: string, size: { w: number; h: number }, ground?: string): Promise<Buffer | null> {
+/**
+ * `place`: the element's fractional place on the page and the span the reference crop covers, so the
+ * render starts where the page's pixels do (the crop begins on a whole device pixel, D-098).
+ */
+export type Placement = { phase: { x: number; y: number }; clip: { w: number; h: number } };
+
+export async function renderPreview(s: RenderSession, url: string, size: { w: number; h: number }, ground?: string, place?: Placement): Promise<Buffer | null> {
   await s.page.setViewportSize({ width: Math.max(1, Math.ceil(size.w + RENDER_PAD * 2)), height: Math.max(1, Math.ceil(size.h + RENDER_PAD * 2)) });
   try {
     await s.page.goto(url, { waitUntil: 'load', timeout: 15_000 });
@@ -40,6 +46,14 @@ export async function renderPreview(s: RenderSession, url: string, size: { w: nu
     await s.page.evaluate(() => document.fonts.ready.then(() => true)).catch(() => true);
     const root = s.page.locator('.dse-root');
     if ((await root.count()) === 0) return null;
+    if (place && (place.phase.x > 0 || place.phase.y > 0)) {
+      await s.page.addStyleTag({ content: `.dse-root { position: relative; left: ${place.phase.x}px; top: ${place.phase.y}px; }` });
+      const o = await root.evaluate((el) => {
+        const r = el.getBoundingClientRect();
+        return { x: r.left - Number.parseFloat(getComputedStyle(el).left || '0'), y: r.top - Number.parseFloat(getComputedStyle(el).top || '0') };
+      });
+      return await s.page.screenshot({ type: 'png', animations: 'disabled', caret: 'hide', timeout: 10_000, clip: { x: o.x, y: o.y, width: place.clip.w, height: place.clip.h } });
+    }
     return await root.screenshot({ type: 'png', animations: 'disabled', caret: 'hide', timeout: 10_000 });
   } catch {
     return null;

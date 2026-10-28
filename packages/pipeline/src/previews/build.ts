@@ -45,7 +45,8 @@ const resetValue = /^(inherit|unset|initial|revert|revert-layer)$/i;
 const resetProps = new Set(['box-sizing', '-webkit-tap-highlight-color']);
 const universal = /^(\*|\*::?before|\*::?after|::?before|::?after)$/;
 
-const keepDecl = (d: MatchedRule['declarations'][number]) => !resetValue.test(d.value.trim()) && !resetProps.has(d.name.toLowerCase()) && d.name.toLowerCase() !== 'all';
+// A custom property set to `initial` stops inheritance, so it is never a reset to drop (D-098).
+const keepDecl = (d: MatchedRule['declarations'][number]) => d.name.startsWith('--') || (!resetValue.test(d.value.trim()) && !resetProps.has(d.name.toLowerCase()) && d.name.toLowerCase() !== 'all');
 export const isUniversal = (rule: MatchedRule) => {
   const parts = splitSelectorList(rule.selector);
   return parts.length > 0 && parts.every((s) => universal.test(s.trim()));
@@ -107,7 +108,13 @@ export function universalCarry(rules: MatchedRule[], tags: Set<string>): { selec
  * is only the element's size, so `8vw` would otherwise read against it (D-098). Preview CSS only; the
  * exported code keeps the site's units.
  */
-export function viewportUnits(value: string, vp: { width: number; height: number }): string {
+export function viewportUnits(value: string, vp: { width: number; height: number }, container?: { width: number; height: number }): string {
+  // Container units take the nearest container's content box, else the small viewport, as the spec falls back.
+  const cq = container ?? vp;
+  value = value.replace(/(-?\d*\.?\d+)(cqw|cqi|cqh|cqb|cqmin|cqmax)\b/g, (_, n: string, unit: string) => {
+    const base = unit === 'cqw' || unit === 'cqi' ? cq.width : unit === 'cqh' || unit === 'cqb' ? cq.height : unit === 'cqmin' ? Math.min(cq.width, cq.height) : Math.max(cq.width, cq.height);
+    return `${Math.round(((Number(n) * base) / 100) * 100) / 100}px`;
+  });
   return value.replace(/(-?\d*\.?\d+)(d|s|l)?(vw|vh|vmin|vmax)\b/g, (_, n: string, _k: string | undefined, unit: string) => {
     const base = unit === 'vw' ? vp.width : unit === 'vh' ? vp.height : unit === 'vmin' ? Math.min(vp.width, vp.height) : Math.max(vp.width, vp.height);
     return `${Math.round(((Number(n) * base) / 100) * 100) / 100}px`;
@@ -194,7 +201,7 @@ export function withPlaceholders(markup: string, snapshot: Snapshot, imageColors
     const h = snap ? Math.round(snap.h) : Number(el.getAttribute('height')) || 0;
     const radius = snap?.style['border-top-left-radius'] ?? '0px';
     const fill = imageUrls[d] ? `url('${imageUrls[d]}') center / 100% 100% no-repeat ${imageColors[d] ?? '#E5E5E5'}` : (imageColors[d] ?? '#E5E5E5');
-    span.setAttribute('style', `display: inline-block; width: ${w}px; height: ${h}px; border-radius: ${radius}; background: ${fill}; vertical-align: middle`);
+    span.setAttribute('style', `display: inline-block; width: ${w}px; height: ${h}px; border-radius: ${radius}; background: ${fill}; background-origin: border-box; vertical-align: middle`);
     if (d) span.setAttribute('data-dse-id', d);
     for (const c of el.getAttribute('class')?.split(/\s+/).filter(Boolean) ?? []) span.classList.add(c);
     el.replaceWith(span);
@@ -224,6 +231,17 @@ export function withPlaceholders(markup: string, snapshot: Snapshot, imageColors
     }
     for (const a of ['class', 'fill', 'stroke', 'style']) if (use.getAttribute(a) && !node.getAttribute(a)) node.setAttribute(a, use.getAttribute(a)!);
     use.replaceWith(node);
+  }
+  // A presentation attribute reading a custom property takes the value the page computed (D-098).
+  // Walked, not queried: jsdom's selector engine misses a parenthesis inside an attribute value.
+  for (const el of [...doc.querySelectorAll('[fill], [stroke]')].filter((e) => /var\(/.test(`${e.getAttribute('fill') ?? ''}${e.getAttribute('stroke') ?? ''}`))) {
+    const snap = snapshot.byDse.get(el.getAttribute('data-dse-id') ?? '');
+    for (const a of ['fill', 'stroke'] as const) {
+      if (!el.getAttribute(a)?.includes('var(')) continue;
+      const v = snap?.style[a];
+      if (v) el.setAttribute(a, v);
+      else el.removeAttribute(a);
+    }
   }
   // An unclosed window stays reachable after the run (D-075), so the caller closes it.
   return { html: doc.querySelector('.dse-root')!.innerHTML, doc, close: () => dom.window.close() };
@@ -335,7 +353,9 @@ type Placed = { key: string; rule: MatchedRule; selectors: string[]; pseudo?: st
 function mergeInOrder(lists: Placed[][]): Placed[] {
   const out: Placed[] = [];
   const index = new Map<string, Placed>();
-  for (const list of lists) {
+  for (const all of lists) {
+    // A rule the page loads twice (one CSS module in two sheets) sits where its last copy does in the cascade (D-098).
+    const list = all.filter((p, i) => all.findLastIndex((q) => q.key === p.key) === i);
     for (let i = 0; i < list.length; i++) {
       const p = list[i]!;
       const have = index.get(p.key);
@@ -386,7 +406,7 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
       .map((d) => {
         const s = sanitizeDeclaration(d.name, d.value, policy);
         if (!s) return null;
-        if (!code) return `${s.name}: ${input.viewport ? viewportUnits(s.value, input.viewport) : s.value}${d.important ? ' !important' : ''};`;
+        if (!code) return `${s.name}: ${input.viewport ? viewportUnits(s.value, input.viewport, container) : s.value}${d.important ? ' !important' : ''};`;
         // A custom property is code only when the exports declare it; every other is resolved where it is used.
         if (s.name.startsWith('--') && !keep.has(s.name)) return null;
         const value = resolveVars(s.value, input.vars, keep);
@@ -395,6 +415,19 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
       .filter(Boolean)
       .join(' ');
   const keep = input.siteVars ?? new Set<string>();
+  let container: { width: number; height: number } | undefined;
+  for (let a = input.root.p; a >= 0 && !container; a = input.snapshot.elements[a]!.p) {
+    const e = input.snapshot.elements[a]!;
+    const type = e.style['container-type'];
+    if (type && type !== 'normal') {
+      const n = (v: string | undefined) => Number.parseFloat(v ?? '0') || 0;
+      const st = e.style;
+      container = {
+        width: e.w - n(st['padding-left']) - n(st['padding-right']) - n(st['border-left-width']) - n(st['border-right-width']),
+        height: e.h - n(st['padding-top']) - n(st['padding-bottom']) - n(st['border-top-width']) - n(st['border-bottom-width']),
+      };
+    }
+  }
   const tags = new Set([...doc.querySelectorAll('.dse-root *')].map((e) => e.localName));
   const carried = universalCarry(
     rules.map((p) => p.rule),
@@ -442,7 +475,7 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
   const from = parent ?? input.root;
   const rootDecls = [
     ...inherited.map((prop) => (from.style[prop] ? sanitizeDeclaration(prop, from.style[prop], policy) : null)).filter(Boolean),
-    ...Object.entries(input.vars).map(([n, v]) => sanitizeDeclaration(n, v, policy)).filter(Boolean),
+    ...Object.entries(input.vars).map(([n, v]) => sanitizeDeclaration(n, input.viewport ? viewportUnits(v, input.viewport, container) : v, policy)).filter(Boolean),
   ] as { name: string; value: string }[];
   // The element keeps the exact box it had on the page, whatever the page's layout gave it.
   const w = Math.round(input.root.w * 100) / 100;
@@ -452,10 +485,24 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
   const borderBox = inside.length > 0 && inside.filter((e) => e.style['box-sizing'] === 'border-box').length * 2 > inside.length;
   const boxCss = borderBox ? '\n.dse-root *, .dse-root *::before, .dse-root *::after { box-sizing: border-box; }' : '';
   // The box was measured with the element's own translation applied, so the preview does not apply it again (D-098).
-  const shift = /^matrix\(1, 0, 0, 1, [-\d.e]+, [-\d.e]+\)$/.test(input.root.style.transform ?? '');
+  // A computed transform of `none` is what the page applied, whatever the matched rules say (D-098).
+  const shift = /^(none|matrix\(1, 0, 0, 1, [-\d.e]+, [-\d.e]+\))$/.test(input.root.style.transform ?? '');
   const ownTranslate = input.root.style.translate && input.root.style.translate !== 'none';
   const unshift = shift || ownTranslate ? `\n.dse-root > :first-child:not(#dse-shift) { ${shift ? 'transform: none; ' : ''}${ownTranslate ? 'translate: none; ' : ''}}` : '';
-  const rootCss = `.dse-root { ${rootDecls.map((d) => `${d.name}: ${d.value};`).join(' ')} display: flex; flex-direction: column; align-items: flex-start; width: ${w}px; }\n.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: ${w}px !important; height: ${h}px !important; flex: none !important;${/^(absolute|fixed|sticky)$/.test(input.root.style.position) ? ' position: relative !important; inset: auto !important;' : ''} }${boxCss}${unshift}`;
+  // The ancestors' opacity the element shows through, above a floor so a mid-entrance capture never hides it (D-098).
+  let faded = 1;
+  for (let a = input.root.p; a >= 0; a = input.snapshot.elements[a]!.p) {
+    const e = input.snapshot.elements[a]!;
+    if (e.tag === 'body' || e.tag === 'html') break;
+    const o = Number.parseFloat(e.style.opacity ?? '1');
+    if (Number.isFinite(o)) faded *= o;
+  }
+  const fade = faded < 0.999 && faded >= 0.2 ? ` opacity: ${Math.round(faded * 1000) / 1000};` : '';
+  // An inline root's box is its content area: blockified, it takes that height as its line height (D-098).
+  const px = (v: string | undefined) => Number.parseFloat(v ?? '0') || 0;
+  const st = input.root.style;
+  const inlineLine = st.display === 'inline' ? ` line-height: ${Math.round((input.root.h - px(st['padding-top']) - px(st['padding-bottom']) - px(st['border-top-width']) - px(st['border-bottom-width'])) * 100) / 100}px !important;` : '';
+  const rootCss = `.dse-root { ${rootDecls.map((d) => `${d.name}: ${d.value};`).join(' ')}${fade} display: flex; flex-direction: column; align-items: flex-start; width: ${w}px; }\n.dse-root > :first-child { margin: 0 !important; box-sizing: border-box !important; width: ${w}px !important; height: ${h}px !important; flex: none !important;${inlineLine}${/^(absolute|fixed|sticky)$/.test(input.root.style.position) ? ' position: relative !important; inset: auto !important;' : ''} }${boxCss}${unshift}`;
   const fontCss = input.fonts.faces.map((f) => `@font-face { font-family: '${f.family}'; src: url('${f.url}') format('${f.format}'); font-weight: ${f.weight}; font-style: ${f.style}; font-display: block; }`).join('\n');
   const css = [fontCss, rootCss, ruleText].filter(Boolean).join('\n');
 

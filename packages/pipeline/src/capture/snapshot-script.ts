@@ -88,6 +88,8 @@ export const styleProps = [
   // Where an ancestor clips the element, the render check compares the part that shows (D-098).
   'overflow-x',
   'overflow-y',
+  // Container query units resolve against the nearest container (D-098).
+  'container-type',
 ] as const;
 
 /** Longhands the freeze removes, so they are kept from the snapshot taken before it (capture-and-states.md, 2b). */

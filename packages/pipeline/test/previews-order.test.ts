@@ -2,7 +2,7 @@ import { PNG } from 'pngjs';
 import { describe, expect, it } from 'vitest';
 import { cropShot, paintMargin, pixelAt, shotExtent, type Shot } from '../src/components/crop';
 import { bandRegions } from '../src/stages/capture';
-import { buildPreview } from '../src/previews/build';
+import { buildPreview, viewportUnits } from '../src/previews/build';
 import { reasonWords, renderOrder, visibleBox } from '../src/stages/previews';
 import { snap } from './helpers/snap';
 
@@ -80,5 +80,32 @@ describe('what the render check compares (D-098)', () => {
     expect(out.css).toContain('.dse-root > :first-child:not(#dse-shift) { transform: none; }');
     const turned = snap([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'div', parent: 0, box: [10, 10, 120, 44], style: { transform: 'matrix(0.7, 0.7, -0.7, 0.7, 0, 0)' } }]);
     expect(buildPreview({ markup: '<div data-dse-id="e1">Go</div>', vars: {}, snapshot: turned, root: turned.elements[1]!, matched: {}, imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy: { storageBase: 'https://store.example/dse' } }).css).not.toContain('dse-shift');
+  });
+
+  it('places a rule the page loads twice where its last copy sits, so a media override after it still wins', () => {
+    const s = snap([{ tag: 'body', box: [0, 0, 400, 300] }, { tag: 'div', parent: 0, box: [10, 10, 120, 44] }]);
+    const rule = (selector: string, decl: [string, string], media: string[] = []) => ({ selector, matched: [selector], origin: 'regular', media, supports: [], declarations: [{ name: decl[0], value: decl[1], important: false }] });
+    const base = rule('.root', ['padding-top', '460px']);
+    const small = rule('.root', ['padding-top', '284px'], ['(max-width: 640px)']);
+    const out = buildPreview({ markup: '<div class="root" data-dse-id="e1">Go</div>', vars: {}, snapshot: s, root: s.elements[1]!, matched: { e1: { rules: [base, small, base, small], inline: [], pseudo: [] } }, imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy: { storageBase: 'https://store.example/dse' } });
+    expect(out.rules.indexOf('padding-top: 460px')).toBeLessThan(out.rules.indexOf('padding-top: 284px'));
+  });
+
+  it("gives an inline root its content height as line height, carries its ancestors' opacity, and reads var() in svg attributes", () => {
+    const s = snap([
+      { tag: 'body', box: [0, 0, 400, 300] },
+      { tag: 'div', parent: 0, box: [0, 0, 400, 300], style: { opacity: '0.8' } },
+      { tag: 'span', parent: 1, box: [10, 10, 60, 20], style: { display: 'inline', 'padding-top': '2px', 'padding-bottom': '2px' } },
+      { tag: 'svg', parent: 2, box: [10, 10, 16, 16], style: { fill: 'rgb(16, 185, 129)' } },
+    ]);
+    const out = buildPreview({ markup: '<span data-dse-id="e2">Go<svg data-dse-id="e3" fill="var(--color-green)"></svg></span>', vars: {}, snapshot: s, root: s.elements[2]!, matched: {}, imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy: { storageBase: 'https://store.example/dse' } });
+    expect(out.css).toContain('line-height: 16px !important;');
+    expect(out.css).toMatch(/\.dse-root \{[^}]*opacity: 0\.8;/);
+    expect(out.markup).toContain('fill="rgb(16, 185, 129)"');
+  });
+
+  it('resolves container query units against the nearest container', () => {
+    expect(viewportUnits('calc(50cqw - 8px)', { width: 1440, height: 900 }, { width: 1300, height: 600 })).toBe('calc(650px - 8px)');
+    expect(viewportUnits('10cqh', { width: 1440, height: 900 })).toBe('90px');
   });
 });

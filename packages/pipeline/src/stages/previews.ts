@@ -9,7 +9,7 @@ import type { RunContext } from '../context';
 import { buildPreview, statePreview, type PreviewDoc } from '../previews/build';
 import { IMAGE_CAP_BYTES, LIVE_MAX_DIFF_PCT } from '../previews/constants';
 import { FontCopier, fontsFor } from '../previews/fonts';
-import { diffPercent, maskBoxes, openRenderSession, renderPreview, textBoxes, type RenderSession } from '../previews/render';
+import { diffPercent, maskBoxes, openRenderSession, renderPreview, textBoxes, type Placement, type RenderSession } from '../previews/render';
 import type { CssPolicy } from '../previews/sanitize';
 import { keys } from '../storage/keys';
 import type { CaptureOutput } from './capture';
@@ -73,8 +73,10 @@ function referenceCrop(it: Item, shown: { x: number; y: number; w: number; h: nu
 }
 
 /** The render cut to the part of the element the page shows, in the render's own coordinates. */
-function cutRender(png: Buffer, it: Item, shown: { x: number; y: number; w: number; h: number }): Buffer | null {
-  return cropShot({ png, width: Math.round(it.el.w * 100) / 100, height: it.el.h }, { x: shown.x - it.el.x, y: shown.y - it.el.y, w: shown.w, h: shown.h });
+function cutRender(png: Buffer, it: Item, shown: { x: number; y: number; w: number; h: number }, place?: Placement): Buffer | null {
+  const px = place && (place.phase.x > 0 || place.phase.y > 0) ? place : null;
+  const origin = { x: it.el.x - (px?.phase.x ?? 0), y: it.el.y - (px?.phase.y ?? 0) };
+  return cropShot({ png, width: px ? px.clip.w : Math.round(it.el.w * 100) / 100, height: px ? px.clip.h : it.el.h }, { x: shown.x - origin.x, y: shown.y - origin.y, w: shown.w, h: shown.h });
 }
 
 function fontsUsed(it: Item): { family: string; weights: number[] }[] {
@@ -129,10 +131,13 @@ async function previewFor(ctx: RunContext, it: Item, htmlKey: string, existing: 
   const doc = buildPreview({ markup: markup.html, vars: markup.vars, snapshot: it.snapshot, root: it.el, matched, imageColors, imageUrls, fonts, policy, siteVars, viewport: viewportSize[it.viewport] });
   if (doc.tooLarge) return { preview: { ...existing, ground, mode: 'captured', capturedReason: 'css-too-large' }, doc, fonts: fonts.mode };
   await ctx.files.put(htmlKey, doc.html, { contentType: 'text/html; charset=utf-8' });
-  const rendered = await renderPreview(session, ctx.files.publicUrl(htmlKey), { w: it.el.w, h: it.el.h }, ground);
+  // The crop of the page starts on a whole device pixel at or before the element; the render starts there too (D-098).
+  const frac = (v: number) => (v * 2 - Math.floor(v * 2)) / 2;
+  const place = it.revealed ? undefined : { phase: { x: frac(it.el.x), y: frac(it.el.y) }, clip: { w: (Math.ceil((it.el.x + it.el.w) * 2) - Math.floor(it.el.x * 2)) / 2, h: (Math.ceil((it.el.y + it.el.h) * 2) - Math.floor(it.el.y * 2)) / 2 } };
+  const rendered = await renderPreview(session, ctx.files.publicUrl(htmlKey), { w: it.el.w, h: it.el.h }, ground, place);
   const shown = it.revealed ? null : visibleBox(it);
   const clipped = shown && (shown.x > it.el.x + 0.5 || shown.y > it.el.y + 0.5 || shown.w < it.el.w - 0.5 || shown.h < it.el.h - 0.5);
-  const shot = rendered && clipped ? cutRender(rendered, it, shown) : rendered;
+  const shot = rendered && clipped ? cutRender(rendered, it, shown, place) : rendered;
   const ref = referenceCrop(it, clipped ? shown : null);
   const diffPct = shot && ref ? diffPercent(shot, ref) : 100;
   const size = { width: Math.round(it.el.w), height: Math.round(it.el.h) };
