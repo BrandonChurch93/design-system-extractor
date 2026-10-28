@@ -28,9 +28,9 @@
 .m-feature-card-scroll-reveal-start { opacity: 0; transform: translateY(16px); }
 .m-feature-card-scroll-reveal-end { opacity: 1; transform: none; transition: opacity var(--duration-240) var(--ease-out-quart), transform var(--duration-240) var(--ease-out-quart); }
 
-/* add .m-scroll-reveal-end when it enters the viewport at 30% from the bottom · observed · easing not recorded, nearest token suggested: ease-out-quad · about 400 ms */
+/* add .m-scroll-reveal-end when it enters the viewport at 30% from the bottom · observed · easing not recorded, nearest token suggested: ease-out-quad · about 383 ms */
 .m-scroll-reveal-start { opacity: 0.04; transform: translateY(15.4px); }
-.m-scroll-reveal-end { opacity: 1; transform: translateY(0px); transition: opacity 400ms var(--ease-out-quad), transform 400ms var(--ease-out-quad); }
+.m-scroll-reveal-end { opacity: 1; transform: translateY(0px); transition: opacity 383ms var(--ease-out-quad), transform 383ms var(--ease-out-quad); }
 
 /* add .m-site-header-scrolled-header-end after 400 px of scrolling */
 .m-site-header-scrolled-header-start { box-shadow: none; }

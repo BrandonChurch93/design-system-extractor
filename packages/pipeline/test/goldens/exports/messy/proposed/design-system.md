@@ -334,7 +334,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Pill link
+### Release notes link
 
 Link · 1 variant: Default
 States captured: Default, Hover, Focus, Active
@@ -457,7 +457,7 @@ input { font: inherit; color: inherit; }
 .checkbox { appearance: none; flex: 0 0 auto; width: 44px; height: 44px; margin: 0px -12px; border: 0px; border-radius: var(--radius-sm); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect x='0.5' y='0.5' width='19' height='19' rx='3.5' fill='%23FFFFFF' stroke='%230B1F3A'/%3E%3C/svg%3E") center center no-repeat transparent; cursor: pointer; }
 ```
 
-### Text area
+### Textarea
 
 Textarea · 1 variant: Default
 States captured: Default, Hover, Focus, Active
@@ -718,7 +718,7 @@ States captured: Default
 Tokens used: overlay-black-4 (background-color), color-gray-900 (color), space-16 (padding-left), type-body (font)
 Motion: none
 Checks: 0 of 1
-- Contrast AA · fail · 4.3:1 on gray-50b, needs 4.5:1
+- Contrast AA · fail · 4.3:1 on gray-surface, needs 4.5:1
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -787,7 +787,7 @@ Motion: none
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
 ```html
-<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: url('http://localhost:4400/messy/runs/evalmessy0/components/f83pxouf/img-e58.png') center / 100% 100% no-repeat rgb(215, 221, 229); vertical-align: middle" class="avatar"></span>
+<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: url('http://localhost:4400/messy/runs/evalmessy0/components/f83pxouf/img-e58.png') center / 100% 100% no-repeat rgb(215, 221, 229); background-origin: border-box; vertical-align: middle" class="avatar"></span>
 ```
 
 ```css
@@ -846,7 +846,7 @@ a { color: var(--color-blue-600b); text-decoration: none; }
 .crumb-current { color: var(--color-blue-900); }
 ```
 
-### Plan tabs
+### Feature tabs
 
 Tabs · 1 variant: Default
 States captured: Default
@@ -974,7 +974,7 @@ a { color: var(--color-blue-600b); text-decoration: none; }
 .btn-primary { background: var(--color-blue-600); color: var(--color-gray-50); }
 ```
 
-### Empty state
+### Not found state
 
 Empty state · 1 variant: Default
 States captured: Default
@@ -1013,7 +1013,7 @@ States captured: Default
 Tokens used: color-gray-900 (color), type-body-xs (font)
 Motion: none
 Checks: all pass
-- Contrast AA · pass · 15.1:1 on gray-50b
+- Contrast AA · pass · 15.1:1 on gray-surface
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -1058,7 +1058,7 @@ pre { margin: 0px; margin: 0px; margin: 0px; }
 .code-block { padding: var(--space-16) var(--space-24); border-radius: var(--radius-sm); background: var(--color-blue-900); color: var(--color-gray-50); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; line-height: 22px; overflow-x: auto; }
 ```
 
-### Resources menu
+### Resources dropdown
 
 Dropdown · 1 variant: Default
 States captured: Default
@@ -1120,7 +1120,7 @@ a { color: var(--color-blue-600b); text-decoration: none; }
 
 Proposed set: 16 colors, 11 spacing steps, 8 type styles, 9 durations, 6 easings. Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.
 
-The palette carries 14 grays where nine would do, and nine of them sit within ΔE 6.0 of a neighbor. Two spacing values, 10 and 18, sit off the 4 px grid, on 12 pages. Three type styles differ by 1 px or less in size or line height. The proposed set folds the grays into nine steps, brings spacing to 11 steps and merges the near-duplicate type styles into eight. Every pair of text and background keeps its contrast ratio.
+The palette carries 14 grays where nine would do, and nine of them sit within ΔE 6.0 of a neighbor. Two spacing values, 10 and 18, sit off the 4 px grid, on 12 pages. Three type styles differ by 1 px or less in size or line height, so nine styles could be eight. The proposed set folds the grays into nine steps, maps the off-grid spacing values to their nearest steps and merges the near-duplicate type styles. Every pair of text and background keeps its contrast ratio.
 
 ## How this was made
 

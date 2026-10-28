@@ -18,11 +18,11 @@ You are building an interface that must match this design system exactly.
   --color-gray-800: #353535;
   --color-gray-500: #737373;
   --color-gray-100: #EBEBEB;
-  --color-gray-500b: #868686;
-  --color-gray-50b: #F5F5F5;
+  --color-gray-border: #868686;
+  --color-gray-surface: #F5F5F5;
   --color-gray-400: #B1B1B1;
-  --color-gray-300b: #C4C4C4;
-  --color-gray-400b: #9E9E9E;
+  --color-gray-300-soft: #C4C4C4;
+  --color-gray-400-soft: #9E9E9E;
   --color-success: #15803D;
   --color-danger: #DC2626;
   --color-warning: #F59E0B;
@@ -262,7 +262,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Pill link
+### Release notes link
 
 Link. Variants: Default.
 States: Default, Hover, Focus, Active.
@@ -349,7 +349,7 @@ input { font: inherit; color: inherit; }
 .checkbox { appearance: none; flex: 0 0 auto; width: 44px; height: 44px; margin: 0px -12px; border: 0px; border-radius: var(--radius-sm); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect x='0.5' y='0.5' width='19' height='19' rx='3.5' fill='%23FFFFFF' stroke='%230B1F3A'/%3E%3C/svg%3E") center center no-repeat transparent; cursor: pointer; }
 ```
 
-### Text area
+### Textarea
 
 Textarea. Variants: Default.
 States: Default, Hover, Focus, Active.
@@ -379,7 +379,7 @@ Checks: all pass
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
-.site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-500b); transition: box-shadow var(--duration-160) var(--ease-out-quad); }
+.site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-border); transition: box-shadow var(--duration-160) var(--ease-out-quad); }
 .container { max-width: 1120px; margin: 0px auto; padding: 0px var(--space-24); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-32); height: 72px; }
 a { color: var(--color-blue-600b); text-decoration: none; }
@@ -392,13 +392,13 @@ a { color: var(--color-blue-600b); text-decoration: none; }
 button { font: inherit; color: inherit; }
 .dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 svg { display: block; }
-.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300-soft); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
 .header-actions { display: flex; align-items: center; gap: var(--space-10); }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-ghost { background: transparent; color: var(--color-blue-900); }
 .btn-primary { background: var(--color-blue-600); color: var(--color-gray-50); }
 .menu-button { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0px; border-radius: var(--radius-sm); background: transparent; color: var(--color-blue-900); cursor: pointer; }
-.mobile-menu { border-top: 1px solid var(--color-gray-500b); padding: var(--space-8) 0px var(--space-16); }
+.mobile-menu { border-top: 1px solid var(--color-gray-border); padding: var(--space-8) 0px var(--space-16); }
 ```
 
 ### Site footer
@@ -470,7 +470,7 @@ a { color: var(--color-blue-600b); text-decoration: none; }
 button { font: inherit; color: inherit; }
 .dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 svg { display: block; }
-.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300-soft); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
 ```
 
 ### Feature card
@@ -578,7 +578,7 @@ Default: text color-gray-900 · font type-body
 Motion: none
 Checks: all pass
 
-### Plan tabs
+### Feature tabs
 
 Tabs. Variants: Default.
 States: Default.
@@ -613,7 +613,7 @@ Default: background color-gray-50 · text color-blue-900 · border 1px color-suc
 Motion: none
 Checks: all pass
 
-### Empty state
+### Not found state
 
 Empty state. Variants: Default.
 States: Default.
@@ -640,12 +640,12 @@ Default: background color-blue-900 · text color-gray-50 · radius radius-sm · 
 Motion: none
 Checks: all pass
 
-### Resources menu
+### Resources dropdown
 
 Dropdown. Variants: Default.
 States: Default.
-Tokens: color-gray-50 for background-color, color-gray-900 for color, color-gray-300b for border-color, radius-lg for border-radius, space-8 for padding-top, space-8 for padding-right, space-8 for padding-bottom, space-8 for padding-left, type-body for font, shadow-md for box-shadow.
-Default: background color-gray-50 · text color-gray-900 · border 1px color-gray-300b · radius radius-lg · padding space-8 space-8 space-8 space-8 · font type-body · shadow shadow-md
+Tokens: color-gray-50 for background-color, color-gray-900 for color, color-gray-300-soft for border-color, radius-lg for border-radius, space-8 for padding-top, space-8 for padding-right, space-8 for padding-bottom, space-8 for padding-left, type-body for font, shadow-md for box-shadow.
+Default: background color-gray-50 · text color-gray-900 · border 1px color-gray-300-soft · radius radius-lg · padding space-8 space-8 space-8 space-8 · font type-body · shadow shadow-md
 Motion: none
 Checks: all pass
 
@@ -653,8 +653,8 @@ Checks: all pass
 
 Dropdown. Variants: Default.
 States: Default.
-Tokens: color-gray-900 for color, color-gray-500b for border-color, space-8 for padding-top, space-16 for padding-bottom, type-body for font.
-Default: text color-gray-900 · border 1px color-gray-500b · padding space-8 0px space-16 0px · font type-body
+Tokens: color-gray-900 for color, color-gray-border for border-color, space-8 for padding-top, space-16 for padding-bottom, type-body for font.
+Default: text color-gray-900 · border 1px color-gray-border · padding space-8 0px space-16 0px · font type-body
 Motion: none
 Checks: all pass
 

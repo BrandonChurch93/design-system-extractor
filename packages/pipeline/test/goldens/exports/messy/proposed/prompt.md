@@ -248,7 +248,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Pill link
+### Release notes link
 
 Link. Variants: Default.
 States: Default, Hover, Focus, Active.
@@ -335,7 +335,7 @@ input { font: inherit; color: inherit; }
 .checkbox { appearance: none; flex: 0 0 auto; width: 44px; height: 44px; margin: 0px -12px; border: 0px; border-radius: var(--radius-sm); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect x='0.5' y='0.5' width='19' height='19' rx='3.5' fill='%23FFFFFF' stroke='%230B1F3A'/%3E%3C/svg%3E") center center no-repeat transparent; cursor: pointer; }
 ```
 
-### Text area
+### Textarea
 
 Textarea. Variants: Default.
 States: Default, Hover, Focus, Active.
@@ -564,7 +564,7 @@ Default: text color-gray-900 · font type-body
 Motion: none
 Checks: all pass
 
-### Plan tabs
+### Feature tabs
 
 Tabs. Variants: Default.
 States: Default.
@@ -599,7 +599,7 @@ Default: background color-gray-50 · text color-blue-900 · border 1px color-suc
 Motion: none
 Checks: all pass
 
-### Empty state
+### Not found state
 
 Empty state. Variants: Default.
 States: Default.
@@ -626,7 +626,7 @@ Default: background color-blue-900 · text color-gray-50 · radius radius-sm · 
 Motion: none
 Checks: all pass
 
-### Resources menu
+### Resources dropdown
 
 Dropdown. Variants: Default.
 States: Default.

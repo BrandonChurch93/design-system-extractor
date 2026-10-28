@@ -20,11 +20,11 @@ This design system was extracted from localhost:4100 across 12 pages. It holds 2
 | gray-800 | #353535 | neutral | 72 |
 | gray-500 | #737373 | neutral | 36 |
 | gray-100 | #EBEBEB | neutral | 34 |
-| gray-500b | #868686 | neutral | 25 |
-| gray-50b | #F5F5F5 | neutral | 6 |
+| gray-border | #868686 | neutral | 25 |
+| gray-surface | #F5F5F5 | neutral | 6 |
 | gray-400 | #B1B1B1 | neutral | 8 |
-| gray-300b | #C4C4C4 | neutral | 4 |
-| gray-400b | #9E9E9E | neutral | 2 |
+| gray-300-soft | #C4C4C4 | neutral | 4 |
+| gray-400-soft | #9E9E9E | neutral | 2 |
 | success | #15803D | semantic | 18 |
 | danger | #DC2626 | semantic | 12 |
 | warning | #F59E0B | semantic | 2 |
@@ -130,11 +130,11 @@ This design system was extracted from localhost:4100 across 12 pages. It holds 2
   --color-gray-800: #353535;
   --color-gray-500: #737373;
   --color-gray-100: #EBEBEB;
-  --color-gray-500b: #868686;
-  --color-gray-50b: #F5F5F5;
+  --color-gray-border: #868686;
+  --color-gray-surface: #F5F5F5;
   --color-gray-400: #B1B1B1;
-  --color-gray-300b: #C4C4C4;
-  --color-gray-400b: #9E9E9E;
+  --color-gray-300-soft: #C4C4C4;
+  --color-gray-400-soft: #9E9E9E;
   --color-success: #15803D;
   --color-danger: #DC2626;
   --color-warning: #F59E0B;
@@ -354,7 +354,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Pill link
+### Release notes link
 
 Link · 1 variant: Default
 States captured: Default, Hover, Focus, Active
@@ -477,7 +477,7 @@ input { font: inherit; color: inherit; }
 .checkbox { appearance: none; flex: 0 0 auto; width: 44px; height: 44px; margin: 0px -12px; border: 0px; border-radius: var(--radius-sm); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect x='0.5' y='0.5' width='19' height='19' rx='3.5' fill='%23FFFFFF' stroke='%230B1F3A'/%3E%3C/svg%3E") center center no-repeat transparent; cursor: pointer; }
 ```
 
-### Text area
+### Textarea
 
 Textarea · 1 variant: Default
 States captured: Default, Hover, Focus, Active
@@ -550,7 +550,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
-.site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-500b); transition: box-shadow var(--duration-160) var(--ease-out-quad); }
+.site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-border); transition: box-shadow var(--duration-160) var(--ease-out-quad); }
 .container { max-width: 1120px; margin: 0px auto; padding: 0px var(--space-24); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-32); height: 72px; }
 a { color: var(--color-blue-600b); text-decoration: none; }
@@ -563,13 +563,13 @@ a { color: var(--color-blue-600b); text-decoration: none; }
 button { font: inherit; color: inherit; }
 .dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 svg { display: block; }
-.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300-soft); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
 .header-actions { display: flex; align-items: center; gap: var(--space-10); }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-ghost { background: transparent; color: var(--color-blue-900); }
 .btn-primary { background: var(--color-blue-600); color: var(--color-gray-50); }
 .menu-button { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; border: 0px; border-radius: var(--radius-sm); background: transparent; color: var(--color-blue-900); cursor: pointer; }
-.mobile-menu { border-top: 1px solid var(--color-gray-500b); padding: var(--space-8) 0px var(--space-16); }
+.mobile-menu { border-top: 1px solid var(--color-gray-border); padding: var(--space-8) 0px var(--space-16); }
 ```
 
 ### Site footer
@@ -694,7 +694,7 @@ a { color: var(--color-blue-600b); text-decoration: none; }
 button { font: inherit; color: inherit; }
 .dropdown-trigger { display: inline-flex; align-items: center; gap: var(--space-4); height: 44px; padding: 0px var(--space-12); border: 0px; border-radius: var(--radius-sm); background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 svg { display: block; }
-.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300-soft); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
 ```
 
 ### Feature card
@@ -738,7 +738,7 @@ States captured: Default
 Tokens used: overlay-black-4 (background-color), color-gray-900 (color), space-16 (padding-left), type-body (font)
 Motion: none
 Checks: 0 of 1
-- Contrast AA · fail · 4.3:1 on gray-50b, needs 4.5:1
+- Contrast AA · fail · 4.3:1 on gray-surface, needs 4.5:1
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -807,7 +807,7 @@ Motion: none
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
 ```html
-<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: url('http://localhost:4400/messy/runs/evalmessy0/components/f83pxouf/img-e58.png') center / 100% 100% no-repeat rgb(215, 221, 229); vertical-align: middle" class="avatar"></span>
+<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: url('http://localhost:4400/messy/runs/evalmessy0/components/f83pxouf/img-e58.png') center / 100% 100% no-repeat rgb(215, 221, 229); background-origin: border-box; vertical-align: middle" class="avatar"></span>
 ```
 
 ```css
@@ -866,7 +866,7 @@ a { color: var(--color-blue-600b); text-decoration: none; }
 .crumb-current { color: var(--color-blue-900); }
 ```
 
-### Plan tabs
+### Feature tabs
 
 Tabs · 1 variant: Default
 States captured: Default
@@ -885,7 +885,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
-.tabs { display: flex; gap: var(--space-4); border-bottom: 1px solid var(--color-gray-400b); }
+.tabs { display: flex; gap: var(--space-4); border-bottom: 1px solid var(--color-gray-400-soft); }
 button { font: inherit; color: inherit; }
 .tab { height: 44px; padding: 0px var(--space-16); border-width: 0px 0px 2px; border-style: none none solid; border-color: currentcolor currentcolor transparent; border-image: none; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-blue-900); cursor: pointer; }
 .tab[aria-selected="true"] { color: var(--color-blue-600); border-bottom-color: var(--color-blue-600); }
@@ -994,7 +994,7 @@ a { color: var(--color-blue-600b); text-decoration: none; }
 .btn-primary { background: var(--color-blue-600); color: var(--color-gray-50); }
 ```
 
-### Empty state
+### Not found state
 
 Empty state · 1 variant: Default
 States captured: Default
@@ -1033,7 +1033,7 @@ States captured: Default
 Tokens used: color-gray-900 (color), type-body-xs (font)
 Motion: none
 Checks: all pass
-- Contrast AA · pass · 15.1:1 on gray-50b
+- Contrast AA · pass · 15.1:1 on gray-surface
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -1051,7 +1051,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```css
 td, th { padding: 0px; padding: 0px; padding: 0px; }
 .table { width: 100%; border-collapse: collapse; font-size: 14px; line-height: 22px; }
-.th { padding: var(--space-12) var(--space-16); background: var(--color-gray-50b); border-bottom: 1px solid var(--color-gray-100); text-align: left; font-size: 14px; line-height: 20px; font-weight: 600; }
+.th { padding: var(--space-12) var(--space-16); background: var(--color-gray-surface); border-bottom: 1px solid var(--color-gray-100); text-align: left; font-size: 14px; line-height: 20px; font-weight: 600; }
 .td { padding: var(--space-12) var(--space-16); border-bottom: 1px solid var(--color-gray-100); }
 ```
 
@@ -1078,11 +1078,11 @@ pre { margin: 0px; margin: 0px; margin: 0px; }
 .code-block { padding: var(--space-16) var(--space-24); border-radius: var(--radius-sm); background: var(--color-blue-900); color: var(--color-gray-50); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 14px; line-height: 22px; overflow-x: auto; }
 ```
 
-### Resources menu
+### Resources dropdown
 
 Dropdown · 1 variant: Default
 States captured: Default
-Tokens used: color-gray-50 (background-color), color-gray-900 (color), color-gray-300b (border-color), radius-lg (border-radius), space-8 (padding-top), space-8 (padding-right), space-8 (padding-bottom), space-8 (padding-left), type-body (font), shadow-md (box-shadow)
+Tokens used: color-gray-50 (background-color), color-gray-900 (color), color-gray-300-soft (border-color), radius-lg (border-radius), space-8 (padding-top), space-8 (padding-right), space-8 (padding-bottom), space-8 (padding-left), type-body (font), shadow-md (box-shadow)
 Motion: none
 Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
@@ -1098,7 +1098,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
+.dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300-soft); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
 a { color: var(--color-blue-600b); text-decoration: none; }
 .menu-item { display: flex; align-items: center; height: 44px; padding: 0px var(--space-12); border-radius: var(--radius-sm); font-size: 14px; line-height: 22px; color: var(--color-blue-900); }
 ```
@@ -1107,7 +1107,7 @@ a { color: var(--color-blue-600b); text-decoration: none; }
 
 Dropdown · 1 variant: Default
 States captured: Default
-Tokens used: color-gray-900 (color), color-gray-500b (border-color), space-8 (padding-top), space-16 (padding-bottom), type-body (font)
+Tokens used: color-gray-900 (color), color-gray-border (border-color), space-8 (padding-top), space-16 (padding-bottom), type-body (font)
 Motion: none
 Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
@@ -1125,7 +1125,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-.mobile-menu { border-top: 1px solid var(--color-gray-500b); padding: var(--space-8) 0px var(--space-16); }
+.mobile-menu { border-top: 1px solid var(--color-gray-border); padding: var(--space-8) 0px var(--space-16); }
 a { color: var(--color-blue-600b); text-decoration: none; }
 .mobile-link { display: flex; align-items: center; height: 48px; font-size: 16px; line-height: 26px; color: var(--color-blue-900); }
 ```
@@ -1140,7 +1140,7 @@ a { color: var(--color-blue-600b); text-decoration: none; }
 
 Proposed set: 16 colors, 11 spacing steps, 8 type styles, 9 durations, 6 easings. Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.
 
-The palette carries 14 grays where nine would do, and nine of them sit within ΔE 6.0 of a neighbor. Two spacing values, 10 and 18, sit off the 4 px grid, on 12 pages. Three type styles differ by 1 px or less in size or line height. The proposed set folds the grays into nine steps, brings spacing to 11 steps and merges the near-duplicate type styles into eight. Every pair of text and background keeps its contrast ratio.
+The palette carries 14 grays where nine would do, and nine of them sit within ΔE 6.0 of a neighbor. Two spacing values, 10 and 18, sit off the 4 px grid, on 12 pages. Three type styles differ by 1 px or less in size or line height, so nine styles could be eight. The proposed set folds the grays into nine steps, maps the off-grid spacing values to their nearest steps and merges the near-duplicate type styles. Every pair of text and background keeps its contrast ratio.
 
 ## How this was made
 
