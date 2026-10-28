@@ -88,7 +88,7 @@ describe('findings', () => {
 
 describe('motion sprawl', () => {
   const dur = (ms: number, usage: number) => ({ id: `d${ms}`, name: `duration-${ms}`, ms, usage, pages: [], rawValues: [`${ms}ms`] });
-  const ease = (name: string, value: string, usage: number) => ({ id: `e${name}`, name, value, usage, pages: [] });
+  const ease = (name: string, value: string, usage: number) => ({ id: `e${name}`, name, value, usage, pages: [], usedBy: { componentTypes: [], patternKinds: [] } });
   const nine = [100, 120, 150, 160, 200, 250, 300, 400, 500].map((ms) => dur(ms, ms === 160 ? 400 : ms === 150 ? 2 : 40));
   const seven = [ease('ease-out-quad', 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', 90), ease('ease-custom-1', 'cubic-bezier(0.25, 0.45, 0.45, 0.95)', 4), ease('ease-custom-2', 'cubic-bezier(0.26, 0.47, 0.44, 0.93)', 3), ease('ease-custom-3', 'cubic-bezier(0.24, 0.46, 0.46, 0.94)', 2), ease('ease', 'ease', 30), ease('linear', 'linear', 20), ease('ease-in-out', 'ease-in-out', 10)];
 

@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import type { MotionPattern, RunDocumentPartial } from '@dse/schema';
 import { fill, motionKindLabels } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
@@ -50,16 +50,45 @@ function Change({ property, from, to }: { property: string; from?: string; to?: 
   );
 }
 
+/** A staggered pattern plays this many chips at most, the row's width (D-098). */
+const STAGGER_CHIPS = 6;
+
 export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId }: { pattern: MotionPattern; doc: RunDocumentPartial; hrefFor?: (id: string) => string; onOpen?: (id: string) => void; captionId?: string }) {
   const reduced = usePrefersReducedMotion();
+  const row = useRef<HTMLLIElement>(null);
   const [playing, setPlaying] = useState(false);
-  const [at, setAt] = useState<'start' | 'end'>('end');
+  const [at, setAt] = useState<'start' | 'end'>('start');
+  // The auto-preview (D-093): the chip plays start to end once when the row scrolls into view; Replay follows.
+  const [previewed, setPreviewed] = useState(false);
   const shown = reduced ? 'end' : at;
   useEffect(() => {
     if (!playing) return;
     const f = requestAnimationFrame(() => requestAnimationFrame(() => setAt('end')));
     return () => cancelAnimationFrame(f);
   }, [playing]);
+  useEffect(() => {
+    const el = row.current;
+    if (!el || reduced || previewed) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e?.isIntersecting) return;
+      io.disconnect();
+      setAt('start');
+      setPlaying(true);
+    }, { threshold: 0.5 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reduced, previewed]);
+  const done = () => {
+    setPlaying(false);
+    setPreviewed(true);
+  };
+  const total = p.durationMs + p.delayMs + (p.stagger ? (Math.min(p.stagger.count, STAGGER_CHIPS) - 1) * p.stagger.stepMs : 0);
+  useEffect(() => {
+    if (!playing) return;
+    // Values a chip cannot show end no transition, so the play also ends on the clock.
+    const t = setTimeout(done, Math.min(total, 12_000) + 200);
+    return () => clearTimeout(t);
+  }, [playing, total]);
   const toggle = () => {
     if (playing) {
       setPlaying(false);
@@ -73,9 +102,10 @@ export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId }: { pa
   const easing = easingName(doc, p.easingTokenId, p.easing);
   const props = [...new Set([...Object.keys(p.start), ...Object.keys(p.end)])];
   const sampled = p.source === 'inline-style';
-  const timing = `${p.durationMs}ms ${p.easing ?? 'ease'} ${p.delayMs}ms`;
+  const timing = (i: number) => `${p.durationMs}ms ${p.easing ?? 'ease'} ${p.delayMs + i * (p.stagger?.stepMs ?? 0)}ms`;
+  const chips = p.stagger ? Math.min(p.stagger.count, STAGGER_CHIPS) : 1;
   return (
-    <li className={styles.row} data-testid="pattern-row">
+    <li ref={row} className={styles.row} data-testid="pattern-row" data-previewed={previewed || reduced || undefined}>
       <div className={styles.main}>
         <div className={styles.head}>
           <Pill variant="soft">{motionKindLabels[p.kind]}</Pill>
@@ -111,15 +141,21 @@ export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId }: { pa
         {p.observed && !easing ? <p className={styles.caption}>{fill(M.observedCaption, { name: suggestedEasing(doc) })}</p> : null}
       </div>
       <div className={styles.replay}>
-        <span className={styles.chip} aria-hidden="true">
-          <span
-            className={styles.block}
-            data-at={shown}
-            style={{ ...chipStyle(shown === 'end' ? p.end : p.start), transition: !reduced && playing && at === 'end' ? props.map((x) => `${x} ${timing}`).join(', ') : 'none' }}
-            onTransitionEnd={() => setPlaying(false)}
-          />
+        <span className={styles.chips} aria-hidden="true">
+          {Array.from({ length: chips }, (_, i) => (
+            <span key={i} className={styles.chip}>
+              <span
+                className={styles.block}
+                data-at={shown}
+                style={{ ...chipStyle(shown === 'end' ? p.end : p.start), transition: !reduced && playing && at === 'end' ? props.map((x) => `${x} ${timing(i)}`).join(', ') : 'none' }}
+                onTransitionEnd={i === chips - 1 ? done : undefined}
+              />
+            </span>
+          ))}
         </span>
-        <ReplayButton playing={playing} onToggle={toggle} captionId={captionId} />
+        <span className={styles.replayButton} data-shown={previewed || reduced || undefined}>
+          <ReplayButton playing={playing} onToggle={toggle} captionId={captionId} />
+        </span>
       </div>
     </li>
   );

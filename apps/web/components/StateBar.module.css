@@ -1,0 +1,28 @@
+.bar {
+  display: flex;
+  align-items: center;
+  gap: var(--dse-space-3);
+  min-width: 0;
+}
+
+.chips {
+  min-width: 0;
+}
+
+@media (max-width: 640px) {
+  .bar {
+    flex-wrap: nowrap;
+  }
+
+  /* The chips scroll; Play stays at the end of the row. */
+  .chips {
+    flex: 1 1 auto;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .bar > :last-child:not(.chips) {
+    flex: none;
+  }
+}

@@ -4,10 +4,10 @@ import type { RunDocumentPartial } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
 import { count } from '../../lib/format';
-import { baseDuration, motionCounts } from '../../lib/motion-view';
+import { motionCounts } from '../../lib/motion-view';
 import { Card } from '../Card';
 import { DurationStrip } from './DurationStrip';
-import { EasingGrid } from './EasingCard';
+import { AmbientClock, EasingGrid } from './EasingCard';
 import { KeyframesList } from './KeyframesList';
 import { PatternList } from './PatternList';
 import { RegionSkeleton } from './RegionSkeleton';
@@ -34,8 +34,8 @@ export function MotionSection({ doc, landed, hrefFor, onOpen, id = 'motion', lab
           <p className={styles.emptyCaption}>{M.emptyCaption}</p>
         </Card>
       ) : (
-        <div className={styles.stack}>
-          <ReplayCaption id={captionId} />
+        <AmbientClock className={styles.stack}>
+          {doc.motion?.patterns.length ? <ReplayCaption id={captionId} /> : null}
           {t?.duration?.length ? (
             <Card>
               <CardHead title={M.durationsTitle} meta={count(n.durations)} />
@@ -45,7 +45,7 @@ export function MotionSection({ doc, landed, hrefFor, onOpen, id = 'motion', lab
           {t?.easing?.length ? (
             <div className={styles.group}>
               <CardHead title={M.easingsTitle} meta={count(n.easings)} level={3} />
-              <EasingGrid easings={t.easing} durationMs={baseDuration(doc)} captionId={captionId} />
+              <EasingGrid easings={t.easing} />
             </div>
           ) : null}
           {t?.keyframes?.length ? (
@@ -60,7 +60,7 @@ export function MotionSection({ doc, landed, hrefFor, onOpen, id = 'motion', lab
               <PatternList patterns={doc.motion.patterns} doc={doc} hrefFor={hrefFor} onOpen={onOpen} captionId={captionId} />
             </Card>
           ) : null}
-        </div>
+        </AmbientClock>
       )}
     </Section>
   );

@@ -55,7 +55,7 @@ describe('copy audit · the other direction', () => {
   collect(labels, implemented);
   const corpus = placeholders([...implemented, ...pipeline].join('\n'));
   // Examples that show a composed result rather than a string of their own.
-  const examples = ['Primary small', 'Teal', 'Ghost rounded', 'Button (footer)', 'Button (footer, pricing)', 'Button (footer, second)', 'Six variants across four components where three would do. Nine spacing values, two of them off the 4 px grid.'];
+  const examples = ['Primary small', 'Teal', 'Ghost rounded', 'Button (footer)', 'Button (footer, pricing)', 'Button (footer, second)', 'Six variants across four components where three would do. Nine spacing values, two of them off the 4 px grid.', 'Buttons, cards and 2 scroll reveals', 'Buttons and links', '1 entrance', '0.8×', '0.65×'];
   // Names quoted for reference: enum keys, an env var, a metadata value, the shadow bucket names from the run.
   const references = ['discover', 'invalid-url', 'private-address', 'summary_large_image', 'DSE_CONTACT_EMAIL', 'lg'];
 
@@ -95,8 +95,8 @@ describe('copy rules', () => {
   });
 
   it('writes headings, labels, buttons and tags in sentence case (rule 2)', () => {
-    // Proper nouns: the product, people, places, products and plans. Acronyms are not capitalized words.
-    const proper = new Set('Design System Extractor Brandon Church GitHub Anthropic Claude Code Desktop ChatGPT Tailwind Haiku Sonnet Chromium Chrome Mountain DesignSystemExtractorBot Idaho United States Pro Team Free Bootstrap Chakra CSS-in-JS'.split(' '));
+    // Proper nouns: the product, people, places, products and plans, and the pronoun I. Acronyms are not capitalized words.
+    const proper = new Set('I Design System Extractor Brandon Church GitHub Anthropic Claude Code Desktop ChatGPT Tailwind Haiku Sonnet Chromium Chrome Mountain DesignSystemExtractorBot Idaho United States Pro Team Free Bootstrap Chakra CSS-in-JS'.split(' '));
     const bad: string[] = [];
     for (const [path, v] of all) {
       if (v.includes('\n') || /^(npx|claude|npm|dse) /.test(v)) continue;

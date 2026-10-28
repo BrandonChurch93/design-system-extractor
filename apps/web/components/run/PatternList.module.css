@@ -95,6 +95,20 @@
   gap: var(--dse-space-3);
 }
 
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dse-space-1);
+}
+
+.replayButton {
+  visibility: hidden;
+}
+
+.replayButton[data-shown] {
+  visibility: visible;
+}
+
 .chip {
   position: relative;
   display: grid;

@@ -1,9 +1,8 @@
 import { componentsPassing, previewCounts, TypeRole, type TypeRole as Role } from '@dse/schema';
 import { easingUsedBy } from './components/used-by';
 import { slugsOf } from './components/slug';
-import type { RawType } from './tokens/collect';
 import { SHADOW_NAMES } from './tokens/constants';
-import { assignRoles, nameTypes } from './tokens/type-roles';
+import { assignRoles, nameTypes, type RawType } from './tokens/type-roles';
 
 // Upgrading stored documents (docs/specs/data-model.md, D-092): a stored document keeps the shape of
 // the build that wrote it; every read path brings it to the current shape first. Each step checks the

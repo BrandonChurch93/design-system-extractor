@@ -12,7 +12,8 @@ export type ColorUse = 'text' | 'background' | 'border' | 'other';
 export type RawColor = { hex: string; rgba: Rgba; weight: number; uses: Record<ColorUse, number>; /** uses on elements in a semantic context */ semantic: number; pages: Map<string, number> };
 /** One text color on one effective background, the background already opaque. */
 export type RawPair = { fg: string; bg: string; ratio: number; large: boolean; count: number; where: string };
-export type RawType = { key: string; family: string; fallbackStack: string; size: number; lineHeight: number; weight: number; letterSpacing: number; textTransform?: string; count: number; tags: Map<string, number>; pages: Map<string, number>; sample: string; homeLargest: boolean; pageLargest: boolean };
+import type { RawType } from './type-roles';
+export type { RawType };
 export type RawSpace = { value: number; weight: number; contexts: { padding: number; margin: number; gap: number; layout: number }; pages: Map<string, number> };
 export type RawRadius = { value: number; isPill: boolean; count: number; pages: Map<string, number> };
 export type RawShadow = { value: string; count: number; maxBlur: number; pages: Map<string, number> };

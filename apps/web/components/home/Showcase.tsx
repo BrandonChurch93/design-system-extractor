@@ -33,7 +33,7 @@ export function Showcase({ entries }: { entries: ShowcaseEntry[] }) {
         <h2 id="showcase-title" className={styles.title}>
           {home.showcase.heading}
         </h2>
-        <p className={styles.caption}>{home.showcase.caption}</p>
+        <p className={styles.caption}>{entries.some((e) => e.promoted) ? home.showcase.promotedCaption : home.showcase.caption}</p>
       </div>
       <ChipGroup
         options={options}

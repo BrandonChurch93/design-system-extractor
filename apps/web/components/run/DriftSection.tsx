@@ -91,7 +91,7 @@ function Collapses({ doc, base }: { doc: RunDocumentPartial; base?: string }) {
                 {variants.map((x) => (
                   <figure key={x.id} className={styles.collapseFigure}>
                     <div className={styles.collapseGround}>
-                      <FitPreview preview={x.preview} base={base} title={fill(runPage.previewTitle, { name: `${c.name} · ${x.name}` })} showCaptured={false} lazy />
+                      <FitPreview preview={x.preview} base={base} title={fill(runPage.previewTitle, { name: `${c.name} · ${x.name}` })} showCaptured={false} lazy ground={x.preview.ground ?? c.ground} showScale={false} />
                     </div>
                     <figcaption className={styles.caption}>{x.name}</figcaption>
                   </figure>

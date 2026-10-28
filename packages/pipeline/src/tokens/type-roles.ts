@@ -1,7 +1,8 @@
 import type { TypeRole } from '@dse/schema';
-import type { RawType } from './collect';
 
 // Type roles and names (docs/specs/token-clustering.md, Type). Pure, so the browser-safe upgrade can use them.
+
+export type RawType = { key: string; family: string; fallbackStack: string; size: number; lineHeight: number; weight: number; letterSpacing: number; textTransform?: string; count: number; tags: Map<string, number>; pages: Map<string, number>; sample: string; homeLargest: boolean; pageLargest: boolean };
 
 const bodyTags = ['p', 'li', 'td', 'span', 'div'];
 

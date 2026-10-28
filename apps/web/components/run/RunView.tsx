@@ -2,10 +2,10 @@
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import { componentsPassing, type RunEvent, type RunResponse } from '@dse/schema';
+import { componentsPassing, type Component, type RunEvent, type RunResponse } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { global, runPage, statePages } from '../../copy/strings';
-import { cost as formatCost } from '../../lib/format';
+import { count, cost as formatCost } from '../../lib/format';
 import { isRecent, updateRecent } from '../../lib/browser-store';
 import { paletteOf } from '../../lib/palette';
 import { breadcrumb, completeMeta, landed as landedOf, progressMeta, rail, terminal } from '../../lib/run-view';
@@ -64,6 +64,12 @@ const logLines = (events: RunEvent[]): LogLine[] => events.map((e) => ({ id: e.i
 
 /** The run page, both faces: the in-progress page filling stage by stage, and the complete page. */
 /** A template with its run id set in mono (docs/design/copy.md, rule 11). */
+/** The footer's live-rate line (copy.md, D-095). */
+export function liveRate(comps: Pick<Component, 'preview'>[]): string {
+  const live = comps.filter((c) => c.preview.mode === 'live').length;
+  return fill(runPage.liveRate, { live: count(live), total: count(comps.length), captured: count(comps.length - live) });
+}
+
 function withRunId(template: string, id: string) {
   const [before, after = ''] = template.split('{id}');
   // One inline element: a body that lays out its children as rows keeps the sentence on one line.
@@ -172,6 +178,7 @@ export function RunView({ initial, storageBase, appUrl, contactEmail, partial, l
         </Link>
       </p>
       <p>{fill(runPage.footer.share, { url: shareUrl })}</p>
+      {doc.components?.length ? <p data-testid="live-rate">{liveRate(doc.components)}</p> : null}
       <p>
         {contactEmail ? (
           <a href={`mailto:${contactEmail}?subject=${encodeURIComponent(`Run ${id}`)}`} className={styles.footerLink}>

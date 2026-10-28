@@ -1,5 +1,6 @@
 'use client';
 import type { ReactNode } from 'react';
+import type { ComponentType, MotionKind } from '@dse/schema';
 import { stateLabels } from '@dse/schema/labels';
 import { componentPanel, home, howItWorks, runPage } from '../../copy/strings';
 import type { RecentRun } from '../../lib/browser-store';
@@ -23,7 +24,7 @@ import { ComponentsSection } from '../run/ComponentsSection';
 import { DriftHeadline } from '../run/DriftHeadline';
 import { DriftSection } from '../run/DriftSection';
 import { DurationStrip } from '../run/DurationStrip';
-import { EasingCard, EasingGrid } from '../run/EasingCard';
+import { AmbientClock, EasingCard, EasingGrid } from '../run/EasingCard';
 import { KeyframesList } from '../run/KeyframesList';
 import { MotionSection } from '../run/MotionSection';
 import { PatternList } from '../run/PatternList';
@@ -65,6 +66,21 @@ const motionDoc = cleanDoc;
 const durations = motionDoc.tokens?.duration ?? [];
 const easings = motionDoc.tokens?.easing ?? [];
 const siteNamed = easings.find((e) => e.siteName) ?? { name: 'ease-out-quart', value: 'cubic-bezier(0.25, 1, 0.5, 1)', siteName: '--ease-out-quart' };
+const used = (types: [ComponentType, number][], kinds: [MotionKind, number][] = []) => ({ componentTypes: types.map(([type, count]) => ({ type, count })), patternKinds: kinds.map(([kind, count]) => ({ kind, count })) });
+const twelveEasings = [
+  { name: 'linear', value: 'linear', usedBy: used([['link', 2]]) },
+  { name: 'ease', value: 'ease', usedBy: used([['button', 4], ['card', 2]], [['scroll-reveal', 2]]) },
+  { name: 'ease-in', value: 'ease-in', usedBy: used([], [['entrance', 1]]) },
+  { name: 'ease-out', value: 'ease-out', usedBy: used([['nav', 1], ['menu', 1]]) },
+  { name: 'ease-in-out', value: 'ease-in-out', usedBy: used([['tabs', 1]], [['loop', 3]]) },
+  { name: 'ease-out-quad', value: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)', usedBy: used([['button', 6], ['card', 3], ['list-row', 1]]) },
+  { name: 'ease-in-out-cubic', value: 'cubic-bezier(0.65, 0, 0.35, 1)', usedBy: used([], [['scroll-reveal', 4]]) },
+  { name: 'ease-out-quart', value: 'cubic-bezier(0.25, 1, 0.5, 1)', usedBy: used([['dropdown', 1]], [['open', 1]]) },
+  { name: 'ease-out-expo', value: 'cubic-bezier(0.16, 1, 0.3, 1)', usedBy: used([], [['entrance', 2]]) },
+  { name: 'ease-out-back', value: 'cubic-bezier(0.34, 1.56, 0.64, 1)', usedBy: used([['toggle', 1]]) },
+  { name: 'steps-5', value: 'steps(5, end)', usedBy: used([], [['loop', 1]]) },
+  { name: 'spring-1', value: 'linear(0, 0.25, 0.8, 1.1, 1.02, 0.99, 1)', usedBy: used([['modal', 1]]) },
+];
 const moving = (motionDoc.components ?? []).find((c) => c.motion?.patternIds.length) ?? (motionDoc.components ?? []).find((c) => c.motion);
 const motionStill = { ...motionDoc, tokens: motionDoc.tokens ? { ...motionDoc.tokens, duration: [], easing: [], keyframes: [] } : undefined, motion: { patterns: [], truncatedPages: [], intersectionObservers: 0 } };
 
@@ -214,21 +230,23 @@ export const pageDemos: Demo[] = [
     tokens: ['hex', 'caption', 'muted', 'ink (marks, dot)', 'line'],
     frameHeight: 420,
     states: () => [
-      { label: stateLabels.default, wide: true, node: <Card><DurationStrip durations={durations} /></Card> },
-      { label: 'Close ticks', wide: true, node: <Card><DurationStrip durations={[{ name: 'duration-100', ms: 100, usage: 3 }, { name: 'duration-120', ms: 120, usage: 9, role: 'fast' }, { name: 'duration-150', ms: 150, usage: 4 }, { name: 'duration-600', ms: 600, usage: 1, role: 'slow' }]} /></Card> },
+      { label: stateLabels.default, wide: true, node: <AmbientClock><Card><DurationStrip durations={durations} /></Card></AmbientClock> },
+      { label: 'Close ticks', wide: true, node: <AmbientClock><Card><DurationStrip durations={[{ name: 'duration-100', ms: 100, usage: 3 }, { name: 'duration-120', ms: 120, usage: 9, role: 'fast' }, { name: 'duration-150', ms: 150, usage: 4 }, { name: 'duration-600', ms: 600, usage: 1, role: 'slow' }, { name: 'duration-2400', ms: 2400, usage: 1 }]} /></Card></AmbientClock> },
     ],
   },
   {
     slug: 'easing-card',
-    name: 'EasingCard and EasingGrid',
-    tokens: ['surface', 'line-soft', 'shadow-card', 'radius-lg', 'h3', 'code', 'surface-tint', 'ink (curve, dot)', 'line (baseline, track)'],
-    frameHeight: 1400,
+    name: 'EasingCard, EasingStage and EasingGrid',
+    tokens: ['surface', 'line-soft', 'shadow-card', 'radius-lg', 'h3', 'code', 'caption', 'muted', 'surface-tint', 'ink (curve, dots)', 'line (axes, track)'],
+    frameHeight: 2600,
     states: () => [
-      { label: stateLabels.default, node: <EasingCard easing={easings[0] ?? { name: 'ease-out', value: 'cubic-bezier(0, 0, 0.58, 1)' }} durationMs={300} /> },
-      { label: runPage.namedBySite, node: <EasingCard easing={siteNamed} durationMs={300} /> },
-      { label: 'steps()', node: <EasingCard easing={{ name: 'steps-4', value: 'steps(4, end)' }} durationMs={300} /> },
-      { label: 'linear()', node: <EasingCard easing={{ name: 'spring', value: 'linear(0, 0.6, 1.1, 0.95, 1)' }} durationMs={300} /> },
-      { label: 'EasingGrid', wide: true, node: <Wide><EasingGrid easings={easings} durationMs={300} /></Wide> },
+      { label: stateLabels.default, node: <AmbientClock><EasingCard easing={easings[0] ?? twelveEasings[0]!} /></AmbientClock> },
+      { label: runPage.namedBySite, node: <AmbientClock><EasingCard easing={siteNamed} /></AmbientClock> },
+      { label: 'steps()', node: <AmbientClock><EasingCard easing={{ name: 'steps-4', value: 'steps(4, end)' }} /></AmbientClock> },
+      { label: 'linear()', node: <AmbientClock><EasingCard easing={{ name: 'spring', value: 'linear(0, 0.6, 1.1, 0.95, 1)' }} /></AmbientClock> },
+      { label: 'EasingGrid', wide: true, node: <Wide><AmbientClock><EasingGrid easings={easings} /></AmbientClock></Wide> },
+      // No fixture has more than seven easings; the long-task test loops these twelve (docs/evals.md).
+      { label: 'EasingGrid · 12 easings', wide: true, node: <Wide><div data-testid="twelve-easings"><AmbientClock><EasingGrid easings={twelveEasings} /></AmbientClock></div></Wide> },
     ],
   },
   {

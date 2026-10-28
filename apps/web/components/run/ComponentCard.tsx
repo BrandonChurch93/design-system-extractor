@@ -38,7 +38,7 @@ export function ComponentCard({ component: c, href, base, tokens, opened, reveal
   return (
     <article className={styles.card} data-opened={opened || undefined}>
       <div className={styles.preview}>
-        <FitPreview preview={c.preview} base={base} title={fill(runPage.previewTitle, { name: c.name })} lazy />
+        <FitPreview preview={c.preview} base={base} title={fill(runPage.previewTitle, { name: c.name })} lazy ground={c.preview.ground ?? c.ground} />
       </div>
       <motion.div className={styles.body} variants={reveal ? revealContentVariants() : undefined}>
         <div className={styles.head}>

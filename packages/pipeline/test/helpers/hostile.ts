@@ -34,5 +34,5 @@ export function hostilePreview(h: Hostile, storageBase: string): PreviewDoc {
   const matched: Record<string, MatchedStyles> = {
     e1: { rules: (h.rules ?? []).map((r) => ({ selector: r.selector, matched: [r.selector], origin: 'regular', media: [], supports: [], declarations: r.declarations.map(([name, value]) => ({ name, value, important: false })) })), inline: [], pseudo: [] },
   };
-  return buildPreview({ markup: h.markup, vars: h.vars ?? {}, snapshot, root, matched, ground: 'rgb(255, 255, 255)', imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy: { storageBase } });
+  return buildPreview({ markup: h.markup, vars: h.vars ?? {}, snapshot, root, matched, imageColors: {}, fonts: { googleLinks: [], faces: [], mode: 'none' }, policy: { storageBase } });
 }

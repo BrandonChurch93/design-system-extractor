@@ -12,6 +12,7 @@ import { CaptureViewer } from '../CaptureViewer';
 import { ChipGroup } from '../ChipGroup';
 import { CodeBlock } from '../CodeBlock';
 import { FitPreview } from '../FitPreview';
+import { PreviewStage } from './PreviewStage';
 import { Tabs } from '../Tabs';
 import { Tag } from '../Tag';
 import { useToast } from '../Toast';
@@ -100,6 +101,8 @@ export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel 
   const all = checkCounts(c.checks);
   const tokens = [...new Map(c.tokensUsed.map((u) => [u.tokenId, u])).values()];
   const variantName = (id: string) => c.variants.find((v) => v.id === id)?.name;
+  // Crops carry 4 px around the element since v1.2, 8 before (D-094).
+  const cropMargin = /^1\.[01]\./.test(doc.pipelineVersion ?? '') ? 8 : 4;
   // The CSS names tokens as tokens.css does; until the exporters load it shows the resolved rules.
   const css = useMemo(() => (exporters && doc.tokens?.colors ? exporters.componentCss(c, exporters.exportTokens(doc, 'proposed')) : c.code.css), [exporters, doc, c]);
   const patterns = (c.motion?.patternIds ?? []).map((id) => doc.motion?.patterns.find((p) => p.id === id)).filter((p) => p !== undefined);
@@ -120,9 +123,7 @@ export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel 
           <p className={styles.caption}>{fidelity(variant)}</p>
         </div>
         {c.variants.length > 1 ? <ChipGroup label={P.variants} value={variantId} onChange={setVariantId} options={c.variants.map((v) => ({ value: v.id, label: v.name }))} /> : null}
-        <div className={styles.ground}>
-          <FitPreview preview={variant.preview} base={base} title={fill(runPage.previewTitle, { name: `${c.name} · ${variant.name}` })} padding={0} />
-        </div>
+        <PreviewStage key={variant.id} component={c} variantId={variant.id} base={base} title={fill(runPage.previewTitle, { name: `${c.name} · ${variant.name}` })} />
         {c.responsiveVariant ? <p className={styles.caption}>{c.responsiveVariant.note}</p> : null}
       </section>
 
@@ -193,11 +194,13 @@ export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel 
         <ul className={styles.states}>
           {captured.map((s) => {
             const htmlKey = c.preview.mode === 'live' ? (s.state === 'default' ? c.preview.htmlKey : c.preview.stateHtmlKeys?.[s.state]) : undefined;
-            const preview = htmlKey ? { ...c.preview, mode: 'live' as const, htmlKey } : s.cropKey ? { ...c.preview, mode: 'captured' as const, cropKey: s.cropKey, width: c.preview.width + 16, height: c.preview.height + 16 } : c.preview;
+            // A state crop carries the crop margin on each side; a captured preview's size already includes it.
+            const edge = c.preview.mode === 'live' ? cropMargin * 2 : 0;
+            const preview = htmlKey ? { ...c.preview, mode: 'live' as const, htmlKey } : s.cropKey ? { ...c.preview, mode: 'captured' as const, cropKey: s.cropKey, width: c.preview.width + edge, height: c.preview.height + edge } : c.preview;
             return (
               <li key={s.state} className={styles.state}>
                 <div className={styles.stateGround}>
-                  <FitPreview preview={preview} base={base} title={fill(runPage.statePreviewTitle, { name: c.name, state: stateLabels[s.state] })} padding={4} showCaptured={false} lazy />
+                  <FitPreview preview={preview} base={base} title={fill(runPage.statePreviewTitle, { name: c.name, state: stateLabels[s.state] })} padding={4} showCaptured={false} lazy ground={c.preview.ground ?? c.ground} showScale={false} />
                 </div>
                 <span className={styles.caption}>{stateLabels[s.state]}</span>
               </li>

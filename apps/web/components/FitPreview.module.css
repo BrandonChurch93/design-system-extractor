@@ -29,6 +29,18 @@
   border: 1px solid var(--dse-line-soft);
 }
 
+.scale {
+  composes: tag from '../styles/type.module.css';
+  position: absolute;
+  bottom: var(--dse-space-3);
+  left: var(--dse-space-3);
+  padding: 2px var(--dse-space-2);
+  border-radius: var(--dse-radius-pill);
+  background: var(--dse-surface);
+  color: var(--dse-ink-2);
+  border: 1px solid var(--dse-line-soft);
+}
+
 .placeholder {
   composes: caption from '../styles/type.module.css';
   color: var(--dse-muted);
