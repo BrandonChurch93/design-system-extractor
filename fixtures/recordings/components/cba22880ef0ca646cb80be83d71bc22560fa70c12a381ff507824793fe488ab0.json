@@ -2,16 +2,16 @@
   "purpose": "components",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"items\": [{\"id\": \"c25\", \"type\": \"tabs\", \"name\": \"Feature tabs\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c26\", \"type\": \"tag\", \"name\": \"Feature tab\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c27\", \"type\": \"alert\", \"name\": \"Notice\", \"isComponent\": true, \"variantHint\": \"success tone, with action button\"}, {\"id\": \"c28\", \"type\": \"empty-state\", \"name\": \"Not found panel\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c29\", \"type\": \"alert\", \"name\": \"Notice\", \"isComponent\": true, \"variantHint\": \"info tone\"}]}",
+  "text": "{\"items\": [{\"id\": \"c25\", \"type\": \"tabs\", \"name\": \"Feature tabs\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c26\", \"type\": \"tag\", \"name\": \"Tab button\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c27\", \"type\": \"alert\", \"name\": \"Success notice\", \"isComponent\": true, \"variantHint\": \"green border and check icon\"}, {\"id\": \"c28\", \"type\": \"empty-state\", \"name\": \"Not found panel\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c29\", \"type\": \"alert\", \"name\": \"Warning notice\", \"isComponent\": true, \"variantHint\": \"amber border and alert icon\"}]}",
   "usage": {
-    "input_tokens": 708,
+    "input_tokens": 689,
     "cache_creation_input_tokens": 0,
     "cache_read_input_tokens": 1564,
     "cache_creation": {
       "ephemeral_5m_input_tokens": 0,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 229,
+    "output_tokens": 235,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-27T20:59:30.867Z",
+  "recordedAt": "2026-10-28T22:44:58.735Z",
   "request": "Items:\nc25 guess tabs 0.95, div role tablist, no class names, inside button:3, in features, text \"Digests Slack Pages\", 2 instances on 1 page (/features), variants Default, no picture\nc26 guess button 0.95, button role tab, no class names, no children, in features, text \"Digests\", 6 instances on 1 page (/features), variants Default, no picture\nc27 guess card 0.6, div role status, no class names, inside div:2 p:1 span:1 svg:1, in features, text \"Digests are included in every plan. Compare plans\", 2 instances on 1 page (/features), variants Default, picture below\nc28 guess empty-state 0.6, section, no class names, inside a:1 h1:1 p:1 span:1 svg:1, in 80f283cb5c does not exist, text \"This page is not here. It may have moved when the docs were reorganized. Back to\", 2 instances on 1 page (/80f283cb5c-does-not-exist), variants Default, picture below\nc29 guess card 0.6, div role status, no class names, inside p:1 span:1 svg:1, in getting started, text \"Publishing posts to every connected channel. Try it on a test channel first.\", 2 instances on 1 page (/docs/getting-started), variants Default, picture below\nPicture of c27:\n[image]\nPicture of c28:\n[image]\nPicture of c29:\n[image]"
 }

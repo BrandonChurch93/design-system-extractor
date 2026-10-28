@@ -2,16 +2,16 @@
   "purpose": "components",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"items\": [{\"id\": \"c25\", \"type\": \"tabs\", \"name\": \"Plan tabs\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c26\", \"type\": \"tabs\", \"name\": \"Tab\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c27\", \"type\": \"alert\", \"name\": \"Notice\", \"isComponent\": true, \"variantHint\": \"tone and whether it has an action button\"}, {\"id\": \"c28\", \"type\": \"card\", \"name\": \"Promo card\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c29\", \"type\": \"button\", \"name\": \"Share button\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c30\", \"type\": \"list-row\", \"name\": \"Changelog entry\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c31\", \"type\": \"empty-state\", \"name\": \"Empty state\", \"isComponent\": true, \"variantHint\": null}]}",
+  "text": "{\"items\": [{\"id\": \"c25\", \"type\": \"tabs\", \"name\": \"Feature tabs\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c26\", \"type\": \"tabs\", \"name\": \"Tab\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c27\", \"type\": \"alert\", \"name\": \"Notice\", \"isComponent\": true, \"variantHint\": \"tone and whether it carries an action button\"}, {\"id\": \"c28\", \"type\": \"card\", \"name\": \"Promo card\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c29\", \"type\": \"button\", \"name\": \"Share button\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c30\", \"type\": \"list-row\", \"name\": \"Changelog entry\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c31\", \"type\": \"empty-state\", \"name\": \"Not found state\", \"isComponent\": true, \"variantHint\": null}]}",
   "usage": {
-    "input_tokens": 936,
+    "input_tokens": 917,
     "cache_creation_input_tokens": 0,
     "cache_read_input_tokens": 1564,
     "cache_creation": {
       "ephemeral_5m_input_tokens": 0,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 309,
+    "output_tokens": 310,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-27T20:58:15.168Z",
+  "recordedAt": "2026-10-28T22:43:50.426Z",
   "request": "Items:\nc25 guess tabs 0.95, div role tablist, classes tabs, inside button:3, in features, text \"Digests Slack Pages\", 2 instances on 1 page (/features), variants Default, no picture\nc26 guess button 0.95, button role tab, classes tab, no children, in features, text \"Digests\", 6 instances on 1 page (/features), variants Default, no picture\nc27 guess alert 0.8, div role status, classes alert alert-success, inside div:2 p:1 span:1 svg:1, in features, text \"Digests are included in every plan. Compare plans\", 2 instances on 1 page (/features), variants Default, picture below\nc28 guess card 0.6, section, classes promo, inside h3:1 p:1, in features, text \"Ship notes on Fridays Teams that publish weekly see twice the readers.\", 2 instances on 1 page (/features), variants Default, picture below\nc29 guess button 0.95, button, classes share-button, inside svg:1, in changelog, text \"\", 4 instances on 2 pages (/changelog, /blog/release-notes-week-1), variants Default, no picture\nc30 guess list-row 0.7, article, classes release, inside h3:1 p:1 span:1, in changelog, text \"Week 1 Faster digests A short note about faster digests.\", 8 instances on 1 page (/changelog), variants Default, picture below\nc31 guess empty-state 0.6, section, classes empty-state, inside a:1 h1:1 p:1 span:1 svg:1, in fd51925e6a does not exist, text \"This page is not here. It may have moved when the docs were reorganized. Back to\", 2 instances on 1 page (/fd51925e6a-does-not-exist), variants Default, picture below\nPicture of c27:\n[image]\nPicture of c28:\n[image]\nPicture of c30:\n[image]\nPicture of c31:\n[image]"
 }

@@ -2,7 +2,7 @@
   "purpose": "components",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"items\": [{\"id\": \"c9\", \"type\": \"card\", \"name\": \"Pricing card\", \"isComponent\": true, \"variantHint\": \"plan highlight and button style\"}, {\"id\": \"c10\", \"type\": \"table\", \"name\": \"Plan comparison table\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c11\", \"type\": \"breadcrumb\", \"name\": \"Breadcrumb\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c12\", \"type\": \"tabs\", \"name\": \"Docs tabs\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c13\", \"type\": \"link\", \"name\": \"Docs tab link\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c14\", \"type\": \"alert\", \"name\": \"Notice\", \"isComponent\": true, \"variantHint\": \"tone and background color\"}, {\"id\": \"c15\", \"type\": \"code-block\", \"name\": \"Code block\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c16\", \"type\": \"input\", \"name\": \"Text input\", \"isComponent\": true, \"variantHint\": null}]}",
+  "text": "{\"items\": [{\"id\": \"c9\", \"type\": \"card\", \"name\": \"Pricing card\", \"isComponent\": true, \"variantHint\": \"plan highlight and call to action\"}, {\"id\": \"c10\", \"type\": \"table\", \"name\": \"Plan comparison table\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c11\", \"type\": \"breadcrumb\", \"name\": \"Breadcrumb\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c12\", \"type\": \"tabs\", \"name\": \"Docs tabs\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c13\", \"type\": \"link\", \"name\": \"Docs tab link\", \"isComponent\": true, \"variantHint\": \"active and inactive state\"}, {\"id\": \"c14\", \"type\": \"alert\", \"name\": \"Notice\", \"isComponent\": true, \"variantHint\": \"tone and color\"}, {\"id\": \"c15\", \"type\": \"code-block\", \"name\": \"Code block\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c16\", \"type\": \"input\", \"name\": \"Text input\", \"isComponent\": true, \"variantHint\": null}]}",
   "usage": {
     "input_tokens": 881,
     "cache_creation_input_tokens": 0,
@@ -11,7 +11,7 @@
       "ephemeral_5m_input_tokens": 0,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 360,
+    "output_tokens": 367,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-27T21:01:58.491Z",
+  "recordedAt": "2026-10-28T22:47:12.602Z",
   "request": "Items:\nc9 guess card 0.6, div, classes box, inside a:1 p:3, in pricing, text \"Solo $9 Unlimited invoices and receipts. Choose Solo\", 4 instances on 1 page (/pricing), variants Default, picture below\nc10 guess table 0.98, table, classes is-fullwidth is-striped table, inside tbody:1 thead:1 tr:4, in pricing, text \"Feature Solo Studio Invoices Unlimited Unlimited Seats 1 3 Bank sync Included In\", 4 instances on 2 pages (/pricing, /docs/api), variants Default, no picture\nc11 guess breadcrumb 0.8, nav, classes breadcrumb, inside li:2 ul:1, in documentation, text \"Home Docs\", 4 instances on 2 pages (/docs, /docs/api), variants Default, picture below\nc12 guess tabs 0.95, ul role tablist, no class names, inside a:3 li:3, in documentation, text \"Guides API Support\", 2 instances on 1 page (/docs), variants Default, no picture\nc13 guess link 0.9, a role tab, no class names, no children, in documentation, text \"Guides\", 6 instances on 1 page (/docs), variants Default, no picture\nc14 guess other 0.3, div role status, classes is-info is-light notification, inside p:1 strong:1, in documentation, text \"New: receipts can now be forwarded from any address.\", 2 instances on 1 page (/docs), variants Default, picture below\nc15 guess code-block 0.95, pre, no class names, inside code:1, in documentation, text \"curl https://api.ledgerly.dev/v1/invoices -H \"Authorization: Bearer $TOKEN\"\", 4 instances on 2 pages (/docs, /docs/api), variants Default, no picture\nc16 guess input 0.98, input, classes input, no children, in create your, text \"\", 6 instances on 2 pages (/signup, /contact), variants Default, no picture\nPicture of c9:\n[image]\nPicture of c11:\n[image]\nPicture of c14:\n[image]"
 }

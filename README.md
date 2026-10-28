@@ -47,14 +47,14 @@ claude mcp add design-system-extractor -- npx -y @design-system-extractor/mcp --
 
 ## Eval results
 
-Five fixture sites with planted components, states, check failures and drift, scored against their `expected.json` (`docs/evals.md`). The final live run:
+Five fixture sites with planted components, states, check failures and drift, scored against their `expected.json` (`docs/evals.md`). The final live run (v1.2.0, 2026-10-28):
 
 | Fixture | Pages | Tokens P / R | Components P / R | States | Live previews | Planted checks | Drift | Motion · Naming |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| clean | 9, exact | 1.000 / 1.000 | 1.000 / 1.000 | 67 of 67 | 27 of 28 | 100% | none, contrast kept | 1.00 · 1.00 |
-| messy | 12, exact | 1.000 / 1.000 | 1.000 / 1.000 | 73 of 73 | 29 of 31 | 100% | 16 of 16 found | 1.00 · 1.00 |
-| tailwind | 9, exact | 1.000 / 1.000 | 1.000 / 1.000 | 67 of 67 | 27 of 28 | 100% | none, contrast kept | 1.00 · 1.00 |
-| css-in-js | 9, exact | 1.000 / 1.000 | 1.000 / 1.000 | 67 of 67 | 27 of 28 | 100% | none, contrast kept | 1.00 · 1.00 |
+| clean | 9, exact | 1.000 / 1.000 | 1.000 / 1.000 | 67 of 67 | 28 of 28 | 100% | none, contrast kept | 1.00 · 1.00 |
+| messy | 12, exact | 1.000 / 1.000 | 1.000 / 1.000 | 73 of 73 | 30 of 31 | 100% | 16 of 16 found | 1.00 · 1.00 |
+| tailwind | 9, exact | 1.000 / 1.000 | 1.000 / 1.000 | 67 of 67 | 28 of 28 | 100% | none, contrast kept | 1.00 · 1.00 |
+| css-in-js | 9, exact | 1.000 / 1.000 | 1.000 / 1.000 | 67 of 67 | 28 of 28 | 100% | none, contrast kept | 1.00 · 1.00 |
 | library | 7, exact | 1.000 / 1.000 | 1.000 / 1.000 | 54 of 54 | 22 of 22 | 100% | none, contrast kept | 1.00 · 1.00 |
 
 The checks are measurements, not an audit: the measurable subset of WCAG 2.2, run on every component.

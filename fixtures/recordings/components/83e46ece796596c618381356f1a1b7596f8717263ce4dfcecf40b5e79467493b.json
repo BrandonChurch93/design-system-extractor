@@ -2,16 +2,16 @@
   "purpose": "components",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"items\": [{\"id\": \"c1\", \"type\": \"nav\", \"name\": \"Main navigation\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c2\", \"type\": \"button\", \"name\": \"Button\", \"isComponent\": true, \"variantHint\": \"fill style: primary, secondary, tertiary\"}, {\"id\": \"c3\", \"type\": \"hero\", \"name\": \"Hero\", \"isComponent\": true, \"variantHint\": \"background color and height\"}, {\"id\": \"c4\", \"type\": \"card\", \"name\": \"Feature card\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c5\", \"type\": \"tag\", \"name\": \"Status tag\", \"isComponent\": true, \"variantHint\": \"color: success, info, warning\"}, {\"id\": \"c6\", \"type\": \"footer\", \"name\": \"Site footer\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c7\", \"type\": \"dropdown\", \"name\": \"Mobile menu\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c8\", \"type\": \"button\", \"name\": \"Menu toggle\", \"isComponent\": true, \"variantHint\": null}]}",
+  "text": "{\"items\": [{\"id\": \"c1\", \"type\": \"nav\", \"name\": \"Main navigation\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c2\", \"type\": \"button\", \"name\": \"Log in button\", \"isComponent\": true, \"variantHint\": \"fill and emphasis (primary, secondary, tertiary)\"}, {\"id\": \"c3\", \"type\": \"hero\", \"name\": \"Hero\", \"isComponent\": true, \"variantHint\": \"background color\"}, {\"id\": \"c4\", \"type\": \"card\", \"name\": \"Feature card\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c5\", \"type\": \"tag\", \"name\": \"Feature tag\", \"isComponent\": true, \"variantHint\": \"color (success, info, warning)\"}, {\"id\": \"c6\", \"type\": \"footer\", \"name\": \"Site footer\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c7\", \"type\": \"dropdown\", \"name\": \"Mobile menu\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c8\", \"type\": \"button\", \"name\": \"Menu toggle\", \"isComponent\": true, \"variantHint\": null}]}",
   "usage": {
-    "input_tokens": 1321,
+    "input_tokens": 1299,
     "cache_creation_input_tokens": 0,
     "cache_read_input_tokens": 1564,
     "cache_creation": {
       "ephemeral_5m_input_tokens": 0,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 366,
+    "output_tokens": 373,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-27T21:01:58.943Z",
+  "recordedAt": "2026-10-28T22:47:12.912Z",
   "request": "Items:\nc1 guess nav 0.95, nav, classes has-shadow is-white navbar, inside div:3, in home, text \"Ledgerly Pricing Docs Contact Log in Sign up\", 14 instances on 7 pages (/, /pricing, /docs, /signup), variants Default, no picture\nc2 guess button 0.95, a, classes button is-light, no children, in nav, text \"Log in\", 30 instances on 7 pages (/, /pricing, /docs, /signup), variants Primary, Secondary, Tertiary, no picture\nc3 guess hero 0.8, section, classes hero is-medium is-primary, inside div:2, in home, text \"Small books, kept in order. Invoices, receipts and quarterly taxes for one-perso\", 2 instances on 1 page (/), variants Default, picture below\nc4 guess card 0.6, div, classes card, inside a:1 div:1 footer:1 p:2, in home, text \"Invoices Send a branded invoice in a minute and see when it was opened. Learn mo\", 6 instances on 1 page (/), variants Default, picture below\nc5 guess tag 0.7, span, classes is-success tag, no children, in home, text \"Bank sync\", 14 instances on 3 pages (/, /pricing, /docs/api), variants Success, Info, Warning, picture below\nc6 guess footer 0.95, footer, classes footer, inside div:1 p:2, in home, text \"Ledgerly keeps small books in order. Made with Bulma.\", 14 instances on 7 pages (/, /pricing, /docs, /signup), variants Default, no picture\nc7 guess dropdown 0.85, div role revealed:, classes is-active navbar-menu, inside a:3 div:3, in home, text \"Pricing Docs Contact Log in Sign up\", 1 instances on 1 page (/), variants Default, picture below\nc8 guess button 0.95, a role button, classes navbar-burger, inside span:4, in nav, text \"\", 7 instances on 7 pages (/, /pricing, /docs, /signup), variants Default, no picture\nPicture of c3:\n[image]\nPicture of c4:\n[image]\nPicture of c5:\n[image]\nPicture of c7:\n[image]"
 }

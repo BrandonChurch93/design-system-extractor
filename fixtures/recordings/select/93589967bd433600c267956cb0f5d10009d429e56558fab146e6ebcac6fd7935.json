@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-27T20:57:08.901Z",
+  "recordedAt": "2026-10-28T22:42:45.693Z",
   "request": "Page cap: 12.\nMandatory ids: u18bpkgs.\n\nid | path | title | h1 | source | score | template | reason\nu18bpkgs | / | Tidewater · Release notes your team will read | Release notes your team will actually read. | start | 3.0 | - | home\noigqwsuo | /pricing | Pricing · Tidewater | Pricing | nav | 4.0 | - | tables-toggles\naued7wl1 | /contact | Contact · Tidewater | Contact | nav | 3.0 | - | forms\nlww1k5gm | /docs | Documentation · Tidewater | Documentation | nav | 3.0 | - | code-blocks\nugf0jllh | /features | Features · Tidewater | Features | nav | 3.0 | - | nav\nprtpbx95 | /login | Sign in · Tidewater | Sign in | header | 3.0 | - | forms-errors\ndh5bcnfc | /signup | Create your account · Tidewater | Create your account | header | 3.0 | - | forms\nkgk2jn1g | /changelog | Changelog · Tidewater | Changelog | sitemap | 2.0 | - | badges-timeline\nqpoue356 | /fd51925e6a-does-not-exist | Not found · Tidewater | This page is not here. | synthetic | 2.0 | - | empty-state\ngy4dss3e | /docs/getting-started | Getting started · Tidewater | Getting started | nav | 1.5 | - | code-blocks\nehtkloyy | /about | About · Tidewater | About Tidewater | sitemap | 1.0 | about ×2 | about\nr6anqd3a | /blog | Blog · Tidewater | Blog | sitemap | 1.0 | - | list-template\nclkkbvnn | /blog/release-notes-week-1 | Faster digests · Tidewater blog | Faster digests | sitemap | 1.0 | blog ×12 | post-template"
 }
