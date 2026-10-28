@@ -197,6 +197,26 @@ linear.app and stripe.com are below the 70% floor and their remaining captures a
 | linear.app `9tgcgu3m6g` | 69 | 51 | 0 | 0 | 0 | 120 | 69 of 120 · 57.5% |
 | stripe.com `wjn7p14ocv` | 75 | 45 | 0 | 0 | 0 | 120 | 75 of 120 · 62.5% |
 
+### Third classification, after the second round (2026-10-28)
+
+The 77 captured previews of `ydbxpnubjo` (linear.app, 37, 20 core) and `dk3a8fecyk` (stripe.com, 40, 33 core), each fix measured by re-rendering a patched copy of the stored preview against the page crop.
+
+| Cause | linear.app (core) | stripe.com (core) | Handling (D-098) |
+| --- | --- | --- | --- |
+| element not shown on the page (clipped away, closed menu, opacity 0 tooltip, inactive tab, 1 × 1) | 3 (0) | 11 (10) | none possible: the reference does not show it |
+| other paint over the element | 6 (3) | 4 (4) | not handled |
+| the page shows other content (animation, cycling deck) | 4 (2) | 4 (2) | not handled |
+| images (video, popups, over the cap) | 3 (1) | 3 (3) | not handled |
+| ground behind gradients or parent paint | 2 (0) | 4 (4) | not handled |
+| duplicate stylesheets reorder rules | 4 (3) | 0 | the last copy decides |
+| container query units | 3 (3) | 0 | resolved against the container |
+| inline roots | 3 (1) | 0 | content height as line height |
+| sub-pixel position | 1 (1) | 2 (1) | the render placed at the page's phase |
+| external background images removed | 0 | 3 (2) | not handled |
+| other single causes | 8 (6) | 9 (7) | border-box placeholders, custom properties kept, svg var(), transform none, ancestor opacity handled |
+
+Measured, the handled causes would make 12 more live on linear.app and 4 on stripe.com. Two proposals were left out: a 24 × 2 bar matched without alignment slack (a flat bar's match says little) and an emulated specificity change that could not be measured on real selectors.
+
 ### Second classification, after the first round (2026-10-28)
 
 The 96 captured previews of `9tgcgu3m6g` (linear.app, 51 captured, 43 core) and `wjn7p14ocv` (stripe.com, 45 captured, 41 core); fonts now load on both, so font metrics fell from 46 to 2.
