@@ -16,7 +16,7 @@ v1.1 (P16) passed its gate and the Definition of Done on 2026-10-27; v1.0 (P0 to
 
 ## Next action
 
-Finish step 5 (classify the remaining captured previews by cause, add the builder handling, re-run the three real sites and record the after table), then reseed (`pnpm db:seed:fixtures`), run the new e2e, review `qa:design` at three viewports, update goldens once, then the real-site checks and `verify:all`.
+The real-site live rates meet the floor (fourth round, `P17 real-site check`) and D-098 is written. Next: the final record-mode evals with results.json and the README table; `pnpm fixtures:runs`, the export goldens, `pnpm db:seed:fixtures`, the e2e suite; qa:design at three viewports and the qa:visual goldens once; modernsoftworks.com fresh through the queue; traceability, verify:all on a fresh clone, Docker smoke, doctor, the twelve Definition of Done items.
 
 Environment note: the repository sits on an iCloud-synced Desktop and macOS evicts files (`ls -lO` shows `dataless`); a read then blocks while iCloud downloads. `find . -type f -flags +dataless -print0 | xargs -0 cat > /dev/null` brings them back.
 
@@ -178,6 +178,18 @@ On the production build against the local database: `/compare?a=tx4mehptdf&b=mhx
 ### Showcase promotion on the local database (2026-10-28)
 
 `pnpm showcase --add z1ud0oz4vu` (the sparse v1.0 modernsoftworks.com run) answered `z1ud0oz4vu is sparse (0 components). A sparse run is not added to the showcase.` and exited 1. `pnpm showcase --add mhxvphzzfr` made Modern Softworks the first card on the home page with the promoted caption (`Sites I have run it on. Yours stays private unless you share the link.`), `is_showcase` true and null retention, and warned `7 entries leave an orphan at 3 or 2 columns. Add 5 more or remove 1.`; `--list` showed it as promoted; `--remove mhxvphzzfr` took it down with its 90-day retention back.
+
+### After the fourth round of handling (2026-10-28, 15 min)
+
+Counted by `pnpm live-rate` on the run files.
+
+| Run | live | diff | css-too-large | fonts-unavailable | not-checked | total | live of checked | core live of checked |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| www.modernsoftworks.com `9rx5lsdzlc` | 62 | 13 | 0 | 0 | 0 | 75 | 62 of 75 · 82.7% | 44 of 54 |
+| linear.app `3ekye7ii3n` | 98 | 21 | 1 | 0 | 0 | 120 | 98 of 120 · 81.7% | 65 of 83 |
+| stripe.com `9bwlr9x7rq` | 87 | 33 | 0 | 0 | 0 | 120 | 87 of 120 · 72.5% | 73 of 101 |
+
+Every site is over the 70% floor (D-095), with no component unchecked. stripe.com's third-round drop was 4 previews lost to the svg `var()` handling (svg children are never in the snapshot, so the attribute was removed and the shapes filled black) and 2 from a different set of crawled pages; the fourth round corrected the svg handling and added ancestors' scale, container conditions read against the page's container, the reset carry in its layer and hidden inputs kept hidden, each measured on stored previews first (74 to 86 projected, 87 measured).
 
 ### After the third round of handling (2026-10-28, 15 min)
 
@@ -464,6 +476,7 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-098 · The build's P17 rulings: `pipeline:run` served previews as `file://` (fonts never loaded) and now serves storage over HTTP; every measured preview cause with its handling (clips below the cut, the 1 MB font cap, the masked comparison, the clipped page screenshot, the freeze settling animations, image pixels, layers, `:where()`, units, transforms, ancestors' opacity and scale, svg paint, container conditions, the layered reset carry, hidden inputs) and the causes not handled; the state-file security fix; the rates per round, ending 82.7, 81.7 and 72.5% live of checked; UI rulings (main-variant pinning, six stagger chips, Compare's unfinished reason, same-site promotion replaces the card, skeletons re-measured, the ambient QA mask); `messy-after`'s dark band and its drift deltas.
 - D-097 · Rulings from merging the v1.2 addendum: ids and the 1.2.0 upgrade step, the showcase entry's shape and `promoted`, the upgrade on every read path including MCP `--run` and CLI `serve`, Compare's StateCard reasons, `usedBy` with counts, the EasingStage's two animations and 2,200 ms cycle, the duration tick's path, shadowed crops keep their margin, the Ground toggle's two app grounds, reduced motion in state files, `fontsSubstituted` as a list, `checkCounts` in the schema, the previews event words, `seedv10cln`, stripe.com as the third real site.
 - D-096 · Check results are a component-level metric and a monochrome mark (D-003 and D-018 stand).
 - D-095 · Live rate is measured per reason, render checks run core first by usage, and real sites have thresholds.
@@ -577,7 +590,9 @@ Interface
 - The MCP install line in Claude Code is the one check the build could not run itself; the runbook's step 12 has Brandon run it once (by design, `docs/specs/exports-and-mcp.md`, The MCP server).
 
 Previews and v1.2 (D-098)
-- Causes the builder does not handle, which keep a preview captured on real sites: a reference crop that does not show the element as its markup does (an entrance a script never played, a closed menu, a hidden tooltip, a marquee mid-move, a sticky element on top), an element moved by an ancestor's transform, a longhand Chromium serializes empty after a shorthand with a `var()`, rule order the site's duplicated sheets confuse, a custom property used only in markup attributes, a gradient or image behind a transparent element (a flat ground cannot reproduce it). Counts are in `P17 real-site check`.
+- Causes the builder does not handle, which keep a preview captured on real sites: a reference crop that does not show the element as its markup does (an entrance a script never played, a closed menu, a hidden tooltip, a marquee mid-move, a sticky element on top), an element moved by an ancestor's translation or rotation (a uniform scale is handled), a longhand Chromium serializes empty after a shorthand with a `var()`, a gradient or external image behind a transparent element (a flat ground cannot reproduce it), video and canvas. Counts are in `P17 real-site check`.
+- An svg child's paint that came from a class rule or a custom property is its computed color in the preview and in the exported markup, not the site's rule or variable (D-098).
+- A container query the builder cannot read (a style query, `or`, `not`) keeps its wrapper in the preview and, with no container around it there, does not apply (D-098).
 - A crop margin is not painted when the element casts a shadow, since the shadow lives in the margin (D-097).
 - The StateBar pins states on the variant that shares the component's preview (its first-seen instance, which the state files are built from); the panel opens on it, and other variants show their default only (D-097).
 - A staggered pattern previews six chips at most (D-098).
