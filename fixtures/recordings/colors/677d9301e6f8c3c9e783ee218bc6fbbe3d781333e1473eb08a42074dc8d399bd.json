@@ -1,0 +1,24 @@
+{
+  "purpose": "colors",
+  "size": "small",
+  "model": "claude-haiku-5-5",
+  "text": "{\"names\": [{\"id\": \"zh3ek8iz\", \"name\": \"blue-ink\"}, {\"id\": \"busxwsvr\", \"name\": \"blue-600\"}, {\"id\": \"un4hucw1\", \"name\": \"blue-link\"}, {\"id\": \"4qan2176\", \"name\": \"teal-500\"}, {\"id\": \"3fnsmir4\", \"name\": \"blue-500\"}, {\"id\": \"x0ub1zat\", \"name\": \"blue-focus\"}, {\"id\": \"zb0a35xs\", \"name\": \"gray-ink\"}, {\"id\": \"rlwe9st9\", \"name\": \"gray-50\"}, {\"id\": \"gdffiqfo\", \"name\": \"gray-300\"}, {\"id\": \"972cwu8i\", \"name\": \"gray-200\"}, {\"id\": \"7rmqsn04\", \"name\": \"gray-500\"}, {\"id\": \"bd9c4pw8\", \"name\": \"gray-700\"}, {\"id\": \"54bndii3\", \"name\": \"gray-800\"}, {\"id\": \"dvbecg9z\", \"name\": \"gray-border\"}, {\"id\": \"vjnf6tde\", \"name\": \"gray-900b\"}, {\"id\": \"kbh48r2q\", \"name\": \"gray-400\"}, {\"id\": \"2fqlnlan\", \"name\": \"success\"}, {\"id\": \"45mds9q3\", \"name\": \"warning\"}, {\"id\": \"rab0bgis\", \"name\": \"danger\"}]}",
+  "usage": {
+    "input_tokens": 1214,
+    "cache_creation_input_tokens": 1085,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 1085,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 453,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-29T17:34:24.058Z",
+  "request": "id | name now | hex | group | role | hue | step | uses | pages | fixed\nzh3ek8iz | blue-900 | #0B1F3A | brand | - | blue | 900 | text 138 background 6 border 8 other 26 | 12 of 12 pages | -\nbusxwsvr | blue-600 | #2458E6 | brand | - | blue | 600 | text 2 background 48 border 39 other 0 | 12 of 12 pages | -\nun4hucw1 | blue-600b | #1C4EDB | brand | - | blue | 600 | text 38 background 2 border 40 other 0 | 6 of 12 pages | -\n4qan2176 | teal-500 | #0F8A8A | brand | - | teal | 500 | text 28 background 2 border 0 other 14 | 3 of 12 pages | -\n3fnsmir4 | blue-500 | #2E63ED | brand | - | blue | 500 | text 4 background 0 border 0 other 0 | 2 of 12 pages | -\nx0ub1zat | blue-600c | #005FCC | brand | - | blue | 600 | text 0 background 0 border 2 other 0 | 1 of 12 pages | -\nzb0a35xs | gray-900 | #1F1F1F | neutral | - | gray | 900 | text 736 background 24 border 0 other 2 | 12 of 12 pages | -\nrlwe9st9 | gray-50 | #FFFFFF | neutral | - | gray | 50 | text 160 background 131 border 0 other 24 | 12 of 12 pages | -\ngdffiqfo | gray-300 | #D1D1D1 | neutral | - | gray | 300 | text 0 background 0 border 164 other 0 | 12 of 12 pages | -\n972cwu8i | gray-200 | #E1E1E1 | neutral | - | gray | 200 | text 0 background 2 border 130 other 0 | 12 of 12 pages | -\n7rmqsn04 | gray-500 | #737373 | neutral | - | gray | 500 | text 130 background 0 border 0 other 0 | 12 of 12 pages | -\nbd9c4pw8 | gray-700 | #505050 | neutral | - | gray | 700 | text 118 background 0 border 0 other 0 | 12 of 12 pages | -\n54bndii3 | gray-800 | #353535 | neutral | - | gray | 800 | text 72 background 0 border 0 other 0 | 12 of 12 pages | -\ndvbecg9z | gray-500b | #868686 | neutral | - | gray | 500 | text 0 background 0 border 25 other 0 | 12 of 12 pages | -\nvjnf6tde | gray-900b | #0B0D10 | neutral | - | gray | 900 | text 0 background 2 border 0 other 0 | 1 of 12 pages | -\nkbh48r2q | gray-400 | #B1B1B1 | neutral | - | gray | 400 | text 0 background 0 border 10 other 0 | 2 of 12 pages | -\n2fqlnlan | success | #15803D | semantic | success | green | 600 | text 4 background 4 border 8 other 2 | 3 of 12 pages | -\n45mds9q3 | warning | #B45309 | semantic | warning | orange | 500 | text 4 background 2 border 8 other 2 | 2 of 12 pages | -\nrab0bgis | danger | #DC2626 | semantic | danger | red | 500 | text 2 background 2 border 8 other 0 | 2 of 12 pages | -"
+}
