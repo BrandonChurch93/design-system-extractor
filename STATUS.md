@@ -10,13 +10,13 @@ None.
 
 ## Current phase
 
-P18 · Third testing round (v1.3). In progress. Done and committed: docs merged (D-101 to D-109, merge rulings D-110), the addendum deleted; schema 1.3.0 and the upgrade's 1.3 step (with `clean-v1-2.json`, the v1.2 fixture document) and the references test; the 404 page naming context and pattern attribution; the hidden-at-capture rule, hidden-until-focus previews, no-crop, the fill; the clean family's skip link; state rules in the default preview and inert links, the security suite over both; the web previews (pointer, overlay, 0.6× floor, drawer 1:1, contrast fallback, card Ground toggle, no-crop card), the Motion components (stage, log-axis strip, Replay width, six keyframes, chips at rest), the Radius and Shadow row, the catalog states, `tests/e2e/v13.spec.ts`; recordings re-recorded, fixture runs, export goldens and the seed regenerated; the real-site check (below) and the Long list adopted; skeletons re-measured; D-111; traceability, README, CHANGELOG 1.3.0; qa:design reviewed at three viewports.
+Build complete (v1.3). P18 · Third testing round passed its gate and the Definition of Done (thirteen items) on a fresh clone of `d835b9b` on 2026-10-29; nothing pushed.
 
 v1.2 (P17) passed its gate and the Definition of Done (twelve items) on 2026-10-28; v1.1 (P16) passed its gate and the Definition of Done on 2026-10-27; v1.0 (P0 to P15) on 2026-10-26.
 
 ## Next action
 
-Confirm qa:axe at zero, review the updated visual goldens and log them, the full e2e suite green, then `pnpm verify:all` on a fresh clone with the Docker smoke and the web build, and the Definition of Done (thirteen items).
+None for the Builder. What remains is the owner's end list below.
 
 Environment note: the repository sits on an iCloud-synced Desktop and macOS evicts files (`ls -lO` shows `dataless`); a read then blocks while iCloud downloads. `find . -type f -flags +dataless -print0 | xargs -0 cat > /dev/null` brings them back.
 
@@ -457,13 +457,13 @@ a { text-decoration: none; }
 
 P18 gate (docs/plan.md):
 
-- [ ] Screenshots at 1440, 820 and 390 of the Motion section (clean, `Wide range`, `Dense`, 12 easings), Tokens with Radius and Shadow, a hovered card, a clipped wide component, a `Dark on dark` card, a hidden-until-focus card and a `no-crop` card, reviewed; easing stages of a row at one height; no value label dropped on `Wide range` at 1440; `Dense` under 300 px tall at 390.
-- [ ] Playwright: ReplayButton width constant through a play; chip rest equals the scaled start and returns to it; card frame hover changes the root's computed style; a touch tap on the preview and a click on the name row open the drawer; the card Ground toggle repaints without opening the drawer; the drawer stage scrolls horizontally; the long-task test with 12 easings at card width.
-- [ ] Unit: scale function; contrast fallback; shadow gap; log axis and label budget; synthetic page context; hidden-at-capture rule; every reference resolves in every fixture run, seed and versioned document.
-- [ ] Security: `pnpm test:security` over default previews with state rules; a link click inside a card frame leaves its URL unchanged.
-- [ ] Evals in replay at thresholds with the clean fixture's skip link; live-rate floor unchanged on the three fixtures.
-- [ ] Real-site check: the portfolio and modernsoftworks.com fresh through the queue, under `P18 real-site check` (skip link mode and reason, cards on the contrast fallback, Button names on the 404 page, dropped-label count and the Long list ruling, three screenshots).
-- [ ] `pnpm qa:copy`, axe zero on the run page with the new controls, `pnpm verify:all` green; the Definition of Done re-run in full (thirteen items).
+- [x] Screenshots at 1440, 820 and 390 of the Motion section (clean, `Wide range`, `Dense`, 12 easings), Tokens with Radius and Shadow, a hovered card, a clipped wide component, a `Dark on dark` card, a hidden-until-focus card and a `no-crop` card, reviewed; easing stages of a row at one height; no value label dropped on `Wide range` at 1440; `Dense` under 300 px tall at 390.
+- [x] Playwright: ReplayButton width constant through a play; chip rest equals the scaled start and returns to it; card frame hover changes the root's computed style; a touch tap on the preview and a click on the name row open the drawer; the card Ground toggle repaints without opening the drawer; the drawer stage scrolls horizontally; the long-task test with 12 easings at card width.
+- [x] Unit: scale function; contrast fallback; shadow gap; log axis and label budget; synthetic page context; hidden-at-capture rule; every reference resolves in every fixture run, seed and versioned document.
+- [x] Security: `pnpm test:security` over default previews with state rules; a link click inside a card frame leaves its URL unchanged.
+- [x] Evals in replay at thresholds with the clean fixture's skip link; live-rate floor unchanged on the three fixtures.
+- [x] Real-site check: the portfolio and modernsoftworks.com fresh through the queue, under `P18 real-site check` (skip link mode and reason, cards on the contrast fallback, Button names on the 404 page, dropped-label count and the Long list ruling, three screenshots).
+- [x] `pnpm qa:copy`, axe zero on the run page with the new controls, `pnpm verify:all` green; the Definition of Done re-run in full (thirteen items).
 
 P17 gate (docs/plan.md):
 
@@ -485,6 +485,22 @@ P16 gate (docs/plan.md):
 - [x] Panel Motion block, Compare rows and /open reviewed the same way.
 - [x] Fresh local run on stripe.com: prompt with a Motion section, 46 observed patterns, zero undeclared `var(--`, no numeric names; under `P16 real-site check` above.
 - [x] `pnpm verify:all` green on a fresh clone; goldens updated for v1.1 and logged (D-090: the final set follows the final live eval); Definition of Done re-run in full (eleven items, below).
+
+v1.3 Definition of Done (P18), all true at once on a fresh clone of `d835b9b` with the Docker services running and `DSE_MODEL_MODE=replay` (2026-10-29):
+
+- [x] 1. `pnpm verify:all` green on a fresh clone in 3,959 s: check, seed check, 785 tests (643 unit), security 53, e2e 243, full evals at thresholds with the motion, naming, export-integrity and live-rate rows (live rate clean 28 of 29, messy 30 of 31, tailwind 28 of 29, css-in-js 28 of 29, library 22 of 22; the clean family's skip link captured `hidden-until-focus` as expected), build, visual 128, axe 185, billing 17, Lighthouse (home 100/100/100/100, run 99/100/100/100), copy, audit (no high; one moderate, GHSA-67mh-4wv8-2f99, as in v1.0).
+- [x] 2. Every phase gate P0 to P18 recorded below with its date.
+- [x] 3. `docs/traceability.md` maps every `##` and `###` section of the 21 spec and design documents, the P18 code and tests included, with no gap (`scripts/test/traceability.test.ts`).
+- [x] 4. `docs/decisions.md` records every deviation (D-001 to D-111); Known limitations lists each with its decision id.
+- [x] 5. `pnpm docker:smoke` builds the worker image from the root and completes the clean fixture in it (9 pages, 9 colors, 29 components, 28 live previews, 50 of 52 checks); `pnpm --filter web build` succeeds.
+- [x] 6. The flag-off test passes (inside verify:all).
+- [x] 7. `pnpm qa:copy` passes (641 files).
+- [x] 8. `pnpm run doctor --production --env fixtures/env/production.sample` passes.
+- [x] 9. The working tree is clean and committed; there is no remote, nothing was pushed.
+- [x] 10. STATUS says `Build complete`, and the owner's end list below is exactly what remains.
+- [x] 11. The prompt export of every fixture run has a Motion section, a Site variables block, a Default line per component, core components before page-specific ones, and no `var(--` to an undeclared name (the export-integrity eval row: 0 undeclared on all five fixtures).
+- [x] 12. Every read path upgrades a stored document by its `pipelineVersion`, now through the 1.3 step (`upgrade.test.ts` on `clean-v1-0.json` and `clean-v1-2.json`; every reference resolves in every committed and seeded document); Compare renders the v1.0 seed against the current one and the owner's runs of every version.
+- [x] 13. A live component's card frame answers the pointer with the site's own hover and active styles (`tests/e2e/v13.spec.ts`: the root's background inside the frame reaches the recorded hover value; the security suite hovers and presses every hostile default document), and no card preview renders below 0.6× (`apps/web/test/preview-fit.test.ts` and the e2e scale check on every card of `seedclean0`).
 
 v1.2 Definition of Done (P17), all true at once on a fresh clone of `622bef2` with the Docker services running and `DSE_MODEL_MODE=replay` (2026-10-28):
 
@@ -531,6 +547,8 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 - [x] 10. STATUS says `Build complete`, and the owner's end list below is exactly what remains.
 
 ## Gates passed
+
+- P18 · Third testing round (v1.3) · 2026-10-29 · addendum merged and deleted (D-101 to D-109, merge rulings D-110), the build's rulings D-111 · schema 1.3.0 and the upgrade's 1.3 step, every reference resolving in every fixture, seed and versioned document · the 404 page context and pattern attribution · the hidden-at-capture rule, the skip link shown focused, the drop rule, no-crop, the fill · state rules in the default preview, inert links, the security suite over both · card previews that take the pointer (body overlay, touch cover), the 0.6× floor with clip and fade, the drawer at 1:1, the contrast fallback and the card Ground toggle · the easing stage at card width, the log-axis durations strip with its label budget and the Long list adopted by measurement, the fixed-width Replay, six keyframes, chips at rest on the start · Radius and Shadow in their own row · catalog states · skeletons re-measured · the real-site check on the owner's portfolio and modernsoftworks.com through the queue · record evals in `fixtures/results.json` · qa:design 165 reviewed at 1440, 820 and 390, goldens updated once and logged, axe 185 zero violations · traceability, README, CHANGELOG 1.3.0, version 1.3.0 · verify:all green on a fresh clone, Docker smoke, web build, doctor on the production sample · build spend $1.03 of $20 on the meter (the two queue runs $0.016 more).
 
 - P17 · Second testing round (v1.2) · 2026-10-28 · addendum merged and deleted (D-091 to D-096, merge rulings D-097), the build's rulings D-098 to D-100 · root cause verified (`tx4mehptdf` 447 issues, `mhxvphzzfr` clean) and the upgrade on every read path; Compare and `/r/tx4mehptdf` on the owner's runs · showcase `--add`, `--remove`, `--list` on the local database · previews measured per cause on three real sites at 15 min and handled in four rounds: 32.0, 35.0, 27.5% live of checked before, 82.7, 81.7, 72.5% after (floor 70%) · linear.app at the visitor timeout, all 87 core components checked · ground and the `messy-after` halo check · state files, pinning Hover e2e, security suite on state files · ambient easing loops (long-task, shared start, off screen, reduced motion e2e) · checks up front (six cells with no orphan, the filter, CheckBadge, opening line) · modernsoftworks.com fresh through the queue (`qgc6npq1au`, 60 of 74 live, 30 of 71 passing, Compare against `mhxvphzzfr`) · final record-mode evals in `fixtures/results.json` and the README · qa:design 165 reviewed at 1440, 820 and 390, goldens updated once and logged (plus the Compare goldens after D-099) · axe 185 zero violations · traceability · CHANGELOG 1.2.0, version 1.2.0 · verify:all green on a fresh clone, Docker smoke, web build, doctor on the production sample · P17 model spend about $0.30 (18 local real-site runs $0.286, the queue run $0.011, plus the record evals); build spend under $1 of $20.
 
@@ -724,12 +742,14 @@ Previews and capture (v1.3, D-108, D-109, D-111)
 Keep this list current. It is the only hands-on work he will do.
 
 1. Follow `docs/deploy-runbook.md`.
-2. modernsoftworks.com still answers Hostinger's 403 at the bare host (checked 2026-10-28); the www host serves the site, and the roster crawls `https://www.modernsoftworks.com/` (D-100), so step 11 of the runbook includes it. Pointing the bare host at the site (a redirect to www in Hostinger) is optional.
+2. modernsoftworks.com still answers Hostinger's 403 at the bare host (checked again 2026-10-29); the www host serves the site, and the roster crawls `https://www.modernsoftworks.com/` (D-100), so step 11 of the runbook includes it. Pointing the bare host at the site (a redirect to www in Hostinger) is optional.
 
 ## Session log
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-29 · Build complete · v1.3 · the Definition of Done (thirteen items) is green on a fresh clone of `d835b9b`; nothing pushed.
+- 2026-10-29 · Gate passed · P18 · the real-site check, the screenshot review, axe, verify:all on a fresh clone (second attempt: the first found six integration expectations still at 28 components).
 - 2026-10-29 · P18 · docs merged: the addendum's changes are in their documents, D-101 to D-110 logged, the addendum deleted.
 - 2026-10-29 · Session started · P18 · read CLAUDE.md, STATUS, decisions (D-001 to D-100), handoff, the v1.3 addendum, partner.md, partner-log.md, plan (P17 and the Definition of Done), components, motion, copy, pages, design-system, preview-fidelity, capture-and-states, component-detection, motion-capture, data-model, evals, glossary · tree reconciled (`apps/web/next-env.d.ts` rewritten by the dev server, restored; the addendum and prompts/v1-3.md committed by the Partner in `12b2667`) · `pnpm check` green.
 - 2026-10-28 · Build complete · v1.2 · the Definition of Done (twelve items) is green on a fresh clone of `622bef2`; nothing pushed.
