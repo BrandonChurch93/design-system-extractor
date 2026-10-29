@@ -35,3 +35,23 @@ export function labelRows(xs: number[], texts: (string | null)[], rows = LABEL_R
     return null;
   });
 }
+
+/** A trigger's target: 24 px across, clear of every other (WCAG 2.5.8). */
+export const TARGET = 24;
+
+/**
+ * Which ticks are popover triggers: the most used first, each taken when its center sits at least a
+ * target's width from every trigger already taken; the rest are drawn, not pressed (D-111).
+ */
+export function triggerTicks(xs: number[], usage: number[]): boolean[] {
+  const order = xs.map((_, i) => i).sort((a, b) => usage[b]! - usage[a]! || a - b);
+  const taken: number[] = [];
+  const out = xs.map(() => false);
+  for (const i of order) {
+    if (taken.every((x) => Math.abs(x - xs[i]!) >= TARGET)) {
+      taken.push(xs[i]!);
+      out[i] = true;
+    }
+  }
+  return out;
+}

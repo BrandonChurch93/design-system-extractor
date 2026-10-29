@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { labelRows, logPositions } from '../lib/duration-axis';
+import { labelRows, logPositions, triggerTicks } from '../lib/duration-axis';
 
 // The strip's log axis and label budget (D-102).
 
@@ -37,5 +37,14 @@ describe('the durations axis', () => {
 
   it('skips ticks with no label', () => {
     expect(labelRows([0, 10, 20], ['Base', null, 'Slow'])).toEqual([0, null, 1]);
+  });
+});
+
+describe('the strip\'s triggers', () => {
+  it('takes the most used first and keeps every trigger a target apart', () => {
+    expect(triggerTicks([0, 22, 50, 60, 90], [1, 9, 1, 5, 1])).toEqual([false, true, false, true, true]);
+    const xs = logPositions(dense, 290);
+    const on = xs.filter((_, i) => triggerTicks(xs, dense.map(() => 1))[i]);
+    for (let i = 1; i < on.length; i++) expect(on[i]! - on[i - 1]!).toBeGreaterThanOrEqual(24);
   });
 });

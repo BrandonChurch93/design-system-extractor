@@ -51,7 +51,7 @@ test('the first poll that returns blocked navigates to the state route with ?run
 test('opening a component pushes ?c=, a reload reopens the panel, closing removes it and returns focus to the card', async ({ page }) => {
   await page.goto('/r/seedclean0');
   await settle(page);
-  const link = page.locator('#components article a').first();
+  const link = page.locator('#components article h3 a').first();
   const href = (await link.getAttribute('href'))!;
   const cid = new URL(href, 'http://x').searchParams.get('c')!;
   const name = (await link.innerText()).trim();
@@ -74,7 +74,7 @@ test('the clicked card gets a 2 px focus-colored ring that fades over motion-slo
   await page.goto('/r/seedclean0');
   await settle(page);
   const card = page.locator('#components article').first();
-  await card.locator('a').first().click();
+  await card.locator('h3 a').first().click();
   await expect(card).toHaveAttribute('data-opened', 'true');
   const ring = await card.evaluate((el) => {
     const anim = el.getAnimations().find((a) => (a as CSSAnimation).animationName?.includes('dse-opened'));

@@ -29,12 +29,16 @@
   transform: translateX(-50%);
 }
 
+/* A 24 px hit area around the 16 px mark; the labels keep their place against the mark. */
 .tick {
   position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: flex-end;
   align-items: center;
-  padding: 0 4px;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 0;
   border: 0;
   background: transparent;
   color: inherit;
@@ -42,14 +46,14 @@
   cursor: pointer;
 }
 
-.tick[aria-disabled] {
+span.tick {
   cursor: default;
 }
 
 .value {
   composes: hex from '../../styles/type.module.css';
   position: absolute;
-  bottom: calc(100% + var(--dse-space-1) + var(--row) * var(--line-h));
+  bottom: calc(var(--dse-space-4) + var(--dse-space-1) + var(--row) * var(--line-h));
   left: 50%;
   transform: translateX(-50%);
   color: var(--dse-ink-2);

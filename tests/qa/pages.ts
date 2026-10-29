@@ -36,7 +36,7 @@ const usage = { used: 1.94, budget: 2, runsToday: 41, resetsAt: '2026-10-27T06:0
 
 /** The first component of a seeded run, opened in its panel by clicking its card. */
 async function openFirstComponent(page: Page) {
-  await page.locator('#components article a').first().click();
+  await page.locator('#components article h3 a').first().click();
   await page.locator('[role="dialog"] h2').first().waitFor();
   await page.waitForTimeout(800);
 }
@@ -103,7 +103,7 @@ export const qaPages: QaPage[] = [
   {
     name: 'component',
     path: '/r/seedclean0',
-    states: [{ name: 'page', setup: async (page) => void (await page.goto(await page.locator('#components article a').first().evaluate((a) => (a as HTMLAnchorElement).pathname.replace(/\/$/, '') + '/c/' + new URL((a as HTMLAnchorElement).href).searchParams.get('c'))), await settle(page)) }],
+    states: [{ name: 'page', setup: async (page) => void (await page.goto(await page.locator('#components article h3 a').first().evaluate((a) => (a as HTMLAnchorElement).pathname.replace(/\/$/, '') + '/c/' + new URL((a as HTMLAnchorElement).href).searchParams.get('c'))), await settle(page)) }],
   },
   {
     name: 'compare',

@@ -3,7 +3,7 @@ import { useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import type { DurationToken, RunDocumentPartial } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
-import { labelRows, logPositions, LABEL_ROWS } from '../../lib/duration-axis';
+import { labelRows, logPositions, triggerTicks, LABEL_ROWS } from '../../lib/duration-axis';
 import { count } from '../../lib/format';
 import { AMBIENT, loopFrames, useAmbientLoop } from '../../lib/motion/ambient';
 import { TokenPopover, tokenInfo } from './TokenPopover';
@@ -60,6 +60,7 @@ export function DurationStrip({ durations, doc, head }: { durations: Duration[];
   const valueRows = labelRows(xs, values);
   const roleRows = labelRows(xs, list.map((d) => (d.role ? M.roles[d.role] : null)));
   const dropped = valueRows.filter((r) => r === null).length;
+  const triggers = triggerTicks(xs, list.map((d) => d.usage));
   const above = Math.max(1, ...valueRows.map((r) => (r === null ? 0 : r + 1)));
   const below = Math.max(0, ...roleRows.map((r) => (r === null ? 0 : r + 1)));
   const info = (d: Duration) => (doc && d.id ? tokenInfo(doc, d.id) : null);
@@ -70,19 +71,20 @@ export function DurationStrip({ durations, doc, head }: { durations: Duration[];
         <div className={styles.scaleBox} style={{ ['--above' as string]: Math.min(LABEL_ROWS, above), ['--below' as string]: Math.min(LABEL_ROWS, below) }}>
           <ol ref={ref} className={styles.scale}>
             {list.map((d, i) => {
+              const t = triggers[i] ? info(d) : null;
+              const Tag = t ? 'button' : 'span';
               const tick = (props: Record<string, unknown> = {}) => (
-                <button type="button" className={styles.tick} data-most-used={d === top || undefined} {...props}>
+                <Tag {...(t ? { type: 'button' as const } : {})} className={styles.tick} data-most-used={d === top || undefined} {...props}>
                   {valueRows[i] === null ? <span className="visually-hidden">{values[i]}</span> : <span className={styles.value} style={{ ['--row' as string]: valueRows[i] }}>{values[i]}</span>}
                   <span className={styles.mark} aria-hidden="true">
                     <TickDot ms={d.ms} />
                   </span>
                   {d.role && roleRows[i] !== null ? <span className={styles.role} style={{ ['--row' as string]: roleRows[i] }}>{M.roles[d.role]}</span> : null}
-                </button>
+                </Tag>
               );
-              const t = info(d);
               return (
                 <li key={d.name} className={styles.at} style={{ left: `${xs[i]}px` }} data-testid="duration-tick">
-                  {t ? <TokenPopover info={t} trigger={(p) => tick(p)} /> : tick({ tabIndex: -1, 'aria-disabled': true })}
+                  {t ? <TokenPopover info={t} trigger={(p) => tick(p)} /> : tick()}
                 </li>
               );
             })}
@@ -94,14 +96,15 @@ export function DurationStrip({ durations, doc, head }: { durations: Duration[];
             <ul className={styles.longList}>
               {long.map((d) => {
                 const t = info(d);
+                const Tag = t ? 'button' : 'span';
                 const row = (props: Record<string, unknown> = {}) => (
-                  <button type="button" className={styles.longRow} {...props}>
+                  <Tag {...(t ? { type: 'button' as const } : {})} className={styles.longRow} {...props}>
                     <span>{d.name}</span>
                     <span>{fill(M.ms, { ms: count(d.ms) })}</span>
                     {d.role ? <span className={styles.longRole}>{M.roles[d.role]}</span> : null}
-                  </button>
+                  </Tag>
                 );
-                return <li key={d.name}>{t ? <TokenPopover info={t} trigger={(p) => row(p)} /> : row({ tabIndex: -1, 'aria-disabled': true })}</li>;
+                return <li key={d.name}>{t ? <TokenPopover info={t} trigger={(p) => row(p)} /> : row()}</li>;
               })}
             </ul>
           </div>
