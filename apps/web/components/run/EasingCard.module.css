@@ -7,6 +7,7 @@
 .card {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto 1fr;
   align-content: start;
   gap: var(--dse-space-3);
   padding: var(--dse-space-5);
@@ -45,18 +46,21 @@
   margin-top: var(--dse-space-3);
 }
 
+/* Pinned to the card's bottom edge, so every stage in a row sits at one height (D-101). */
 .stage {
   display: grid;
-  justify-items: start;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-3);
-  margin-top: var(--dse-space-1);
+  align-self: end;
+  margin-top: auto;
+  padding-top: var(--dse-space-1);
 }
 
 .plot {
   position: relative;
   display: block;
-  width: 160px;
-  height: 96px;
+  width: 100%;
+  height: 160px;
   background: var(--dse-surface-tint);
   border-radius: var(--dse-radius-xs);
 }
@@ -90,10 +94,10 @@
 
 .curveDot {
   position: absolute;
-  left: -3px;
-  top: -3px;
-  width: 6px;
-  height: 6px;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
   border-radius: var(--dse-radius-pill);
   background: var(--dse-ink);
   opacity: 0;
@@ -102,8 +106,8 @@
 .track {
   position: relative;
   display: block;
-  width: 120px;
-  height: 8px;
+  width: 100%;
+  height: 10px;
 }
 
 .track::before {
@@ -120,8 +124,8 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
   border-radius: var(--dse-radius-pill);
   background: var(--dse-ink);
   opacity: 0;

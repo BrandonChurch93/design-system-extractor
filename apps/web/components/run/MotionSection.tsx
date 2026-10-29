@@ -38,8 +38,7 @@ export function MotionSection({ doc, landed, hrefFor, onOpen, id = 'motion', lab
           {doc.motion?.patterns.length ? <ReplayCaption id={captionId} /> : null}
           {t?.duration?.length ? (
             <Card>
-              <CardHead title={M.durationsTitle} meta={count(n.durations)} />
-              <DurationStrip durations={t.duration} />
+              <DurationStrip durations={t.duration} doc={doc} head={(meta) => <CardHead title={M.durationsTitle} meta={meta} />} />
             </Card>
           ) : null}
           {t?.easing?.length ? (

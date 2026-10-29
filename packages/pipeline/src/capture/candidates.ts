@@ -113,5 +113,5 @@ export function noveltyKey(e: SnapElement): string {
     .filter((c) => !/[0-9a-f]{5,}|^css-|^sc-|^_/.test(c))
     .sort()
     .slice(0, 8);
-  return `${e.tag}|${e.role ?? ''}|${cls.join('.')}|${e.style['background-color']}|${Math.round(e.h / 4)}${trigger ? '|trigger' : ''}${iconOnly ? '|icon' : ''}`;
+  return `${e.tag}|${e.role ?? ''}|${cls.join('.')}|${e.style['background-color']}|${Math.round(e.h / 4)}${trigger ? '|trigger' : ''}${iconOnly ? '|icon' : ''}${e.hidden ? '|hidden' : ''}`;
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29T17:01:34.176Z",
+  "generatedAt": "2026-10-29T17:09:53.410Z",
   "mode": "record",
   "through": "done",
   "pipelineVersion": "1.3.0",
@@ -78,52 +78,16 @@
           }
         },
         "components": {
-          "precision": 0.357,
-          "recall": 0.357,
-          "predicted": 28,
+          "precision": 0.966,
+          "recall": 1,
+          "predicted": 29,
           "expected": 28,
-          "matched": 10,
-          "nameAgreement": 0.6,
+          "matched": 28,
+          "nameAgreement": 0.714,
           "namesValid": true,
-          "misses": [
-            "Site header (header)",
-            "Main navigation (nav)",
-            "Dropdown trigger (button)",
-            "Button (button)",
-            "New tag (tag)",
-            "Avatar (avatar)",
-            "Footer links (nav)",
-            "Menu button (button)",
-            "Footer button (button)",
-            "Toggle (toggle)",
-            "Breadcrumb (breadcrumb)",
-            "Status badge (badge)",
-            "Input (input)",
-            "Select (select)",
-            "Checkbox (checkbox)",
-            "Icon button (button)",
-            "Tabs (tabs)",
-            "Tab (button)"
-          ],
+          "misses": [],
           "extras": [
-            "Button (button) /",
-            "Dropdown trigger (button) /",
-            "Menu button (button) /",
-            "Tab (button) /features",
-            "Footer button (button) /pricing",
-            "Icon button (button) /contact",
-            "Text input (input) /login",
-            "Toggle (toggle) /pricing",
-            "Select (select) /signup",
-            "Checkbox (checkbox) /signup",
-            "Site header (header) /",
-            "Footer links (nav) /",
-            "Main navigation (nav) /",
-            "Breadcrumb (breadcrumb) /docs",
-            "Feature tabs (tabs) /features",
-            "Status badge (badge) /docs",
-            "New tag (tag) /",
-            "Avatar (avatar) /"
+            "Skip link (link) /"
           ]
         },
         "variants": {
@@ -132,26 +96,19 @@
         },
         "states": {
           "rate": 1,
-          "captured": 13,
-          "expected": 13,
+          "captured": 67,
+          "expected": 67,
           "misses": []
         },
         "motion": {
           "durations": 1,
           "easings": 1,
           "keyframes": 1,
-          "patterns": 0.6,
-          "hover": 0,
+          "patterns": 1,
+          "hover": 1,
           "outlineNoise": 0,
-          "collapsedBorder": 0,
-          "missed": [
-            "pattern scroll-reveal in-view 400",
-            "pattern scrolled-header scroll 160",
-            "hover Button background-color",
-            "hover Button transform",
-            "hover Button box-shadow",
-            "border not collapsed on Icon button"
-          ]
+          "collapsedBorder": 1,
+          "missed": []
         },
         "naming": {
           "siteNaming": 1,
@@ -159,63 +116,32 @@
           "overlaySplit": 1,
           "typeNames": 1,
           "roleOther": 0,
-          "variantNames": 0,
+          "variantNames": 1,
           "numericNames": 0,
-          "tiers": 0.35714285714285715,
+          "tiers": 1,
           "fallbackNames": 1,
-          "missed": [
-            "variant names on Button",
-            "tier Site header unmatched not core",
-            "tier Main navigation unmatched not core",
-            "tier Dropdown trigger unmatched not core",
-            "tier Button unmatched not core",
-            "tier New tag unmatched not core",
-            "tier Avatar unmatched not core",
-            "tier Footer links unmatched not core",
-            "tier Menu button unmatched not core",
-            "tier Footer button unmatched not page",
-            "tier Toggle unmatched not core",
-            "tier Breadcrumb unmatched not core",
-            "tier Status badge unmatched not core",
-            "tier Input unmatched not core",
-            "tier Select unmatched not core",
-            "tier Checkbox unmatched not core",
-            "tier Icon button unmatched not page",
-            "tier Tabs unmatched not page",
-            "tier Tab unmatched not core"
-          ]
+          "missed": []
         },
         "liveRate": {
-          "rate": 1,
-          "live": 28,
-          "total": 28,
-          "captured": []
+          "rate": 0.931,
+          "live": 27,
+          "total": 29,
+          "captured": [
+            "Skip link (hidden-until-focus)",
+            "Resources menu (diff 10.1 %)"
+          ]
         },
         "checks": {
-          "failures": 0,
-          "passes": 0,
+          "failures": 1,
+          "passes": 1,
           "summary": {
-            "passed": 47,
+            "passed": 50,
             "failed": 3,
-            "total": 140,
-            "applicable": 50
+            "total": 145,
+            "applicable": 53
           },
-          "missedFailures": [
-            "Icon button label: no result",
-            "New tag contrast: no result"
-          ],
-          "flaggedPasses": [
-            "Button contrast: no result",
-            "Button focus-visible: no result",
-            "Button tap-target: no result",
-            "Button reduced-motion: no result",
-            "Input label: no result",
-            "Toggle label: no result",
-            "Menu button label: no result",
-            "Status badge contrast: no result",
-            "Checkbox tap-target: no result",
-            "Dropdown trigger focus-visible: no result"
-          ]
+          "missedFailures": [],
+          "flaggedPasses": []
         },
         "drift": {
           "falseFindings": 0,
@@ -223,7 +149,7 @@
           "headline": "Nothing to collapse. 9 colors, 11 spacing steps, all on the grid."
         },
         "exports": {
-          "files": 72,
+          "files": 74,
           "undeclared": [],
           "promptShape": []
         }
@@ -303,55 +229,15 @@
           }
         },
         "components": {
-          "precision": 0.387,
-          "recall": 0.387,
+          "precision": 1,
+          "recall": 1,
           "predicted": 31,
           "expected": 31,
-          "matched": 12,
-          "nameAgreement": 0.583,
+          "matched": 31,
+          "nameAgreement": 0.677,
           "namesValid": true,
-          "misses": [
-            "Site header (header)",
-            "Main navigation (nav)",
-            "Dropdown trigger (button)",
-            "Button (button)",
-            "Pill link (link)",
-            "New tag (tag)",
-            "Avatar (avatar)",
-            "Footer links (nav)",
-            "Input (input)",
-            "Menu button (button)",
-            "Toggle (toggle)",
-            "Breadcrumb (breadcrumb)",
-            "Status badge (badge)",
-            "Select (select)",
-            "Checkbox (checkbox)",
-            "Icon button (button)",
-            "Tabs (tabs)",
-            "Tab (button)",
-            "Share button (button)"
-          ],
-          "extras": [
-            "Button (button) /",
-            "Dropdown trigger (button) /",
-            "Menu button (button) /",
-            "Tab (button) /features",
-            "Share button (button) /changelog",
-            "Pill link (link) /",
-            "Icon button (button) /contact",
-            "Newsletter input (input) /",
-            "Billing toggle (toggle) /pricing",
-            "Team size select (select) /signup",
-            "Checkbox (checkbox) /signup",
-            "Site header (header) /",
-            "Footer links (nav) /",
-            "Main navigation (nav) /",
-            "Breadcrumb (breadcrumb) /docs",
-            "Feature tabs (tabs) /features",
-            "Status badge (badge) /docs",
-            "New tag (tag) /",
-            "Avatar (avatar) /"
-          ]
+          "misses": [],
+          "extras": []
         },
         "variants": {
           "accuracy": 1,
@@ -359,21 +245,19 @@
         },
         "states": {
           "rate": 1,
-          "captured": 15,
-          "expected": 15,
+          "captured": 73,
+          "expected": 73,
           "misses": []
         },
         "motion": {
           "durations": 1,
           "easings": 1,
           "keyframes": 1,
-          "patterns": 0.5,
+          "patterns": 1,
           "hover": 1,
           "outlineNoise": 0,
           "collapsedBorder": 1,
-          "missed": [
-            "pattern scrolled-header scroll 160"
-          ]
+          "missed": []
         },
         "naming": {
           "siteNaming": 1,
@@ -383,29 +267,9 @@
           "roleOther": 0,
           "variantNames": 1,
           "numericNames": 0,
-          "tiers": 0.3870967741935484,
+          "tiers": 1,
           "fallbackNames": 1,
-          "missed": [
-            "tier Site header unmatched not core",
-            "tier Main navigation unmatched not core",
-            "tier Dropdown trigger unmatched not core",
-            "tier Button unmatched not core",
-            "tier Pill link unmatched not core",
-            "tier New tag unmatched not core",
-            "tier Avatar unmatched not core",
-            "tier Footer links unmatched not core",
-            "tier Input unmatched not core",
-            "tier Menu button unmatched not core",
-            "tier Toggle unmatched not core",
-            "tier Breadcrumb unmatched not page",
-            "tier Status badge unmatched not core",
-            "tier Select unmatched not core",
-            "tier Checkbox unmatched not core",
-            "tier Icon button unmatched not page",
-            "tier Tabs unmatched not page",
-            "tier Tab unmatched not core",
-            "tier Share button unmatched not core"
-          ]
+          "missed": []
         },
         "liveRate": {
           "rate": 0.968,
@@ -416,42 +280,24 @@
           ]
         },
         "checks": {
-          "failures": 0,
-          "passes": 0,
+          "failures": 1,
+          "passes": 1,
           "summary": {
             "passed": 48,
             "failed": 10,
             "total": 155,
             "applicable": 58
           },
-          "missedFailures": [
-            "Status badge contrast: no result",
-            "Pill link focus-visible: no result",
-            "Share button tap-target: no result",
-            "Input label: no result",
-            "Status badge reduced-motion: no result",
-            "Icon button label: no result",
-            "New tag contrast: no result"
-          ],
-          "flaggedPasses": [
-            "Button contrast: no result",
-            "Button reduced-motion: no result",
-            "Checkbox label: no result",
-            "Toggle label: no result",
-            "Tab focus-visible: no result",
-            "Share button label: no result",
-            "Menu button label: no result"
-          ]
+          "missedFailures": [],
+          "flaggedPasses": []
         },
         "drift": {
-          "recall": 0.938,
-          "found": 15,
+          "recall": 1,
+          "found": 16,
           "planted": 16,
           "findings": 18,
           "contrastKept": true,
-          "missed": [
-            "Button collapse ×2"
-          ],
+          "missed": [],
           "headline": "14 grays across 12 pages. 9 would do."
         },
         "exports": {
@@ -535,52 +381,19 @@
           }
         },
         "components": {
-          "precision": 0.357,
-          "recall": 0.357,
-          "predicted": 28,
+          "precision": 0.931,
+          "recall": 0.964,
+          "predicted": 29,
           "expected": 28,
-          "matched": 10,
-          "nameAgreement": 0.5,
+          "matched": 27,
+          "nameAgreement": 0.593,
           "namesValid": true,
           "misses": [
-            "Site header (header)",
-            "Main navigation (nav)",
-            "Dropdown trigger (button)",
-            "Button (button)",
-            "New tag (tag)",
-            "Avatar (avatar)",
-            "Footer links (nav)",
-            "Menu button (button)",
-            "Footer button (button)",
-            "Toggle (toggle)",
-            "Breadcrumb (breadcrumb)",
-            "Status badge (badge)",
-            "Input (input)",
-            "Select (select)",
-            "Checkbox (checkbox)",
-            "Icon button (button)",
-            "Tabs (tabs)",
-            "Tab (button)"
+            "Button (button)"
           ],
           "extras": [
-            "Button (button) /",
-            "Resources trigger (button) /",
-            "Menu button (button) /",
-            "Tab button (button) /features",
-            "Button (footer) (button) /pricing",
-            "Icon button (button) /contact",
-            "Text input (input) /login",
-            "Toggle (toggle) /pricing",
-            "Select (select) /signup",
-            "Checkbox (checkbox) /signup",
-            "Site header (header) /",
-            "Footer links (nav) /",
-            "Main navigation (nav) /",
-            "Breadcrumb (breadcrumb) /docs",
-            "Feature tabs (tabs) /features",
-            "Status badge (badge) /docs",
-            "New tag (tag) /",
-            "Avatar (avatar) /"
+            "Skip link (link) /",
+            "Button (button) /login"
           ]
         },
         "variants": {
@@ -589,25 +402,22 @@
         },
         "states": {
           "rate": 1,
-          "captured": 13,
-          "expected": 13,
+          "captured": 62,
+          "expected": 62,
           "misses": []
         },
         "motion": {
           "durations": 1,
           "easings": 1,
           "keyframes": 1,
-          "patterns": 0.6,
+          "patterns": 1,
           "hover": 0,
           "outlineNoise": 0,
-          "collapsedBorder": 0,
+          "collapsedBorder": 1,
           "missed": [
-            "pattern scroll-reveal in-view 400",
-            "pattern scrolled-header scroll 160",
             "hover Button background-color",
             "hover Button transform",
-            "hover Button box-shadow",
-            "border not collapsed on Icon button"
+            "hover Button box-shadow"
           ]
         },
         "naming": {
@@ -618,60 +428,36 @@
           "roleOther": 0,
           "variantNames": 0,
           "numericNames": 0,
-          "tiers": 0.35714285714285715,
+          "tiers": 0.9642857142857143,
           "fallbackNames": 1,
           "missed": [
             "variant names on Button",
-            "tier Site header unmatched not core",
-            "tier Main navigation unmatched not core",
-            "tier Dropdown trigger unmatched not core",
-            "tier Button unmatched not core",
-            "tier New tag unmatched not core",
-            "tier Avatar unmatched not core",
-            "tier Footer links unmatched not core",
-            "tier Menu button unmatched not core",
-            "tier Footer button unmatched not page",
-            "tier Toggle unmatched not core",
-            "tier Breadcrumb unmatched not core",
-            "tier Status badge unmatched not core",
-            "tier Input unmatched not core",
-            "tier Select unmatched not core",
-            "tier Checkbox unmatched not core",
-            "tier Icon button unmatched not page",
-            "tier Tabs unmatched not page",
-            "tier Tab unmatched not core"
+            "tier Button unmatched not core"
           ]
         },
         "liveRate": {
-          "rate": 1,
+          "rate": 0.966,
           "live": 28,
-          "total": 28,
-          "captured": []
+          "total": 29,
+          "captured": [
+            "Resources dropdown (diff 10.1 %)"
+          ]
         },
         "checks": {
-          "failures": 0,
-          "passes": 0,
+          "failures": 1,
+          "passes": 0.6,
           "summary": {
-            "passed": 47,
+            "passed": 51,
             "failed": 3,
-            "total": 140,
-            "applicable": 50
+            "total": 145,
+            "applicable": 54
           },
-          "missedFailures": [
-            "Icon button label: no result",
-            "New tag contrast: no result"
-          ],
+          "missedFailures": [],
           "flaggedPasses": [
             "Button contrast: no result",
             "Button focus-visible: no result",
             "Button tap-target: no result",
-            "Button reduced-motion: no result",
-            "Input label: no result",
-            "Toggle label: no result",
-            "Menu button label: no result",
-            "Status badge contrast: no result",
-            "Checkbox tap-target: no result",
-            "Dropdown trigger focus-visible: no result"
+            "Button reduced-motion: no result"
           ]
         },
         "drift": {
@@ -680,7 +466,7 @@
           "headline": "Nothing to collapse. 9 colors, 11 spacing steps, all on the grid."
         },
         "exports": {
-          "files": 72,
+          "files": 74,
           "undeclared": [],
           "promptShape": []
         }
@@ -760,52 +546,19 @@
           }
         },
         "components": {
-          "precision": 0.357,
-          "recall": 0.357,
-          "predicted": 28,
+          "precision": 0.931,
+          "recall": 0.964,
+          "predicted": 29,
           "expected": 28,
-          "matched": 10,
-          "nameAgreement": 0.5,
+          "matched": 27,
+          "nameAgreement": 0.667,
           "namesValid": true,
           "misses": [
-            "Site header (header)",
-            "Main navigation (nav)",
-            "Dropdown trigger (button)",
-            "Button (button)",
-            "New tag (tag)",
-            "Avatar (avatar)",
-            "Footer links (nav)",
-            "Menu button (button)",
-            "Footer button (button)",
-            "Toggle (toggle)",
-            "Breadcrumb (breadcrumb)",
-            "Status badge (badge)",
-            "Input (input)",
-            "Select (select)",
-            "Checkbox (checkbox)",
-            "Icon button (button)",
-            "Tabs (tabs)",
-            "Tab (button)"
+            "Button (button)"
           ],
           "extras": [
-            "Button (button) /",
-            "Dropdown trigger (button) /",
-            "Menu icon button (button) /",
-            "Feature tab (button) /features",
-            "Button (footer) (button) /pricing",
-            "Icon button (button) /contact",
-            "Text input (input) /login",
-            "Toggle (toggle) /pricing",
-            "Select (select) /signup",
-            "Checkbox (checkbox) /signup",
-            "Site header (header) /",
-            "Footer links (nav) /",
-            "Main navigation (nav) /",
-            "Breadcrumb (breadcrumb) /docs",
-            "Feature tabs (tabs) /features",
-            "Status badge (badge) /docs",
-            "Status tag (tag) /",
-            "Avatar (avatar) /"
+            "Skip link (link) /",
+            "Button (button) /login"
           ]
         },
         "variants": {
@@ -814,25 +567,22 @@
         },
         "states": {
           "rate": 1,
-          "captured": 13,
-          "expected": 13,
+          "captured": 62,
+          "expected": 62,
           "misses": []
         },
         "motion": {
           "durations": 1,
           "easings": 1,
           "keyframes": 1,
-          "patterns": 0.6,
+          "patterns": 1,
           "hover": 0,
           "outlineNoise": 0,
-          "collapsedBorder": 0,
+          "collapsedBorder": 1,
           "missed": [
-            "pattern scroll-reveal in-view 400",
-            "pattern scrolled-header scroll 160",
             "hover Button background-color",
             "hover Button transform",
-            "hover Button box-shadow",
-            "border not collapsed on Icon button"
+            "hover Button box-shadow"
           ]
         },
         "naming": {
@@ -843,60 +593,36 @@
           "roleOther": 0,
           "variantNames": 0,
           "numericNames": 0,
-          "tiers": 0.35714285714285715,
+          "tiers": 0.9642857142857143,
           "fallbackNames": 1,
           "missed": [
             "variant names on Button",
-            "tier Site header unmatched not core",
-            "tier Main navigation unmatched not core",
-            "tier Dropdown trigger unmatched not core",
-            "tier Button unmatched not core",
-            "tier New tag unmatched not core",
-            "tier Avatar unmatched not core",
-            "tier Footer links unmatched not core",
-            "tier Menu button unmatched not core",
-            "tier Footer button unmatched not page",
-            "tier Toggle unmatched not core",
-            "tier Breadcrumb unmatched not core",
-            "tier Status badge unmatched not core",
-            "tier Input unmatched not core",
-            "tier Select unmatched not core",
-            "tier Checkbox unmatched not core",
-            "tier Icon button unmatched not page",
-            "tier Tabs unmatched not page",
-            "tier Tab unmatched not core"
+            "tier Button unmatched not core"
           ]
         },
         "liveRate": {
-          "rate": 1,
+          "rate": 0.966,
           "live": 28,
-          "total": 28,
-          "captured": []
+          "total": 29,
+          "captured": [
+            "Resources menu (diff 10.1 %)"
+          ]
         },
         "checks": {
-          "failures": 0,
-          "passes": 0,
+          "failures": 1,
+          "passes": 0.6,
           "summary": {
-            "passed": 47,
+            "passed": 51,
             "failed": 3,
-            "total": 140,
-            "applicable": 50
+            "total": 145,
+            "applicable": 54
           },
-          "missedFailures": [
-            "Icon button label: no result",
-            "New tag contrast: no result"
-          ],
+          "missedFailures": [],
           "flaggedPasses": [
             "Button contrast: no result",
             "Button focus-visible: no result",
             "Button tap-target: no result",
-            "Button reduced-motion: no result",
-            "Input label: no result",
-            "Toggle label: no result",
-            "Menu button label: no result",
-            "Status badge contrast: no result",
-            "Checkbox tap-target: no result",
-            "Dropdown trigger focus-visible: no result"
+            "Button reduced-motion: no result"
           ]
         },
         "drift": {
@@ -905,7 +631,7 @@
           "headline": "Nothing to collapse. 9 colors, 11 spacing steps, all on the grid."
         },
         "exports": {
-          "files": 72,
+          "files": 74,
           "undeclared": [],
           "promptShape": []
         }
@@ -990,7 +716,7 @@
           "predicted": 22,
           "expected": 22,
           "matched": 22,
-          "nameAgreement": 0.364,
+          "nameAgreement": 0.318,
           "namesValid": true,
           "misses": [],
           "extras": []

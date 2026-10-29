@@ -7,7 +7,7 @@ export type Cluster = { key: string; items: Item[] };
 
 export function exactKey(it: Item): string {
   const f = it.fp;
-  return [f.tag, f.role, f.baseTokens.join('.'), f.structure, f.iconOnly ? 'icon' : '', f.trigger ? 'trigger' : '', f.semanticGround ? 'semantic' : ''].join('|');
+  return [f.tag, f.role, f.baseTokens.join('.'), f.structure, f.iconOnly ? 'icon' : '', f.trigger ? 'trigger' : '', f.semanticGround ? 'semantic' : '', f.hidden ? 'hidden' : ''].join('|');
 }
 
 export function exactGroups(items: Item[]): Cluster[] {
@@ -107,7 +107,7 @@ export function styleMerge(groups: Cluster[]): Cluster[] {
     for (let j = i + 1; j < groups.length; j++) {
       const a = reps[i]!.fp;
       const b = reps[j]!.fp;
-      if (a.tag !== b.tag || a.role !== b.role || a.iconOnly !== b.iconOnly || a.trigger !== b.trigger) continue;
+      if (a.tag !== b.tag || a.role !== b.role || a.iconOnly !== b.iconOnly || a.trigger !== b.trigger || Boolean(a.hidden) !== Boolean(b.hidden)) continue;
       if (!classesAllowMerge(a.baseTokens, b.baseTokens)) continue;
       if (structureSimilarity(a.structure, b.structure) < 0.7) continue;
       const d = styleDifference(a.style, b.style);

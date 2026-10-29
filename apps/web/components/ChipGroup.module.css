@@ -40,6 +40,20 @@
   color: var(--dse-inverse-ink);
 }
 
+.sm {
+  gap: var(--dse-space-1);
+}
+
+.sm .chip {
+  font-family: var(--dse-type-caption-family);
+  font-size: var(--dse-type-caption-size);
+  line-height: var(--dse-type-caption-line);
+  letter-spacing: var(--dse-type-caption-tracking);
+  font-weight: 600;
+  height: 24px;
+  padding-inline: var(--dse-space-2);
+}
+
 .count {
   composes: meta from '../styles/type.module.css';
 }
@@ -55,5 +69,14 @@
   }
   .group::-webkit-scrollbar {
     display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .sm {
+    margin-inline: 0;
+    padding-inline: 0;
+    padding-block: 0;
+    overflow: visible;
   }
 }

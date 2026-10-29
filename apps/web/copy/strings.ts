@@ -145,6 +145,7 @@ export const runPage = {
     radius: 'Radius',
     shadow: 'Shadow',
     pill: 'pill',
+    radiusValue: '{value} px',
     darkTheme: 'A dark theme was detected and not extracted.',
     overlays: 'Overlays',
     overlaysCaption: 'Translucent colors, as a base color and an alpha.',

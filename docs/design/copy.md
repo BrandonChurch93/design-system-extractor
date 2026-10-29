@@ -126,7 +126,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Color groups: `Brand` · `Neutral · {n} found` · `Semantic`
 - Type card meta: `{families} · {n} styles` (families joined by ·); show-all `Show all {n} styles`; font not loaded caption `{family} did not load; the fallback {fallback} was measured.`
 - Spacing meta: `{n} steps · {base} px base`; breakpoints caption `Breakpoints · {list}` (values joined by ·); off-grid popover `Off the {base} px grid` followed by the page list
-- Radius and shadow labels: `Radius` · `Shadow`; shadow names `sm` · `md` · `lg`; the pill radius `pill`
+- Radius and shadow labels: `Radius` · `Shadow`; shadow names `sm` · `md` · `lg`; the pill radius `pill`; a radius value `{value} px` (D-103)
 - Dark theme caption: `A dark theme was detected and not extracted.`
 - Overlays: label `Overlays` · caption `Translucent colors, as a base color and an alpha.`
 - Site names (D-082): Pill `Named by the site` · provenance line `Named by {variable}` · type tags line `Found on {tags}` (tags joined by ·)

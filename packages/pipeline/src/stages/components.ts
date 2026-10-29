@@ -132,7 +132,7 @@ function toneMerge(list: Working[], typeOf: (w: Working) => ComponentType, token
       if (typeOf(a) !== typeOf(b) || !TONED.has(typeOf(a))) continue;
       const ra = representative(a.items).fp;
       const rb = representative(b.items).fp;
-      if (ra.tag !== rb.tag || ra.role !== rb.role || ra.iconOnly !== rb.iconOnly || ra.trigger !== rb.trigger || !classesAllowMerge(ra.baseTokens, rb.baseTokens)) continue;
+      if (ra.tag !== rb.tag || ra.role !== rb.role || ra.iconOnly !== rb.iconOnly || ra.trigger !== rb.trigger || Boolean(ra.hidden) !== Boolean(rb.hidden) || !classesAllowMerge(ra.baseTokens, rb.baseTokens)) continue;
       // A notice holds what it says, with or without an action, so its box decides, not its children.
       if (!toneOnly(ra.style, rb.style)) continue;
       a.items.push(...b.items);
@@ -173,7 +173,7 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
       const b = working[j]!;
       const ra = representative(a.items).fp;
       const rb = representative(b.items).fp;
-      if (a.guess.type !== b.guess.type || ra.iconOnly !== rb.iconOnly || ra.trigger !== rb.trigger || !classesAllowMerge(ra.baseTokens, rb.baseTokens)) continue;
+      if (a.guess.type !== b.guess.type || ra.iconOnly !== rb.iconOnly || ra.trigger !== rb.trigger || Boolean(ra.hidden) !== Boolean(rb.hidden) || !classesAllowMerge(ra.baseTokens, rb.baseTokens)) continue;
       // Only where a look is a choice (controls, marks): plain wrappers all look alike.
       if (!a.items.some(sized) || !b.items.some(sized)) continue;
       const looks = new Set(a.variants.map((v) => v.key));
@@ -214,6 +214,8 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
       const b = group[i]!;
       // A trigger never joins an action control, whatever the model called the two (D-054, D-070).
       if (representative(a.items).fp.trigger !== representative(b.items).fp.trigger) continue;
+      // Nor does an element hidden until focus join one that shows at rest (D-108).
+      if (Boolean(representative(a.items).fp.hidden) !== Boolean(representative(b.items).fp.hidden)) continue;
       if (stylesAgree(draftOf(a), draftOf(b))) {
         parent.set(b, a);
         mergedByStyle++;

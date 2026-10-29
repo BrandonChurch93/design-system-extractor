@@ -121,9 +121,11 @@ test('the easings under reduced motion: still at 60% of the curve, nothing runs,
   const before = [await dot.evaluate(x), await curve.evaluate(y)];
   await page.waitForTimeout(900);
   expect([await dot.evaluate(x), await curve.evaluate(y)]).toEqual(before);
-  // Somewhere along the track, not at either end: the still frame is drawn at 60% of the time.
+  // Somewhere along the track, not at either end: the still frame is drawn at 60% of the time, and the dot crosses the track's full width (D-101).
+  const travel = (await motion.getByTestId('easing-track').first().evaluate((el) => el.getBoundingClientRect().width)) - 10;
+  expect(travel).toBeGreaterThan(200);
   expect(before[0]).toBeGreaterThan(0);
-  expect(before[0]).toBeLessThan(112);
+  expect(before[0]).toBeLessThan(travel);
   expect(await page.evaluate(() => document.getAnimations().filter((a) => a.playState === 'running').length)).toBe(0);
   await expect(motion.getByTestId('easing-reduced')).toBeVisible();
   await expect(motion.getByTestId('easing-caption')).toHaveCount(0);

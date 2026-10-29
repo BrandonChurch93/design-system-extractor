@@ -1,12 +1,15 @@
 'use client';
 import { motion } from 'motion/react';
 import Link from 'next/link';
+import { useState } from 'react';
 import type { Component } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
 import { count } from '../../lib/format';
 import { revealContentVariants } from '../../lib/motion';
+import { contrastFallback } from '../../lib/ground';
 import { FitPreview } from '../FitPreview';
+import { GroundToggle, paintFor, type Ground } from '../GroundToggle';
 import { Tag } from '../Tag';
 import { CheckBadge } from './CheckBadge';
 import { StatesStrip } from './StatesStrip';
@@ -35,10 +38,15 @@ type Props = {
 
 /** A component: its preview, name, check badge, source line, states and up to four tokens. */
 export function ComponentCard({ component: c, href, base, tokens, opened, reveal, onOpen }: Props) {
+  const site = c.preview.ground ?? c.ground;
+  // A ground that matches the component's own fill starts on the opposite tone (D-109).
+  const [ground, setGround] = useState<Ground>(() => contrastFallback(c.preview.fill, site) ?? 'site');
+  const paint = paintFor(ground, site);
   return (
     <article className={styles.card} data-opened={opened || undefined} data-testid="component-card">
-      <div className={styles.preview}>
-        <FitPreview preview={c.preview} base={base} title={fill(runPage.previewTitle, { name: c.name })} lazy ground={c.preview.ground ?? c.ground} />
+      <div className={styles.preview} style={paint ? { background: paint } : undefined} data-testid="card-preview">
+        <FitPreview preview={c.preview} base={base} title={fill(runPage.previewTitle, { name: c.name })} lazy ground={paint} fit="card" code={c.code.html} />
+        <GroundToggle value={ground} onChange={setGround} size="sm" className={styles.ground} />
       </div>
       <motion.div className={styles.body} variants={reveal ? revealContentVariants() : undefined}>
         <div className={styles.head}>

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import type { MotionPattern, RunDocumentPartial } from '@dse/schema';
 import { fill, motionKindLabels } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
+import { chipValues } from '../../lib/chip-scale';
 import { dots } from '../../lib/format';
 import { durationText, easingName, suggestedEasing, triggerPhrase } from '../../lib/motion-view';
 import { usePrefersReducedMotion } from '../../lib/motion/reduced';
@@ -19,7 +20,7 @@ const M = runPage.motion;
 const chipProps = new Set(['opacity', 'transform', 'translate', 'scale', 'rotate', 'filter', 'background-color', 'color', 'border-color', 'box-shadow', 'clip-path']);
 const camel = (p: string) => p.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase());
 
-/** The pattern's start or end values as an inline style for the 18 px block. */
+/** The pattern's start or end values as an inline style for the chip's block. */
 export function chipStyle(values: Record<string, string>): CSSProperties {
   const out: Record<string, string> = {};
   for (const [p, v] of Object.entries(values)) if (chipProps.has(p) && !/url\(|expression\(/i.test(v)) out[camel(p)] = v;
@@ -50,60 +51,101 @@ function Change({ property, from, to }: { property: string; from?: string; to?: 
   );
 }
 
-/** A staggered pattern plays this many chips at most, the row's width (D-098). */
+/** A staggered pattern plays this many chips at most (D-098). */
 const STAGGER_CHIPS = 6;
+/** A chip and its gap; the chips take at most 40% of a row, or the whole row once stacked. */
+const CHIP_STEP = 64;
+/** The ambient hold and fade a play ends with before it returns to rest (D-104). */
+const HOLD_MS = 500;
+const FADE_MS = 150;
+/** A play is cut here and snaps to the end state (D-104). */
+const PLAY_CAP_MS = 12_000;
+
+/** rest: the scaled start, opacity floored; start: the true scaled start; end; out: fading; in: back at rest, faded in. */
+type Phase = 'rest' | 'start' | 'end' | 'snap' | 'out' | 'in';
 
 export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId }: { pattern: MotionPattern; doc: RunDocumentPartial; hrefFor?: (id: string) => string; onOpen?: (id: string) => void; captionId?: string }) {
   const reduced = usePrefersReducedMotion();
   const row = useRef<HTMLLIElement>(null);
-  const [playing, setPlaying] = useState(false);
-  const [at, setAt] = useState<'start' | 'end'>('start');
-  // The auto-preview (D-093): the chip plays start to end once when the row scrolls into view; Replay follows.
+  const [phase, setPhase] = useState<Phase>('rest');
+  const [width, setWidth] = useState(0);
+  // The auto-preview (D-093): the chip plays once when the row scrolls into view; Replay follows.
   const [previewed, setPreviewed] = useState(false);
-  const shown = reduced ? 'end' : at;
+  const playing = phase !== 'rest';
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const clear = () => {
+    timers.current.forEach(clearTimeout);
+    timers.current = [];
+  };
+  useEffect(() => clear, []);
   useEffect(() => {
-    if (!playing) return;
-    const f = requestAnimationFrame(() => requestAnimationFrame(() => setAt('end')));
-    return () => cancelAnimationFrame(f);
-  }, [playing]);
+    const el = row.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([e]) => e && setWidth(e.contentRect.width));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const chips = p.stagger ? Math.max(1, Math.min(p.stagger.count, STAGGER_CHIPS, Math.floor(((width < 600 ? width : width * 0.4) + 8) / CHIP_STEP) || 1)) : 1;
+  const total = p.durationMs + p.delayMs + (p.stagger ? (chips - 1) * p.stagger.stepMs : 0);
+  const play = () => {
+    clear();
+    setPhase('start');
+    const after = (ms: number, next: () => void) => timers.current.push(setTimeout(next, ms));
+    // Two frames so the start is painted before the transition to the end begins.
+    requestAnimationFrame(() => requestAnimationFrame(() => setPhase('end')));
+    const run = Math.min(total, PLAY_CAP_MS);
+    if (total > PLAY_CAP_MS) after(run, () => setPhase('snap'));
+    after(run + HOLD_MS, () => setPhase('out'));
+    after(run + HOLD_MS + FADE_MS, () => {
+      setPhase('in');
+      requestAnimationFrame(() => requestAnimationFrame(() => setPhase('rest')));
+    });
+    after(run + HOLD_MS + FADE_MS * 2 + 50, () => setPreviewed(true));
+  };
   useEffect(() => {
     const el = row.current;
     if (!el || reduced || previewed) return;
     const io = new IntersectionObserver(([e]) => {
       if (!e?.isIntersecting) return;
       io.disconnect();
-      setAt('start');
-      setPlaying(true);
+      play();
     }, { threshold: 0.5 });
     io.observe(el);
     return () => io.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reduced, previewed]);
-  const done = () => {
-    setPlaying(false);
-    setPreviewed(true);
-  };
-  const total = p.durationMs + p.delayMs + (p.stagger ? (Math.min(p.stagger.count, STAGGER_CHIPS) - 1) * p.stagger.stepMs : 0);
-  useEffect(() => {
-    if (!playing) return;
-    // Values a chip cannot show end no transition, so the play also ends on the clock.
-    const t = setTimeout(done, Math.min(total, 12_000) + 200);
-    return () => clearTimeout(t);
-  }, [playing, total]);
   const toggle = () => {
     if (playing) {
-      setPlaying(false);
-      setAt('end');
+      clear();
+      setPhase('rest');
+      setPreviewed(true);
       return;
     }
-    setAt('start');
-    setPlaying(true);
+    play();
   };
   const component = p.componentId ? doc.components?.find((c) => c.id === p.componentId) : undefined;
   const easing = easingName(doc, p.easingTokenId, p.easing);
   const props = [...new Set([...Object.keys(p.start), ...Object.keys(p.end)])];
   const sampled = p.source === 'inline-style';
   const timing = (i: number) => `${p.durationMs}ms ${p.easing ?? 'ease'} ${p.delayMs + i * (p.stagger?.stepMs ?? 0)}ms`;
-  const chips = p.stagger ? Math.min(p.stagger.count, STAGGER_CHIPS) : 1;
+  // Under reduced motion the chip shows the end at once; otherwise it rests on the start (D-104).
+  const blockStyle = (i: number): CSSProperties => {
+    if (reduced) return { ...chipStyle(chipValues(p.end)), transition: 'none' };
+    switch (phase) {
+      case 'start':
+        return { ...chipStyle(chipValues(p.start)), transition: 'none' };
+      case 'end':
+        return { ...chipStyle(chipValues(p.end)), transition: props.map((x) => `${x} ${timing(i)}`).join(', ') };
+      case 'snap':
+        return { ...chipStyle(chipValues(p.end)), transition: 'none' };
+      case 'out':
+        return { ...chipStyle(chipValues(p.end)), opacity: 0, transition: `opacity ${FADE_MS}ms linear` };
+      case 'in':
+        return { ...chipStyle(chipValues(p.start, true)), opacity: 0, transition: 'none' };
+      default:
+        return { ...chipStyle(chipValues(p.start, true)), transition: previewed ? `opacity ${FADE_MS}ms linear` : 'none' };
+    }
+  };
   return (
     <li ref={row} className={styles.row} data-testid="pattern-row" data-previewed={previewed || reduced || undefined}>
       <div className={styles.main}>
@@ -144,12 +186,7 @@ export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId }: { pa
         <span className={styles.chips} aria-hidden="true">
           {Array.from({ length: chips }, (_, i) => (
             <span key={i} className={styles.chip}>
-              <span
-                className={styles.block}
-                data-at={shown}
-                style={{ ...chipStyle(shown === 'end' ? p.end : p.start), transition: !reduced && playing && at === 'end' ? props.map((x) => `${x} ${timing(i)}`).join(', ') : 'none' }}
-                onTransitionEnd={i === chips - 1 ? done : undefined}
-              />
+              <span className={styles.block} data-at={reduced ? 'end' : phase} data-testid="pattern-chip" style={blockStyle(i)} />
             </span>
           ))}
         </span>

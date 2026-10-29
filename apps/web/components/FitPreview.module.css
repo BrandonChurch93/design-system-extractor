@@ -10,6 +10,55 @@
 
 .scaled {
   overflow: hidden;
+  flex: none;
+}
+
+/* Past the 0.6× floor the preview starts at the region's top-left and is cut at its edges (D-107). */
+.anchored {
+  place-items: start;
+  padding: var(--dse-space-4) 0 0 var(--dse-space-4);
+}
+
+/* The drawer: 1:1, scrolling sideways when wider, centered when narrower (D-107). */
+.actual {
+  display: flex;
+  height: auto;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-color: var(--dse-line) transparent;
+  scrollbar-width: thin;
+}
+
+.actual > .scaled {
+  margin-inline: auto;
+}
+
+.fadeRight,
+.fadeBottom {
+  position: absolute;
+  pointer-events: none;
+}
+
+.fadeRight {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 40px;
+}
+
+.fadeBottom {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40px;
+}
+
+.code {
+  align-self: stretch;
+  justify-self: stretch;
+  margin: var(--dse-space-3);
+  max-height: calc(100% - var(--dse-space-3) * 2 - 28px);
+  overflow: auto;
 }
 
 .scaled iframe,
@@ -32,6 +81,8 @@
 .scale {
   composes: tag from '../styles/type.module.css';
   position: absolute;
+  z-index: 2;
+  max-width: calc(100% - var(--dse-space-3) * 2);
   bottom: var(--dse-space-3);
   left: var(--dse-space-3);
   padding: 2px var(--dse-space-2);

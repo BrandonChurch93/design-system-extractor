@@ -40,12 +40,21 @@
 }
 
 .preview {
+  position: relative;
   height: 152px;
   background: var(--dse-surface-tint);
   border-bottom: 1px solid var(--dse-line-soft);
 }
 
+.ground {
+  position: absolute;
+  right: var(--dse-space-3);
+  bottom: var(--dse-space-3);
+  z-index: 2;
+}
+
 .body {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: var(--dse-space-2);
@@ -71,12 +80,22 @@
   outline: none;
 }
 
-/* The whole card is the link; the badge, the states and nothing else sit above it. */
+/* The body is the link where the pointer can hover the preview; on touch the whole card is (D-106). The badge, the states, the toggle and the caption sit above it. */
 .link::after {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 0;
+}
+
+@media (hover: none) {
+  .body {
+    position: static;
+  }
+
+  .link::after {
+    z-index: 1;
+  }
 }
 
 .source {

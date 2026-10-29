@@ -184,7 +184,11 @@
 .samples {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--dse-space-4);
+  align-items: flex-start;
+  gap: var(--dse-space-6);
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .sampleButton {
@@ -202,8 +206,8 @@
 .radiusBox,
 .shadowBox {
   display: block;
-  width: 44px;
-  height: 44px;
+  width: 72px;
+  height: 72px;
 }
 
 .radiusBox {
@@ -218,6 +222,15 @@
 .sampleLabel {
   composes: hex from '../../styles/type.module.css';
   color: var(--dse-ink-2);
+}
+
+.shadowValue {
+  composes: tag from '../../styles/type.module.css';
+  display: grid;
+  max-width: 160px;
+  color: var(--dse-muted);
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 640px) {

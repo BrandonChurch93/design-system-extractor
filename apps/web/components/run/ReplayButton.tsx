@@ -7,6 +7,20 @@ import styles from './ReplayButton.module.css';
 
 const M = runPage.motion;
 
+/** Both labels in one cell, the inactive one hidden, so the button is as wide as the wider and never moves (D-104). */
+function Labels({ playing }: { playing: boolean }) {
+  return (
+    <span className={styles.labels}>
+      <span className={playing ? styles.off : undefined} aria-hidden={playing || undefined}>
+        {M.replay}
+      </span>
+      <span className={playing ? undefined : styles.off} aria-hidden={!playing || undefined}>
+        {M.stop}
+      </span>
+    </span>
+  );
+}
+
 /**
  * Plays a site's own motion once (docs/design/components.md, ReplayButton). With reduced motion it is
  * off: the motion shows its end state and the button points at the group's caption (`captionId`), or
@@ -17,15 +31,15 @@ export function ReplayButton({ playing, onToggle, captionId, forceReduced }: { p
   if (reduced)
     return (
       <span className={styles.wrap}>
-        <Button variant="ghost" size="sm" icon={Play} disabled aria-describedby={captionId}>
-          {M.replay}
+        <Button variant="ghost" size="sm" icon={Play} disabled aria-describedby={captionId} data-testid="replay-button">
+          <Labels playing={false} />
         </Button>
         {captionId ? null : <span className={styles.caption}>{M.reducedMotion}</span>}
       </span>
     );
   return (
-    <Button variant="ghost" size="sm" icon={playing ? Square : Play} onClick={onToggle} aria-pressed={playing}>
-      {playing ? M.stop : M.replay}
+    <Button variant="ghost" size="sm" icon={playing ? Square : Play} onClick={onToggle} aria-pressed={playing} data-testid="replay-button">
+      <Labels playing={playing} />
     </Button>
   );
 }

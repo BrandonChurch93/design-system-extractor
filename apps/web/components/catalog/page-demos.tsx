@@ -1,6 +1,6 @@
 'use client';
 import type { ReactNode } from 'react';
-import { passesAll, type ComponentType, type MotionKind } from '@dse/schema';
+import { passesAll, type Component, type ComponentType, type MotionKind } from '@dse/schema';
 import { checkStatusLabels, fill, stateLabels } from '@dse/schema/labels';
 import { componentPanel, home, howItWorks, runPage } from '../../copy/strings';
 import type { RecentRun } from '../../lib/browser-store';
@@ -24,6 +24,7 @@ import { ComponentsSection } from '../run/ComponentsSection';
 import { DriftHeadline } from '../run/DriftHeadline';
 import { DriftSection } from '../run/DriftSection';
 import { DurationStrip } from '../run/DurationStrip';
+import { CardHead } from '../run/Section';
 import { AmbientClock, EasingCard, EasingGrid } from '../run/EasingCard';
 import { KeyframesList } from '../run/KeyframesList';
 import { MotionSection } from '../run/MotionSection';
@@ -83,6 +84,18 @@ const twelveEasings = [
 ];
 const moving = (motionDoc.components ?? []).find((c) => c.motion?.patternIds.length) ?? (motionDoc.components ?? []).find((c) => c.motion);
 const motionStill = { ...motionDoc, tokens: motionDoc.tokens ? { ...motionDoc.tokens, duration: [], easing: [], keyframes: [] } : undefined, motion: { patterns: [], truncatedPages: [], intersectionObservers: 0 } };
+
+const durationOf = (ms: number, role?: 'base' | 'slow' | 'slower', usage = 1) => ({ name: `duration-${ms}`, ms, usage, ...(role ? { role } : {}) });
+// The owner's site and linear.app (docs/plan.md, P18): a wide range and a dense one.
+const wideRange = [150, 200, 300, 350, 400, 500, 700, 900, 1000, 1200, 4000, 14000, 35000].map((ms) => durationOf(ms, ms === 150 ? 'base' : ms === 200 ? 'slow' : ms === 300 ? 'slower' : undefined, ms === 150 ? 9 : 1));
+const dense = [100, 120, 150, 160, 200, 250, 260, 300, 320, 350, 400, 450, 500, 700, 800, 960, 1000, 1200, 1250, 1300, 1500, 2000, 2200, 6000, 10000, 30000].map((ms) => durationOf(ms, ms === 100 ? 'base' : ms === 120 ? 'slow' : ms === 150 ? 'slower' : undefined, ms === 100 ? 9 : 1));
+const stripHead = (meta: string) => <CardHead title={runPage.motion.durationsTitle} meta={meta} />;
+const manyKeyframes = Array.from({ length: 47 }, (_, i) => ({ name: `fade-${['up', 'in', 'down', 'left', 'right', 'scale', 'blur'][i % 7]}-${Math.floor(i / 7) + 1 === 1 ? 'a' : String.fromCharCode(97 + Math.floor(i / 7))}`, css: `@keyframes k${i} { from { opacity: 0; } to { opacity: 1; } }`, used: i % 9 !== 8, usage: 47 - i, pages: (motionDoc.pages ?? []).slice(0, (i % 6) + 1).map((p) => ({ pageId: p.id, count: 1 })), unresolved: [] }));
+// Card previews (D-106 to D-109): a dark card on its own dark ground, a navigation cut at 0.6×, a skip link shown focused, and one with no crop.
+const darkCard: Component = { ...comps[5]!, id: 'catdark0', name: 'Project card', ground: '#141414', preview: { mode: 'live', htmlKey: 'catalog/sample-dark-card.html', width: 320, height: 120, diffPct: 0.4, ground: '#141414', fill: '#1A1A1A' } };
+const wideNav: Component = { ...comps[1]!, id: 'catwide0', name: 'Main navigation', preview: { mode: 'live', htmlKey: 'catalog/sample-wide-nav.html', width: 1440, height: 72, diffPct: 0.2, ground: '#FFFFFF', fill: '#FFFFFF' } };
+const skipLink: Component = { ...comps[0]!, id: 'catskip0', name: 'Skip link', preview: { mode: 'captured', capturedReason: 'hidden-until-focus', cropKey: 'catalog/sample-crop.png', width: 128, height: 58, ground: '#FFFFFF', fill: '#2458E6' } };
+const noCrop: Component = { ...comps[0]!, id: 'catnocr0', name: 'Skip link', preview: { mode: 'captured', capturedReason: 'no-crop', width: 0, height: 0, fill: null }, code: { html: '<a class="skip-link" href="#main">Skip to content</a>', css: '' } };
 
 function Wide({ children }: { children: ReactNode }) {
   return <div className={styles.fullWidth}>{children}</div>;
@@ -230,7 +243,9 @@ export const pageDemos: Demo[] = [
     tokens: ['hex', 'caption', 'muted', 'ink (marks, dot)', 'line'],
     frameHeight: 420,
     states: () => [
-      { label: stateLabels.default, wide: true, node: <AmbientClock><Card><DurationStrip durations={durations} /></Card></AmbientClock> },
+      { label: stateLabels.default, wide: true, node: <AmbientClock><Card><DurationStrip durations={durations} head={stripHead} /></Card></AmbientClock> },
+      { label: 'Wide range', wide: true, node: <AmbientClock><Card><DurationStrip durations={wideRange} head={stripHead} /></Card></AmbientClock> },
+      { label: 'Dense', wide: true, node: <AmbientClock><Card><DurationStrip durations={dense} head={stripHead} /></Card></AmbientClock> },
       { label: 'Close ticks', wide: true, node: <AmbientClock><Card><DurationStrip durations={[{ name: 'duration-100', ms: 100, usage: 3 }, { name: 'duration-120', ms: 120, usage: 9, role: 'fast' }, { name: 'duration-150', ms: 150, usage: 4 }, { name: 'duration-600', ms: 600, usage: 1, role: 'slow' }, { name: 'duration-2400', ms: 2400, usage: 1 }]} /></Card></AmbientClock> },
     ],
   },
@@ -256,6 +271,7 @@ export const pageDemos: Demo[] = [
     frameHeight: 600,
     states: () => [
       { label: stateLabels.default, wide: true, node: <Card><KeyframesList keyframes={[...(motionDoc.tokens?.keyframes ?? []), { name: 'spin-legacy', css: '@keyframes spin-legacy { to { transform: rotate(360deg); } }', used: false, usage: 0, pages: [], unresolved: [] }]} doc={motionDoc} /></Card> },
+      { label: 'Long list', wide: true, node: <Card><KeyframesList keyframes={manyKeyframes} doc={motionDoc} /></Card> },
     ],
   },
   {
@@ -285,6 +301,10 @@ export const pageDemos: Demo[] = [
       { label: 'Live', node: <div className={styles.cardBox}><ComponentCard component={comps[0]!} href="#" base={sampleBase} tokens={cardTokens(comps[0]!, names)} /></div> },
       { label: runPage.captured, node: <div className={styles.cardBox}><ComponentCard component={comps[4]!} href="#" base={sampleBase} tokens={cardTokens(comps[4]!, names)} /></div> },
       { label: componentPanel.openAsPage, node: <div className={styles.cardBox}><ComponentCard component={comps[1]!} href="#" base={sampleBase} tokens={cardTokens(comps[1]!, names)} opened /></div> },
+      { label: 'Dark on dark', node: <div className={styles.cardBox}><ComponentCard component={darkCard} href="#" base={sampleBase} tokens={cardTokens(darkCard, names)} /></div> },
+      { label: 'Cut to fit', node: <div className={styles.cardBox}><ComponentCard component={wideNav} href="#" base={sampleBase} tokens={cardTokens(wideNav, names)} /></div> },
+      { label: runPage.preview.hiddenUntilFocus, node: <div className={styles.cardBox}><ComponentCard component={skipLink} href="#" base={sampleBase} tokens={cardTokens(skipLink, names)} /></div> },
+      { label: runPage.preview.noCrop, node: <div className={styles.cardBox}><ComponentCard component={noCrop} href="#" base={sampleBase} tokens={cardTokens(noCrop, names)} /></div> },
       { label: 'StatesStrip', node: <StatesStrip states={comps[0]!.states} base={sampleBase} name={comps[0]!.name} /> },
       { label: runPage.components.badgeAll, node: <CheckBadge checks={comps.find((c) => passesAll(c.checks))!.checks} name={comps.find((c) => passesAll(c.checks))!.name} /> },
       { label: fill(runPage.components.badgeSome, { passed: '3', applicable: '4' }), node: <CheckBadge checks={comps.find((c) => c.checks.some((r) => r.status === 'fail'))?.checks ?? []} name="Icon button" /> },

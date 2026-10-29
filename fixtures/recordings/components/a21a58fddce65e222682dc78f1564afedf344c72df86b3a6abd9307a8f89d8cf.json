@@ -1,0 +1,24 @@
+{
+  "purpose": "components",
+  "size": "small",
+  "model": "claude-haiku-5-5",
+  "text": "{\"items\": [{\"id\": \"c17\", \"type\": \"button\", \"name\": \"Footer CTA button\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c18\", \"type\": \"breadcrumb\", \"name\": \"Breadcrumb\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c19\", \"type\": \"badge\", \"name\": \"Status badge\", \"isComponent\": true, \"variantHint\": \"fill color by status: success, warning, danger\"}, {\"id\": \"c20\", \"type\": \"code-block\", \"name\": \"Code block\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c21\", \"type\": \"input\", \"name\": \"Text input\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c22\", \"type\": \"select\", \"name\": \"Select\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c23\", \"type\": \"checkbox\", \"name\": \"Checkbox\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c24\", \"type\": \"button\", \"name\": \"Icon button\", \"isComponent\": true, \"variantHint\": null}]}",
+  "usage": {
+    "input_tokens": 619,
+    "cache_creation_input_tokens": 0,
+    "cache_read_input_tokens": 1564,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 355,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-29T17:13:12.622Z",
+  "request": "Items:\nc17 guess button 0.95, button, classes footer-cta, inside svg:1, in footer, text \"Talk to sales\", 2 instances on 1 page (/pricing), variants Default, no picture\nc18 guess breadcrumb 0.8, nav, no class names, inside li:3 ol:1, in docs, text \"Home / Docs\", 4 instances on 2 pages (/docs, /docs/getting-started), variants Default, picture below\nc19 guess badge 0.7, span, classes badge badge-success, no children, in docs, text \"API operational\", 6 instances on 1 page (/docs), variants Warning, Success, Danger, picture below\nc20 guess code-block 0.95, pre, classes code-block, inside code:1, in guides, text \"npm install @tidewater/cli tidewater login tidewater publish\", 4 instances on 2 pages (/docs, /docs/getting-started), variants Default, no picture\nc21 guess input 0.98, input, classes input, no children, in login, text \"\", 10 instances on 3 pages (/login, /signup, /contact), variants Default, no picture\nc22 guess select 0.98, select, classes select, no children, in signup, text \"1 to 5 6 to 20 21 or more\", 2 instances on 1 page (/signup), variants Default, no picture\nc23 guess checkbox 0.98, input, classes checkbox, no children, in signup, text \"\", 2 instances on 1 page (/signup), variants Default, no picture\nc24 guess button 0.95, button, classes icon-button, inside svg:1, in contact, text \"\", 2 instances on 1 page (/contact), variants Default, no picture\nPicture of c18:\n[image]\nPicture of c19:\n[image]"
+}

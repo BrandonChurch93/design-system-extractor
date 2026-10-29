@@ -10,12 +10,14 @@ type ChipGroupProps<T extends string> = {
   onChange: (value: T) => void;
   label: string;
   className?: string;
+  /** `sm` for a group that sits on a preview, the card's Ground toggle (D-110). */
+  size?: 'md' | 'sm';
   /** Catalog only. */
   forceState?: { value: T; state: 'hover' | 'focus' };
 };
 
 /** A single-select radio group of Chips with arrow-key movement and a roving tab stop. */
-export function ChipGroup<T extends string>({ options, value, onChange, label, className, forceState }: ChipGroupProps<T>) {
+export function ChipGroup<T extends string>({ options, value, onChange, label, className, size = 'md', forceState }: ChipGroupProps<T>) {
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
 
   function onKeyDown(e: KeyboardEvent<HTMLDivElement>) {
@@ -34,7 +36,7 @@ export function ChipGroup<T extends string>({ options, value, onChange, label, c
   }
 
   return (
-    <div role="radiogroup" aria-label={label} className={`${styles.group} ${className ?? ''}`} onKeyDown={onKeyDown}>
+    <div role="radiogroup" aria-label={label} className={`${styles.group} ${size === 'sm' ? styles.sm : ''} ${className ?? ''}`} onKeyDown={onKeyDown}>
       {options.map((o, i) => {
         const selected = o.value === value;
         return (

@@ -189,6 +189,25 @@
       ]
     },
     {
+      "type": "link",
+      "name": "Skip link",
+      "page": "/",
+      "bbox": {
+        "x": 24,
+        "y": 12,
+        "w": 134,
+        "h": 44
+      },
+      "viewport": "desktop",
+      "variants": 1,
+      "states": [
+        "default",
+        "hover",
+        "focus",
+        "active"
+      ]
+    },
+    {
       "type": "nav",
       "name": "Main navigation",
       "page": "/",
@@ -730,7 +749,13 @@
     "expectNone": true
   },
   "previews": {
-    "minLiveRate": 0.9
+    "minLiveRate": 0.9,
+    "captured": [
+      {
+        "name": "Skip link",
+        "reason": "hidden-until-focus"
+      }
+    ]
   },
   "motion": {
     "durations": [
@@ -923,7 +948,8 @@
     "Tabs": "page",
     "Tab": "core",
     "Alert": "core",
-    "Empty state": "page"
+    "Empty state": "page",
+    "Skip link": "core"
   },
   "variantNames": [
     {

@@ -32,6 +32,8 @@ export type Fingerprint = {
   textLen: 0 | 1 | 2 | 3 | 4;
   /** Opens something (`aria-haspopup`, `aria-expanded`, `aria-controls`): a trigger is not an action button. */
   trigger: boolean;
+  /** Hidden at capture and kept because it takes focus: a skip link is not the button it looks like (D-108). */
+  hidden?: boolean;
   /** For inline marks: whether the ground is a semantic color (a status badge, not a tag). */
   semanticGround?: boolean;
 };
@@ -118,6 +120,7 @@ export function fingerprint(s: Snapshot, el: SnapElement, framework?: FrameworkH
     style: styleInputs(el),
     iconOnly: el.text.trim().length < 2 && el.kids.length > 0,
     trigger: ['aria-haspopup', 'aria-expanded', 'aria-controls'].some((a) => a in el.aria),
+    ...(el.hidden ? { hidden: true } : {}),
     textLen: textLen(el.text),
   };
 }

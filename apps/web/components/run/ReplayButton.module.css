@@ -5,6 +5,18 @@
   gap: var(--dse-space-1);
 }
 
+.labels {
+  display: inline-grid;
+}
+
+.labels > span {
+  grid-area: 1 / 1;
+}
+
+.off {
+  visibility: hidden;
+}
+
 .caption {
   composes: caption from '../../styles/type.module.css';
   color: var(--dse-muted);

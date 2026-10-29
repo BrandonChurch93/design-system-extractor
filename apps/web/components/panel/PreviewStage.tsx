@@ -3,15 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 import { State, type Component } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
-import { ChipGroup } from '../ChipGroup';
+import { contrastFallback } from '../../lib/ground';
 import { FitPreview } from '../FitPreview';
+import { GroundToggle, paintFor, type Ground } from '../GroundToggle';
 import { StateBar } from '../StateBar';
 import styles from './PreviewStage.module.css';
 
 const R = runPage.preview;
-type Ground = 'site' | 'light' | 'dark';
-/** The app's own two grounds, so no color enters the chrome (D-003, D-097). */
-const grounds: Record<Exclude<Ground, 'site'>, string> = { light: 'var(--dse-surface)', dark: 'var(--dse-inverse-bg)' };
 /** Play steps these states in order, the ones the component has (D-094). */
 const playOrder: State[] = ['default', 'hover', 'active', 'default'];
 const stateOrder = State.options;
@@ -49,7 +47,9 @@ export function PreviewStage({ component: c, variantId, base, title }: { compone
   const states = pinnable(c, variant.id);
   const [state, setState] = useState<State>('default');
   const [reload, setReload] = useState(0);
-  const [ground, setGround] = useState<Ground>('site');
+  const site = variant.preview.ground ?? c.ground;
+  const fallback = contrastFallback(variant.preview.fill, site);
+  const [ground, setGround] = useState<Ground>(fallback ?? 'site');
   const [playing, setPlaying] = useState(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
@@ -77,12 +77,11 @@ export function PreviewStage({ component: c, variantId, base, title }: { compone
   const live = variant.preview.mode === 'live';
   const htmlKey = live && shown !== 'default' ? c.preview.stateHtmlKeys?.[shown] : undefined;
   const cropKey = !live && shown !== 'default' ? c.states.find((s) => s.state === shown)?.cropKey : undefined;
-  const site = variant.preview.ground ?? c.ground;
-  const paint = ground === 'site' ? site : grounds[ground];
+  const paint = paintFor(ground, site);
   return (
     <div className={styles.stage}>
       <div className={styles.ground} style={paint ? { background: paint } : undefined} data-testid="preview-stage" data-state={shown}>
-        <FitPreview preview={variant.preview} base={base} title={title} padding={0} htmlKey={htmlKey} cropKey={cropKey} reload={reload} ground={paint} />
+        <FitPreview preview={variant.preview} base={base} title={title} padding={0} htmlKey={htmlKey} cropKey={cropKey} reload={reload} ground={paint} fit="actual" code={c.code.html} />
       </div>
       <div className={styles.controls}>
         {states.length > 1 ? <StateBar states={states} value={shown} onChange={pick} onPlay={canPlay ? play : undefined} playing={playing} /> : <span />}
@@ -90,9 +89,10 @@ export function PreviewStage({ component: c, variantId, base, title }: { compone
           <span className={styles.label} aria-hidden="true">
             {R.ground}
           </span>
-          <ChipGroup label={R.ground} value={ground} onChange={setGround} options={(['site', 'light', 'dark'] as const).map((g) => ({ value: g, label: R.grounds[g] }))} />
+          <GroundToggle value={ground} onChange={setGround} />
         </div>
       </div>
+      {fallback ? <p className={styles.caption}>{fallback === 'light' ? R.groundLight : R.groundDark}</p> : null}
       {(variant.preview.fontsSubstituted ?? []).map((family) => (
         <p key={family} className={styles.caption}>
           {fill(R.font, { family })}

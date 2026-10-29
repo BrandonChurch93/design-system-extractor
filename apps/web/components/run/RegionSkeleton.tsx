@@ -1,11 +1,13 @@
 import { Skeleton } from '../Skeleton';
 import styles from './RegionSkeleton.module.css';
 
-export type SkeletonRegion = 'palette' | 'type' | 'spacing' | 'motion' | 'components' | 'checks' | 'drift' | 'exports';
+export type SkeletonRegion = 'palette' | 'type' | 'spacing' | 'radius' | 'shadow' | 'motion' | 'components' | 'checks' | 'drift' | 'exports';
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 /** The clean fixture's Motion section at 1440 (D-080, re-measured for v1.2's easing stages, D-098). */
 const MOTION = { strip: 171, easing: 358, patterns: 977 };
+/** The clean fixture's Radius and Shadow cards at 1440 (D-103). */
+const TOKEN_ROW = { radius: 180, shadow: 220 };
 
 /**
  * A run page region before its stage lands, at the height of a typical result so nothing below it
@@ -41,6 +43,9 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
           ))}
         </span>
       );
+    case 'radius':
+    case 'shadow':
+      return <Skeleton height={TOKEN_ROW[region]} radius="lg" />;
     case 'motion':
       return (
         <span className={styles.stack} aria-hidden="true">

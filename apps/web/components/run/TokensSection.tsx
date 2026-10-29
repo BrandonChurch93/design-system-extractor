@@ -11,6 +11,7 @@ import { Card } from '../Card';
 import { PaletteStrip } from '../PaletteStrip';
 import { Popover } from '../Popover';
 import { Skeleton } from '../Skeleton';
+import { shadowGap } from '../../lib/shadow-gap';
 import { RegionSkeleton } from './RegionSkeleton';
 import { Swatch } from '../Swatch';
 import { Tag } from '../Tag';
@@ -187,13 +188,13 @@ function RadiusCard({ doc }: { doc: RunDocumentPartial }) {
       <CardHead title={T.radius} meta={count(radii.length)} />
       <ul className={styles.samples}>
         {radii.map((r) => (
-          <li key={r.id} className={styles.sample44}>
+          <li key={r.id}>
             <TokenPopover
               info={tokenInfo(doc, r.id)!}
               trigger={(t) => (
                 <button type="button" className={styles.sampleButton} {...t}>
-                  <span className={styles.radiusBox} style={{ borderRadius: r.isPill ? 9999 : r.value }} aria-hidden="true" />
-                  <span className={styles.sampleLabel}>{r.isPill ? T.pill : r.value}</span>
+                  <span className={styles.radiusBox} style={{ borderRadius: r.isPill || r.value >= 36 ? 9999 : r.value }} aria-hidden="true" />
+                  <span className={styles.sampleLabel}>{r.isPill ? T.pill : fill(T.radiusValue, { value: count(r.value) })}</span>
                 </button>
               )}
             />
@@ -206,18 +207,21 @@ function RadiusCard({ doc }: { doc: RunDocumentPartial }) {
 
 function ShadowCard({ doc }: { doc: RunDocumentPartial }) {
   const shadows = doc.tokens?.shadow ?? [];
+  // A gap twice the largest blur, and half of it around the list, so no shadow reaches a neighbor or the card's edge (D-103).
+  const gap = shadowGap(shadows.map((s) => s.value));
   return (
     <Card>
       <CardHead title={T.shadow} meta={count(shadows.length)} />
-      <ul className={styles.samples}>
+      <ul className={styles.samples} style={{ gap, padding: gap / 2 }} data-testid="shadow-samples">
         {shadows.map((s) => (
-          <li key={s.id} className={styles.sample44}>
+          <li key={s.id}>
             <TokenPopover
               info={tokenInfo(doc, s.id)!}
               trigger={(t) => (
                 <button type="button" className={styles.sampleButton} {...t}>
                   <span className={styles.shadowBox} style={{ boxShadow: s.value }} aria-hidden="true" />
                   <span className={styles.sampleLabel}>{s.name}</span>
+                  <span className={styles.shadowValue}>{splitLayers(s.value).map((l, i) => <span key={i}>{l}</span>)}</span>
                 </button>
               )}
             />
@@ -228,7 +232,23 @@ function ShadowCard({ doc }: { doc: RunDocumentPartial }) {
   );
 }
 
-/** Tokens: the Color card, then Type beside a stack of Spacing, Radius and Shadow. */
+/** A shadow's layers, one per line. */
+function splitLayers(value: string): string[] {
+  const out: string[] = [];
+  let depth = 0;
+  let cur = '';
+  for (const ch of value) {
+    if (ch === '(') depth++;
+    if (ch === ')') depth--;
+    if (ch === ',' && depth === 0) {
+      out.push(cur.trim());
+      cur = '';
+    } else cur += ch;
+  }
+  return [...out, cur.trim()].filter(Boolean);
+}
+
+/** Tokens: the Color card, then Type beside Spacing, then Radius and Shadow in a row of their own (D-103). */
 export function TokensSection({ doc }: { doc: RunDocumentPartial }) {
   const t = doc.tokens;
   const rc = t?.rawCounts;
@@ -238,16 +258,14 @@ export function TokensSection({ doc }: { doc: RunDocumentPartial }) {
       {doc.darkThemeDetected ? <p className={styles.note}>{T.darkTheme}</p> : null}
       <div className={styles.split}>
         {t?.type ? <TypeCard doc={doc} /> : <RegionSkeleton region="type" />}
-        <div className={styles.stack}>
-          {t?.space ? <SpacingCard doc={doc} /> : <RegionSkeleton region="spacing" />}
-          {t?.radius?.length === 0 && t.shadow?.length === 0 ? null : (
-            <div className={styles.pair}>
-              {t?.radius ? t.radius.length ? <RadiusCard doc={doc} /> : null : <Skeleton height={140} radius="lg" />}
-              {t?.shadow ? t.shadow.length ? <ShadowCard doc={doc} /> : null : <Skeleton height={140} radius="lg" />}
-            </div>
-          )}
-        </div>
+        {t?.space ? <SpacingCard doc={doc} /> : <RegionSkeleton region="spacing" />}
       </div>
+      {t?.radius?.length === 0 && t.shadow?.length === 0 ? null : (
+        <div className={styles.pair}>
+          {t?.radius ? t.radius.length ? <RadiusCard doc={doc} /> : null : <RegionSkeleton region="radius" />}
+          {t?.shadow ? t.shadow.length ? <ShadowCard doc={doc} /> : null : <RegionSkeleton region="shadow" />}
+        </div>
+      )}
     </Section>
   );
 }
