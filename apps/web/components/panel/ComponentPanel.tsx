@@ -50,7 +50,7 @@ export function ComponentPanel({ runId, doc, component: c, neighbors, base, runU
         return;
       }
       router.push(`/r/${runId}`, { scroll: false });
-      requestAnimationFrame(() => document.querySelector<HTMLAnchorElement>(`a[href="/r/${runId}?c=${c.id}"]`)?.focus());
+      requestAnimationFrame(() => document.querySelector<HTMLAnchorElement>(`a[href="/r/${runId}?c=${c.id}"]:not([aria-hidden="true"])`)?.focus());
     };
     if (phone || reduced) done();
     else setTimeout(done, 420);

@@ -160,6 +160,12 @@ Read for P11: pages, components, copy, motion, quality-bar, design-system, expor
 10. Catalog entries for every page-level component.
 11. QA: `tests/qa/pages.ts` with every page and state, goldens, axe, no horizontal scroll at 390, Lighthouse script and thresholds, `/open` test, polling mutation bound test, reduced-motion on the run page, a recorded video of the in-progress page reviewed, the Compare deltas test (messy to messy-after).
 
+## P18 qa:design, qa:visual and axe (2026-10-29)
+
+`pnpm qa:design` 165 of 165 captured and reviewed at 1440, 820 and 390 (run page, panel, Motion, Tokens, components, the catalog's new states); the review fixed the long hidden and no-capture captions colliding with the Ground toggle (moved to the region's top), the toggle's selected chip vanishing on the dark tone (a `surface` track), and the QA panel opener, which clicked the touch cover link. `pnpm qa:visual` goldens updated once for v1.3 (`--update-snapshots=all`, 128 passed): 133 files in `6930932` and 35 more after the axe fixes in the same pass (the run pages, the panel, /open, the catalog's duration strip, card, keyframes, easing and Motion entries), every one of them reviewed; no golden outside the v1.3 surfaces changed by more than anti-aliasing. `pnpm qa:axe` 185 of 185 with zero violations after two fixes: duration ticks as 24 px targets clear of each other (`target-size`) and the /open placeholder on a surface note (`color-contrast` on the dark tone).
+
+During the first full e2e pass Docker Desktop's engine stopped answering (its API returned 500), which took the services down mid-run; Docker was restarted, `pnpm run doctor` passed, the seed was intact, and the failed files were re-run green.
+
 ## P18 real-site check
 
 ### The owner's portfolio and modernsoftworks.com, fresh through the queue (2026-10-29)

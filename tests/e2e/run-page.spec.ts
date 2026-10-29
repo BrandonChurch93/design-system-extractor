@@ -67,7 +67,7 @@ test('opening a component pushes ?c=, a reload reopens the panel, closing remove
   await panel.getByRole('button', { name: componentPanel.close }).click();
   await expect(page).toHaveURL('/r/seedclean0');
   await expect(page.getByRole('dialog')).toHaveCount(0);
-  await expect(page.locator(`a[href="/r/seedclean0?c=${cid}"]`)).toBeFocused();
+  await expect(page.locator(`a[href="/r/seedclean0?c=${cid}"]:not([aria-hidden="true"])`).first()).toBeFocused();
 });
 
 test('the clicked card gets a 2 px focus-colored ring that fades over motion-slow', async ({ page }) => {
