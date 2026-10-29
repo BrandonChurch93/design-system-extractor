@@ -201,8 +201,10 @@ function Desktop({ before, after, labels }: { before: RunDocumentPartial; after:
               {colors.added.map((c) => (
                 <li key={c.value} className={styles.swatchLine}>
                   <span className={styles.chip} style={{ background: c.value }} aria-hidden="true" />
-                  <span className={styles.hex}>{c.name}</span>
-                  <span className={styles.where}>{c.where}</span>
+                  <span className={styles.addedText}>
+                    <span className={styles.hex}>{c.name}</span>
+                    <span className={styles.where}>{c.where}</span>
+                  </span>
                 </li>
               ))}
             </ul>

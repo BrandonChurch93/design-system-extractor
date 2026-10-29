@@ -167,6 +167,8 @@ Complete in 292 s. The budget cut fingerprints (48 of 59) and the states of late
 
 `pnpm qa:design` 165 of 165 captured on the final builder and seed, reviewed at 1440, 820 and 390 (run page, panel, Compare, home; the StateBar's chips scroll on phones with Play at the row's end as specified). `pnpm qa:visual` then differed on the v1.2 surfaces, and the goldens were updated once (`--update-snapshots=all`, 128 passed): 3 new (the catalog StateBar at three widths), 128 resized (the six-cell stat strip, the checks opening line, the easing stages and the 12-easing catalog sample, the Compare Motion card, `messy-after`'s dark band, and 1 px rounding on section crops), the rest unchanged or under 3% of pixels (anti-aliasing and the seed's re-recorded content).
 
+After D-099, the first fresh-clone `verify:all` found the catalog Compare goldens out of date (the sample's later run kept its finish date of Oct 12, so its buttons fell to `Open the earlier run`); the sample now finishes on Nov 23, and the review of that golden found the Added card's path running into the token name in a narrow card, so the path now sits under the name. The three catalog Compare goldens and the four Compare page goldens were updated for these two changes and reviewed.
+
 ### axe (2026-10-28)
 
 `pnpm qa:axe`: 185 of 185 pages and states with zero violations, the StateBar, the Ground toggle, the check Pills and the Compare StateCard included.

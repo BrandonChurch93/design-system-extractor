@@ -168,7 +168,7 @@
 
 .swatchLine {
   display: grid;
-  grid-template-columns: 36px minmax(0, 1fr) auto;
+  grid-template-columns: 36px minmax(0, 1fr);
   align-items: center;
   gap: var(--dse-space-3);
 }
@@ -195,6 +195,14 @@
 .where {
   composes: caption from '../../styles/type.module.css';
   color: var(--dse-muted);
+}
+
+/* The page a token was first seen on sits under its name, so a long path never runs into it. */
+.addedText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .tableCard {
