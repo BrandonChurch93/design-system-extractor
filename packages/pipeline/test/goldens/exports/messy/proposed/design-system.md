@@ -17,7 +17,7 @@ This design system was extracted from localhost:4100 across 12 pages. It holds 2
 | gray-900 | #1F1F1F | neutral | 684 |
 | blue-900 | #0B1F3A | brand | 168 |
 | blue-600 | #2458E6 | brand | 91 |
-| blue-600b | #1C4EDB | brand | 70 |
+| blue-600-alt | #1C4EDB | brand | 70 |
 | teal-500 | #0F8A8A | brand | 44 |
 | success | #15803D | semantic | 18 |
 | danger | #DC2626 | semantic | 12 |
@@ -119,7 +119,7 @@ This design system was extracted from localhost:4100 across 12 pages. It holds 2
   --color-gray-900: #1F1F1F;
   --color-blue-900: #0B1F3A;
   --color-blue-600: #2458E6;
-  --color-blue-600b: #1C4EDB;
+  --color-blue-600-alt: #1C4EDB;
   --color-teal-500: #0F8A8A;
   --color-success: #15803D;
   --color-danger: #DC2626;
@@ -230,7 +230,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-ghost { background: transparent; color: var(--color-blue-900); }
 ```
@@ -241,9 +241,10 @@ Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Open
 Tokens used: color-blue-900 (color), radius-sm (border-radius), space-12 (padding-right), space-12 (padding-left), type-text-14 (font)
 Motion: none
-Checks: all pass
+Checks: 2 of 3
 - Contrast AA · pass · 16.5:1 on gray-50
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
+- Tap target · fail · 0 px tall, 44 short
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -283,7 +284,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Tab
+### Feature tab
 
 Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Selected
@@ -334,7 +335,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Release notes link
+### Pill link
 
 Link · 1 variant: Default
 States captured: Default, Hover, Focus, Active
@@ -353,7 +354,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```
 
 ```css
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .link-pill { display: inline-flex; align-items: center; height: 44px; padding: 0px var(--space-16); border: 1px solid var(--color-gray-300); border-radius: 999px; color: var(--color-gray-900); font-size: 14px; line-height: 20px; font-weight: 600; }
 .link-pill { transition: border-color var(--duration-300); }
 .link-pill { border-color: var(--overlay-gray-700-30); }
@@ -457,7 +458,7 @@ input { font: inherit; color: inherit; }
 .checkbox { appearance: none; flex: 0 0 auto; width: 44px; height: 44px; margin: 0px -12px; border: 0px; border-radius: var(--radius-sm); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect x='0.5' y='0.5' width='19' height='19' rx='3.5' fill='%23FFFFFF' stroke='%230B1F3A'/%3E%3C/svg%3E") center center no-repeat transparent; cursor: pointer; }
 ```
 
-### Textarea
+### Text area
 
 Textarea · 1 variant: Default
 States captured: Default, Hover, Focus, Active
@@ -533,7 +534,7 @@ button { padding: 0px; padding: 0px; padding: 0px; }
 .site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-500); transition: box-shadow var(--duration-160) var(--ease-out-quad); }
 .container { max-width: 1120px; margin: 0px auto; padding: 0px var(--space-24); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-32); height: 72px; }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .logo { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--color-gray-800); }
 .logo { transition: color var(--duration-150) var(--ease-linear); }
 .nav-links { display: flex; align-items: center; gap: var(--space-24); }
@@ -596,7 +597,7 @@ button, input { padding: 0px; padding: 0px; padding: 0px; }
 p { font-size: 16px; line-height: 26px; }
 .caption { font-size: 12px; line-height: 16px; color: rgb(115, 115, 115); }
 .footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .footer-link { font-size: 14px; line-height: 22px; color: var(--color-gray-600); }
 .footer-link { transition: color var(--duration-120) var(--ease-out); }
 .newsletter { display: flex; gap: var(--space-8); align-items: center; }
@@ -631,7 +632,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 
 ```css
 .footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .footer-link { font-size: 14px; line-height: 22px; color: var(--color-gray-600); }
 .footer-link { transition: color var(--duration-120) var(--ease-out); }
 ```
@@ -667,7 +668,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
 .nav-links { display: flex; align-items: center; gap: var(--space-24); }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .nav-link { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-gray-700); }
 .nav-link { transition: color var(--duration-100); }
 .dropdown { position: relative; }
@@ -718,7 +719,7 @@ States captured: Default
 Tokens used: overlay-black-4 (background-color), color-gray-900 (color), space-16 (padding-left), type-body (font)
 Motion: none
 Checks: 0 of 1
-- Contrast AA · fail · 4.3:1 on gray-surface, needs 4.5:1
+- Contrast AA · fail · 4.3:1 on gray-50-alt, needs 4.5:1
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -787,7 +788,7 @@ Motion: none
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
 ```html
-<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: url('http://localhost:4400/messy/runs/evalmessy0/components/f83pxouf/img-e58.png') center / 100% 100% no-repeat rgb(215, 221, 229); background-origin: border-box; vertical-align: middle" class="avatar"></span>
+<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: url('http://localhost:4400/messy/runs/evalmessy0/components/ncxwhtsb/img-e58.png') center / 100% 100% no-repeat rgb(215, 221, 229); background-origin: border-box; vertical-align: middle" class="avatar"></span>
 ```
 
 ```css
@@ -840,7 +841,7 @@ ol { margin: 0px; margin: 0px; margin: 0px; }
 ol { padding: 0px; padding: 0px; padding: 0px; }
 ol { list-style: none; }
 .breadcrumb { display: flex; align-items: center; gap: var(--space-8); font-size: 14px; line-height: 22px; }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .crumb { color: rgb(46, 99, 237); }
 .crumb { transition: color var(--duration-200) cubic-bezier(0.25, 0.5, 0.45, 0.95); }
 .crumb-current { color: var(--color-blue-900); }
@@ -910,9 +911,9 @@ ul { list-style: none; }
 .plan-features { display: flex; flex-direction: column; gap: var(--space-8); }
 .text-sm { font-size: 14px; line-height: 22px; color: var(--color-gray-700); }
 .card .text-sm { font-size: 15px; }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
-.btn-secondary { background: var(--color-gray-50); color: var(--color-blue-600b); border-color: var(--color-blue-600b); }
+.btn-secondary { background: var(--color-gray-50); color: var(--color-blue-600-alt); border-color: var(--color-blue-600-alt); }
 ```
 
 ### Promo card
@@ -968,13 +969,13 @@ svg { display: block; }
 .stack { display: flex; flex-direction: column; gap: var(--space-16); }
 p { font-size: 16px; line-height: 26px; }
 .hero-actions { display: flex; gap: var(--space-12); flex-wrap: wrap; }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-sm { height: 36px; padding: 0px var(--space-16); }
 .btn-primary { background: var(--color-blue-600); color: var(--color-gray-50); }
 ```
 
-### Not found state
+### Not found message
 
 Empty state · 1 variant: Default
 States captured: Default
@@ -1001,7 +1002,7 @@ h1, p { margin: 0px; margin: 0px; margin: 0px; }
 svg { display: block; }
 h1 { font-size: 36px; line-height: 44px; font-weight: 700; }
 p { font-size: 16px; line-height: 26px; }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-ghost { background: transparent; color: var(--color-blue-900); }
 ```
@@ -1013,7 +1014,7 @@ States captured: Default
 Tokens used: color-gray-900 (color), type-body-xs (font)
 Motion: none
 Checks: all pass
-- Contrast AA · pass · 15.1:1 on gray-surface
+- Contrast AA · pass · 15.1:1 on gray-50-alt
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -1079,7 +1080,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 
 ```css
 .dropdown-menu { position: absolute; top: 48px; left: 0px; z-index: 20; min-width: 224px; padding: var(--space-8); background: var(--color-gray-50); border: 1px solid var(--color-gray-300b); border-radius: var(--radius-lg); box-shadow: var(--overlay-blue-900-12) 0px 12px 32px; }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .menu-item { display: flex; align-items: center; height: 44px; padding: 0px var(--space-12); border-radius: var(--radius-sm); font-size: 14px; line-height: 22px; color: var(--color-blue-900); }
 ```
 
@@ -1106,7 +1107,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 
 ```css
 .mobile-menu { border-top: 1px solid var(--color-gray-500); padding: var(--space-8) 0px var(--space-16); }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .mobile-link { display: flex; align-items: center; height: 48px; font-size: 16px; line-height: 26px; color: var(--color-blue-900); }
 ```
 
@@ -1120,7 +1121,7 @@ a { color: var(--color-blue-600b); text-decoration: none; }
 
 Proposed set: 16 colors, 11 spacing steps, 8 type styles, 9 durations, 6 easings. Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.
 
-The palette carries 14 grays where nine would do, and nine of them sit within ΔE 6.0 of a neighbor. Two spacing values, 10 and 18, sit off the 4 px grid, on 12 pages. Three type styles differ by 1 px or less in size or line height, so nine styles could be eight. The proposed set folds the grays into nine steps, maps the off-grid spacing values to their nearest steps and merges the near-duplicate type styles. Every pair of text and background keeps its contrast ratio.
+The palette carries 14 grays where nine would do, and nine of them sit within ΔE 6.0 of a neighbor. Two spacing values, 10 and 18, sit off the 4 px grid on 12 pages. Three type styles differ by 1 px or less in size or line height. The proposed set folds the grays into nine steps, maps the off-grid values to their nearest steps and merges the near-duplicate type styles into eight. Every pair of text and background keeps its contrast ratio.
 
 ## How this was made
 

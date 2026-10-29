@@ -74,7 +74,7 @@
     {
       "id": "1im9etpy",
       "kind": "entrance",
-      "elementKey": "h1|1.0.0.0",
+      "elementKey": "h1|2.0.0.0",
       "selector": "h1.display",
       "pageId": "ccxkgte0",
       "pageIds": [
@@ -105,9 +105,9 @@
     {
       "id": "k1viu24s",
       "kind": "scroll-reveal",
-      "elementKey": "article|1.0.7.0.0",
+      "elementKey": "article|2.0.7.0.0",
       "selector": "div.grid > article:nth-of-type(1)",
-      "componentId": "ufnklwdg",
+      "componentId": "aocunqyq",
       "pageId": "dnmqve6y",
       "pageIds": [
         "dnmqve6y"
@@ -141,7 +141,7 @@
     {
       "id": "k0dkmtrj",
       "kind": "scroll-reveal",
-      "elementKey": "div|1.0.3.0",
+      "elementKey": "div|2.0.3.0",
       "selector": "div.testimonial",
       "pageId": "ccxkgte0",
       "pageIds": [
@@ -151,17 +151,17 @@
       "instances": 1,
       "trigger": {
         "type": "in-view",
-        "value": 0.3
+        "value": 0.25
       },
       "start": {
-        "opacity": "0.04",
-        "transform": "translateY(15.4px)"
+        "opacity": "0.02",
+        "transform": "translateY(15.6px)"
       },
       "end": {
         "opacity": "1",
         "transform": "translateY(0px)"
       },
-      "durationMs": 383,
+      "durationMs": 400,
       "delayMs": 0,
       "easing": null,
       "iterations": 1,
@@ -171,9 +171,9 @@
     {
       "id": "px3kmvc5",
       "kind": "scrolled-header",
-      "elementKey": "header|e1",
+      "elementKey": "header|e2",
       "selector": "header.site-header",
-      "componentId": "oyicb4ht",
+      "componentId": "e1dmn3k1",
       "pageId": "ccxkgte0",
       "pageIds": [
         "ccxkgte0",
@@ -207,9 +207,9 @@
     {
       "id": "o5l4zcc8",
       "kind": "loop",
-      "elementKey": "svg|1.0.5.0.0",
+      "elementKey": "svg|2.0.5.0.0",
       "selector": "span.alert-icon.alert-icon-success > svg",
-      "componentId": "81pp7ac5",
+      "componentId": "1asf09tv",
       "pageId": "dnmqve6y",
       "pageIds": [
         "dnmqve6y"
@@ -237,7 +237,7 @@
   ],
   "components": [
     {
-      "id": "j3poeqhk",
+      "id": "t5c83vbk",
       "name": "Button",
       "slug": "button",
       "transitions": [
@@ -288,7 +288,7 @@
       "patternIds": []
     },
     {
-      "id": "oyicb4ht",
+      "id": "e1dmn3k1",
       "name": "Site header",
       "slug": "site-header",
       "transitions": [
@@ -306,7 +306,7 @@
       ]
     },
     {
-      "id": "ufnklwdg",
+      "id": "aocunqyq",
       "name": "Feature card",
       "slug": "feature-card",
       "transitions": [],
@@ -316,7 +316,7 @@
       ]
     },
     {
-      "id": "81pp7ac5",
+      "id": "1asf09tv",
       "name": "Notice",
       "slug": "notice",
       "transitions": [],

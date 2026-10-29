@@ -15,7 +15,7 @@ You are building an interface that must match this design system exactly.
   --color-gray-900: #1F1F1F;
   --color-blue-900: #0B1F3A;
   --color-blue-600: #2458E6;
-  --color-blue-600b: #1C4EDB;
+  --color-blue-600-alt: #1C4EDB;
   --color-teal-500: #0F8A8A;
   --color-success: #15803D;
   --color-danger: #DC2626;
@@ -170,7 +170,7 @@ Motion: hover · background-color · 160 ms · ease-out-quad; active · backgrou
 Checks: all pass
 
 ```css
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-ghost { background: transparent; color: var(--color-blue-900); }
 ```
@@ -186,7 +186,7 @@ States: Default, Hover, Focus, Active, Open.
 Tokens: color-blue-900 for color, radius-sm for border-radius, space-12 for padding-right, space-12 for padding-left, type-text-14 for font.
 Default: text color-blue-900 · radius radius-sm · padding 0px space-12 0px space-12 · font type-text-14
 Motion: none
-Checks: all pass
+Checks: 2 of 3
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
@@ -213,7 +213,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Tab
+### Feature tab
 
 Button. Variants: Default.
 States: Default, Hover, Focus, Active, Selected.
@@ -248,7 +248,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Release notes link
+### Pill link
 
 Link. Variants: Default.
 States: Default, Hover, Focus, Active.
@@ -258,7 +258,7 @@ Motion: none
 Checks: 3 of 4
 
 ```css
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .link-pill { display: inline-flex; align-items: center; height: 44px; padding: 0px var(--space-16); border: 1px solid var(--color-gray-300); border-radius: 999px; color: var(--color-gray-900); font-size: 14px; line-height: 20px; font-weight: 600; }
 .link-pill { transition: border-color var(--duration-300); }
 .link-pill { border-color: var(--overlay-gray-700-30); }
@@ -335,7 +335,7 @@ input { font: inherit; color: inherit; }
 .checkbox { appearance: none; flex: 0 0 auto; width: 44px; height: 44px; margin: 0px -12px; border: 0px; border-radius: var(--radius-sm); background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Crect x='0.5' y='0.5' width='19' height='19' rx='3.5' fill='%23FFFFFF' stroke='%230B1F3A'/%3E%3C/svg%3E") center center no-repeat transparent; cursor: pointer; }
 ```
 
-### Textarea
+### Text area
 
 Textarea. Variants: Default.
 States: Default, Hover, Focus, Active.
@@ -368,7 +368,7 @@ button { padding: 0px; padding: 0px; padding: 0px; }
 .site-header { position: relative; top: 0px; z-index: 10; background: var(--color-gray-50); border-bottom: 1px solid var(--color-gray-500); transition: box-shadow var(--duration-160) var(--ease-out-quad); }
 .container { max-width: 1120px; margin: 0px auto; padding: 0px var(--space-24); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-32); height: 72px; }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .logo { font-size: 20px; line-height: 28px; font-weight: 600; color: var(--color-gray-800); }
 .logo { transition: color var(--duration-150) var(--ease-linear); }
 .nav-links { display: flex; align-items: center; gap: var(--space-24); }
@@ -408,7 +408,7 @@ button, input { padding: 0px; padding: 0px; padding: 0px; }
 p { font-size: 16px; line-height: 26px; }
 .caption { font-size: 12px; line-height: 16px; color: rgb(115, 115, 115); }
 .footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .footer-link { font-size: 14px; line-height: 22px; color: var(--color-gray-600); }
 .footer-link { transition: color var(--duration-120) var(--ease-out); }
 .newsletter { display: flex; gap: var(--space-8); align-items: center; }
@@ -432,7 +432,7 @@ Checks: all pass
 
 ```css
 .footer-links { display: flex; gap: var(--space-24); flex-wrap: wrap; }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .footer-link { font-size: 14px; line-height: 22px; color: var(--color-gray-600); }
 .footer-link { transition: color var(--duration-120) var(--ease-out); }
 ```
@@ -449,7 +449,7 @@ Checks: all pass
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
 .nav-links { display: flex; align-items: center; gap: var(--space-24); }
-a { color: var(--color-blue-600b); text-decoration: none; }
+a { color: var(--color-blue-600-alt); text-decoration: none; }
 .nav-link { font-size: 14px; line-height: 20px; font-weight: 600; color: var(--color-gray-700); }
 .nav-link { transition: color var(--duration-100); }
 .dropdown { position: relative; }
@@ -599,7 +599,7 @@ Default: background color-gray-50 · text color-blue-900 · border 1px color-suc
 Motion: none
 Checks: all pass
 
-### Not found state
+### Not found message
 
 Empty state. Variants: Default.
 States: Default.

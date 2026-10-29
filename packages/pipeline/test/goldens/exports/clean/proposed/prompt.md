@@ -131,7 +131,7 @@ Patterns:
 
 - Entrance · h1.display · on load · opacity 0 → 1, transform translateY(12px) → none · 480 ms · ease-out-quart
 - Scroll reveal · Feature card · when it enters the viewport at 15% from the bottom · opacity 0 → 1, transform translateY(16px) → none · 240 ms · ease-out-quart · 3 items · 60 ms apart
-- Scroll reveal · div.testimonial · when it enters the viewport at 30% from the bottom · opacity 0.04 → 1, transform translateY(15.4px) → translateY(0px) · about 383 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
+- Scroll reveal · div.testimonial · when it enters the viewport at 25% from the bottom · opacity 0.02 → 1, transform translateY(15.6px) → translateY(0px) · about 400 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
 - Scrolled header · Site header · after 400 px of scrolling · box-shadow none → 0px 12px 32px 0px #0B1F3A1F · 160 ms · ease-out-quad
 - Loop · Notice · loops every 1,600 ms · opacity 1 → 0.4 · 1,600 ms · ease-out-quart
 
@@ -167,6 +167,21 @@ a { color: var(--color-blue-600); text-decoration: none; }
 .btn { font-size: var(--text-small-size); }
 ```
 
+### Skip link
+
+Link. Variants: Default.
+States: Default, Hover, Focus, Active.
+- Focus: outline-width 2px; outline-style solid; outline-color #2458E6; outline-offset 2px
+Tokens: color-text-primary for background-color, color-gray-50 for color, radius-sm for border-radius, space-16 for padding-right, space-16 for padding-left, type-text-14 for font.
+Default: background color-text-primary · text color-gray-50 · radius radius-sm · padding 0px space-16 0px space-16 · font type-text-14
+Motion: none
+Checks: all pass
+
+```css
+a { color: var(--color-blue-600); text-decoration: none; }
+.skip-link { position: absolute; top: 12px; left: 24px; z-index: 30; display: inline-flex; align-items: center; height: 44px; padding: 0px var(--space-16); border-radius: var(--radius-sm); background: var(--color-text-primary); color: var(--color-gray-50); font-size: 14px; line-height: 20px; font-weight: 600; clip-path: inset(50%); }
+```
+
 ### Dropdown trigger
 
 Button. Variants: Default.
@@ -178,7 +193,7 @@ States: Default, Hover, Focus, Active, Open.
 Tokens: color-text-primary for color, radius-sm for border-radius, space-12 for padding-right, space-12 for padding-left, type-text-14 for font.
 Default: text color-text-primary · radius radius-sm · padding 0px space-12 0px space-12 · font type-text-14
 Motion: none
-Checks: all pass
+Checks: 2 of 3
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
@@ -566,7 +581,7 @@ Motion: none
 
 ## Page-specific components
 
-### Footer button
+### Footer CTA button
 
 Button. Variants: Default.
 States: Default, Hover, Focus, Active.
@@ -614,7 +629,7 @@ Default: text color-text-primary · border 1px color-gray-200 · radius radius-m
 Motion: none
 Checks: all pass
 
-### Resources dropdown
+### Resources menu
 
 Dropdown. Variants: Default.
 States: Default.

@@ -96,7 +96,7 @@
       "kind": "scrolled-header",
       "elementKey": "header|e1",
       "selector": "header.site-header",
-      "componentId": "oyicb4ht",
+      "componentId": "e1dmn3k1",
       "pageId": "u18bpkgs",
       "pageIds": [
         "u18bpkgs",
@@ -135,7 +135,7 @@
       "kind": "loop",
       "elementKey": "span|1.0.0.2.0.0",
       "selector": "span.live-dot",
-      "componentId": "ytssiwz6",
+      "componentId": "xf5jcg0z",
       "pageId": "kgk2jn1g",
       "pageIds": [
         "kgk2jn1g"
@@ -163,7 +163,7 @@
   ],
   "components": [
     {
-      "id": "j3poeqhk",
+      "id": "t5c83vbk",
       "name": "Button",
       "slug": "button",
       "transitions": [
@@ -186,7 +186,7 @@
       "patternIds": []
     },
     {
-      "id": "oyicb4ht",
+      "id": "e1dmn3k1",
       "name": "Site header",
       "slug": "site-header",
       "transitions": [
@@ -204,7 +204,7 @@
       ]
     },
     {
-      "id": "ytssiwz6",
+      "id": "xf5jcg0z",
       "name": "Status badge",
       "slug": "status-badge",
       "transitions": [],

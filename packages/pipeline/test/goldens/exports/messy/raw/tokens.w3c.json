@@ -20,10 +20,10 @@
       "$value": "#2458E6",
       "$description": "blue-600 · 89 uses"
     },
-    "blue-600b": {
+    "blue-600-alt": {
       "$type": "color",
       "$value": "#1C4EDB",
-      "$description": "blue-600b · 70 uses"
+      "$description": "blue-600-alt · 70 uses"
     },
     "teal-500": {
       "$type": "color",
@@ -85,25 +85,25 @@
       "$value": "#868686",
       "$description": "gray-border · 25 uses"
     },
-    "gray-surface": {
+    "gray-50-alt": {
       "$type": "color",
       "$value": "#F5F5F5",
-      "$description": "gray-surface · 6 uses"
+      "$description": "gray-50-alt · 6 uses"
     },
     "gray-400": {
       "$type": "color",
       "$value": "#B1B1B1",
       "$description": "gray-400 · 8 uses"
     },
-    "gray-300-soft": {
+    "gray-300-alt": {
       "$type": "color",
       "$value": "#C4C4C4",
-      "$description": "gray-300-soft · 4 uses"
+      "$description": "gray-300-alt · 4 uses"
     },
-    "gray-400-soft": {
+    "gray-400-alt": {
       "$type": "color",
       "$value": "#9E9E9E",
-      "$description": "gray-400-soft · 2 uses"
+      "$description": "gray-400-alt · 2 uses"
     },
     "success": {
       "$type": "color",

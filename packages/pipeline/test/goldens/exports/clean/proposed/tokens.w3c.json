@@ -13,7 +13,7 @@
     "gray-50": {
       "$type": "color",
       "$value": "#FFFFFF",
-      "$description": "gray-50 · 130 uses"
+      "$description": "gray-50 · 148 uses"
     },
     "gray-200": {
       "$type": "color",
@@ -28,12 +28,12 @@
     "text-primary": {
       "$type": "color",
       "$value": "#0B1F3A",
-      "$description": "text-primary · 896 uses"
+      "$description": "text-primary · 914 uses"
     },
     "blue-600": {
       "$type": "color",
       "$value": "#2458E6",
-      "$description": "blue-600 · 104 uses"
+      "$description": "blue-600 · 106 uses"
     },
     "teal-500": {
       "$type": "color",

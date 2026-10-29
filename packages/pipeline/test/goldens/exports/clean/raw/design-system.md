@@ -1,15 +1,15 @@
 # localhost:4100 design system
 
-This design system was extracted from localhost:4100 across nine pages. It holds nine colors, nine type styles, 11 spacing steps and 28 components.
+This design system was extracted from localhost:4100 across nine pages. It holds nine colors, nine type styles, 11 spacing steps and 29 components.
 
 ## Palette
 
 | Name | Value | Group | Uses |
 | --- | --- | --- | --- |
-| text-primary | #0B1F3A | brand | 896 |
-| blue-600 | #2458E6 | brand | 104 |
+| text-primary | #0B1F3A | brand | 914 |
+| blue-600 | #2458E6 | brand | 106 |
 | teal-500 | #0F8A8A | brand | 44 |
-| gray-50 | #FFFFFF | neutral | 130 |
+| gray-50 | #FFFFFF | neutral | 148 |
 | gray-border | #E2E8F0 | neutral | 209 |
 | text-secondary | #5F6368 | neutral | 20 |
 | success | #15803D | semantic | 16 |
@@ -83,7 +83,7 @@ This design system was extracted from localhost:4100 across nine pages. It holds
 
 - Entrance · h1.display · on load · opacity 0 → 1, transform translateY(12px) → none · 480 ms · ease-out-quart
 - Scroll reveal · Feature card · when it enters the viewport at 15% from the bottom · opacity 0 → 1, transform translateY(16px) → none · 240 ms · ease-out-quart · 3 items · 60 ms apart
-- Scroll reveal · div.testimonial · when it enters the viewport at 30% from the bottom · opacity 0.04 → 1, transform translateY(15.4px) → translateY(0px) · about 383 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
+- Scroll reveal · div.testimonial · when it enters the viewport at 25% from the bottom · opacity 0.02 → 1, transform translateY(15.6px) → translateY(0px) · about 400 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
 - Scrolled header · Site header · after 400 px of scrolling · box-shadow none → 0px 12px 32px 0px #0B1F3A1F · 160 ms · ease-out-quad
 - Loop · Notice · loops every 1,600 ms · opacity 1 → 0.4 · 1,600 ms · ease-out-quart
 
@@ -218,15 +218,38 @@ a { color: var(--color-blue-600); text-decoration: none; }
 .btn { font-size: var(--text-small-size); }
 ```
 
+### Skip link
+
+Link · 1 variant: Default
+States captured: Default, Hover, Focus, Active
+Tokens used: color-text-primary (background-color), color-gray-50 (color), radius-sm (border-radius), space-16 (padding-right), space-16 (padding-left), type-text-14 (font)
+Motion: none
+Checks: all pass
+- Contrast AA · pass · 16.5:1 on text-primary
+- Focus visible · pass · 2 px ring, 5.8:1 against gray-50
+- Tap target · pass · 134 × 44 at 390 px
+
+The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
+
+```html
+<a class="skip-link" href="#">Skip to content</a>
+```
+
+```css
+a { color: var(--color-blue-600); text-decoration: none; }
+.skip-link { position: absolute; top: 12px; left: 24px; z-index: 30; display: inline-flex; align-items: center; height: 44px; padding: 0px var(--space-16); border-radius: var(--radius-sm); background: var(--color-text-primary); color: var(--color-gray-50); font-size: 14px; line-height: 20px; font-weight: 600; clip-path: inset(50%); }
+```
+
 ### Dropdown trigger
 
 Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Open
 Tokens used: color-text-primary (color), radius-sm (border-radius), space-12 (padding-right), space-12 (padding-left), type-text-14 (font)
 Motion: none
-Checks: all pass
+Checks: 2 of 3
 - Contrast AA · pass · 16.5:1 on gray-50
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
+- Tap target · fail · 0 px tall, 44 short
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -816,7 +839,7 @@ Motion: none
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
 ```html
-<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: url('http://localhost:4400/clean/runs/evalclean0/components/f83pxouf/img-e57.png') center / 100% 100% no-repeat rgb(215, 221, 229); background-origin: border-box; vertical-align: middle" class="avatar"></span>
+<span aria-hidden="true" style="display: inline-block; width: 40px; height: 40px; border-radius: 50%; background: url('http://localhost:4400/clean/runs/evalclean0/components/ncxwhtsb/img-e58.png') center / 100% 100% no-repeat rgb(215, 221, 229); background-origin: border-box; vertical-align: middle" class="avatar"></span>
 ```
 
 ```css
@@ -825,7 +848,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 
 ## Page-specific components
 
-### Footer button
+### Footer CTA button
 
 Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active
@@ -978,7 +1001,7 @@ a { color: var(--color-blue-600); text-decoration: none; }
 .btn { font-size: var(--text-small-size); }
 ```
 
-### Resources dropdown
+### Resources menu
 
 Dropdown · 1 variant: Default
 States captured: Default
@@ -1038,8 +1061,8 @@ Nothing to collapse. 9 colors, 11 spacing steps, all on the grid.
 
 Proposed set: 9 colors, 11 spacing steps, 9 type styles, 5 durations, 2 easings. Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.
 
-Nothing drifts in this system. It is already tight. It is built from nine colors, nine type styles and 11 spacing steps, and every spacing step sits on the grid. No colors sit near a neighbor, no type styles overlap and no component variants need to collapse. The proposed set keeps all three grays, all nine type styles and all 11 spacing steps as they are, and every passing contrast ratio stays intact.
+Nothing drifts here. The system is built from nine colors, nine type styles and 11 spacing steps, and every spacing step sits on the grid. No colors sit within reach of a neighbor, no type styles overlap and no component variants collapse. The proposed set keeps the same nine type styles and 11 spacing steps, with three grays. Every pair of text and background keeps its contrast ratio.
 
 ## How this was made
 
-Extracted by Design System Extractor from localhost:4100 in run evalclean0 on 2026-10-12. Tokens, motion, components and checks are measured from the rendered pages; motion marked observed was measured at runtime. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the raw set. 28 of 28 components are live previews; 0 are captured images.
+Extracted by Design System Extractor from localhost:4100 in run evalclean0 on 2026-10-12. Tokens, motion, components and checks are measured from the rendered pages; motion marked observed was measured at runtime. The introduction and the drift narrative were written by a model from those measurements. Tokens shown are the raw set. 28 of 29 components are live previews; 1 are captured images.
