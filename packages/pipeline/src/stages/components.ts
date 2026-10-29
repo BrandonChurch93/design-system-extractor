@@ -5,7 +5,7 @@ import { px, radiusOf } from '../capture/snapshot';
 import { classify, type Guess } from '../components/classify';
 import { classesAllowMerge, clusterItems, exactKey, representative, toneOnly, type Cluster } from '../components/cluster';
 import { cropShot, downscale, padded, shotExtent, sourceRegion } from '../components/crop';
-import { commonGround, CROP_MARGIN, groundOf, withGround } from '../components/ground';
+import { commonGround, CROP_MARGIN, fillOf, groundOf, withGround } from '../components/ground';
 import { itemsFrom, type Item } from '../components/items';
 import { nameComponents, resolveCollisions, stylesAgree, type CollisionPair, type Draft, type Naming } from '../components/model';
 import { componentMotion, easingLink, patternOwners, withOwners } from '../components/motion';
@@ -152,8 +152,10 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
     it.fp.semanticGround = tokens.colors.find((t) => t.id === id)?.group === 'semantic';
   }
   const clusters = clusterItems(items);
-  const kept = clusters.filter((c) => !isNoise(c));
-  const noise = clusters.length - kept.length;
+  // Hidden at capture and never shown by a state: a reader can never see it, so it is not a design element (D-108).
+  const unseen = clusters.filter((c) => c.items.every((it) => it.el.hidden && !focusShown(it)));
+  const kept = clusters.filter((c) => !isNoise(c) && !unseen.includes(c));
+  const noise = clusters.filter((c) => isNoise(c) && !unseen.includes(c)).length;
 
   // Drafts in first-seen order, so ids, batches and names follow the pages.
   const working: Working[] = kept
@@ -294,6 +296,7 @@ export async function components(ctx: RunContext, capture: CaptureOutput, tokens
   if (cut) await ctx.emit({ stage: 'components', level: 'warn', message: `time budget for naming reached · ${cut} of ${named.calls.length} batches named by the rules` });
   if (mergedByStyle + mergedCount + toned > 0) await ctx.emit({ stage: 'components', message: `merged ${mergedCount + toned} across pages` });
   if (noise + dropped > 0) await ctx.emit({ stage: 'components', message: `${noise + dropped} noise cluster${noise + dropped > 1 ? 's' : ''} dropped` });
+  if (unseen.length) await ctx.emit({ stage: 'components', message: `${unseen.length} hidden until focus and never shown · dropped` });
   return { components: out, sources };
 }
 
@@ -304,7 +307,14 @@ async function put(ctx: RunContext, key: string, png: Buffer | null): Promise<{ 
   return { key, width: Math.round(png.readUInt32BE(16) / 2), height: Math.round(png.readUInt32BE(20) / 2) };
 }
 
-const capturedPreview = (shot: { key: string; width: number; height: number }): Preview => ({ mode: 'captured', cropKey: shot.key, width: shot.width, height: shot.height });
+const capturedPreview = (shot: { key: string; width: number; height: number } | null, fill: string | null): Preview =>
+  // A crop that cannot be cut leaves no key behind (D-108).
+  shot ? { mode: 'captured', cropKey: shot.key, width: shot.width, height: shot.height, fill } : { mode: 'captured', capturedReason: 'no-crop', width: 0, height: 0, fill };
+
+/** The focus record that shows an element hidden at rest (D-108). */
+function focusShown(it: Item) {
+  return (it.vc.states[it.el.d] ?? []).find((r) => r.state === 'focus' && r.crop && !r.hidden);
+}
 
 type Assembled = Omit<Component, 'tier' | 'slug' | 'motion'>;
 
@@ -331,13 +341,18 @@ async function assemble(ctx: RunContext, w: Working, id: string, tokens: Tokens)
   const variantOf = (it: Item) => w.variants.find((v) => v.items.includes(it))!;
 
   const defaultShot = await put(ctx, keys.componentCrop(ctx.runId, id, 'default'), crop(first));
+  const fillFor = (it: Item) => fillOf(it, groundOf(it));
   const variants: Component['variants'] = [];
   for (const v of w.variants) {
     const vid = variantIds.get(v)!;
     const rep = firstSeen(v.items);
     const shot = (await put(ctx, keys.variantCrop(ctx.runId, id, vid), crop(rep))) ?? defaultShot;
-    variants.push({ id: vid, name: v.name, instanceIds: v.items.map(instanceId), delta: v.delta, preview: shot ? capturedPreview(shot) : capturedPreview({ key: keys.componentCrop(ctx.runId, id, 'default'), width: 0, height: 0 }) });
+    variants.push({ id: vid, name: v.name, instanceIds: v.items.map(instanceId), delta: v.delta, preview: capturedPreview(shot, fillFor(rep)) });
   }
+  // Hidden at rest on every instance: the preview is the focus crop, as the site shows it to a keyboard user (D-108).
+  const shownBy = w.items.every((it) => it.el.hidden) ? w.items.find(focusShown) : undefined;
+  const focusRec = shownBy && focusShown(shownBy);
+  const focusShot = shownBy && focusRec ? await put(ctx, keys.componentCrop(ctx.runId, id, 'focus'), withGround(focusRec.crop, shownBy, groundOf(shownBy), focusRec.delta)) : null;
 
   const instances: Component['instances'] = w.items.map((it) => ({
     id: instanceId(it),
@@ -348,6 +363,7 @@ async function assemble(ctx: RunContext, w: Working, id: string, tokens: Tokens)
     variantId: variantIds.get(variantOf(it))!,
     ...(it.el.text.trim() ? { text: it.el.text.trim().slice(0, 80) } : {}),
     ground: groundOf(it),
+    ...(it.el.hidden ? { hiddenAtCapture: true } : {}),
   }));
 
   const ground = commonGround(instances.flatMap((i) => (i.ground ? [i.ground] : [])));
@@ -389,7 +405,7 @@ async function assemble(ctx: RunContext, w: Working, id: string, tokens: Tokens)
     },
     states: await statesOf(ctx, w, id, first, instanceId),
     ...tokensUsedBy(first, tokens),
-    preview: defaultShot ? capturedPreview(defaultShot) : capturedPreview({ key: keys.componentCrop(ctx.runId, id, 'default'), width: 0, height: 0 }),
+    preview: focusShot ? { ...capturedPreview(focusShot, fillFor(shownBy!)), capturedReason: 'hidden-until-focus' } : capturedPreview(defaultShot, fillFor(first)),
     ...(ground ? { ground } : {}),
     code: { html: '', css: '' },
     checks: [],
@@ -402,7 +418,8 @@ async function statesOf(ctx: RunContext, w: Working, id: string, first: Item, in
   const ordered = [first, ...w.items.filter((i) => i !== first)];
   const out = new Map<State, StateCapture>();
   const save = async (state: State, png: Buffer | null | undefined) => (await put(ctx, keys.componentCrop(ctx.runId, id, state), png ?? null))?.key;
-  out.set('default', { state: 'default', captured: true, cropKey: keys.componentCrop(ctx.runId, id, 'default'), delta: [], instanceId: instanceId(first) });
+  const hasDefault = Boolean(crop(first));
+  out.set('default', { state: 'default', captured: true, ...(hasDefault ? { cropKey: keys.componentCrop(ctx.runId, id, 'default') } : {}), delta: [], instanceId: instanceId(first) });
 
   const interactive = w.items.some((i) => i.interactive && !i.revealed);
   for (const state of ['hover', 'focus', 'active', 'scrolled'] as const) {
@@ -451,5 +468,5 @@ async function responsiveVariantOf(ctx: RunContext, w: Working, id: string, firs
   if (!note) return undefined;
   const shot = await put(ctx, keys.componentMobile(ctx.runId, id), crop(mobile));
   if (!shot) return undefined;
-  return { mobilePreview: capturedPreview(shot), note };
+  return { mobilePreview: capturedPreview(shot, fillOf(mobile, groundOf(mobile))), note };
 }

@@ -14,6 +14,8 @@ export type StateRecord = {
   crop?: Buffer;
   delta: StyleDelta[];
   reachedByKeyboard?: boolean;
+  /** For `focus`: the element is still hidden while focused (D-108). */
+  hidden?: boolean;
   /** For `open`: the data-dse-id of the revealed element's root. */
   revealed?: string;
   /** Script-driven animations that ran on the element during the state (D-089). */

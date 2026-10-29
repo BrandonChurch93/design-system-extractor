@@ -7,7 +7,8 @@ import { matchedFromCssom, unreadableSheets } from '../capture/cssom-match';
 import { endScriptAnimations, motionInit, motionMarkScroll, motionReadout, type MotionRecords } from '../capture/motion-script';
 import type { MatchedStyles } from '../capture/matched-css';
 import { scanSheets, type SheetScan } from '../capture/sheet-scan';
-import { buildSnapshot, compactSnapshot, descendants, type SnapElement, type Snapshot } from '../capture/snapshot';
+import { hiddenAtFocus } from '../capture/hidden';
+import { buildSnapshot, compactSnapshot, descendants, toStyleMap, type SnapElement, type Snapshot } from '../capture/snapshot';
 import { stitch, type ShotBand } from '../components/crop';
 import { buildSelectors, motionProps, styleProps, takeSnapshot } from '../capture/snapshot-script';
 import { activeState, cropOf, hoverState, neutral, readStyles, scrolledState, settle, splitList, STATE_WAIT_CAP, styleDelta, tabWalk, withTransitions, type StateRecord, type StyleDelta } from '../capture/states';
@@ -470,7 +471,8 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
     const base = new Map<string, string[] | null>();
     for (const d of chosen) base.set(d, await readStyles(p, d));
     const walk = (lite ? null : await probe(() => tabWalk(p, chosenSet))) ?? { order: [], focus: new Map() };
-    for (const [d, f] of walk.focus) add(d, { state: 'focus', crop: f.crop, delta: styleDelta(base.get(d) ?? null, f.styles), reachedByKeyboard: true });
+    const stillHidden = (styles: string[] | null) => (styles ? hiddenAtFocus(toStyleMap(styles)) : true);
+    for (const [d, f] of walk.focus) add(d, { state: 'focus', crop: f.crop, delta: styleDelta(base.get(d) ?? null, f.styles), reachedByKeyboard: true, hidden: stillHidden(f.styles) });
     let hovers = 0;
     let focusFallback = 0;
     let actives = 0;
@@ -487,7 +489,7 @@ async function captureViewport(ctx: RunContext, rc: RunBrowserContext, throttle:
           const animations = await settle(p, d);
           const styles = await readStyles(p, d);
           const crop = await cropOf(p, d);
-          add(d, { state: 'focus', crop, delta: styleDelta(b, styles), reachedByKeyboard: false, ...(animations.length ? { animations } : {}) });
+          add(d, { state: 'focus', crop, delta: styleDelta(b, styles), reachedByKeyboard: false, hidden: stillHidden(styles), ...(animations.length ? { animations } : {}) });
           focusFallback++;
         }
         const a = await activeState(p, d, b);

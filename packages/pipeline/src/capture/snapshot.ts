@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { parseCssColor } from '../color/parse';
+import { hiddenAtCapture } from './hidden';
 import { styleProps, type RawElement, type SnapshotResult } from './snapshot-script';
 
 // The snapshot as Node sees it: validated, with style maps and tree helpers.
@@ -27,6 +28,8 @@ const RawElementSchema = z.object({
   st: z.array(z.string()).length(styleProps.length),
   font: z.string(),
   focusable: z.boolean(),
+  /** Takes focus from the keyboard, whether or not it shows at rest. */
+  tab: z.boolean().optional(),
 });
 
 export const SnapshotSchema = z.object({
@@ -41,7 +44,8 @@ export const SnapshotSchema = z.object({
 
 export type StyleMap = Record<(typeof styleProps)[number], string>;
 
-export type SnapElement = Omit<RawElement, 'st'> & { index: number; style: StyleMap; kids: number[] };
+/** `hidden`: hidden at capture by the measured rule (capture/hidden.ts, D-108). */
+export type SnapElement = Omit<RawElement, 'st'> & { index: number; style: StyleMap; kids: number[]; hidden: boolean };
 
 export type Snapshot = Omit<SnapshotResult, 'elements'> & { elements: SnapElement[]; byDse: Map<string, SnapElement> };
 
@@ -55,7 +59,8 @@ export function buildSnapshot(raw: unknown): Snapshot {
   const parsed = SnapshotSchema.parse(raw);
   const elements: SnapElement[] = parsed.elements.map((e, index) => {
     const { st, ...rest } = e;
-    return { ...rest, index, style: toStyleMap(st), kids: [] };
+    const style = toStyleMap(st);
+    return { ...rest, index, style, kids: [], hidden: !rest.vis || hiddenAtCapture(rest, style, parsed.docW) };
   });
   for (const e of elements) if (e.p >= 0) elements[e.p]?.kids.push(e.index);
   return { ...parsed, elements, byDse: new Map(elements.map((e) => [e.d, e])) };
@@ -65,7 +70,7 @@ export function buildSnapshot(raw: unknown): Snapshot {
 export function compactSnapshot(s: Snapshot): SnapshotResult {
   return {
     ...s,
-    elements: s.elements.map(({ index: _i, style, kids: _k, ...rest }) => ({ ...rest, st: styleProps.map((p) => style[p]) })),
+    elements: s.elements.map(({ index: _i, style, kids: _k, hidden: _h, ...rest }) => ({ ...rest, st: styleProps.map((p) => style[p]) })),
   } as SnapshotResult & { byDse?: unknown };
 }
 

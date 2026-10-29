@@ -12,12 +12,14 @@ import {
   type SnapElement,
   type Snapshot,
 } from './snapshot';
+import { focusableWhileHidden } from './hidden';
 
 // Element candidates (docs/specs/component-detection.md): DOM elements that may become components.
 
 export type CandidateRule = 'control' | 'styled-link' | 'landmark' | 'role' | 'data' | 'popup' | 'container' | 'inline-mark' | 'avatar';
 
-export type ElementCandidate = { dse: string; rules: CandidateRule[]; interactive: boolean; area: number };
+/** `hidden`: hidden at capture and kept because it takes focus (D-108). */
+export type ElementCandidate = { dse: string; rules: CandidateRule[]; interactive: boolean; area: number; hidden?: true };
 
 const landmarkTags = new Set(['nav', 'header', 'footer', 'table', 'pre']);
 const sectioning = new Set(['article', 'aside', 'main', 'nav', 'section']);
@@ -60,7 +62,8 @@ export function findCandidates(s: Snapshot, viewport: Viewport): ElementCandidat
   const vpArea = vp.width * vp.height;
   const out: ElementCandidate[] = [];
   for (const e of s.elements) {
-    if (!e.vis) continue;
+    // A hidden element is not a candidate unless it takes focus, as a skip link does (D-108).
+    if (e.hidden && !focusableWhileHidden(e.style, e.tab ?? false)) continue;
     const rules: CandidateRule[] = [];
     const area = e.w * e.h;
     const interactive = isInteractive(e);
@@ -85,7 +88,7 @@ export function findCandidates(s: Snapshot, viewport: Viewport): ElementCandidat
       const r = e.style['border-top-left-radius'];
       if (r.endsWith('%') ? parseFloat(r) >= 50 : px(r) >= e.w / 2 - 0.5) rules.push('avatar');
     }
-    if (rules.length) out.push({ dse: e.d, rules, interactive, area });
+    if (rules.length) out.push({ dse: e.d, rules, interactive, area, ...(e.hidden ? { hidden: true as const } : {}) });
   }
   return out;
 }

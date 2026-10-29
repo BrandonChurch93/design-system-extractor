@@ -91,6 +91,9 @@ export const styleProps = [
   // Container query units resolve against the nearest container (D-098).
   'container-type',
   'container-name',
+  // The hidden-at-capture rule reads both (D-108).
+  'clip',
+  'clip-path',
 ] as const;
 
 /** Longhands the freeze removes, so they are kept from the snapshot taken before it (capture-and-states.md, 2b). */
@@ -134,6 +137,7 @@ export type RawElement = {
   /** font family actually available, from document.fonts.check */
   font: string;
   focusable: boolean;
+  tab?: boolean;
 };
 
 export type SnapshotResult = { elements: RawElement[]; truncated: boolean; docW: number; docH: number; nodeCount: number; title: string; h1: string };
@@ -239,6 +243,7 @@ export function takeSnapshot(args: { props: string[]; cap: number; root?: string
           st,
           font: own ? resolveFont(cs.fontFamily, cs.fontSize, cs.fontWeight) : '',
           focusable: vis && isFocusable(el),
+          tab: isFocusable(el),
         });
       }
     }

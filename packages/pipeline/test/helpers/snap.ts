@@ -29,14 +29,14 @@ for (const side of ['top', 'right', 'bottom', 'left']) {
 }
 for (const corner of ['top-left', 'top-right', 'bottom-right', 'bottom-left']) defaults[`border-${corner}-radius` as keyof StyleMap] = '0px';
 
-export type El = { tag: string; type?: string; parent?: number; cls?: string[]; text?: string; own?: string; role?: string; aria?: Record<string, string>; box?: [number, number, number, number]; style?: Partial<StyleMap>; href?: boolean };
+export type El = { tag: string; type?: string; parent?: number; cls?: string[]; text?: string; own?: string; role?: string; aria?: Record<string, string>; box?: [number, number, number, number]; style?: Partial<StyleMap>; href?: boolean; tab?: boolean };
 
 export function snap(els: El[], doc = { w: 1440, h: 3000 }): Snapshot {
   return buildSnapshot({
     elements: els.map((e, i) => {
       const [x, y, w, h] = e.box ?? [0, 0, 100, 40];
       const style = { ...defaults, ...e.style } as StyleMap;
-      return { d: `e${i}`, p: e.parent ?? -1, tag: e.tag, id: '', cls: e.cls ?? [], role: e.role ?? null, type: e.type ?? null, href: e.href ?? e.tag === 'a', disabled: false, aria: e.aria ?? {}, attrs: {}, text: e.text ?? '', own: e.own ?? '', children: 0, x, y, w, h, vis: true, st: styleProps.map((p) => style[p] ?? ''), font: '', focusable: false };
+      return { d: `e${i}`, p: e.parent ?? -1, tag: e.tag, id: '', cls: e.cls ?? [], role: e.role ?? null, type: e.type ?? null, href: e.href ?? e.tag === 'a', disabled: false, aria: e.aria ?? {}, attrs: {}, text: e.text ?? '', own: e.own ?? '', children: 0, x, y, w, h, vis: true, st: styleProps.map((p) => style[p] ?? ''), font: '', focusable: false, ...(e.tab ? { tab: true } : {}) };
     }),
     truncated: false,
     docW: doc.w,

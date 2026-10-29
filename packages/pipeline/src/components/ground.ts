@@ -1,3 +1,4 @@
+import { composite, parseHex } from '../color/contrast';
 import { deltaE, hexOf } from '../color/parse';
 import { ancestors, parseRgb } from '../capture/snapshot';
 import { CROP_PAD } from '../capture/states';
@@ -7,6 +8,13 @@ import type { Item } from './items';
 // Ground (docs/specs/capture-and-states.md, D-094): the color an instance sat on, painted behind its preview.
 
 export const CROP_MARGIN = CROP_PAD;
+
+/** The element's own fill (D-109): its background when nearly opaque, composited over its ground when partly, null when transparent. */
+export function fillOf(it: Item, ground: string): string | null {
+  const c = parseRgb(it.el.style['background-color']);
+  if (!c || c.a <= 0.1) return null;
+  return hexOf(c.a >= 0.9 ? { ...c, a: 1 } : composite(c, parseHex(ground)));
+}
 
 /** The four corners of the crop margin when they agree within ΔE 2; else the nearest opaque ancestor; else the body; else the page's canvas; else white. */
 export function groundOf(it: Item): string {

@@ -44,6 +44,8 @@ p { font-size: 16px; line-height: 26px; }
 .sc-11533:hover { color: var(--c-primary); }
 .css-a9d6f4d { display: flex; align-items: center; gap: 12px; }
 .css-473d86b { position: relative; }
+.css-bb5d725 { position: absolute; top: 12px; left: 24px; z-index: 30; display: inline-flex; align-items: center; height: 44px; padding: 0 16px; border-radius: 8px; background: var(--c-ink); color: var(--c-surface); font-size: 14px; line-height: 20px; font-weight: 600; clip-path: inset(50%); }
+.css-bb5d725:focus { clip-path: none; outline: 2px solid var(--c-primary); outline-offset: 2px; }
 .css-e41d4c2 { display: inline-flex; align-items: center; gap: 4px; height: 44px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; font-size: 14px; line-height: 20px; font-weight: 600; color: var(--c-ink); cursor: pointer; }
 .css-e41d4c2:hover, .css-e41d4c2[aria-expanded='true'] { background: var(--c-border); }
 .css-297a324 { position: absolute; top: 48px; left: 0; z-index: 20; min-width: 224px; padding: 8px; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: 12px; box-shadow: 0 12px 32px rgba(11, 31, 58, 0.12); }
@@ -192,6 +194,7 @@ p { font-size: 16px; line-height: 26px; }
 
 </head>
 <body>
+<a css-bb5d725 href="#main">Skip to content</a>
 <header class="css-e26c31b" data-header>
   <div class="css-fb5b128">
     <div class="css-fb1fd82">
@@ -225,7 +228,7 @@ p { font-size: 16px; line-height: 26px; }
     </nav>
   </div>
 </header>
-<main>
+<main id="main">
 
 <div class="css-fb5b128">
   <div class="css-8eecddf" style="padding: 48px 0 32px">

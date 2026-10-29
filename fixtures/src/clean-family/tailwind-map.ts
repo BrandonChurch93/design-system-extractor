@@ -19,6 +19,7 @@ export const twMap: Record<string, string> = {
   'nav-link': `text-[14px] leading-[20px] font-semibold text-navy-900 hover:text-blue-600 transition-[color] duration-120 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${motion} ${focusRing}`,
   'header-actions': 'flex items-center gap-3 max-[640px]:hidden',
   dropdown: 'relative',
+  'skip-link': 'absolute top-3 left-6 z-30 inline-flex items-center h-11 px-4 rounded-lg bg-navy-900 text-white text-[14px] leading-[20px] font-semibold [clip-path:inset(50%)] focus:[clip-path:none] focus:outline-2 focus:outline-solid focus:outline-blue-600 focus:outline-offset-2',
   'dropdown-trigger': `inline-flex items-center gap-1 h-11 px-3 border-0 rounded-lg bg-transparent text-[14px] leading-[20px] font-semibold text-navy-900 cursor-pointer hover:bg-slate-200 aria-expanded:bg-slate-200 ${focusRing}`,
   'dropdown-menu': 'absolute top-12 left-0 z-20 min-w-56 p-2 bg-white border border-solid border-slate-200 rounded-xl shadow-raised',
   'menu-item': `flex items-center h-11 px-3 rounded-lg text-[14px] leading-[22px] text-navy-900 hover:bg-slate-200 ${focusRing}`,

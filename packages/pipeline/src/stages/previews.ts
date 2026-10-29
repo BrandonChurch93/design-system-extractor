@@ -103,10 +103,12 @@ function cssSource(src: NonNullable<ReturnType<ComponentSources['get']>>, it: It
 }
 
 async function previewFor(ctx: RunContext, it: Item, htmlKey: string, existing: Preview, policy: CssPolicy, session: RenderSession, copier: FontCopier, siteVars: ReadonlySet<string>): Promise<Outcome> {
-  if (overBudget(ctx, 'previews')) return { preview: { ...existing, mode: 'captured', capturedReason: 'not-checked' } };
+  // Hidden until focus and no crop keep their capture: there is nothing at rest to check against, but the code is still built (D-108).
+  const kept = existing.capturedReason === 'hidden-until-focus' || existing.capturedReason === 'no-crop';
+  if (!kept && overBudget(ctx, 'previews')) return { preview: { ...existing, mode: 'captured', capturedReason: 'not-checked' } };
   const markup = it.revealed ? it.revealed.open.markup : it.vc.markup[it.el.d];
   const matched = it.revealed ? it.revealed.open.matched : it.vc.matched;
-  if (!markup?.html) return { preview: { ...existing, mode: 'captured', capturedReason: 'css-too-large' } };
+  if (!markup?.html) return { preview: kept ? existing : { ...existing, mode: 'captured', capturedReason: 'css-too-large' } };
   // The component's images keep their own pixels from the page screenshot, on their average color (D-098).
   const imageColors: Record<string, string> = {};
   const imageUrls: Record<string, string> = {};
@@ -129,7 +131,8 @@ async function previewFor(ctx: RunContext, it: Item, htmlKey: string, existing: 
   const ground = groundOf(it);
   const fonts = await fontsFor(fontsUsed(it), it.vc.sheets, copier);
   const doc = buildPreview({ markup: markup.html, vars: markup.vars, snapshot: it.snapshot, root: it.el, matched, imageColors, imageUrls, fonts, policy, siteVars, viewport: viewportSize[it.viewport] });
-  if (doc.tooLarge) return { preview: { ...existing, ground, mode: 'captured', capturedReason: 'css-too-large' }, doc, fonts: fonts.mode };
+  if (doc.tooLarge) return { preview: kept ? { ...existing, ground } : { ...existing, ground, mode: 'captured', capturedReason: 'css-too-large' }, doc, fonts: fonts.mode };
+  if (kept) return { preview: { ...existing, ground }, doc, fonts: fonts.mode };
   await ctx.files.put(htmlKey, doc.html, { contentType: 'text/html; charset=utf-8' });
   // The crop of the page starts on a whole device pixel at or before the element; the render starts there too (D-098).
   const frac = (v: number) => (v * 2 - Math.floor(v * 2)) / 2;
@@ -172,6 +175,8 @@ export function reasonWords(c: ReturnType<typeof previewCounts>): string {
     [c['fonts-unavailable'], 'fonts unavailable'],
     [c['css-too-large'], 'styles too large'],
     [c['not-checked'], 'not checked in time'],
+    [c['hidden-until-focus'] ?? 0, 'hidden until focused'],
+    [c['no-crop'] ?? 0, 'no capture'],
   ];
   return parts
     .filter(([n]) => n > 0)
