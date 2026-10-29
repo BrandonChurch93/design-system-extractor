@@ -155,9 +155,8 @@ ${x.head}
 ${x.extra?.('head', base) ?? ''}
 </head>
 <body>
-<a ${x.c('skip-link')} href="#main">Skip to content</a>
-${header(x, base)}
-<main id="main">
+${v11(x) ? `<a ${attrs(x, 'skip-link')} href="#main">Skip to content</a>\n` : ''}${header(x, base)}
+<main${v11(x) ? ' id="main"' : ''}>
 ${page.body(x, base)}
 </main>
 ${footer(x, base, page)}

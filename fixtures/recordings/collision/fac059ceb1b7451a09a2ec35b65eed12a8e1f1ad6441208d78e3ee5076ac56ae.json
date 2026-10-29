@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-28T22:45:01.833Z",
+  "recordedAt": "2026-10-29T16:59:12.083Z",
   "request": "Pairs:\np1 Button: a with no class names, no children, in header, text \"Sign in\" / button with no class names, inside svg:1, in footer, text \"Talk to sales\", differing background, borderWidth, borderColor, radius, padding, fontSize, fontWeight"
 }
