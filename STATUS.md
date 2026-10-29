@@ -160,6 +160,26 @@ Read for P11: pages, components, copy, motion, quality-bar, design-system, expor
 10. Catalog entries for every page-level component.
 11. QA: `tests/qa/pages.ts` with every page and state, goldens, axe, no horizontal scroll at 390, Lighthouse script and thresholds, `/open` test, polling mutation bound test, reduced-motion on the run page, a recorded video of the in-progress page reviewed, the Compare deltas test (messy to messy-after).
 
+## P18 real-site check
+
+### The owner's portfolio and modernsoftworks.com, fresh through the queue (2026-10-29)
+
+`pnpm dev` (web and worker), `POST /api/runs` at the visitor timeout, on the final P18 pipeline.
+
+| Run | time · cost | pages · components | live | diff | hidden-until-focus | no-crop | not-checked | live of checked | core live |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| brandonchurchportfolio.com `5m44rnrxfm` (v1.3) | 144 s · $0.0072 | 4 · 15 | 11 | 3 | 1 | 0 | 0 | 11 of 15 · 73.3% | 7 of 10 |
+| brandonchurchportfolio.com `d78cp1kh0v` (owner, v1.2) | 171 s · $0.0074 | 4 · 16 | 11 | 5 | n/a | n/a | 0 | 11 of 16 · 68.8% | 7 of 10 |
+| modernsoftworks.com `u5wb4o3to9` (v1.3) | 253 s · $0.0086 | 12 · 93 | 75 | 17 | 1 | 0 | 0 | 75 of 93 · 80.6% | 51 of 65 |
+| modernsoftworks.com `qgc6npq1au` (P17, v1.2) | 234 s · $0.0112 | 12 · 74 | 60 | 13 | n/a | 1 | 0 | 60 of 73 · 82.2% | 42 of 52 |
+
+- The skip link. Portfolio: one `Skip link`, `captured` with `hidden-until-focus`, its focus crop 146 × 29 (2 hidden instances); the v1.2 run had two (a 59 × 27 dark box captured `diff`, and a 1,440 px wide strip that was the zero-height header), and the second is no longer a component. modernsoftworks.com: `Skip link`, `captured` with `hidden-until-focus`, 207 × 57, where P17's run had it `no-crop` at 0 × 0 with a key never written.
+- Cards on the contrast fallback: 36 of 93 on modernsoftworks.com (cards, inputs, the navigation and footer, `#1A1A1A` on `#141414` and the like), 0 of 15 on the portfolio.
+- The 404 page: modernsoftworks.com's second Button, first seen on `/8780d3aa06-does-not-exist`, is `Button (404 page)` (P17: `Button (8780d3aa06 does not exist)`); no name in either run contains the probe path, and no pattern reference dangles.
+- Durations: on the log scale alone, modernsoftworks.com's fifteen (100 ms to 35,000 ms) dropped 2 value labels at 1440 (the strip 1,062 px wide) and the portfolio's fifteen dropped none; the Long list is adopted (D-111). With it, both strips label every value at 1440 (86 and 104 px tall); at 390 they label 12 of 15 and 10 of 15, and stay under 220 px.
+- Components passing: 8 of 15 on the portfolio, 40 of 87 on modernsoftworks.com.
+- Screenshots: `docs/real-site-check/p18-modernsoftworks-cards.png` (the core cards at 1440: the dark site's grounds, a FAQ trigger cut to fit at 0.6×, the skip link shown focused, the Ground toggle on every card), `docs/real-site-check/p18-portfolio-skip-link.png` (the portfolio's skip link card), `docs/real-site-check/p18-modernsoftworks-durations.png` (the strip with its Long list at 1440).
+
 ## P17 real-site check
 
 ### Baseline, before any preview builder change (2026-10-28)

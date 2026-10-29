@@ -12,11 +12,8 @@ import styles from './DurationStrip.module.css';
 const M = runPage.motion;
 /** The tick's mark is 16 px; its 4 px dot rises 12 px from the foot (D-097, D-110). */
 const RISE = 12;
-/**
- * Durations above this leave the scale for the Long list, when the P18 measurement adopted it (D-102,
- * the P18 build rulings); null keeps every duration on the scale.
- */
-export const LONG_FROM: number | null = null;
+/** Durations above this leave the scale for the Long list, adopted by the P18 measurement (D-102, D-111). */
+export const LONG_FROM = 2000;
 
 type Duration = Pick<DurationToken, 'name' | 'ms' | 'role' | 'usage'> & { id?: string };
 
@@ -55,8 +52,8 @@ export function DurationStrip({ durations, doc, head }: { durations: Duration[];
     return () => ro.disconnect();
   }, []);
   const all = [...durations].sort((a, b) => a.ms - b.ms);
-  const long = LONG_FROM === null ? [] : all.filter((d) => d.ms > LONG_FROM!);
-  const list = LONG_FROM === null ? all : all.filter((d) => d.ms <= LONG_FROM!);
+  const long = all.filter((d) => d.ms > LONG_FROM);
+  const list = all.filter((d) => d.ms <= LONG_FROM);
   const top = [...all].sort((a, b) => b.usage - a.usage)[0];
   const xs = logPositions(list.map((d) => d.ms), width || 1000);
   const values = list.map((d) => fill(M.ms, { ms: count(d.ms) }));
