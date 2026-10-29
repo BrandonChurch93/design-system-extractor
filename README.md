@@ -6,7 +6,7 @@ Tokens under the site's own names, its motion (durations, easings, keyframes, an
 
 ![A complete run of a fixture site: the stats, the palette, the drift headline and the tokens](docs/images/run-page.png)
 
-![The Motion section of a fixture run: the duration scale with its running ticks, the easing curves looping on one shared clock, the keyframes, and the patterns with their triggers](docs/images/motion.png)
+![The Motion section of a fixture run: the durations on a log scale with their running ticks, the easing curves at card width looping on one shared clock, the keyframes, and the patterns with their chips at rest and Replay](docs/images/motion.png)
 
 ## How it works
 
