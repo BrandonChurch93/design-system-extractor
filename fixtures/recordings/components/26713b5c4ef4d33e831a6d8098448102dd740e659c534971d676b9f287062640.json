@@ -2,7 +2,7 @@
   "purpose": "components",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"items\": [{\"id\": \"c17\", \"type\": \"card\", \"name\": \"Pricing card\", \"isComponent\": true, \"variantHint\": \"border and button fill for the featured plan\"}, {\"id\": \"c18\", \"type\": \"table\", \"name\": \"Plan comparison table\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c19\", \"type\": \"breadcrumb\", \"name\": \"Breadcrumb\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c20\", \"type\": \"badge\", \"name\": \"Status badge\", \"isComponent\": true, \"variantHint\": \"fill color by status\"}, {\"id\": \"c21\", \"type\": \"code-block\", \"name\": \"Code block\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c22\", \"type\": \"select\", \"name\": \"Select\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c23\", \"type\": \"checkbox\", \"name\": \"Checkbox\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c24\", \"type\": \"button\", \"name\": \"Icon button\", \"isComponent\": true, \"variantHint\": null}]}",
+  "text": "{\"items\": [{\"id\": \"c17\", \"type\": \"card\", \"name\": \"Pricing card\", \"isComponent\": true, \"variantHint\": \"border and button style between primary and secondary\"}, {\"id\": \"c18\", \"type\": \"table\", \"name\": \"Plan comparison table\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c19\", \"type\": \"breadcrumb\", \"name\": \"Breadcrumb\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c20\", \"type\": \"badge\", \"name\": \"Status badge\", \"isComponent\": true, \"variantHint\": \"fill color: green, amber or red\"}, {\"id\": \"c21\", \"type\": \"code-block\", \"name\": \"Code block\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c22\", \"type\": \"select\", \"name\": \"Team size select\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c23\", \"type\": \"checkbox\", \"name\": \"Checkbox\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c24\", \"type\": \"button\", \"name\": \"Icon button\", \"isComponent\": true, \"variantHint\": null}]}",
   "usage": {
     "input_tokens": 967,
     "cache_creation_input_tokens": 1564,
@@ -11,7 +11,7 @@
       "ephemeral_5m_input_tokens": 1564,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 361,
+    "output_tokens": 368,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-29T17:34:28.097Z",
+  "recordedAt": "2026-10-29T18:02:14.724Z",
   "request": "Items:\nc17 guess card 0.6, article, classes card pricing-card, inside a:1 h3:1 li:3 p:1 ul:1, in team, text \"Starter $0 One public changelog Weekly digest Three integrations Start free\", 4 instances on 1 page (/pricing), variants Primary, Secondary, picture below\nc18 guess table 0.98, table, classes table, inside tbody:1 thead:1 tr:4, in pricing, text \"Feature Starter Team Changelogs 1 Unlimited Digests Weekly Daily or weekly Custo\", 4 instances on 2 pages (/pricing, /docs/getting-started), variants Default, no picture\nc19 guess breadcrumb 0.8, nav, no class names, inside li:3 ol:1, in docs, text \"Home / Docs\", 4 instances on 2 pages (/docs, /docs/getting-started), variants Default, picture below\nc20 guess badge 0.7, span, classes badge badge-success, no children, in docs, text \"API operational\", 8 instances on 2 pages (/docs, /changelog), variants Success, Warning, Danger, picture below\nc21 guess code-block 0.95, pre, classes code-block, inside code:1, in guides, text \"npm install @tidewater/cli tidewater login tidewater publish\", 4 instances on 2 pages (/docs, /docs/getting-started), variants Default, no picture\nc22 guess select 0.98, select, classes select, no children, in signup, text \"1 to 5 6 to 20 21 or more\", 2 instances on 1 page (/signup), variants Default, no picture\nc23 guess checkbox 0.98, input, classes checkbox, no children, in signup, text \"\", 2 instances on 1 page (/signup), variants Default, no picture\nc24 guess button 0.95, button, classes icon-button, inside svg:1, in contact, text \"\", 2 instances on 1 page (/contact), variants Default, no picture\nPicture of c17:\n[image]\nPicture of c19:\n[image]\nPicture of c20:\n[image]"
 }

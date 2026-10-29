@@ -2,7 +2,7 @@
   "purpose": "colors",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"names\": [{\"id\": \"zh3ek8iz\", \"name\": \"navy-900\"}, {\"id\": \"busxwsvr\", \"name\": \"blue-600\"}, {\"id\": \"4qan2176\", \"name\": \"teal-600\"}, {\"id\": \"rlwe9st9\", \"name\": \"white\"}, {\"id\": \"t266iczb\", \"name\": \"slate-200\"}, {\"id\": \"c8zthrsu\", \"name\": \"gray-600\"}, {\"id\": \"2fqlnlan\", \"name\": \"success-700\"}, {\"id\": \"45mds9q3\", \"name\": \"warning-700\"}, {\"id\": \"rab0bgis\", \"name\": \"danger-600\"}]}",
+  "text": "{\"names\": [{\"id\": \"zh3ek8iz\", \"name\": \"navy-900\"}, {\"id\": \"busxwsvr\", \"name\": \"blue-600\"}, {\"id\": \"4qan2176\", \"name\": \"teal-600\"}, {\"id\": \"rlwe9st9\", \"name\": \"white\"}, {\"id\": \"t266iczb\", \"name\": \"gray-200\"}, {\"id\": \"c8zthrsu\", \"name\": \"gray-600\"}, {\"id\": \"2fqlnlan\", \"name\": \"success-700\"}, {\"id\": \"45mds9q3\", \"name\": \"warning-700\"}, {\"id\": \"rab0bgis\", \"name\": \"danger-600\"}]}",
   "usage": {
     "input_tokens": 590,
     "cache_creation_input_tokens": 0,
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-29T17:16:12.045Z",
+  "recordedAt": "2026-10-29T17:52:20.708Z",
   "request": "id | name now | hex | group | role | hue | step | uses | pages | fixed\nzh3ek8iz | navy-900 | #0B1F3A | brand | - | blue | 900 | text 860 background 24 border 8 other 22 | 9 of 9 pages | site\nbusxwsvr | blue-600 | #2458E6 | brand | - | blue | 600 | text 20 background 21 border 61 other 0 | 9 of 9 pages | site\n4qan2176 | teal-600 | #0F8A8A | brand | - | teal | 500 | text 28 background 2 border 0 other 14 | 3 of 9 pages | site\nrlwe9st9 | white | #FFFFFF | neutral | - | gray | 50 | text 69 background 79 border 0 other 0 | 9 of 9 pages | site\nt266iczb | slate-200 | #E2E8F0 | neutral | - | gray | 200 | text 0 background 4 border 205 other 0 | 9 of 9 pages | site\nc8zthrsu | gray-600 | #5F6368 | neutral | - | gray | 600 | text 20 background 0 border 0 other 0 | 9 of 9 pages | site\n2fqlnlan | success-700 | #15803D | semantic | success | green | 600 | text 4 background 2 border 8 other 2 | 2 of 9 pages | site\n45mds9q3 | warning-700 | #B45309 | semantic | warning | orange | 500 | text 4 background 2 border 8 other 2 | 2 of 9 pages | site\nrab0bgis | danger-600 | #DC2626 | semantic | danger | red | 500 | text 2 background 2 border 8 other 0 | 2 of 9 pages | site"
 }

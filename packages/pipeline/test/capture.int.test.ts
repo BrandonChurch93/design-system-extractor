@@ -76,9 +76,23 @@ describe('capture on the clean fixture', () => {
     const tags = vc.candidates.map((c) => vc.snapshot.byDse.get(c.dse)!).map((e) => `${e.tag}${e.cls.length ? `.${e.cls[0]}` : ''}`);
     for (const want of ['header.site-header', 'footer.site-footer', 'a.btn', 'button.dropdown-trigger', 'article.card', 'span.tag-new', 'img.avatar']) expect(tags, want).toContain(want);
     // The known shape of the home page: these counts change only if the fixture or the rules do.
-    expect(vc.candidates.filter((c) => c.interactive).length).toBe(5);
-    expect(vc.candidates.length).toBe(14);
-    expect(page(clean.captured, '/').viewports.mobile!.candidates.filter((c) => c.interactive).length).toBe(3);
+    expect(vc.candidates.filter((c) => c.interactive).length).toBe(6);
+    expect(vc.candidates.length).toBe(15);
+    expect(page(clean.captured, '/').viewports.mobile!.candidates.filter((c) => c.interactive).length).toBe(4);
+  });
+
+  it('keeps the skip link as a hidden candidate, and nothing inside a hidden container (D-108)', () => {
+    for (const viewport of ['desktop', 'mobile'] as const) {
+      const vc = page(clean.captured, '/').viewports[viewport]!;
+      const els = vc.candidates.map((c) => ({ c, e: vc.snapshot.byDse.get(c.dse)! }));
+      const skip = els.find(({ e }) => e.cls.includes('skip-link'))!;
+      expect(skip.c.hidden, viewport).toBe(true);
+      expect(els.filter(({ c }) => c.hidden).map(({ e }) => e.cls[0]), viewport).toEqual(['skip-link']);
+      expect(els.every(({ e }) => e.w > 1 && e.h > 1), viewport).toBe(true);
+      const focus = (vc.states[skip.e.d] ?? []).find((r) => r.state === 'focus')!;
+      expect(focus.hidden, viewport).toBe(false);
+      expect(focus.crop?.length, viewport).toBeGreaterThan(500);
+    }
   });
 
   it('captures hover, focus and active on the primary button with real style changes', () => {
@@ -96,7 +110,7 @@ describe('capture on the clean fixture', () => {
   it('walks the tab order the page defines', () => {
     const vc = page(clean.captured, '/').viewports.desktop!;
     const order = vc.tabOrder.map((d) => vc.snapshot.byDse.get(d)?.text);
-    expect(order.slice(0, 10)).toEqual(['Tidewater', 'Product', 'Pricing', 'Docs', 'Contact', 'Resources', 'Sign in', 'Start free', 'Start free', 'See pricing']);
+    expect(order.slice(0, 10)).toEqual(['Skip to content', 'Tidewater', 'Product', 'Pricing', 'Docs', 'Contact', 'Resources', 'Sign in', 'Start free', 'Start free']);
   });
 
   it('finds the disabled button and the invalid input on the signup page', () => {

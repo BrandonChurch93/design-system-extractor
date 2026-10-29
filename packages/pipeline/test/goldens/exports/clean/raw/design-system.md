@@ -83,7 +83,7 @@ This design system was extracted from localhost:4100 across nine pages. It holds
 
 - Entrance · h1.display · on load · opacity 0 → 1, transform translateY(12px) → none · 480 ms · ease-out-quart
 - Scroll reveal · Feature card · when it enters the viewport at 15% from the bottom · opacity 0 → 1, transform translateY(16px) → none · 240 ms · ease-out-quart · 3 items · 60 ms apart
-- Scroll reveal · div.testimonial · when it enters the viewport at 25% from the bottom · opacity 0.02 → 1, transform translateY(15.6px) → translateY(0px) · about 400 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
+- Scroll reveal · div.testimonial · when it enters the viewport at 25% from the bottom · opacity 0.02 → 1, transform translateY(15.6px) → translateY(0px) · about 402 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
 - Scrolled header · Site header · after 400 px of scrolling · box-shadow none → 0px 12px 32px 0px #0B1F3A1F · 160 ms · ease-out-quad
 - Loop · Notice · loops every 1,600 ms · opacity 1 → 0.4 · 1,600 ms · ease-out-quart
 
@@ -246,10 +246,9 @@ Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Open
 Tokens used: color-text-primary (color), radius-sm (border-radius), space-12 (padding-right), space-12 (padding-left), type-text-14 (font)
 Motion: none
-Checks: 2 of 3
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
-- Tap target · fail · 0 px tall, 44 short
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -339,7 +338,7 @@ input { font: inherit; color: inherit; }
 .input { width: 100%; height: 44px; padding: var(--space-8) var(--space-12); border: 1px solid var(--color-gray-border); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-text-primary); font-size: 16px; line-height: 26px; }
 ```
 
-### Billing toggle
+### Toggle
 
 Toggle · 1 variant: Default
 States captured: Default, Hover, Focus, Active
@@ -774,7 +773,7 @@ The measurable subset of WCAG 2.2, run on every component. Not an accessibility 
 .tag-new { border-radius: var(--radius-rounded); }
 ```
 
-### Plan comparison table
+### Comparison table
 
 Table · 1 variant: Default
 States captured: Default
@@ -966,7 +965,7 @@ a { color: var(--color-blue-600); text-decoration: none; }
 .plan-item { padding-top: var(--space-8); border-top: 1px solid var(--overlay-white-8); }
 ```
 
-### Not found panel
+### Empty state
 
 Empty state · 1 variant: Default
 States captured: Default
@@ -1061,7 +1060,7 @@ Nothing to collapse. 9 colors, 11 spacing steps, all on the grid.
 
 Proposed set: 9 colors, 11 spacing steps, 9 type styles, 5 durations, 2 easings. Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.
 
-Nothing drifts here. The system is built from nine colors, nine type styles and 11 spacing steps, and every spacing step sits on the grid. No colors sit within reach of a neighbor, no type styles overlap and no component variants collapse. The proposed set keeps the same nine type styles and 11 spacing steps, with three grays. Every pair of text and background keeps its contrast ratio.
+Nothing drifts here. The system is built from nine colors, nine type styles and 11 spacing steps, and every spacing step sits on the grid. No colors sit near a neighbor, no type styles overlap and no component variants need collapsing. The proposed set keeps the same 11 spacing steps and nine type styles, with three grays. Every pair of text and background keeps its contrast ratio.
 
 ## How this was made
 

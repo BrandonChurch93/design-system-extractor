@@ -1,11 +1,311 @@
 {
-  "generatedAt": "2026-10-29T17:18:43.235Z",
+  "generatedAt": "2026-10-29T17:54:49.734Z",
   "mode": "record",
   "through": "done",
   "pipelineVersion": "1.3.0",
   "fixtures": [
     {
       "name": "clean",
+      "metrics": {
+        "selection": {
+          "exact": true,
+          "expected": 9,
+          "selected": 9,
+          "missing": [],
+          "extra": []
+        },
+        "tokens": {
+          "precision": 1,
+          "recall": 1,
+          "namesValid": true,
+          "kinds": {
+            "colors": {
+              "predicted": 9,
+              "expected": 9,
+              "matched": 9,
+              "misses": [],
+              "extras": []
+            },
+            "type": {
+              "predicted": 9,
+              "expected": 9,
+              "matched": 9,
+              "misses": [],
+              "extras": []
+            },
+            "space": {
+              "predicted": 11,
+              "expected": 11,
+              "matched": 11,
+              "misses": [],
+              "extras": []
+            },
+            "offGrid": {
+              "predicted": 0,
+              "expected": 0,
+              "matched": 0,
+              "misses": [],
+              "extras": []
+            },
+            "radius": {
+              "predicted": 3,
+              "expected": 3,
+              "matched": 3,
+              "misses": [],
+              "extras": []
+            },
+            "breakpoints": {
+              "predicted": 3,
+              "expected": 3,
+              "matched": 3,
+              "misses": [],
+              "extras": []
+            },
+            "shadow": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "base": {
+              "predicted": 1,
+              "expected": 1,
+              "matched": 1,
+              "misses": [],
+              "extras": []
+            }
+          }
+        },
+        "components": {
+          "precision": 1,
+          "recall": 1,
+          "predicted": 29,
+          "expected": 29,
+          "matched": 29,
+          "nameAgreement": 0.759,
+          "namesValid": true,
+          "misses": [],
+          "extras": []
+        },
+        "variants": {
+          "accuracy": 1,
+          "misses": []
+        },
+        "states": {
+          "rate": 1,
+          "captured": 71,
+          "expected": 71,
+          "misses": []
+        },
+        "motion": {
+          "durations": 1,
+          "easings": 1,
+          "keyframes": 1,
+          "patterns": 1,
+          "hover": 1,
+          "outlineNoise": 0,
+          "collapsedBorder": 1,
+          "missed": []
+        },
+        "naming": {
+          "siteNaming": 1,
+          "hashedNames": 0,
+          "overlaySplit": 1,
+          "typeNames": 1,
+          "roleOther": 0,
+          "variantNames": 1,
+          "numericNames": 0,
+          "tiers": 1,
+          "fallbackNames": 1,
+          "missed": []
+        },
+        "liveRate": {
+          "rate": 0.966,
+          "live": 28,
+          "total": 29,
+          "captured": [
+            "Skip link (hidden-until-focus)"
+          ]
+        },
+        "checks": {
+          "failures": 1,
+          "passes": 1,
+          "summary": {
+            "passed": 50,
+            "failed": 2,
+            "total": 145,
+            "applicable": 52
+          },
+          "missedFailures": [],
+          "flaggedPasses": []
+        },
+        "drift": {
+          "falseFindings": 0,
+          "contrastKept": true,
+          "headline": "Nothing to collapse. 9 colors, 11 spacing steps, all on the grid."
+        },
+        "exports": {
+          "files": 74,
+          "undeclared": [],
+          "promptShape": []
+        }
+      }
+    },
+    {
+      "name": "messy",
+      "metrics": {
+        "selection": {
+          "exact": true,
+          "expected": 12,
+          "selected": 12,
+          "missing": [],
+          "extra": []
+        },
+        "tokens": {
+          "precision": 1,
+          "recall": 1,
+          "namesValid": true,
+          "kinds": {
+            "colors": {
+              "predicted": 22,
+              "expected": 22,
+              "matched": 22,
+              "misses": [],
+              "extras": []
+            },
+            "type": {
+              "predicted": 9,
+              "expected": 9,
+              "matched": 9,
+              "misses": [],
+              "extras": []
+            },
+            "space": {
+              "predicted": 11,
+              "expected": 11,
+              "matched": 11,
+              "misses": [],
+              "extras": []
+            },
+            "offGrid": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "radius": {
+              "predicted": 4,
+              "expected": 4,
+              "matched": 4,
+              "misses": [],
+              "extras": []
+            },
+            "breakpoints": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "shadow": {
+              "predicted": 2,
+              "expected": 2,
+              "matched": 2,
+              "misses": [],
+              "extras": []
+            },
+            "base": {
+              "predicted": 1,
+              "expected": 1,
+              "matched": 1,
+              "misses": [],
+              "extras": []
+            }
+          }
+        },
+        "components": {
+          "precision": 1,
+          "recall": 1,
+          "predicted": 31,
+          "expected": 31,
+          "matched": 31,
+          "nameAgreement": 0.645,
+          "namesValid": true,
+          "misses": [],
+          "extras": []
+        },
+        "variants": {
+          "accuracy": 1,
+          "misses": []
+        },
+        "states": {
+          "rate": 1,
+          "captured": 73,
+          "expected": 73,
+          "misses": []
+        },
+        "motion": {
+          "durations": 1,
+          "easings": 1,
+          "keyframes": 1,
+          "patterns": 1,
+          "hover": 1,
+          "outlineNoise": 0,
+          "collapsedBorder": 1,
+          "missed": []
+        },
+        "naming": {
+          "siteNaming": 1,
+          "hashedNames": 0,
+          "overlaySplit": 1,
+          "typeNames": 1,
+          "roleOther": 0,
+          "variantNames": 1,
+          "numericNames": 0,
+          "tiers": 1,
+          "fallbackNames": 1,
+          "missed": []
+        },
+        "liveRate": {
+          "rate": 0.968,
+          "live": 30,
+          "total": 31,
+          "captured": [
+            "Promo card (diff 92.2 %)"
+          ]
+        },
+        "checks": {
+          "failures": 1,
+          "passes": 1,
+          "summary": {
+            "passed": 48,
+            "failed": 9,
+            "total": 155,
+            "applicable": 57
+          },
+          "missedFailures": [],
+          "flaggedPasses": []
+        },
+        "drift": {
+          "recall": 1,
+          "found": 16,
+          "planted": 16,
+          "findings": 18,
+          "contrastKept": true,
+          "missed": [],
+          "headline": "14 grays across 12 pages. 9 would do."
+        },
+        "exports": {
+          "files": 78,
+          "undeclared": [],
+          "promptShape": []
+        }
+      }
+    },
+    {
+      "name": "tailwind",
       "metrics": {
         "selection": {
           "exact": true,
@@ -121,313 +421,11 @@
           "missed": []
         },
         "liveRate": {
-          "rate": 0.931,
-          "live": 27,
+          "rate": 0.966,
+          "live": 28,
           "total": 29,
           "captured": [
-            "Skip link (hidden-until-focus)",
-            "Resources menu (diff 10.1 %)"
-          ]
-        },
-        "checks": {
-          "failures": 1,
-          "passes": 1,
-          "summary": {
-            "passed": 50,
-            "failed": 3,
-            "total": 145,
-            "applicable": 53
-          },
-          "missedFailures": [],
-          "flaggedPasses": []
-        },
-        "drift": {
-          "falseFindings": 0,
-          "contrastKept": true,
-          "headline": "Nothing to collapse. 9 colors, 11 spacing steps, all on the grid."
-        },
-        "exports": {
-          "files": 74,
-          "undeclared": [],
-          "promptShape": []
-        }
-      }
-    },
-    {
-      "name": "messy",
-      "metrics": {
-        "selection": {
-          "exact": true,
-          "expected": 12,
-          "selected": 12,
-          "missing": [],
-          "extra": []
-        },
-        "tokens": {
-          "precision": 1,
-          "recall": 1,
-          "namesValid": true,
-          "kinds": {
-            "colors": {
-              "predicted": 22,
-              "expected": 22,
-              "matched": 22,
-              "misses": [],
-              "extras": []
-            },
-            "type": {
-              "predicted": 9,
-              "expected": 9,
-              "matched": 9,
-              "misses": [],
-              "extras": []
-            },
-            "space": {
-              "predicted": 11,
-              "expected": 11,
-              "matched": 11,
-              "misses": [],
-              "extras": []
-            },
-            "offGrid": {
-              "predicted": 2,
-              "expected": 2,
-              "matched": 2,
-              "misses": [],
-              "extras": []
-            },
-            "radius": {
-              "predicted": 4,
-              "expected": 4,
-              "matched": 4,
-              "misses": [],
-              "extras": []
-            },
-            "breakpoints": {
-              "predicted": 2,
-              "expected": 2,
-              "matched": 2,
-              "misses": [],
-              "extras": []
-            },
-            "shadow": {
-              "predicted": 2,
-              "expected": 2,
-              "matched": 2,
-              "misses": [],
-              "extras": []
-            },
-            "base": {
-              "predicted": 1,
-              "expected": 1,
-              "matched": 1,
-              "misses": [],
-              "extras": []
-            }
-          }
-        },
-        "components": {
-          "precision": 1,
-          "recall": 1,
-          "predicted": 31,
-          "expected": 31,
-          "matched": 31,
-          "nameAgreement": 0.677,
-          "namesValid": true,
-          "misses": [],
-          "extras": []
-        },
-        "variants": {
-          "accuracy": 1,
-          "misses": []
-        },
-        "states": {
-          "rate": 1,
-          "captured": 73,
-          "expected": 73,
-          "misses": []
-        },
-        "motion": {
-          "durations": 1,
-          "easings": 1,
-          "keyframes": 1,
-          "patterns": 1,
-          "hover": 1,
-          "outlineNoise": 0,
-          "collapsedBorder": 1,
-          "missed": []
-        },
-        "naming": {
-          "siteNaming": 1,
-          "hashedNames": 0,
-          "overlaySplit": 1,
-          "typeNames": 1,
-          "roleOther": 0,
-          "variantNames": 1,
-          "numericNames": 0,
-          "tiers": 1,
-          "fallbackNames": 1,
-          "missed": []
-        },
-        "liveRate": {
-          "rate": 0.968,
-          "live": 30,
-          "total": 31,
-          "captured": [
-            "Promo card (diff 92.2 %)"
-          ]
-        },
-        "checks": {
-          "failures": 1,
-          "passes": 1,
-          "summary": {
-            "passed": 48,
-            "failed": 10,
-            "total": 155,
-            "applicable": 58
-          },
-          "missedFailures": [],
-          "flaggedPasses": []
-        },
-        "drift": {
-          "recall": 1,
-          "found": 16,
-          "planted": 16,
-          "findings": 18,
-          "contrastKept": true,
-          "missed": [],
-          "headline": "14 grays across 12 pages. 9 would do."
-        },
-        "exports": {
-          "files": 78,
-          "undeclared": [],
-          "promptShape": []
-        }
-      }
-    },
-    {
-      "name": "tailwind",
-      "metrics": {
-        "selection": {
-          "exact": true,
-          "expected": 9,
-          "selected": 9,
-          "missing": [],
-          "extra": []
-        },
-        "tokens": {
-          "precision": 1,
-          "recall": 1,
-          "namesValid": true,
-          "kinds": {
-            "colors": {
-              "predicted": 9,
-              "expected": 9,
-              "matched": 9,
-              "misses": [],
-              "extras": []
-            },
-            "type": {
-              "predicted": 9,
-              "expected": 9,
-              "matched": 9,
-              "misses": [],
-              "extras": []
-            },
-            "space": {
-              "predicted": 11,
-              "expected": 11,
-              "matched": 11,
-              "misses": [],
-              "extras": []
-            },
-            "offGrid": {
-              "predicted": 0,
-              "expected": 0,
-              "matched": 0,
-              "misses": [],
-              "extras": []
-            },
-            "radius": {
-              "predicted": 3,
-              "expected": 3,
-              "matched": 3,
-              "misses": [],
-              "extras": []
-            },
-            "breakpoints": {
-              "predicted": 3,
-              "expected": 3,
-              "matched": 3,
-              "misses": [],
-              "extras": []
-            },
-            "shadow": {
-              "predicted": 2,
-              "expected": 2,
-              "matched": 2,
-              "misses": [],
-              "extras": []
-            },
-            "base": {
-              "predicted": 1,
-              "expected": 1,
-              "matched": 1,
-              "misses": [],
-              "extras": []
-            }
-          }
-        },
-        "components": {
-          "precision": 1,
-          "recall": 1,
-          "predicted": 29,
-          "expected": 29,
-          "matched": 29,
-          "nameAgreement": 0.724,
-          "namesValid": true,
-          "misses": [],
-          "extras": []
-        },
-        "variants": {
-          "accuracy": 1,
-          "misses": []
-        },
-        "states": {
-          "rate": 1,
-          "captured": 71,
-          "expected": 71,
-          "misses": []
-        },
-        "motion": {
-          "durations": 1,
-          "easings": 1,
-          "keyframes": 1,
-          "patterns": 1,
-          "hover": 1,
-          "outlineNoise": 0,
-          "collapsedBorder": 1,
-          "missed": []
-        },
-        "naming": {
-          "siteNaming": 1,
-          "hashedNames": 0,
-          "overlaySplit": 1,
-          "typeNames": 1,
-          "roleOther": 0,
-          "variantNames": 1,
-          "numericNames": 0,
-          "tiers": 1,
-          "fallbackNames": 1,
-          "missed": []
-        },
-        "liveRate": {
-          "rate": 0.931,
-          "live": 27,
-          "total": 29,
-          "captured": [
-            "Skip link (hidden-until-focus)",
-            "Resources menu (diff 10.1 %)"
+            "Skip link (hidden-until-focus)"
           ]
         },
         "checks": {
@@ -533,7 +531,7 @@
           "predicted": 29,
           "expected": 29,
           "matched": 29,
-          "nameAgreement": 0.655,
+          "nameAgreement": 0.586,
           "namesValid": true,
           "misses": [],
           "extras": []
@@ -571,12 +569,11 @@
           "missed": []
         },
         "liveRate": {
-          "rate": 0.931,
-          "live": 27,
+          "rate": 0.966,
+          "live": 28,
           "total": 29,
           "captured": [
-            "Skip link (hidden-until-focus)",
-            "Resources menu (diff 10.1 %)"
+            "Skip link (hidden-until-focus)"
           ]
         },
         "checks": {

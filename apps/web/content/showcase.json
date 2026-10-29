@@ -15,9 +15,9 @@
         "spacingSteps": 11,
         "components": 29,
         "checksPassed": 50,
-        "checksApplicable": 53,
+        "checksApplicable": 52,
         "componentsPassing": {
-          "passed": 24,
+          "passed": 25,
           "applicable": 27
         },
         "previews": {
@@ -78,9 +78,9 @@
         "spacingSteps": 11,
         "components": 31,
         "checksPassed": 48,
-        "checksApplicable": 58,
+        "checksApplicable": 57,
         "componentsPassing": {
-          "passed": 20,
+          "passed": 21,
           "applicable": 29
         },
         "previews": {
@@ -330,9 +330,9 @@
         "spacingSteps": 11,
         "components": 36,
         "checksPassed": 56,
-        "checksApplicable": 64,
+        "checksApplicable": 63,
         "componentsPassing": {
-          "passed": 25,
+          "passed": 26,
           "applicable": 33
         },
         "previews": {

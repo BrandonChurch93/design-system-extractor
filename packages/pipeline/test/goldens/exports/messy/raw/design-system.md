@@ -261,10 +261,9 @@ Button · 1 variant: Default
 States captured: Default, Hover, Focus, Active, Open
 Tokens used: color-blue-900 (color), radius-sm (border-radius), space-12 (padding-right), space-12 (padding-left), type-text-14 (font)
 Motion: none
-Checks: 2 of 3
+Checks: all pass
 - Contrast AA · pass · 16.5:1 on gray-50
 - Focus visible · pass · 2 px ring, 5.8:1 against gray-50
-- Tap target · fail · 0 px tall, 44 short
 
 The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.
 
@@ -355,7 +354,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Pill link
+### Release note link
 
 Link · 1 variant: Default
 States captured: Default, Hover, Focus, Active
@@ -1141,7 +1140,7 @@ a { color: var(--color-blue-600-alt); text-decoration: none; }
 
 Proposed set: 16 colors, 11 spacing steps, 8 type styles, 9 durations, 6 easings. Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.
 
-The palette carries 14 grays where nine would do, and nine of them sit within ΔE 6.0 of a neighbor. Two spacing values, 10 and 18, sit off the 4 px grid on 12 pages. Three type styles differ by 1 px or less in size or line height. The proposed set folds the grays into nine steps, maps the off-grid values to their nearest steps and merges the near-duplicate type styles into eight. Every pair of text and background keeps its contrast ratio.
+The palette carries 14 grays where nine would do, and nine of them sit within ΔE 6.0 of a neighbor. Two spacing values, 10 and 18, sit off the 4 px grid, on 12 pages. Three type styles differ by 1 px or less in size or line height. The proposed set folds the grays into nine steps, maps the off-grid values to their nearest steps and merges the near-duplicate type styles into eight. Every pair of text and background keeps its contrast ratio.
 
 ## How this was made
 

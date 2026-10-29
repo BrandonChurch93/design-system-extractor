@@ -2,7 +2,7 @@
   "purpose": "components",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"items\": [{\"id\": \"c9\", \"type\": \"avatar\", \"name\": \"Avatar\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c10\", \"type\": \"footer\", \"name\": \"Site footer\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c11\", \"type\": \"nav\", \"name\": \"Footer links\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c12\", \"type\": \"input\", \"name\": \"Newsletter input\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c13\", \"type\": \"toast\", \"name\": \"Toast\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c14\", \"type\": \"dropdown\", \"name\": \"Mobile menu\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c15\", \"type\": \"button\", \"name\": \"Menu button\", \"isComponent\": true, \"variantHint\": \"icon only\"}, {\"id\": \"c16\", \"type\": \"toggle\", \"name\": \"Toggle\", \"isComponent\": true, \"variantHint\": null}]}",
+  "text": "{\"items\": [{\"id\": \"c9\", \"type\": \"avatar\", \"name\": \"Avatar\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c10\", \"type\": \"footer\", \"name\": \"Site footer\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c11\", \"type\": \"nav\", \"name\": \"Footer links\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c12\", \"type\": \"input\", \"name\": \"Newsletter input\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c13\", \"type\": \"toast\", \"name\": \"Toast\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c14\", \"type\": \"dropdown\", \"name\": \"Mobile menu\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c15\", \"type\": \"button\", \"name\": \"Menu button\", \"isComponent\": true, \"variantHint\": \"icon only\"}, {\"id\": \"c16\", \"type\": \"toggle\", \"name\": \"Toggle\", \"isComponent\": true, \"variantHint\": \"on and off state\"}]}",
   "usage": {
     "input_tokens": 1039,
     "cache_creation_input_tokens": 1564,
@@ -11,7 +11,7 @@
       "ephemeral_5m_input_tokens": 1564,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 344,
+    "output_tokens": 349,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-29T17:34:28.296Z",
+  "recordedAt": "2026-10-29T18:02:15.148Z",
   "request": "Items:\nc9 guess avatar 0.9, img, classes avatar, no children, in home, text \"\", 2 instances on 1 page (/), variants Default, no picture\nc10 guess footer 0.95, footer, classes site-footer, inside div:2, in home, text \"Tidewater Calm release notes for busy teams. Product Pricing Docs Contact Newsle\", 24 instances on 12 pages (/, /pricing, /docs, /login), variants Default, no picture\nc11 guess nav 0.95, nav, classes footer-links, inside a:4, in footer, text \"Product Pricing Docs Contact\", 24 instances on 12 pages (/, /pricing, /docs, /login), variants Default, no picture\nc12 guess input 0.98, input, classes input newsletter-input, no children, in footer, text \"\", 34 instances on 12 pages (/, /pricing, /docs, /login), variants Default, no picture\nc13 guess toast 0.8, div role status, classes toast, inside span:1 svg:1, in home, text \"Draft saved\", 24 instances on 12 pages (/, /pricing, /docs, /login), variants Default, picture below\nc14 guess dropdown 0.85, nav role revealed:, classes mobile-menu, inside a:5, in home, text \"Product Pricing Docs Contact Sign in\", 1 instances on 1 page (/), variants Default, picture below\nc15 guess button 0.95, button, classes menu-button, inside svg:1, in header, text \"\", 12 instances on 12 pages (/, /pricing, /docs, /login), variants Default, no picture\nc16 guess toggle 0.85, button role switch, classes toggle, no children, in pricing, text \"\", 2 instances on 1 page (/pricing), variants Default, picture below\nPicture of c13:\n[image]\nPicture of c14:\n[image]\nPicture of c16:\n[image]"
 }

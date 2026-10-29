@@ -200,7 +200,7 @@ States: Default, Hover, Focus, Active, Open.
 Tokens: color-blue-900 for color, radius-sm for border-radius, space-12 for padding-right, space-12 for padding-left, type-text-14 for font.
 Default: text color-blue-900 · radius radius-sm · padding 0px space-12 0px space-12 · font type-text-14
 Motion: none
-Checks: 2 of 3
+Checks: all pass
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
@@ -262,7 +262,7 @@ button { font: inherit; color: inherit; }
 svg { display: block; }
 ```
 
-### Pill link
+### Release note link
 
 Link. Variants: Default.
 States: Default, Hover, Focus, Active.

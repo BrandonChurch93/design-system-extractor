@@ -131,7 +131,7 @@ Patterns:
 
 - Entrance · h1.display · on load · opacity 0 → 1, transform translateY(12px) → none · 480 ms · ease-out-quart
 - Scroll reveal · Feature card · when it enters the viewport at 15% from the bottom · opacity 0 → 1, transform translateY(16px) → none · 240 ms · ease-out-quart · 3 items · 60 ms apart
-- Scroll reveal · div.testimonial · when it enters the viewport at 25% from the bottom · opacity 0.02 → 1, transform translateY(15.6px) → translateY(0px) · about 400 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
+- Scroll reveal · div.testimonial · when it enters the viewport at 25% from the bottom · opacity 0.02 → 1, transform translateY(15.6px) → translateY(0px) · about 402 ms · easing not recorded, nearest token suggested: ease-out-quad · observed
 - Scrolled header · Site header · after 400 px of scrolling · box-shadow none → 0px 12px 32px 0px #0B1F3A1F · 160 ms · ease-out-quad
 - Loop · Notice · loops every 1,600 ms · opacity 1 → 0.4 · 1,600 ms · ease-out-quart
 
@@ -192,7 +192,7 @@ States: Default, Hover, Focus, Active, Open.
 Tokens: color-text-primary for color, radius-sm for border-radius, space-12 for padding-right, space-12 for padding-left, type-text-14 for font.
 Default: text color-text-primary · radius radius-sm · padding 0px space-12 0px space-12 · font type-text-14
 Motion: none
-Checks: 2 of 3
+Checks: all pass
 
 ```css
 button { padding: 0px; padding: 0px; padding: 0px; }
@@ -256,7 +256,7 @@ input { font: inherit; color: inherit; }
 .input { width: 100%; height: 44px; padding: var(--space-8) var(--space-12); border: 1px solid var(--color-gray-border); border-radius: var(--radius-sm); background: var(--color-gray-50); color: var(--color-text-primary); font-size: 16px; line-height: 26px; }
 ```
 
-### Billing toggle
+### Toggle
 
 Toggle. Variants: Default.
 States: Default, Hover, Focus, Active.
@@ -533,7 +533,7 @@ Checks: 0 of 1
 .tag-new { border-radius: var(--radius-rounded); }
 ```
 
-### Plan comparison table
+### Comparison table
 
 Table. Variants: Default.
 States: Default.
@@ -619,7 +619,7 @@ Default: background color-gray-50 · text color-text-primary · border 1px color
 Motion: none
 Checks: all pass
 
-### Not found panel
+### Empty state
 
 Empty state. Variants: Default.
 States: Default.
