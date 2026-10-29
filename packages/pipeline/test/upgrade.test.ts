@@ -53,7 +53,7 @@ describe('upgradeRunDocument (D-092)', () => {
 
   it('leaves a current document as it is', () => {
     const clean = read('clean.json');
-    expect(upgradeRunDocument({ ...clean, pipelineVersion: '1.2.0' })).toEqual({ ...clean, pipelineVersion: '1.2.0' });
+    expect(upgradeRunDocument({ ...clean, pipelineVersion: '1.3.0' })).toEqual({ ...clean, pipelineVersion: '1.3.0' });
   });
 
   it('derives easing usage and the v1.2 stats on a v1.1 document', () => {
@@ -67,5 +67,42 @@ describe('upgradeRunDocument (D-092)', () => {
     const counts = [...quart.usedBy.componentTypes.map((x) => x.count)];
     expect(counts).toEqual([...counts].sort((a, b) => b - a));
     expect(doc.stats.componentsPassing!.applicable).toBeLessThanOrEqual(doc.components.length);
+  });
+});
+
+describe('the 1.3 step (D-105, D-108, D-109)', () => {
+  const v12 = read('clean-v1-2.json');
+
+  it('brings the committed v1.2 document to the complete current shape with no fill read', () => {
+    const doc = RunDocumentComplete.parse(upgradeRunDocument(v12));
+    expect(doc.pipelineVersion).toBe('1.2.0');
+    const previews = doc.components.flatMap((c) => [c.preview, ...c.variants.map((v) => v.preview)]);
+    expect(previews.every((p) => p.fill === null)).toBe(true);
+    expect(doc.components.flatMap((c) => c.instances).some((i) => 'hiddenAtCapture' in i)).toBe(false);
+    expect(upgradeRunDocument(upgradeRunDocument(v12))).toEqual(upgradeRunDocument(v12));
+  });
+
+  it('turns a preview whose crop was never written into the no-crop form and recounts', () => {
+    const src = structuredClone(v12);
+    const c = src.components.find((x: { preview: { mode: string } }) => x.preview.mode === 'live');
+    Object.assign(c.preview, { width: 0, height: 0 });
+    const doc = RunDocumentComplete.parse(upgradeRunDocument(src));
+    const p = doc.components.find((x) => x.id === c.id)!.preview;
+    expect(p).toMatchObject({ mode: 'captured', capturedReason: 'no-crop' });
+    expect(p.cropKey).toBeUndefined();
+    expect(p.htmlKey).toBeUndefined();
+    expect(doc.stats.previews!['no-crop']).toBe(1);
+    expect(doc.stats.previews!.live).toBe(v12.stats.previews.live - 1);
+  });
+
+  it('removes pattern references that resolve to nothing', () => {
+    const src = structuredClone(v12);
+    const [first] = src.motion.patterns;
+    src.motion.patterns.push({ ...first, id: 'gone0000', componentId: 'nothere0' });
+    const owner = src.components.find((x: { motion: unknown }) => x.motion);
+    owner.motion.patternIds.push('missing0');
+    const doc = RunDocumentComplete.parse(upgradeRunDocument(src));
+    expect(doc.motion.patterns.find((p) => p.id === 'gone0000')!.componentId).toBeUndefined();
+    expect(doc.components.find((x) => x.id === owner.id)!.motion!.patternIds).not.toContain('missing0');
   });
 });

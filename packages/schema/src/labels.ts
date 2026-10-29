@@ -286,6 +286,8 @@ export const capturedReasonLabels: Record<CapturedReason, string> = {
   'css-too-large': 'styles too large',
   'fonts-unavailable': 'fonts unavailable',
   'not-checked': 'not checked in time',
+  'hidden-until-focus': 'hidden until focused',
+  'no-crop': 'no capture',
 };
 
 export const checkLabels: Record<Check, string> = {

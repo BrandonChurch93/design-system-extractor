@@ -76,7 +76,7 @@ export async function allZip(doc: RunDocumentPartial, opts: ExportOptions, read:
       const html = await read(c.preview.htmlKey);
       if (html) entries.push({ path: `components/${c.id}/preview.html`, data: html });
       entries.push({ path: `components/${c.id}/preview.css`, data: componentCss(c, tokens) });
-    } else {
+    } else if (c.preview.cropKey) {
       const crop = await read(c.preview.cropKey);
       if (crop) entries.push({ path: `crops/${c.id}.png`, data: crop });
     }

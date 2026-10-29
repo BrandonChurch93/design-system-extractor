@@ -268,7 +268,8 @@ export type Tokens = z.infer<typeof Tokens>;
 export const Preview = z.object({
   mode: PreviewMode,
   capturedReason: CapturedReason.optional(),
-  cropKey: z.string().min(1),
+  /** Absent only for `no-crop`: the crop could not be cut (D-108). */
+  cropKey: z.string().min(1).optional(),
   width: nonNeg,
   height: nonNeg,
   diffPct: nonNeg.optional(),
@@ -276,6 +277,8 @@ export const Preview = z.object({
   stateHtmlKeys: z.partialRecord(State, z.string()).optional(),
   /** The ground of the instance the preview was built from, painted behind it (D-094). */
   ground: Hex.optional(),
+  /** The element's own background at capture, null when transparent; the contrast fallback reads it (D-109). */
+  fill: Hex.nullable().optional(),
   /** Families a live preview renders in their fallback stack (D-095). */
   fontsSubstituted: z.array(z.string().min(1)).optional(),
 });
@@ -300,6 +303,8 @@ export const Instance = z.object({
   text: z.string().optional(),
   /** The effective background the instance sat on, read at capture (D-094). */
   ground: Hex.optional(),
+  /** A focusable element hidden at capture, kept as a candidate (D-108). */
+  hiddenAtCapture: z.boolean().optional(),
 });
 export type Instance = z.infer<typeof Instance>;
 
@@ -554,7 +559,16 @@ export const Stats = z.object({
   componentsPassing: z.object({ passed: count, applicable: count }).optional(),
   /** Previews by mode and captured reason, since v1.2 (D-095). */
   previews: z
-    .object({ live: count, diff: count, 'css-too-large': count, 'fonts-unavailable': count, 'not-checked': count })
+    .object({
+      live: count,
+      diff: count,
+      'css-too-large': count,
+      'fonts-unavailable': count,
+      'not-checked': count,
+      /** Since v1.3 (D-108). */
+      'hidden-until-focus': count.optional(),
+      'no-crop': count.optional(),
+    })
     .optional(),
 });
 export type Stats = z.infer<typeof Stats>;

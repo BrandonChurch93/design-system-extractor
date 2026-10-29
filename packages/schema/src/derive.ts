@@ -20,7 +20,7 @@ export function componentsPassing(components: Pick<Component, 'checks'>[]): NonN
 }
 
 export function previewCounts(components: Pick<Component, 'preview'>[]): NonNullable<Stats['previews']> {
-  const out = { live: 0, diff: 0, 'css-too-large': 0, 'fonts-unavailable': 0, 'not-checked': 0 };
+  const out = { live: 0, diff: 0, 'css-too-large': 0, 'fonts-unavailable': 0, 'not-checked': 0, 'hidden-until-focus': 0, 'no-crop': 0 };
   for (const { preview: p } of components) {
     if (p.mode === 'live') out.live++;
     else out[p.capturedReason ?? 'diff']++;

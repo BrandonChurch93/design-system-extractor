@@ -1,2 +1,2 @@
 /** The semver of the pipeline, written on every run (`runs.pipeline_version`). */
-export const PIPELINE_VERSION = '1.2.0';
+export const PIPELINE_VERSION = '1.3.0';

@@ -130,11 +130,41 @@ function toV12(doc: Json): void {
   }
 }
 
+function toV13(doc: Json): void {
+  const comps: Json[] = Array.isArray(doc.components) ? doc.components : [];
+  let recount = false;
+  for (const c of comps) {
+    for (const p of [c.preview, ...(Array.isArray(c.variants) ? c.variants.map((v: Json) => v.preview) : [])]) {
+      if (!isObject(p)) continue;
+      if (!('fill' in p)) p.fill = null;
+      // A crop that was never cut recorded 0 × 0 and a key that was never written (D-108).
+      if (p.width === 0 && p.height === 0 && p.capturedReason !== 'no-crop') {
+        delete p.cropKey;
+        p.mode = 'captured';
+        p.capturedReason = 'no-crop';
+        delete p.htmlKey;
+        delete p.stateHtmlKeys;
+        delete p.diffPct;
+        recount = true;
+      }
+    }
+  }
+  const ids = new Set(comps.map((c) => c.id));
+  const patterns: Json[] = Array.isArray(doc.motion?.patterns) ? doc.motion.patterns : [];
+  for (const p of patterns) if (p.componentId !== undefined && !ids.has(p.componentId)) delete p.componentId;
+  const patternIds = new Set(patterns.map((p) => p.id));
+  for (const c of comps) {
+    if (isObject(c.motion) && Array.isArray(c.motion.patternIds)) c.motion.patternIds = c.motion.patternIds.filter((id: string) => patternIds.has(id));
+  }
+  if (recount && isObject(doc.stats) && comps.every((c) => isObject(c.preview))) doc.stats.previews = previewCounts(comps as never);
+}
+
 /** Brings a stored run document to the current shape by its `pipelineVersion`. Returns a new object. */
 export function upgradeRunDocument<T>(input: T): T {
   if (!isObject(input)) return input;
   const doc = structuredClone(input) as Json;
   if (below(doc.pipelineVersion, '1.1.0')) toV11(doc);
   if (below(doc.pipelineVersion, '1.2.0')) toV12(doc);
+  if (below(doc.pipelineVersion, '1.3.0')) toV13(doc);
   return doc as T;
 }

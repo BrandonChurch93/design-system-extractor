@@ -91,7 +91,8 @@ describe('the components stage on the clean fixture', () => {
       expect(f.selector, c.name).not.toBe('');
       expect(f.bbox.w * f.bbox.h, c.name).toBeGreaterThan(0);
       expect(c.provenance.pages.length, c.name).toBeGreaterThan(0);
-      expect(await storage.get(c.preview.cropKey), c.name).not.toBeNull();
+      expect(c.preview.cropKey, c.name).toBeTruthy();
+      expect(await storage.get(c.preview.cropKey!), c.name).not.toBeNull();
       if (f.sourceCrop) {
         expect(f.sourceCrop.width).toBeGreaterThanOrEqual(320);
         expect(await storage.get(f.sourceCrop.key)).not.toBeNull();

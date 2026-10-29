@@ -3,6 +3,7 @@
 // says whether the document parses once upgraded (D-092). Exits 1 when an upgraded document fails.
 import { RunDocumentPartial } from '@dse/schema';
 import { closeDb, createDb, getRun, tables } from '@dse/pipeline/db';
+import { unresolvedReferences } from '@dse/pipeline/references';
 import { upgradeRunDocument } from '@dse/pipeline/upgrade';
 import { eq } from 'drizzle-orm';
 
@@ -23,6 +24,8 @@ try {
     const upgraded = RunDocumentPartial.safeParse(upgradeRunDocument(row.document));
     const after = upgraded.success ? 'upgraded: parses clean' : `upgraded: ${upgraded.error.issues.length} issues, first ${JSON.stringify(upgraded.error.issues[0]!.path)} · ${upgraded.error.issues[0]!.message}`;
     if (!upgraded.success) process.exitCode = 1;
+    const dangling = upgraded.success ? unresolvedReferences(upgraded.data) : [];
+    for (const d of dangling) console.log(`  unresolved: ${d}`);
     if (parsed.success) {
       console.log(`${id} · ${doc.host} · pipeline ${doc.pipelineVersion} · parses clean · ${after}`);
       continue;

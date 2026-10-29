@@ -35,8 +35,8 @@ for (const c of doc.components ?? []) {
   if (capturedOnly && c.preview.mode === 'live') continue;
   const slug = `${c.id}-${c.name.toLowerCase().replace(/\W+/g, '-')}`.slice(0, 60);
   let diff = '';
-  const cropPath = join(root, folder, c.preview.cropKey);
-  if (existsSync(cropPath)) writeFileSync(join(out, `${slug}.captured.png`), readFileSync(cropPath));
+  const cropPath = c.preview.cropKey ? join(root, folder, c.preview.cropKey) : '';
+  if (cropPath && existsSync(cropPath)) writeFileSync(join(out, `${slug}.captured.png`), readFileSync(cropPath));
   if (c.preview.htmlKey) {
     const f = c.provenance.firstSeen;
     const shot = await renderPreview(session, `${base}/${c.preview.htmlKey}`, { w: f.bbox.w, h: f.bbox.h }, c.preview.ground ?? c.ground);
