@@ -101,7 +101,8 @@ test('the run page control: swatches, bars and cards do move without the prefere
 // are drawn still under reduced motion.
 async function motionSection(page: Page) {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/r/seedclean0', { waitUntil: 'networkidle' });
+  await page.goto('/r/seedclean0');
+  await page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => {});
   await page.waitForTimeout(400);
   await page.locator('#motion').evaluate((el) => el.scrollIntoView({ block: 'start' }));
   await page.waitForTimeout(600);
@@ -161,7 +162,9 @@ test('no long task over 50 ms while twelve easings loop (the catalog sample)', a
   const context = await browser.newContext({ reducedMotion: 'no-preference' });
   const page = await context.newPage();
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('/catalog', { waitUntil: 'networkidle' });
+  await page.goto('/catalog');
+  // The catalog's lazy preview frames can keep the network busy; idle is a courtesy, not a condition.
+  await page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => {});
   const grid = page.getByTestId('twelve-easings');
   await grid.evaluate((el) => el.scrollIntoView({ block: 'center' }));
   await page.waitForTimeout(500);
