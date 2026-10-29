@@ -48,6 +48,13 @@ export function ComponentCard({ component: c, href, base, tokens, opened, reveal
         <FitPreview preview={c.preview} base={base} title={fill(runPage.previewTitle, { name: c.name })} lazy ground={paint} fit="card" code={c.code.html} />
         <GroundToggle value={ground} onChange={setGround} size="sm" className={styles.ground} />
       </div>
+      {/* On touch the whole card opens the drawer (D-106). The body's reveal clips its own overlay to the body, so the card carries this one; the name link is the one a reader reaches. */}
+      <Link href={href} scroll={false} className={styles.cover} tabIndex={-1} aria-hidden="true" onClick={(e) => {
+        if (onOpen) {
+          e.preventDefault();
+          onOpen();
+        }
+      }} />
       <motion.div className={styles.body} variants={reveal ? revealContentVariants() : undefined}>
         <div className={styles.head}>
           <h3 className={styles.name}>

@@ -45,7 +45,7 @@ test('health reports the queue and the budget; unknown runs are 404', async ({ r
 test('the MCP server loads a run with --run from the app', async ({ baseURL }) => {
   const { doc, runUrl } = await loadRun(['--run', 'seedclean0', '--app-url', baseURL!]);
   expect(runUrl).toBe(`${baseURL}/r/seedclean0`);
-  expect(doc.components?.length).toBe(28);
+  expect(doc.components?.length).toBe(29);
 });
 
 test('the compare page shows the messy-after deltas', async ({ page }) => {

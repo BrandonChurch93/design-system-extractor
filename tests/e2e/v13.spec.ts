@@ -115,7 +115,7 @@ test('a click on the name row opens the drawer; the card Ground toggle repaints 
   await expect(page).not.toHaveURL(/[?&]c=/);
   await card.getByRole('radiogroup', { name: runPage.preview.ground }).getByRole('radio', { name: runPage.preview.grounds.site }).click();
   await expect.poll(paint).toBe(site);
-  await card.locator('p').first().click();
+  await card.getByRole('heading', { level: 3 }).getByRole('link').click();
   await expect(page.getByTestId('preview-stage')).toBeVisible();
   await expect(page).toHaveURL(/[?&]c=/);
 });
@@ -127,8 +127,14 @@ test('on touch, a tap on the card preview opens the drawer (D-106)', async ({ br
   expect(await page.evaluate(() => matchMedia('(hover: none)').matches)).toBe(true);
   const card = page.locator('#components [data-testid="component-card"]').first();
   await card.scrollIntoViewIfNeeded();
-  await card.getByTestId('card-preview').tap({ position: { x: 40, y: 40 } });
-  await expect(page.getByTestId('preview-stage')).toBeVisible();
+  // A real tap at the point: the cover link takes it, as it should, so the locator's own tap would wait on it forever.
+  // Tapped once the card has entered and the page answers taps.
+  await expect(async () => {
+    const box = (await card.getByTestId('card-preview').boundingBox())!;
+    await page.touchscreen.tap(box.x + 40, box.y + 40);
+    await expect(page.getByTestId('preview-stage')).toBeVisible({ timeout: 1500 });
+  }).toPass({ timeout: 15_000 });
+  await expect(page).toHaveURL(/[?&]c=/);
   await context.close();
 });
 

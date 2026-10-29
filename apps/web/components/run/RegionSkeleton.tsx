@@ -4,10 +4,10 @@ import styles from './RegionSkeleton.module.css';
 export type SkeletonRegion = 'palette' | 'type' | 'spacing' | 'radius' | 'shadow' | 'motion' | 'components' | 'checks' | 'drift' | 'exports';
 
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
-/** The clean fixture's Motion section at 1440 (D-080, re-measured for v1.2's easing stages, D-098). */
-const MOTION = { strip: 171, easing: 358, patterns: 977 };
+/** The clean fixture's Motion section at 1440 (D-080; re-measured for v1.3's easing stage, keyframes list and chips, D-111). */
+const MOTION = { strip: 147, easing: 424, patterns: 978 };
 /** The clean fixture's Radius and Shadow cards at 1440 (D-103). */
-const TOKEN_ROW = { radius: 180, shadow: 220 };
+const TOKEN_ROW = { radius: 274, shadow: 274 };
 
 /**
  * A run page region before its stage lands, at the height of a typical result so nothing below it

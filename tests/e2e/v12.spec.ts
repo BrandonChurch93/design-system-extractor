@@ -50,6 +50,9 @@ for (const [width, cols] of [
     await page.goto('/r/seedclean0');
     const cells = page.locator('[data-cells="6"] > *');
     await expect(cells).toHaveCount(6);
+    // Measured once the streamed page has swapped in and the cells have extended.
+    await expect(cells.last()).toBeVisible();
+    await page.evaluate(() => Promise.all(document.getAnimations().filter((a) => a.effect?.getTiming().iterations !== Infinity).map((a) => a.finished.catch(() => undefined))));
     const boxes = await cells.evaluateAll((els) => els.map((e) => e.getBoundingClientRect()).map((r) => ({ x: Math.round(r.x), y: Math.round(r.y), w: Math.round(r.width) })));
     const rows = new Map<number, number>();
     for (const b of boxes) rows.set(b.y, (rows.get(b.y) ?? 0) + 1);

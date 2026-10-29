@@ -88,12 +88,18 @@
   z-index: 0;
 }
 
-@media (hover: none) {
-  .body {
-    position: static;
-  }
+.cover {
+  display: none;
+}
 
-  .link::after {
+@media (hover: none) {
+  .cover {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 152px;
     z-index: 1;
   }
 }
