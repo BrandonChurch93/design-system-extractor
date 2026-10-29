@@ -19,7 +19,7 @@ describe('compare on the seeded messy and messy-after runs', () => {
       // Checks passed rises by the two fixes plus the new components' passes; failures fall by exactly two.
       expect(d.checksApplicable.before - d.checksPassed.before - (d.checksApplicable.after - d.checksPassed.after)).toBe(2);
       const changes = componentChanges(da, dbb);
-      expect(changes.filter((c) => c.change === 'new').map((c) => c.name).sort()).toEqual(['Band button', 'Dark band', 'Feature card (night mode)', 'Step pill', 'Toast']);
+      expect(changes.filter((c) => c.change === 'new').map((c) => c.name).sort()).toEqual(['Band button', 'Dark band', 'Feature card (night mode)', 'Step tag', 'Toast']);
       expect(changes.find((c) => c.name === 'Button')).toMatchObject({ change: 'changed', before: '7 variants', after: '6 variants' });
       expect(changes.filter((c) => c.change === 'changed' && c.checks.split(' → ')[0] !== c.checks.split(' → ')[1]).map((c) => c.name).sort()).toEqual(['Newsletter input', 'Status badge']);
       expect(deltaCaptions(d)).toMatchObject({ colors: 'Colors · 3 fewer', grays: 'Grays · 4 fewer, still 2 to go', components: 'Components · 5 new', spacing: 'Spacing steps · unchanged' });

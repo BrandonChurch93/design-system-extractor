@@ -85,7 +85,7 @@ describe('the tokens stage on the clean fixture', () => {
 describe('the components stage on the clean fixture', () => {
   it('writes components that validate, with complete provenance and stored crops', async () => {
     const comps = Component.array().parse(ctx.document.components);
-    expect(comps.length).toBe(28);
+    expect(comps.length).toBe(29);
     for (const c of comps) {
       const f = c.provenance.firstSeen;
       expect(f.selector, c.name).not.toBe('');
@@ -120,7 +120,7 @@ describe('the components stage on the clean fixture', () => {
 
   it('logs the component count and the model use', () => {
     const lines = ctx.events.filter((e) => e.stage === 'components').map((e) => e.message);
-    expect(lines[0]).toMatch(/^components · 28 found from [\d,]+ element candidates · 28 by model$/);
+    expect(lines[0]).toMatch(/^components · 29 found from [\d,]+ element candidates · 29 by model$/);
   });
 });
 
@@ -146,7 +146,8 @@ describe('the previews stage on the clean fixture', () => {
 
   it('logs the build in the live-log voice', () => {
     const line = ctx.events.find((e) => e.stage === 'previews')!.message;
-    expect(line).toMatch(/^previews · 28 built · 28 live · 0 captured \(median diff \d+\.\d %\)$/);
+    // The skip link stays captured, shown focused (D-108).
+    expect(line).toMatch(/^previews · 29 built · 28 live · 1 captured \(median diff \d+\.\d %\) · 1 hidden until focused$/);
   });
 });
 
@@ -163,7 +164,7 @@ describe('the checks stage on the clean fixture', () => {
     expect(failing).toEqual([expect.stringMatching(/ · label · No name found$/), expect.stringMatching(/ · contrast · 4\.1:1 on teal-500, needs 4\.5:1$/)]);
     const summary = Checks.parse(ctx.document.checks);
     expect(summary.summary.failed).toBe(2);
-    expect(summary.summary.total).toBe(28 * 5);
+    expect(summary.summary.total).toBe(29 * 5);
     expect(summary.summary.passed + summary.summary.failed).toBe(summary.summary.applicable);
     expect(ctx.events.find((e) => e.stage === 'checks')!.message).toBe(`checks · ${summary.summary.applicable} applicable · ${summary.summary.passed} passed · 2 failed`);
   });
