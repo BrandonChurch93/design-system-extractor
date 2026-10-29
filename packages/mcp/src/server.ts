@@ -6,7 +6,7 @@ import { componentCss, exportTokens, generateExport, motionJson, tokensJson } fr
 // The MCP server (docs/specs/exports-and-mcp.md): one run, read once, served over stdio. No network
 // beyond the first fetch, nothing written to disk.
 
-export const VERSION = '1.2.0';
+export const VERSION = '1.3.0';
 
 const kindKeys: Record<TokenKind, (keyof TokensJson)[]> = {
   color: ['color'],

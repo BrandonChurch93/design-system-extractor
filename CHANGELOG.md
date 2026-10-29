@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.3.0 · 2026-10-29
+
+The third testing round: a Motion section you can read, token cards with room, and previews that answer the pointer.
+
+- Easings: each curve fills its card, 160 px tall, with larger dots; the stages of a row line up at the card's bottom edge; every card says what uses its easing, or that nothing on the pages did.
+- Durations: one log scale from the shortest to the longest, so 150 ms, 1 s and 10 s are evenly spaced; labels take at most two rows above and two below, and the strip says how many it labeled when one has no room; every tick opens its token.
+- Radius and Shadow: a row of their own under Type and Spacing, 72 px samples, and a gap from each run's largest blur so no shadow reaches the next one.
+- Patterns: chips rest on where the site's element starts (faded, slid, blurred) and return there after each play; Replay keeps its width; the keyframes list shows six with Show all.
+- Previews: a live preview on a card plays the site's own hover and active styles under the pointer, and a tap on a phone opens the drawer; a card preview is never smaller than 0.6x, and a cut one fades at its edge and says so; the drawer shows a component at its real size and scrolls sideways; a component whose fill matches its ground is shown on the opposite tone, with the Ground toggle on every card.
+- Capture: an element hidden on the page until focused, such as a skip link, is shown focused; a box with no width or height is never a component; a preview with no crop shows its code.
+- Names: the probe for a missing page is named `404 page`, never its path; a pattern belongs to the component that owns its own element.
+- Stored runs: the 1.3 upgrade removes pattern references that resolve to nothing and turns a preview whose crop was never written into its code-only form.
+
 ## 1.2.0 · 2026-10-28
 
 The second testing round: runs from any version open, easings you can see, previews you can play with, and the check results up front.
