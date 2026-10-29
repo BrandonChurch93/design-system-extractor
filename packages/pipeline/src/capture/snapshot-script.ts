@@ -243,7 +243,8 @@ export function takeSnapshot(args: { props: string[]; cap: number; root?: string
           st,
           font: own ? resolveFont(cs.fontFamily, cs.fontSize, cs.fontWeight) : '',
           focusable: vis && isFocusable(el),
-          tab: isFocusable(el),
+          // Inside a display: none or visibility: hidden ancestor nothing takes focus, whatever it is (D-111).
+          tab: isFocusable(el) && (typeof el.checkVisibility !== 'function' || el.checkVisibility({ visibilityProperty: true })),
         });
       }
     }
