@@ -5,10 +5,10 @@
   "text": "{\"pairs\": [{\"id\": \"p1\", \"same\": true}]}",
   "usage": {
     "input_tokens": 125,
-    "cache_creation_input_tokens": 0,
-    "cache_read_input_tokens": 746,
+    "cache_creation_input_tokens": 746,
+    "cache_read_input_tokens": 0,
     "cache_creation": {
-      "ephemeral_5m_input_tokens": 0,
+      "ephemeral_5m_input_tokens": 746,
       "ephemeral_1h_input_tokens": 0
     },
     "output_tokens": 23,
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-27T21:00:45.953Z",
+  "recordedAt": "2026-10-29T17:16:17.638Z",
   "request": "Pairs:\np1 Notice: div role status with no class names, inside div:2 p:1 span:1 svg:1, in features, text \"Digests are included in every plan. Compare plans\" / div role status with no class names, inside p:1 span:1 svg:1, in getting started, text \"Publishing posts to every connected channel. Try it on a tes\", differing borderColor"
 }

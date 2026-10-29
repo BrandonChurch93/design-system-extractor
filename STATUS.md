@@ -10,13 +10,13 @@ None.
 
 ## Current phase
 
-P18 · Third testing round (v1.3). In progress. Done and committed: docs merged (D-101 to D-109, merge rulings D-110), the addendum deleted.
+P18 · Third testing round (v1.3). In progress. Done and committed: docs merged (D-101 to D-109, merge rulings D-110), the addendum deleted; schema 1.3.0 and the upgrade's 1.3 step (with `clean-v1-2.json`, the v1.2 fixture document) and the references test; the 404 page naming context and pattern attribution; the hidden-at-capture rule, hidden-until-focus previews, no-crop, the fill; the clean family's skip link; state rules in the default preview and inert links, the security suite over both; the web previews (pointer, overlay, 0.6× floor, drawer 1:1, contrast fallback, card Ground toggle, no-crop card), the Motion components (stage, log-axis strip, Replay width, six keyframes, chips at rest), the Radius and Shadow row, the catalog states, `tests/e2e/v13.spec.ts` (not yet run).
 
 v1.2 (P17) passed its gate and the Definition of Done (twelve items) on 2026-10-28; v1.1 (P16) passed its gate and the Definition of Done on 2026-10-27; v1.0 (P0 to P15) on 2026-10-26.
 
 ## Next action
 
-Build P18 step 2: the schema fields (`Preview.fill`, optional `cropKey`, `Instance.hiddenAtCapture`, the two captured reasons), `pipelineVersion` 1.3.0 and the upgrade's 1.3 step with its tests.
+Finish the record-mode evals (the clean family's naming requests changed), then `pnpm fixtures:runs`, the export goldens, stop `pnpm dev` and `pnpm db:seed:fixtures`, run the e2e suite, re-measure the skeleton heights, qa:design review at three viewports.
 
 Environment note: the repository sits on an iCloud-synced Desktop and macOS evicts files (`ls -lO` shows `dataless`); a read then blocks while iCloud downloads. `find . -type f -flags +dataless -print0 | xargs -0 cat > /dev/null` brings them back.
 
