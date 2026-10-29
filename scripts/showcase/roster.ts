@@ -23,7 +23,8 @@ export const roster: RosterSite[] = override?.roster ?? [
   { ...site('wikipedia.org', 'Wikipedia', 'Media'), order: 8, why: 'dense, old, plenty of drift' },
   { ...site('usa.gov', 'USA.gov', 'Government'), order: 9, why: 'USWDS, the government lane' },
   { ...site('homedepot.com', 'The Home Depot', 'Commerce'), order: 10, why: 'big-box retail, enormous system' },
-  { ...site('modernsoftworks.com', 'Modern Softworks', 'Personal'), order: 11, why: "the owner's studio" },
+  // The bare host answers Hostinger's 403 to every request; the www host serves the site (D-100).
+  { ...site('modernsoftworks.com', 'Modern Softworks', 'Personal'), url: 'https://www.modernsoftworks.com/', order: 11, why: "the owner's studio" },
   { ...site('amazon.com', 'Amazon', 'Commerce'), order: 12, why: 'the biggest drift report possible' },
 ];
 

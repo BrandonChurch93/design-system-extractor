@@ -902,3 +902,10 @@ Decision: when the two runs are less than a day apart the title is `What changed
 Reasoning: the copy rule's own examples are spans of time; "today" is not one, and two buttons with one label cannot be told apart by a screen reader or a reader.
 Affects: `docs/design/copy.md`, `docs/design/pages.md`, `apps/web/lib/compare.ts`, `apps/web/components/compare/CompareView.tsx`.
 
+## D-100 · The showcase roster crawls modernsoftworks.com at its www host
+
+Date: 2026-10-28 · Context: the owner's site answers Hostinger's 403 page at `https://modernsoftworks.com/` (checked again at the end of P17) and serves the site at `https://www.modernsoftworks.com/`, where the owner's runs and P17's real-site checks were made. The roster built its URL from the bare host, so step 11 of the runbook would still replace it with an alternate.
+Decision: the roster entry keeps the host `modernsoftworks.com` for its card and matching, and crawls `https://www.modernsoftworks.com/`.
+Reasoning: the site is the owner's studio and belongs in the opening set; the www host is where it serves pages.
+Affects: `scripts/showcase/roster.ts`, `docs/specs/showcase.md`, `docs/deploy-runbook.md`, STATUS (the owner's end list).
+

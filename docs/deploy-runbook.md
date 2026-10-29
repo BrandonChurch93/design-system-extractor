@@ -129,7 +129,7 @@ env DOTENV_FILE=.env.production.local pnpm showcase --add <runId> --remote
 
 The run must be complete and not sparse; add `--category <name>` when the site is not in the roster. `--remove <runId> --remote` takes it down, and `--list --remote` shows what is listed (D-091).
 
-When the build checked the roster (STATUS, P13 dry run), modernsoftworks.com answered every request with Hostinger's 403 page, so the script replaced it with an alternate. Once the site serves pages again, put it back without re-running the rest:
+When the build checked the roster (STATUS, P13 dry run), modernsoftworks.com answered every request with Hostinger's 403 page, so the script replaced it with an alternate. The www host serves the site (checked 2026-10-28) and the roster now crawls `https://www.modernsoftworks.com/` (D-100), so step 11's run includes it. If an earlier showcase still holds the alternate, put it back without re-running the rest:
 
 ```
 env DOTENV_FILE=.env.production.local pnpm showcase --remote --only modernsoftworks.com

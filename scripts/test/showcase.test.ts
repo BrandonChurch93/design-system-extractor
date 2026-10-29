@@ -29,6 +29,10 @@ describe('the roster', () => {
     expect(roster.map((s) => ({ order: s.order, host: s.host, category: s.category }))).toEqual(rows);
   });
 
+  it('crawls each site at its host, and modernsoftworks.com at its www host (D-100)', () => {
+    for (const s of roster) expect(s.url).toBe(s.host === 'modernsoftworks.com' ? 'https://www.modernsoftworks.com/' : `https://${s.host}/`);
+  });
+
   it('has the alternates of showcase.md, in order, with their categories', () => {
     const line = spec.split('\n').find((l) => l.startsWith('Alternates'))!;
     const listed = [...line.matchAll(/([a-z0-9.-]+\.[a-z]+) \(([A-Za-z ]+)\)/g)].map((m) => ({ host: m[1], category: m[2] }));

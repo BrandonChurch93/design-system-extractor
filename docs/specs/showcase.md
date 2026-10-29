@@ -21,6 +21,8 @@ Twelve sites, chosen for a mix of clean systems, dense ones where the drift repo
 | 11 | modernsoftworks.com | Personal | the owner's studio |
 | 12 | amazon.com | Commerce | the biggest drift report possible |
 
+Each site is crawled at `https://{host}/`, except modernsoftworks.com, crawled at `https://www.modernsoftworks.com/` because the bare host answers a 403 page (D-100).
+
 Alternates, used in order when a roster site blocks the crawler or returns a sparse run, each with its category so the chip set stays complete: github.com (Developer tools), figma.com (SaaS), shopify.com (SaaS), airbnb.com (Commerce), nytimes.com (Media), craigslist.org (Media), gov.uk (Government), idaho.gov (Government), etsy.com (Commerce), bestbuy.com (Commerce), tailwindcss.com (Developer tools), mozilla.org (Media), coinbase.com (Finance), wise.com (Finance). An alternate is chosen from the same category as the site it replaces when one is available.
 
 The roster is the opening set. After launch the owner curates the showcase with `--add` and `--remove` (Promoting a run, below); the roster is re-run only when he wants fresh captures of the opening set.

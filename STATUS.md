@@ -491,6 +491,7 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-100 · The showcase roster crawls modernsoftworks.com at `https://www.modernsoftworks.com/`; the bare host still answers 403.
 - D-099 · Compare's same-day title is `What changed today`; the open buttons take the run cards' date, and by order (`Open the earlier run`, `Open the later run`) when both runs share it.
 - D-098 · The build's P17 rulings: `pipeline:run` served previews as `file://` (fonts never loaded) and now serves storage over HTTP; every measured preview cause with its handling (clips below the cut, the 1 MB font cap, the masked comparison, the clipped page screenshot, the freeze settling animations, image pixels, layers, `:where()`, units, transforms, ancestors' opacity and scale, svg paint, container conditions, the layered reset carry, hidden inputs) and the causes not handled; the state-file security fix; the rates per round, ending 82.7, 81.7 and 72.5% live of checked; UI rulings (main-variant pinning, six stagger chips, Compare's unfinished reason, same-site promotion replaces the card, skeletons re-measured, the ambient QA mask); `messy-after`'s dark band and its drift deltas.
 - D-097 · Rulings from merging the v1.2 addendum: ids and the 1.2.0 upgrade step, the showcase entry's shape and `promoted`, the upgrade on every read path including MCP `--run` and CLI `serve`, Compare's StateCard reasons, `usedBy` with counts, the EasingStage's two animations and 2,200 ms cycle, the duration tick's path, shadowed crops keep their margin, the Ground toggle's two app grounds, reduced motion in state files, `fontsSubstituted` as a list, `checkCounts` in the schema, the previews event words, `seedv10cln`, stripe.com as the third real site.
@@ -634,7 +635,7 @@ Previews and v1.2 (D-098)
 Keep this list current. It is the only hands-on work he will do.
 
 1. Follow `docs/deploy-runbook.md`.
-2. modernsoftworks.com answers every request with Hostinger's "403 Forbidden" page (seen 2026-10-26, from a browser user agent too). Until it serves pages, the showcase replaces it with an alternate; once it does, the runbook's step 11 has the one command that restores it.
+2. modernsoftworks.com still answers Hostinger's 403 at the bare host (checked 2026-10-28); the www host serves the site, and the roster crawls `https://www.modernsoftworks.com/` (D-100), so step 11 of the runbook includes it. Pointing the bare host at the site (a redirect to www in Hostinger) is optional.
 
 ## Session log
 
