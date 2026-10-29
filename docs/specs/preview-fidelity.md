@@ -83,7 +83,7 @@ Any new sanitizer bypass found later is added to this suite before it is fixed.
 
 ## Events
 
-`previews · 46 built · 38 live · 8 captured (median diff 1.1 %) · 5 render differed · 2 fonts unavailable · 1 not checked in time` (each reason with a count above zero, D-095).
+`previews · 46 built · 38 live · 8 captured (median diff 1.1 %) · 5 render differed · 2 fonts unavailable · 1 not checked in time` (each reason with a count above zero, D-095; and `{n} hidden until focused`, `{n} no capture`, D-111).
 
 ## Tests
 

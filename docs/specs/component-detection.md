@@ -111,7 +111,7 @@ Up to 120 components per run; beyond that, drop `other` first, then the lowest i
 
 ## Events
 
-`components · 46 found from 1,842 element candidates · 9 by model`, `components · merged 7 across pages`, `components · 3 noise clusters dropped`, `components · 31 core · 15 page-specific`, `components · motion attached to 31 components · 12 patterns`, and, when the final pass renames one, `components · renamed Button 2 to Button (footer)`.
+`components · 46 found from 1,842 element candidates · 9 by model`, `components · merged 7 across pages`, `components · 3 noise clusters dropped`, `components · 31 core · 15 page-specific`, `components · motion attached to 31 components · 12 patterns`, and, when the final pass renames one, `components · renamed Button 2 to Button (footer)`, and when hidden components no state shows are dropped, `components · 1 hidden until focus and never shown · dropped` (D-108, D-111).
 
 ## Tests
 

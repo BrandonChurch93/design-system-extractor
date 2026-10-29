@@ -225,7 +225,11 @@ export async function cropOf(page: Page, dse: string, extra?: string, pad = CROP
 
 export async function neutral(page: Page): Promise<void> {
   await page.mouse.move(0, 0);
-  await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur?.());
+  // A press that lands on text (an element hidden at rest takes no pointer) drags a selection; it must not reach the next crop.
+  await page.evaluate(() => {
+    (document.activeElement as HTMLElement | null)?.blur?.();
+    window.getSelection()?.removeAllRanges();
+  });
 }
 
 /**

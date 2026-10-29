@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29T17:09:53.410Z",
+  "generatedAt": "2026-10-29T17:18:43.235Z",
   "mode": "record",
   "through": "done",
   "pipelineVersion": "1.3.0",
@@ -78,17 +78,15 @@
           }
         },
         "components": {
-          "precision": 0.966,
+          "precision": 1,
           "recall": 1,
           "predicted": 29,
-          "expected": 28,
-          "matched": 28,
-          "nameAgreement": 0.714,
+          "expected": 29,
+          "matched": 29,
+          "nameAgreement": 0.69,
           "namesValid": true,
           "misses": [],
-          "extras": [
-            "Skip link (link) /"
-          ]
+          "extras": []
         },
         "variants": {
           "accuracy": 1,
@@ -96,8 +94,8 @@
         },
         "states": {
           "rate": 1,
-          "captured": 67,
-          "expected": 67,
+          "captured": 71,
+          "expected": 71,
           "misses": []
         },
         "motion": {
@@ -381,20 +379,15 @@
           }
         },
         "components": {
-          "precision": 0.931,
-          "recall": 0.964,
+          "precision": 1,
+          "recall": 1,
           "predicted": 29,
-          "expected": 28,
-          "matched": 27,
-          "nameAgreement": 0.593,
+          "expected": 29,
+          "matched": 29,
+          "nameAgreement": 0.724,
           "namesValid": true,
-          "misses": [
-            "Button (button)"
-          ],
-          "extras": [
-            "Skip link (link) /",
-            "Button (button) /login"
-          ]
+          "misses": [],
+          "extras": []
         },
         "variants": {
           "accuracy": 1,
@@ -402,8 +395,8 @@
         },
         "states": {
           "rate": 1,
-          "captured": 62,
-          "expected": 62,
+          "captured": 71,
+          "expected": 71,
           "misses": []
         },
         "motion": {
@@ -411,14 +404,10 @@
           "easings": 1,
           "keyframes": 1,
           "patterns": 1,
-          "hover": 0,
+          "hover": 1,
           "outlineNoise": 0,
           "collapsedBorder": 1,
-          "missed": [
-            "hover Button background-color",
-            "hover Button transform",
-            "hover Button box-shadow"
-          ]
+          "missed": []
         },
         "naming": {
           "siteNaming": 1,
@@ -426,39 +415,32 @@
           "overlaySplit": 1,
           "typeNames": 1,
           "roleOther": 0,
-          "variantNames": 0,
+          "variantNames": 1,
           "numericNames": 0,
-          "tiers": 0.9642857142857143,
+          "tiers": 1,
           "fallbackNames": 1,
-          "missed": [
-            "variant names on Button",
-            "tier Button unmatched not core"
-          ]
+          "missed": []
         },
         "liveRate": {
-          "rate": 0.966,
-          "live": 28,
+          "rate": 0.931,
+          "live": 27,
           "total": 29,
           "captured": [
-            "Resources dropdown (diff 10.1 %)"
+            "Skip link (hidden-until-focus)",
+            "Resources menu (diff 10.1 %)"
           ]
         },
         "checks": {
           "failures": 1,
-          "passes": 0.6,
+          "passes": 1,
           "summary": {
-            "passed": 51,
-            "failed": 3,
+            "passed": 50,
+            "failed": 2,
             "total": 145,
-            "applicable": 54
+            "applicable": 52
           },
           "missedFailures": [],
-          "flaggedPasses": [
-            "Button contrast: no result",
-            "Button focus-visible: no result",
-            "Button tap-target: no result",
-            "Button reduced-motion: no result"
-          ]
+          "flaggedPasses": []
         },
         "drift": {
           "falseFindings": 0,
@@ -546,20 +528,15 @@
           }
         },
         "components": {
-          "precision": 0.931,
-          "recall": 0.964,
+          "precision": 1,
+          "recall": 1,
           "predicted": 29,
-          "expected": 28,
-          "matched": 27,
-          "nameAgreement": 0.667,
+          "expected": 29,
+          "matched": 29,
+          "nameAgreement": 0.655,
           "namesValid": true,
-          "misses": [
-            "Button (button)"
-          ],
-          "extras": [
-            "Skip link (link) /",
-            "Button (button) /login"
-          ]
+          "misses": [],
+          "extras": []
         },
         "variants": {
           "accuracy": 1,
@@ -567,8 +544,8 @@
         },
         "states": {
           "rate": 1,
-          "captured": 62,
-          "expected": 62,
+          "captured": 71,
+          "expected": 71,
           "misses": []
         },
         "motion": {
@@ -576,14 +553,10 @@
           "easings": 1,
           "keyframes": 1,
           "patterns": 1,
-          "hover": 0,
+          "hover": 1,
           "outlineNoise": 0,
           "collapsedBorder": 1,
-          "missed": [
-            "hover Button background-color",
-            "hover Button transform",
-            "hover Button box-shadow"
-          ]
+          "missed": []
         },
         "naming": {
           "siteNaming": 1,
@@ -591,39 +564,32 @@
           "overlaySplit": 1,
           "typeNames": 1,
           "roleOther": 0,
-          "variantNames": 0,
+          "variantNames": 1,
           "numericNames": 0,
-          "tiers": 0.9642857142857143,
+          "tiers": 1,
           "fallbackNames": 1,
-          "missed": [
-            "variant names on Button",
-            "tier Button unmatched not core"
-          ]
+          "missed": []
         },
         "liveRate": {
-          "rate": 0.966,
-          "live": 28,
+          "rate": 0.931,
+          "live": 27,
           "total": 29,
           "captured": [
+            "Skip link (hidden-until-focus)",
             "Resources menu (diff 10.1 %)"
           ]
         },
         "checks": {
           "failures": 1,
-          "passes": 0.6,
+          "passes": 1,
           "summary": {
-            "passed": 51,
-            "failed": 3,
+            "passed": 50,
+            "failed": 2,
             "total": 145,
-            "applicable": 54
+            "applicable": 52
           },
           "missedFailures": [],
-          "flaggedPasses": [
-            "Button contrast: no result",
-            "Button focus-visible: no result",
-            "Button tap-target: no result",
-            "Button reduced-motion: no result"
-          ]
+          "flaggedPasses": []
         },
         "drift": {
           "falseFindings": 0,
@@ -716,7 +682,7 @@
           "predicted": 22,
           "expected": 22,
           "matched": 22,
-          "nameAgreement": 0.318,
+          "nameAgreement": 0.364,
           "namesValid": true,
           "misses": [],
           "extras": []
