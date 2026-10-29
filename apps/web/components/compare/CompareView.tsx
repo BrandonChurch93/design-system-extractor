@@ -5,7 +5,7 @@ import type { RunDocumentPartial } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { compare as C, global, recent, runPage } from '../../copy/strings';
 import { noRecent, recentSnapshot, subscribeRecent } from '../../lib/browser-store';
-import { colorDiff, componentChanges, deltaCaptions, deltas, motionDiff, span, type Stat } from '../../lib/compare';
+import { colorDiff, componentChanges, deltaCaptions, deltas, motionDiff, sameTitle, type Stat } from '../../lib/compare';
 import { count, runDate, shortDate } from '../../lib/format';
 import { pagesWord } from '../../lib/run-view';
 import { Button } from '../Button';
@@ -98,7 +98,7 @@ export function CompareView({ a, b, shareUrl, embedded }: Props) {
   const [mode, setMode] = useState<Mode>(sameHost ? 'same' : 'two');
   const [before, after] = b && mode === 'same' && Date.parse(b.createdAt ?? '') < Date.parse(a.createdAt ?? '') ? [b, a] : [a, b];
   const crumbs = sameHost || !b ? fill(global.breadcrumbs.compareOne, { host: a.host ?? '' }) : global.breadcrumbs.compareTwo;
-  const title = !after ? C.picker.title : mode === 'same' ? fill(C.sameTitle, { span: span(before.createdAt ?? '', after.createdAt ?? '') }) : fill(C.twoTitle, { hostA: before.host ?? '', hostB: after.host ?? '' });
+  const title = !after ? C.picker.title : mode === 'same' ? sameTitle(before.createdAt ?? '', after.createdAt ?? '') : fill(C.twoTitle, { hostA: before.host ?? '', hostB: after.host ?? '' });
   const labels = mode === 'same' ? [C.columns.before, C.columns.after] : [C.columns.a, C.columns.b];
 
   return (
@@ -160,13 +160,15 @@ export function CompareView({ a, b, shareUrl, embedded }: Props) {
 }
 
 function OpenButtons({ before, after }: { before: RunDocumentPartial; after: RunDocumentPartial }) {
+  // The date the run cards show; two runs of one day are told apart by their order (D-099).
+  const [a, b] = [before, after].map((d) => shortDate(d.finishedAt ?? d.createdAt ?? ''));
   return (
     <div className={styles.buttons}>
       <Button variant="ghost" href={`/r/${before.id}`}>
-        {fill(C.open, { date: shortDate(before.createdAt ?? '') })}
+        {a === b ? C.openEarlier : fill(C.open, { date: a! })}
       </Button>
       <Button variant="primary" href={`/r/${after.id}`}>
-        {fill(C.open, { date: shortDate(after.createdAt ?? '') })}
+        {a === b ? C.openLater : fill(C.open, { date: b! })}
       </Button>
     </div>
   );

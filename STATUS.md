@@ -183,6 +183,17 @@ On the production build against the local database: `/compare?a=tx4mehptdf&b=mhx
 
 `pnpm showcase --add z1ud0oz4vu` (the sparse v1.0 modernsoftworks.com run) answered `z1ud0oz4vu is sparse (0 components). A sparse run is not added to the showcase.` and exited 1. `pnpm showcase --add mhxvphzzfr` made Modern Softworks the first card on the home page with the promoted caption (`Sites I have run it on. Yours stays private unless you share the link.`), `is_showcase` true and null retention, and warned `7 entries leave an orphan at 3 or 2 columns. Add 5 more or remove 1.`; `--list` showed it as promoted; `--remove mhxvphzzfr` took it down with its 90-day retention back.
 
+### modernsoftworks.com, fresh through the queue (2026-10-28, `qgc6npq1au`)
+
+`pnpm dev` (web and worker), `POST /api/runs` with `https://www.modernsoftworks.com/` at the visitor timeout: complete in 234 s for $0.0112, 12 pages, 74 components (53 core, 21 page-specific), 23 colors, 18 type styles, 12 spacing steps; the states budget cut later pages' states (logged).
+
+| Run | live | diff | css-too-large | fonts-unavailable | not-checked | total | live of checked | core live of checked |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| modernsoftworks.com `qgc6npq1au` (v1.2, fresh) | 60 | 14 | 0 | 0 | 0 | 74 | 60 of 74 · 81.1% | 42 of 53 |
+| modernsoftworks.com `mhxvphzzfr` (owner, v1.1) | 45 | 44 | 0 | 0 | 0 | 89 | 45 of 89 · 50.6% | 35 of 69 |
+
+Components passing: 30 of 71 pass every check that applies (82 of 136 checks passed). Compare against the previous run: `/compare?a=mhxvphzzfr&b=qgc6npq1au` answers 200 with every row (Colors 31 → 23, Type styles 20 → 18, Spacing 12 → 12, Components 89 → 74, Checks passed 95 → 82, the Motion card and the component table); `/r/qgc6npq1au` answers 200. Its title read "What changed in today" and both buttons "Open the Oct 28 run", fixed under D-099.
+
 ### After the fourth round of handling (2026-10-28, 15 min)
 
 Counted by `pnpm live-rate` on the run files.
@@ -480,6 +491,7 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-099 · Compare's same-day title is `What changed today`; the open buttons take the run cards' date, and by order (`Open the earlier run`, `Open the later run`) when both runs share it.
 - D-098 · The build's P17 rulings: `pipeline:run` served previews as `file://` (fonts never loaded) and now serves storage over HTTP; every measured preview cause with its handling (clips below the cut, the 1 MB font cap, the masked comparison, the clipped page screenshot, the freeze settling animations, image pixels, layers, `:where()`, units, transforms, ancestors' opacity and scale, svg paint, container conditions, the layered reset carry, hidden inputs) and the causes not handled; the state-file security fix; the rates per round, ending 82.7, 81.7 and 72.5% live of checked; UI rulings (main-variant pinning, six stagger chips, Compare's unfinished reason, same-site promotion replaces the card, skeletons re-measured, the ambient QA mask); `messy-after`'s dark band and its drift deltas.
 - D-097 · Rulings from merging the v1.2 addendum: ids and the 1.2.0 upgrade step, the showcase entry's shape and `promoted`, the upgrade on every read path including MCP `--run` and CLI `serve`, Compare's StateCard reasons, `usedBy` with counts, the EasingStage's two animations and 2,200 ms cycle, the duration tick's path, shadowed crops keep their margin, the Ground toggle's two app grounds, reduced motion in state files, `fontsSubstituted` as a list, `checkCounts` in the schema, the previews event words, `seedv10cln`, stripe.com as the third real site.
 - D-096 · Check results are a component-level metric and a monochrome mark (D-003 and D-018 stand).

@@ -21,6 +21,12 @@ export function span(fromIso: string, toIso: string): string {
   return m === 1 ? C.spans.month : fill(C.spans.months, { n: numberWord(m) });
 }
 
+/** The same-site title: a span under a day reads "What changed today", never "in today". */
+export function sameTitle(fromIso: string, toIso: string): string {
+  const s = span(fromIso, toIso);
+  return s === C.today ? C.sameTitleToday : fill(C.sameTitle, { span: s });
+}
+
 export type Stat = { before: number; after: number };
 export type Deltas = { colors: Stat; typeStyles: Stat; spacingSteps: Stat; components: Stat; checksPassed: Stat; checksApplicable: Stat; grays: Stat; graysProposedAfter: number; newComponents: number };
 

@@ -385,6 +385,7 @@ export const componentPanel = {
 
 export const compare = {
   sameTitle: 'What changed in {span}',
+  sameTitleToday: 'What changed today',
   today: 'today',
   spans: { days: '{n} days', weeks: '{n} weeks', months: '{n} months', day: 'one day', week: 'one week', month: 'one month' },
   facts: '{pages} pages · {viewports} viewports',
@@ -407,6 +408,8 @@ export const compare = {
   pills: { new: 'New', changed: 'Changed', removed: 'Removed' },
   motion: { heading: 'Motion', durations: 'Durations', easings: 'Easings', keyframes: 'Keyframes', patterns: 'Patterns' },
   open: 'Open the {date} run',
+  openEarlier: 'Open the earlier run',
+  openLater: 'Open the later run',
   picker: { title: 'Pick a run to compare against', paste: 'Paste another run link' },
   footer: 'Compare is desktop only. On a phone, open either run.',
   unavailable: {

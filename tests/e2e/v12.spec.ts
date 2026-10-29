@@ -16,7 +16,10 @@ test('Compare renders a stored v1.0 run against a current one, every row, the Mo
   expect(old.document.components!.every((c) => c.tier && c.slug)).toBe(true);
   const now = await run(page, 'seedclean0');
   await page.goto('/compare?a=seedv10cln&b=seedclean0');
-  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  // Both runs are of Oct 12: the title and the two buttons say so by order (D-099).
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('What changed today');
+  await expect(page.getByRole('link', { name: 'Open the earlier run' })).toHaveAttribute('href', '/r/seedv10cln');
+  await expect(page.getByRole('link', { name: 'Open the later run' })).toHaveAttribute('href', '/r/seedclean0');
   for (const label of ['Durations', 'Easings', 'Keyframes', 'Patterns']) {
     const row = page.getByRole('row', { name: new RegExp(`^${label} `) });
     await expect(row).toBeVisible();

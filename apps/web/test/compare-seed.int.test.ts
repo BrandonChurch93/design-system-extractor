@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { closeDb, createDb, getRun } from '@dse/pipeline/db';
 import { RunDocumentPartial } from '@dse/schema';
-import { colorDiff, componentChanges, deltaCaptions, deltas, span } from '../lib/compare';
+import { colorDiff, componentChanges, deltaCaptions, deltas, sameTitle, span } from '../lib/compare';
 
 // The seeded before-and-after pair (docs/evals.md, messy-after): the deltas Compare must show.
 
@@ -28,6 +28,8 @@ describe('compare on the seeded messy and messy-after runs', () => {
       expect(colors.unchanged.length + colors.added.length).toBe(19);
       expect(span(da.createdAt!, dbb.createdAt!)).toBe('two weeks');
       expect(span('2026-10-01T00:00:00Z', '2026-10-01T09:00:00Z')).toBe('today');
+      expect(sameTitle('2026-10-01T00:00:00Z', '2026-10-01T09:00:00Z')).toBe('What changed today');
+      expect(sameTitle(da.createdAt!, dbb.createdAt!)).toBe('What changed in two weeks');
       expect(span('2026-10-01T00:00:00Z', '2026-10-02T00:00:00Z')).toBe('one day');
       expect(span('2026-01-01T00:00:00Z', '2027-03-01T00:00:00Z')).toBe('14 months');
     } finally {

@@ -894,3 +894,11 @@ Decision:
 - Evals. `messy-after` gains its dark band (`band-button`, `band-card` on `#0B0D10`) for the halo check, with re-recorded extras; its expected drift deltas follow the band (grays 14 to 10 and five new entries in `docs/evals.md`).
 Reasoning: D-095 asks for causes measured on real sites, each with its handling, and the rates recorded; every handling above was measured by re-rendering a patched copy of a stored preview against its page crop before it was built, and the full set was re-measured by fresh runs. The UI rulings take the closest faithful reading of the addendum where it was silent.
 Affects: `docs/specs/preview-fidelity.md`, `docs/specs/capture-and-states.md`, `docs/evals.md`, `STATUS.md`.
+
+## D-099 · Compare's same-day title and buttons
+
+Date: 2026-10-28 · Context: P17's real-site check compared the owner's v1.1 run with a fresh run of the same day. The title pattern `What changed in {span}` with the span `today` read "What changed in today", and both buttons read `Open the Oct 28 run`; the buttons also took the start date while the run cards show the finish date, so a run that crossed midnight UTC showed two dates.
+Decision: when the two runs are less than a day apart the title is `What changed today`. The buttons take the date the run cards show (finished, else created); when both runs share it, they read `Open the earlier run` and `Open the later run`.
+Reasoning: the copy rule's own examples are spans of time; "today" is not one, and two buttons with one label cannot be told apart by a screen reader or a reader.
+Affects: `docs/design/copy.md`, `docs/design/pages.md`, `apps/web/lib/compare.ts`, `apps/web/components/compare/CompareView.tsx`.
+

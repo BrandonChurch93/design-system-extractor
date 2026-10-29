@@ -195,7 +195,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 
 ## Compare
 
-- Titles: same host `What changed in {span}` with spans following rule 9: `today` · `{n} days` · `{n} weeks` · `{n} months` ("six weeks", "three days", "14 months"), singular `one day` · `one week` · `one month`; under 14 days counts days, under 60 days weeks, months after; two hosts `{hostA} and {hostB}`
+- Titles: same host `What changed in {span}`, and `What changed today` when the runs are less than a day apart (D-099), with spans following rule 9: `{n} days` · `{n} weeks` · `{n} months` ("six weeks", "three days", "14 months"), singular `one day` · `one week` · `one month`; under 14 days counts days, under 60 days weeks, months after; two hosts `{hostA} and {hostB}`
 - Column facts: `{pages} pages · {viewports} viewports`
 - Caption: `Same site, two runs. Same pages, same viewports, same thresholds.` · two sites: `Two sites, one method. Same viewports, same thresholds.`
 - Toggle: `Two runs of one site` · `Two sites`
@@ -204,7 +204,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Token cards: `Added · {n}` · `Removed · {n}` · `Unchanged · {n}`
 - Change table: `Component` · `Change` · `Before` · `After` · `Checks`; pills `New` · `Changed` · `Removed`
 - Motion heading `Motion`; rows `Durations` · `Easings` · `Keyframes` · `Patterns` (D-089)
-- Buttons: `Open the {date} run`
+- Buttons: `Open the {date} run`, the date the run cards show; when both runs share that date, `Open the earlier run` and `Open the later run` (D-099)
 - Picker: `Pick a run to compare against` · `Paste another run link`
 - Footer: `Compare is desktop only. On a phone, open either run.`
 - Could not compare (D-092): StateCard title `We could not compare these runs.` · body `{reason}` with reasons `No run with the link {id}.` · `The {host} run of {date} could not be read.` · `The {host} run of {date} has not finished.` (a run that is not complete; D-098) · ghost Buttons `Open {host}`, one for each run that exists

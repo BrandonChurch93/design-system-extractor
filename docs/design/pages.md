@@ -96,7 +96,7 @@ TopNav, the component breadcrumb from copy ("{host} / Components / {name}", the 
 
 ## `/compare?a={runId}&b={runId}` · Compare
 
-TopNav; header with the compare breadcrumb from copy ("{host} / Compare" for one host, "Compare" alone for two) and `title-sm` from the compare title patterns in copy; CompareModeToggle (preselected by whether the two hosts match); CompareColumns; DeltaStrip; Tokens (`h2-sm`) with TokenDiff; Motion (`h2-sm`) with a MotionDiff table, rows Durations, Easings, Keyframes and Patterns with their counts before and after (D-089); Components (`h2-sm`) with ChangeTable; two Buttons "Open the {date} run" (ghost for the first, primary for the second); Footer with the compare footer line and the compare share link.
+TopNav; header with the compare breadcrumb from copy ("{host} / Compare" for one host, "Compare" alone for two) and `title-sm` from the compare title patterns in copy; CompareModeToggle (preselected by whether the two hosts match); CompareColumns; DeltaStrip; Tokens (`h2-sm`) with TokenDiff; Motion (`h2-sm`) with a MotionDiff table, rows Durations, Easings, Keyframes and Patterns with their counts before and after (D-089); Components (`h2-sm`) with ChangeTable; two Buttons "Open the {date} run" (ghost for the first, primary for the second; by order when the dates match, copy.md); Footer with the compare footer line and the compare share link.
 
 Compare never throws on a document it can upgrade (D-092). If either run cannot be loaded or upgraded, the page renders the StateCard `We could not compare these runs.` with the reason and a ghost Button `Open {host}` for each run that exists, never a blank page or a stack trace.
 
