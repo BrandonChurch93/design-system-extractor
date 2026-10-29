@@ -586,7 +586,7 @@ function previewOf(input: PreviewInput, placed: string, doc: Document): PreviewD
   const base = `${policy.storageBase.replace(/\/$/, '')}/`;
   const csp = `default-src 'none'; style-src 'unsafe-inline' ${GOOGLE_FONTS_CSS}; font-src ${GOOGLE_FONTS_FILES} ${base}; img-src data: ${base}`;
   const links = input.fonts.googleLinks.map((href) => `<link rel="stylesheet" href="${href.replace(/"/g, '&quot;')}">`).join('');
-  const html = `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${csp}"><style>html,body{margin:0;background:transparent}</style>${links}<style>\n${css.replace(/<\/style/gi, '<\\/style')}\n</style></head><body><div class="dse-root">${sanitized.html}</div></body></html>`;
+  const html = `<!doctype html><html><head><meta charset="utf-8"><meta http-equiv="Content-Security-Policy" content="${csp}"><style>html,body{margin:0;background:transparent}</style>${links}<style>\n${css.replace(/<\/style/gi, '<\\/style')}\n</style></head><body><div class="dse-root">${sanitized.inert}</div></body></html>`;
   const bytes = Buffer.byteLength(css, 'utf8');
   return { html, css, rules: ruleText, code: codeText, markup: sanitized.html, bytes, tooLarge: bytes > CSS_CAP_BYTES, report: sanitized.report };
 }
@@ -630,6 +630,41 @@ export function statePreview(html: string, delta: StateDelta[], policy: CssPolic
     `${STATE_TARGET} { ${values}${animations.length ? ` animation: ${animations.join(', ')};` : ''} }`,
     ...blocks,
     ...(animations.length ? [`@media (prefers-reduced-motion: reduce) { ${STATE_TARGET} { animation: none; } }`] : []),
+  ].join('\n');
+  return html.replace('</style></head>', `\n${css.replace(/<\/style/gi, '<\\/style')}\n</style></head>`);
+}
+
+const pseudoOf: Partial<Record<string, string>> = { hover: ':hover', focus: ':focus-visible', active: ':active' };
+
+/**
+ * The default document with the component's recorded hover, focus and active deltas as pseudo-class
+ * rules on its root, so a pointer over the frame plays the site's own states with their recorded timing
+ * (D-106). Open and disabled are not pseudo-classes and stay in their state files. Same sanitizer and
+ * the same `!important`-free selector as the state files.
+ */
+export function withStateRules(html: string, states: { state: string; captured: boolean; delta: StateDelta[] }[], policy: CssPolicy): string {
+  const decl = (property: string, value: string) => {
+    const d = sanitizeDeclaration(property, value, policy);
+    return d ? `${d.name}: ${d.value};` : '';
+  };
+  const rules: string[] = [];
+  const timing = new Map<string, string>();
+  for (const s of states) {
+    const pseudo = pseudoOf[s.state];
+    if (!pseudo || !s.captured || !s.delta.length) continue;
+    const values = s.delta.map((d) => decl(d.property, d.to)).filter(Boolean).join(' ');
+    if (values) rules.push(`${STATE_TARGET}${pseudo} { ${values} }`);
+    for (const d of s.delta) {
+      if (!d.transition || d.transition.durationMs <= 0 || timing.has(d.property)) continue;
+      const easing = sanitizeDeclaration('transition-timing-function', d.transition.easing, policy)?.value;
+      if (easing && sanitizeDeclaration(d.property, d.to, policy)) timing.set(d.property, `${d.property} ${Math.round(d.transition.durationMs)}ms ${easing}`);
+    }
+  }
+  if (!rules.length) return html;
+  const transition = timing.size ? sanitizeDeclaration('transition', [...timing.values()].join(', '), policy) : null;
+  const css = [
+    ...(transition ? [`${STATE_TARGET} { transition: ${transition.value}; }`, `@media (prefers-reduced-motion: reduce) { ${STATE_TARGET} { transition: none; } }`] : []),
+    ...rules,
   ].join('\n');
   return html.replace('</style></head>', `\n${css.replace(/<\/style/gi, '<\\/style')}\n</style></head>`);
 }

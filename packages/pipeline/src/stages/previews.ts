@@ -6,7 +6,7 @@ import { groundOf } from '../components/ground';
 import type { Item } from '../components/items';
 import { overBudget } from '../budget';
 import type { RunContext } from '../context';
-import { buildPreview, statePreview, type PreviewDoc } from '../previews/build';
+import { buildPreview, statePreview, withStateRules, type PreviewDoc } from '../previews/build';
 import { IMAGE_CAP_BYTES, LIVE_MAX_DIFF_PCT } from '../previews/constants';
 import { FontCopier, fontsFor } from '../previews/fonts';
 import { diffPercent, maskBoxes, openRenderSession, renderPreview, textBoxes, type Placement, type RenderSession } from '../previews/render';
@@ -211,6 +211,9 @@ export async function previews(ctx: RunContext, capture: CaptureOutput, comps: C
         stateHtmlKeys[s.state] = key;
       }
       if (Object.keys(stateHtmlKeys).length) main.preview.stateHtmlKeys = stateHtmlKeys;
+      // Checked at rest; the stored default then carries the hover, focus and active rules the pointer plays (D-106).
+      const withRules = withStateRules(main.doc.html, c.states, policy);
+      if (withRules !== main.doc.html && main.preview.htmlKey) await ctx.files.put(main.preview.htmlKey, withRules, { contentType: 'text/html; charset=utf-8' });
     }
     const variants: Component['variants'] = [];
     for (const v of c.variants) {

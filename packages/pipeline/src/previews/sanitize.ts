@@ -116,7 +116,7 @@ export type SanitizeReport = { removedTags: number; removedAttributes: number; s
  * Markup through the whitelist sanitizer, then a second pass of explicit checks. Images and
  * embeds must already be placeholders (see build.ts); anything left is removed here.
  */
-export function sanitizeMarkup(html: string, policy: CssPolicy): { html: string; report: SanitizeReport } {
+export function sanitizeMarkup(html: string, policy: CssPolicy): { html: string; inert: string; report: SanitizeReport } {
   const { purifier: p, window } = purify();
   const report: SanitizeReport = { removedTags: 0, removedAttributes: 0, secondPass: [] };
   p.removeAllHooks();
@@ -170,11 +170,11 @@ export function sanitizeMarkup(html: string, policy: CssPolicy): { html: string;
     RETURN_TRUSTED_TYPE: false,
   }) as string;
   report.removedAttributes = p.removed.filter((r) => 'attribute' in r).length;
-  return { html: secondPass(clean, window, report), report };
+  return { ...secondPass(clean, window, report), report };
 }
 
 /** Explicit checks on the sanitizer's output; anything that survived is removed and reported. */
-function secondPass(html: string, window: JSDOM['window'], report: SanitizeReport): string {
+function secondPass(html: string, window: JSDOM['window'], report: SanitizeReport): { html: string; inert: string } {
   // A template parses inertly into its one shared content document; a new document per call is retained (D-075).
   const host = window.document.createElement('template');
   host.innerHTML = html;
@@ -194,5 +194,13 @@ function secondPass(html: string, window: JSDOM['window'], report: SanitizeRepor
       }
     }
   }
-  return host.innerHTML;
+  const out = host.innerHTML;
+  // The pointer reaches a preview (D-106): in the document a frame shows, every link points at its own page, so a click never leaves it. The code keeps the site's links.
+  for (const el of [...host.content.querySelectorAll('a, area')]) {
+    for (const name of ['href', 'xlink:href']) {
+      const v = el.getAttribute(name);
+      if (v !== null && !v.startsWith('#')) el.setAttribute(name, '#');
+    }
+  }
+  return { html: out, inert: host.innerHTML };
 }

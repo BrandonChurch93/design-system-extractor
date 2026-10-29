@@ -5,7 +5,7 @@ import { PNG } from 'pngjs';
 import { describe, expect, it } from 'vitest';
 import type { MatchedStyles } from '../src/capture/matched-css';
 import type { SheetScan } from '../src/capture/sheet-scan';
-import { buildPreview, rescope, statePreview, viewportUnits, withPlaceholders } from '../src/previews/build';
+import { buildPreview, rescope, statePreview, viewportUnits, withPlaceholders, withStateRules } from '../src/previews/build';
 import { sanitizeMarkup } from '../src/previews/sanitize';
 import { FontCopier, fontsFor } from '../src/previews/fonts';
 import { diffPercent } from '../src/previews/render';
@@ -145,6 +145,36 @@ describe('the preview builder', () => {
     expect(out).toContain('@keyframes dse-state-1 { from { box-shadow: none; } to { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); } }');
     expect(out).toContain('@media (prefers-reduced-motion: reduce) { .dse-root > :first-child:not(#dse-state) { animation: none; } }');
     expect(out).not.toMatch(/expression|javascript/);
+  });
+
+  it('carries hover, focus and active as pseudo-class rules in the default document, with the recorded timing (D-106)', () => {
+    const html = '<!doctype html><html><head><style>\n.x{}\n</style></head><body><div class="dse-root"><a href="#">Go</a></div></body></html>';
+    const ease = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+    const out = withStateRules(
+      html,
+      [
+        { state: 'default', captured: true, delta: [] },
+        { state: 'hover', captured: true, delta: [{ property: 'background-color', from: '#2458E6', to: '#0B1F3A', transition: { durationMs: 160, easing: ease } }, { property: 'cursor', from: 'auto', to: 'url(https://evil.example/c.png), auto' }] },
+        { state: 'focus', captured: true, delta: [{ property: 'outline-width', from: '0px', to: '2px' }, { property: 'outline-style', from: 'none', to: 'solid' }] },
+        { state: 'active', captured: true, delta: [{ property: 'transform', from: 'none', to: 'scale(0.98)', transition: { durationMs: 120, easing: 'ease-out' } }, { property: 'color', from: '#000', to: '#111}</style><script>x()</script>' }] },
+        { state: 'open', captured: true, delta: [{ property: 'background-color', from: '#FFF', to: '#EEE' }] },
+        { state: 'disabled', captured: true, delta: [{ property: 'opacity', from: '1', to: '0.5' }] },
+      ],
+      policy,
+    );
+    expect(out).toContain('.dse-root > :first-child:not(#dse-state) { transition: background-color 160ms cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 120ms ease-out; }');
+    expect(out).toContain('.dse-root > :first-child:not(#dse-state):hover { background-color: #0B1F3A; }');
+    expect(out).toContain('.dse-root > :first-child:not(#dse-state):focus-visible { outline-width: 2px; outline-style: solid; }');
+    expect(out).toContain('.dse-root > :first-child:not(#dse-state):active { transform: scale(0.98); }');
+    expect(out).toContain('@media (prefers-reduced-motion: reduce) { .dse-root > :first-child:not(#dse-state) { transition: none; } }');
+    expect(out).not.toMatch(/evil\.example|<script|#EEE|opacity: 0\.5/);
+    expect(withStateRules(html, [{ state: 'hover', captured: false, delta: [{ property: 'color', from: '#000', to: '#111' }] }], policy)).toBe(html);
+  });
+
+  it('makes every link in the preview document point at its own page while the code keeps them (D-106)', () => {
+    const r = sanitizeMarkup('<nav><a href="https://example.com/away">Away</a><a href="/pricing">Pricing</a><a href="#top">Top</a></nav>', policy);
+    expect(r.html).toBe('<nav><a href="https://example.com/away">Away</a><a href="#">Pricing</a><a href="#">Top</a></nav>');
+    expect(r.inert).toBe('<nav><a href="#">Away</a><a href="#">Pricing</a><a href="#">Top</a></nav>');
   });
 
   it('security: a state value that would leave its rule or its style element is dropped', () => {
