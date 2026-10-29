@@ -1,4 +1,5 @@
 import { ancestors, descendants } from '../capture/snapshot';
+import { isSyntheticNotFoundPath } from '../crawl/not-found';
 import type { Item } from './items';
 import { ordinal } from './slug';
 
@@ -10,8 +11,9 @@ export { ordinal, slugsOf } from './slug';
 const landmarks: Record<string, string> = { header: 'header', footer: 'footer', nav: 'nav', aside: 'aside' };
 const roleLandmarks: Record<string, string> = { banner: 'header', contentinfo: 'footer', navigation: 'nav', complementary: 'aside' };
 
-/** The page's last path segment, without an extension; the home page is `home`. */
+/** The page's last path segment, without an extension; the home page is `home`, the synthetic missing page `404 page` (D-105). */
 export function pageSegment(path: string): string {
+  if (isSyntheticNotFoundPath(path)) return '404 page';
   const seg = decodeURIComponent(path.replace(/\/+$/, '').split('/').pop() ?? '')
     .replace(/\.[a-z0-9]+$/i, '')
     .toLowerCase()

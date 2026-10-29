@@ -175,6 +175,10 @@ describe('fallback names', () => {
     expect(list.every((x) => !endsInDigit(x.name))).toBe(true);
     expect(pageSegment('/docs/getting-started/')).toBe('getting started');
     expect(pageSegment('/blog/release_notes.html')).toBe('release notes');
+    // The synthetic missing page is context, never its probe path (D-105).
+    expect(pageSegment('/8780d3aa06-does-not-exist')).toBe('404 page');
+    expect(pageSegment('/docs/8780d3aa06-does-not-exist')).toBe('404 page');
+    expect(pageSegment('/how-it-does-not-exist')).toBe('how it does not exist');
     expect(ordinal(2)).toBe('second');
     expect(ordinal(21)).toBe('twenty first');
     expect(ordinal(140)).toBe('one hundred fortieth');

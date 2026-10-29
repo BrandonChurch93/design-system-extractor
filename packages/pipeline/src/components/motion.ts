@@ -17,26 +17,27 @@ export function easingLink(easing: string, easings: EasingToken[]): { easingToke
   return id ? { easingTokenId: id } : { easing: normalizeEasingValue(easing) };
 }
 
-/** Which component each pattern belongs to: the nearest component instance around its target element. */
+/**
+ * Which component each pattern belongs to: the one whose instance is, or holds, the pattern's own
+ * element (its first target, the element its selector names). Another target of a staggered group
+ * never makes it the owner's (D-105).
+ */
 export function patternOwners(capture: CaptureOutput, owners: Map<string, string>, targets: Map<string, PatternTarget[]>): Map<string, string[]> {
   const snap = new Map<string, NonNullable<CaptureOutput['pages'][number]['viewports'][Viewport]>['snapshot']>();
   for (const pc of capture.pages) for (const [v, vc] of Object.entries(pc.viewports)) if (vc) snap.set(`${pc.page.id}|${v}`, vc.snapshot);
   const out = new Map<string, string[]>();
   for (const [patternId, list] of targets) {
-    const found: string[] = [];
-    for (const t of list) {
-      const s = snap.get(`${t.pageId}|${t.viewport}`);
-      const el = s?.byDse.get(t.d);
-      if (!s || !el) continue;
-      for (const e of [el, ...ancestors(s, el)]) {
-        const id = owners.get(`${t.pageId}|${t.viewport}|${e.d}`);
-        if (id) {
-          if (!found.includes(id)) found.push(id);
-          break;
-        }
+    const t = list[0];
+    const s = t && snap.get(`${t.pageId}|${t.viewport}`);
+    const el = t && s?.byDse.get(t.d);
+    if (!t || !s || !el) continue;
+    for (const e of [el, ...ancestors(s, el)]) {
+      const id = owners.get(`${t.pageId}|${t.viewport}|${e.d}`);
+      if (id) {
+        out.set(patternId, [id]);
+        break;
       }
     }
-    if (found.length) out.set(patternId, found);
   }
   return out;
 }
