@@ -672,6 +672,11 @@ Previews and v1.2 (D-098)
 - Exported component code is not wrapped in the site's cascade layers; only the preview is (D-098).
 - P16's stripe.com check (5 of 120 live) and the P17 baseline runs were measured with `pnpm pipeline:run` before it served storage over HTTP, so copied fonts never loaded in them; the owner's runs through the worker are the production-like baseline (D-098).
 
+Previews and capture (v1.3, D-108, D-109, D-111)
+- A component hidden until focus is checked as it sits at rest: the tap target of an `sr-only` link whose box is 1 px reads as a failure, though a keyboard user sees it full size (D-111).
+- Every link inside a preview document points at its own page, so a site rule that selects links by their `href` value no longer matches in the preview; the exported code keeps the site's links (D-111).
+- Runs made before v1.3 have no recorded fill, so the contrast fallback never applies to them; their cards keep the sampled ground (D-110).
+
 ## Toolchain notes
 
 - `next.config` sets `agentRules: false` (Next 16 would write an AGENTS.md with em dashes into apps/web) and `devIndicators: false`. Next 16's own docs are in `apps/web/node_modules/next/dist/docs`; read them before writing routes (P11), because the API differs from older Next.
