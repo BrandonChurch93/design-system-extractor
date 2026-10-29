@@ -86,6 +86,8 @@ A 4 px base. Only these values appear in layout.
 | `space-8` | 64 | Gap between major run page sections (Tokens to Components). |
 | `space-9` | 96 | Top padding above the home headline block. |
 
+A gap derived from a measurement (the shadow list) rounds up to the next token on this scale (D-103).
+
 Content width is 1160 px, centered. Gutters: 40 px at desktop and tablet, 20 px at phone.
 
 ## Radius

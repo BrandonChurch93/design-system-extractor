@@ -909,3 +909,83 @@ Decision: the roster entry keeps the host `modernsoftworks.com` for its card and
 Reasoning: the site is the owner's studio and belongs in the opening set; the www host is where it serves pages.
 Affects: `scripts/showcase/roster.ts`, `docs/specs/showcase.md`, `docs/deploy-runbook.md`, STATUS (the owner's end list).
 
+## D-101 · The easing stage fills its card and the stages of a row align
+
+Date: 2026-10-29 · Context: v1.3, the owner's third round of testing (`qgc6npq1au`, `d78cp1kh0v`, the local linear.app run). The 160 × 96 plot sat flush left and filled under half the card, leaving about 170 px empty beside it at every viewport, and the stages of a row did not align.
+Decision: a card-width plot, 160 px tall, the curve dot 8 px and the track dot 10 px, the stage pinned to the card's bottom, and an always-present usage line (`Declared, not seen in use` when nothing uses the easing).
+Reasoning: a fixed 160 × 96 plot left half the card empty and the rows ragged; the curve is the card's content.
+Affects: `docs/design/components.md`, `docs/design/motion.md`, `docs/design/copy.md`, `apps/web/components/run/EasingCard.tsx`, `apps/web/components/run/RegionSkeleton.tsx`.
+
+## D-102 · Durations sit on a log axis with a label budget
+
+Date: 2026-10-29 · Context: v1.3. A linear scale from 0 to the longest duration put 10 of 13 ticks on the owner's site within the first 36 px and its labels climbed ten rows; linear.app's 26 durations made the strip about 800 px tall.
+Decision: a base-10 log axis from the shortest to the longest duration, two label rows each side, dropped labels counted in the meta line, every tick a TokenPopover trigger, and the Long list adopted only if the measurement on the P18 real-site runs needs it (recorded in the P18 build rulings).
+Reasoning: real sites hold 100 ms to 35 s; a linear axis piles every working duration into the first few pixels.
+Affects: `docs/design/components.md`, `docs/design/copy.md`, `apps/web/components/run/DurationStrip.tsx`, the catalog.
+
+## D-103 · Radius and Shadow take a row of their own with 72 px swatches
+
+Date: 2026-10-29 · Context: v1.3. 44 px swatches at a 16 px gap in two cards about 275 px wide at 1440 and 170 at 820; a 32 px blur reached the next swatch and the card edge.
+Decision: Radius and Shadow share a full-width row under Type and Spacing, each half the width; 72 px swatches; the shadow gap is the smallest spacing token at or above twice the largest blur, never below `space-6`, and the list pads itself by half the gap.
+Reasoning: 44 px swatches in a 275 px card, with a 32 px blur, cannot be read; the row below the Type and Spacing cards is free.
+Affects: `docs/design/pages.md`, `docs/design/components.md`, `docs/design/design-system.md`, `apps/web/components/run/TokensSection.tsx`, `apps/web/components/run/RegionSkeleton.tsx`.
+
+## D-104 · Pattern chips rest on the start state, the ReplayButton holds its width, and the keyframes list shows six
+
+Date: 2026-10-29 · Context: v1.3. The 40 px chip rested on each pattern's end state, which for every entrance is a plain square; `Replay` to `Stop` reflowed the row at the start and end of every play; the keyframes list was uncapped (47 rows on the owner's site, 264 on linear.app).
+Decision: 56 px chips resting on the scaled start state and returning to it after a play; a ReplayButton as wide as its wider label; a KeyframesList of six with `Show all {n} keyframes`.
+Reasoning: a chip at rest on the end state is a square; a button that changes width jolts the row; 264 rows is not a list.
+Affects: `docs/design/components.md`, `docs/design/motion.md`, `docs/design/copy.md`, `apps/web/components/run/PatternList.tsx`, `apps/web/components/run/ReplayButton.tsx`, `apps/web/components/run/KeyframesList.tsx`.
+
+## D-105 · The synthetic not-found page never names a component, and a pattern belongs to the element it was read from
+
+Date: 2026-10-29 · Context: v1.3. A pattern was labeled `Button (8780d3aa06 does not exist)`. The component exists under that name: the synthetic 404 probe page (`/8780d3aa06-does-not-exist`) was the second Button's naming context, so its path segment became the name and also went into the naming prompt. Separately, a stagger led by a `span` was attributed to a Button because the first owned target of the group was taken as its owner.
+Decision: the synthetic not-found page's context is `404 page`, in the generated name and the prompt; a pattern belongs to the component that owns its own selector element (`elementKey`), else to none. The 1.3 upgrade removes pattern ids that resolve to nothing, and a test holds every reference in every fixture run, seed and versioned document to resolve.
+Reasoning: a probe path is not context; a stagger's first owned target is not its owner.
+Affects: `docs/specs/component-detection.md`, `docs/specs/motion-capture.md`, `docs/specs/data-model.md`, `packages/pipeline/src/components/naming.ts`, `packages/pipeline/src/components/model.ts`, `packages/pipeline/src/components/motion.ts`, `fixtures/recordings/components/`.
+
+## D-106 · Card previews take the pointer
+
+Date: 2026-10-29 · Context: v1.3. Card previews were inert for three reasons, each sufficient: `pointer-events: none` on the frame, the card's `.link::after` overlay over the whole card, and preview documents with no `:hover`, `:focus` or `:active` rules, because matched CSS is collected on the neutral page where those selectors match nothing.
+Decision: the default preview document carries the recorded state deltas as `:hover`, `:focus-visible` and `:active` rules on its root, through the state files' sanitizer and timing; the frame takes the pointer; the link overlay covers the card's body on devices that hover and the whole card on touch. Frames stay `sandbox=""` and `tabindex="-1"`.
+Reasoning: a live preview that cannot be hovered is a screenshot with extra steps; the product's point is to play with the components.
+Affects: `docs/specs/preview-fidelity.md`, `docs/design/components.md`, `docs/design/pages.md`, `docs/design/motion.md`, `packages/pipeline/src/previews/`, `apps/web/components/PreviewFrame.*`, `apps/web/components/run/ComponentCard.*`.
+
+## D-107 · Previews scale no lower than 0.6× on a card and show 1:1 in the drawer
+
+Date: 2026-10-29 · Context: v1.3. The card's preview room is 339 × 119 px at 1440, so an 880 px textarea showed at 0.38× and a 1440 px navigation at 0.23×. The documents said "scaled down when wider"; the code also scaled on height.
+Decision: on a card, scale to fit on width and height, never below 0.6×; below that, anchor top-left, clip with a 40 px fade into the ground and caption `Shown at {scale}×, cut to fit`. In the drawer, 1:1 with horizontal scroll.
+Reasoning: a navigation at 0.23× is a thumbnail of nothing; a cut at real size shows more than a whole at a quarter.
+Affects: `docs/specs/preview-fidelity.md`, `docs/design/components.md`, `docs/design/copy.md`, `apps/web/components/FitPreview.*`, `apps/web/components/PreviewFrame.*`, `apps/web/components/panel/`.
+
+## D-108 · A component hidden until focused previews its focus state; a zero-area box is never a candidate; a preview with no crop has no key
+
+Date: 2026-10-29 · Context: v1.3. The portfolio's skip link is hidden by the `sr-only` pattern at capture, so its default crop was a dark box while its focus crop showed it in full; a second "Skip link" was a 1440 × 0 `header` that passed the candidate filter because only a box with both sides at zero counted as empty; on modernsoftworks.com a skip link's crop could not be cut and its preview recorded 0 × 0 with a key that was never written (a 404).
+Decision: the measured hidden-at-capture rule in `capture-and-states.md`; a hidden focusable element stays a candidate flagged `hiddenAtCapture` and previews its focus crop (`hidden-until-focus`); a hidden component no state shows is dropped before naming; a crop that cannot be cut leaves no `cropKey` and the reason `no-crop`, and the card shows its code.
+Reasoning: the skip link is a real component that the site shows to keyboard users, and a blank strip is a defect; a key that 404s is a bug.
+Affects: `docs/specs/capture-and-states.md`, `docs/specs/component-detection.md`, `docs/specs/data-model.md`, `docs/design/components.md`, `docs/design/copy.md`, `docs/evals.md`, `packages/schema`, `packages/pipeline/src/capture/`, `packages/pipeline/src/stages/`, `fixtures/src/clean-family/`, `apps/web/components/`.
+
+## D-109 · A ground that matches the component's fill is swapped for the opposite tone, and the Ground toggle is on the card
+
+Date: 2026-10-29 · Context: v1.3. Every ground on the owner's two sites is a faithful sample of the page behind the element (`#0C0A09`, `#141414`, `#1A1A1A`); what hides is a component whose own fill is within ΔE 5 of its ground (33 of 74 on modernsoftworks.com, cards and inputs at ΔE 0.4 to 3.3), which is also how the site shows them. The Ground toggle existed only in the drawer.
+Decision: capture records `Preview.fill`; when the fill is within ΔE 5 of the ground, the card and the drawer paint the opposite tone (`surface` for a dark ground, `inverse-bg` for a light one) with the ground caption; `Site` on the toggle always returns the sample; the toggle moves onto the card too.
+Reasoning: the sample is faithful, and faithfully invisible; a reader must see the component first and its context second.
+Affects: `docs/specs/capture-and-states.md`, `docs/specs/preview-fidelity.md`, `docs/specs/data-model.md`, `docs/design/components.md`, `docs/design/copy.md`, `docs/glossary.md`, `packages/pipeline/src/capture/`, `apps/web/components/`.
+
+## D-110 · Rulings from merging the v1.3 addendum
+
+Date: 2026-10-29 · Context: P18's first step merges `docs/v1-3-addendum.md` into the kit. Read against the documents and the code, it left some questions open and named two places wrongly.
+Decision:
+- Ids. The addendum's nine decisions are D-101 to D-109 in its order; these rulings are D-110. The pipeline version becomes 1.3.0 and the upgrade gains its third step (below 1.3.0), which checks the shape it fills as the others do.
+- Paths. The motion components (EasingCard with its stage, DurationStrip, KeyframesList, PatternList with its rows, ReplayButton) live in `apps/web/components/run/`, not `apps/web/components/run/motion/` as D-093 and the P16 and P17 plans in STATUS name it; D-093 is not edited, and the documents written from here name the real folder.
+- Motion attachment. The addendum placed the attribution rule in `component-detection.md`; the paragraph that assigns a pattern to a component is `motion-capture.md`, Attachment to components, so the rule is written there. `component-detection.md` keeps the naming context rule and gains a line on hidden candidates.
+- The DurationStrip mark is 16 px (`space-4`), as built; D-097's "12 px mark" is the dot's rise along it, and the document now says so.
+- The card's Ground toggle needs a Chip smaller than the 32 px filter Chip on a 152 px preview region: the Chip gains a `sm` size (24 high, `caption` weight 600, `space-2` side padding), used there only. The ChipGroup takes the size.
+- Ground caption placement. On a card the preview region holds the scale caption at the bottom-left and the toggle at the bottom-right, which leave no room for a 58-character caption; the card shows the fallback by its toggle starting on `Light` or `Dark`, and the ground caption is written under the drawer's stage beside the font caption.
+- Enum labels for the two new captured reasons, which copy.md's Enum labels require of every value (D-030): `hidden until focused` and `no capture`, in the lowercase of the other reasons, also in the panel's fidelity caption.
+- Live rate on real sites: a `hidden-until-focus` preview counts as checked, as the addendum says; a `no-crop` preview has no reference to check against and is excluded like `not-checked`, with its count stated. `stats.previews` gains the two reasons as optional keys.
+- The upgrade's 1.3 step sets `fill: null` on every preview (the contrast fallback never applies to an older run, whose fill was not read) and leaves `hiddenAtCapture` absent.
+- The no-capture card's CodeBlock is the component's sanitized HTML, the drawer's Code section's first tab, inside the 152 px region with its own scroll.
+- The glossary gains `Fill`, `Contrast fallback` and `Hidden until focus`.
+Reasoning: each settles a question the addendum left open, toward the closest faithful reading of its intent, or puts a rule in the document that owns it.
+Affects: `docs/design/components.md`, `docs/design/copy.md`, `docs/specs/motion-capture.md`, `docs/specs/component-detection.md`, `docs/specs/data-model.md`, `docs/evals.md`, `docs/glossary.md`, `docs/plan.md`, `STATUS.md`.

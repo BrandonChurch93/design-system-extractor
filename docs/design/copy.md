@@ -83,7 +83,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Color groups: `Brand` · `Neutral` · `Semantic`
 - Semantic roles: `Success` · `Warning` · `Danger` · `Info`
 - Preview modes: `Live` · `Captured`
-- Captured reasons: `render differed by {pct} %` · `styles too large` · `fonts unavailable` · `not checked in time` (D-066)
+- Captured reasons: `render differed by {pct} %` · `styles too large` · `fonts unavailable` · `not checked in time` (D-066) · `hidden until focused` · `no capture` (D-108, D-110)
 - Check statuses: `Pass` · `Fail` · `Not applicable`
 - Drift kinds: `Grays` · `Variants` · `Spacing values` · `Type styles`
 - Evidence kinds: `Color` · `Variant` · `Spacing` · `Type` · `Sprawl`
@@ -135,8 +135,9 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Pattern kinds in usage lines, singular and plural: `entrance` · `entrances`, `scroll reveal` · `scroll reveals`, `scroll progress pattern` · `scroll progress patterns`, `scrolled header` · `scrolled headers`, `hover pattern` · `hover patterns`, `loop` · `loops`, `open pattern` · `open patterns`
 - Motion section (D-081): title `Motion` · caption `{durations} durations · {easings} easings · {keyframes} keyframes · {patterns} patterns` · empty `No transitions or animations found.` with caption `This site does not move, or its motion is driven by scripts the crawler could not observe.` · card heads `Durations` · `Easings` · `Keyframes` · `Patterns`, the Compare row words, each with its count as meta (D-090)
 - Duration role labels: `Faster` · `Fast` · `Base` · `Slow` · `Slower`
-- Easing card: value caption `{value}` · site-named caption `Named by the site`
-- Keyframes: `{n} uses` (`1 use`) · unused Pill `Unused`
+- Easing card: value caption `{value}` · site-named caption `Named by the site` · empty usage line `Declared, not seen in use` (D-101)
+- Durations (D-102): meta line `{n} durations · {k} labeled` when a value label is dropped, otherwise the count alone · list head `Long`
+- Keyframes: `{n} uses` (`1 use`) · unused Pill `Unused` · `Show all {n} keyframes` · `Show fewer` · pages overflow `· {n} more` (D-104)
 - Replay button (pattern rows only; the easing and duration loops have no button, D-093): `Replay` · while playing `Stop` · reduced motion caption `Replay is off because your system prefers reduced motion.`
 - Pattern trigger phrases: load `On load` · in-view `When it enters the viewport at {pct}% from the bottom` · scroll `Over {range} viewport heights of scrolling` · scrolled header `After {px} px of scrolling` (D-089) · hover `On hover` · open `When it opens` · loop `Loops every {duration}`
 - Stagger phrase: `{count} items · {step} ms apart`
@@ -147,7 +148,8 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Component card source line: `First seen on {path} · {pages} pages · {variants} variants` (singular forms `1 page`, `1 variant`)
 - Captured label: `Captured`
 - Filter chip `Passing all checks` (D-096)
-- Preview controls (D-094): StateBar chips use the State labels (`Default` · `Hover` · `Focus` · `Active` · `Open` · `Disabled`, only the states captured) · `Play` · StateBar landmark label `States` · Ground toggle label `Ground` with `Site` · `Light` · `Dark` · scale caption `Shown at {scale}×` (two decimals at most, trailing zeros dropped: `0.8×`, `0.65×`) · font caption `Font substituted: {family} was not available.`
+- Preview controls (D-094): StateBar chips use the State labels (`Default` · `Hover` · `Focus` · `Active` · `Open` · `Disabled`, only the states captured) · `Play` · StateBar landmark label `States` · Ground toggle label `Ground` with `Site` · `Light` · `Dark` · scale caption `Shown at {scale}×` (two decimals at most, trailing zeros dropped: `0.8×`, `0.65×`) · clipped caption `Shown at {scale}×, cut to fit` (D-107) · font caption `Font substituted: {family} was not available.` · ground captions `On a light ground: the site's ground matches the component.` · `On a dark ground: the site's ground matches the component.` (D-109)
+- Preview captions (D-108): `Shown focused: hidden on the page until focused.` · `No capture: the element sits outside the page at rest.`
 - Preview titles (read by screen readers): `{name} preview` · `{name} · {state} preview`
 - Check badge (D-096): `All checks` when every applicable check passes · `{passed} of {applicable} checks` otherwise · nothing when no check applies
 - Passed counts (the Checks passed and Components passing cells, the ChecksTable's Passed column, Compare's Checks column): `{passed} of {applicable}`
@@ -181,7 +183,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 
 - Eyebrow: `{group} · {index} of {count}`
 - Icon labels: `Previous component` · `Next component` · `Open as page` · `Close panel`
-- Variants label: `Variants`; fidelity caption `Live render · matches crop within {pct} %` or `Captured · {reason}` with reasons `render differed by {pct} %` · `styles too large` · `fonts unavailable` · `not checked in time`
+- Variants label: `Variants`; fidelity caption `Live render · matches crop within {pct} %` or `Captured · {reason}` with reasons `render differed by {pct} %` · `styles too large` · `fonts unavailable` · `not checked in time` · `hidden until focused` · `no capture`
 - Source label: `Source`; lines `{path} · {viewport} px` · the selector in code · `Seen on {paths} and {n} more` (button) · `Show on page`
 - States label: `States · {n} captured`; missing line `Not captured: {names}` (each state name followed by its reason in parentheses, joined by ·) with reasons `no instance found` · `over capture cap` · `not reachable`
 - Checks label: `Checks · {passed} of {applicable} on {variant}`; result lines from `docs/specs/checks.md`

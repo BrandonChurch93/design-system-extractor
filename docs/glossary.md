@@ -29,6 +29,9 @@ Use these names exactly, in code, docs, copy and commit messages. A concept with
 - **Provenance** · a component's source data: first-seen page, pages with counts, selector, bounding box, viewport, crop. The panel section that shows it is named "Source".
 - **Preview** · the visual shown for a component: `live` (sanitized re-render) or `captured` (the crop). See `docs/specs/preview-fidelity.md`.
 - **Ground** · the effective background a component's instance sat on, captured as hex and painted behind its preview so it shows on its own ground (D-094).
+- **Fill** · a preview's own background color at capture (`Preview.fill`), null when the element is transparent; set beside its ground so the app can tell when the two match (D-109).
+- **Contrast fallback** · the app's swap of a preview's painted ground for the opposite tone (`surface` or `inverse-bg`) when the component's fill is within ΔE 5 of its ground; the toggle's `Site` returns the sampled ground (D-109).
+- **Hidden until focus** · a focusable element hidden at capture (the `sr-only` pattern of a skip link) and kept as a candidate with `hiddenAtCapture`; its preview is its focus crop (D-108).
 - **State file** · a live component's `preview-{state}.html`, which plays that state's recorded transition on load; the **StateBar** pins one (D-094).
 - **Live rate** · live previews over previews; on a real site, over the previews that were checked (D-095).
 - **Passing all checks** · a component whose every applicable check passed; the run's count is `componentsPassing` (D-096).

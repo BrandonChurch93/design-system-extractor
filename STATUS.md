@@ -10,15 +10,32 @@ None.
 
 ## Current phase
 
-Build complete (v1.2). P17 · Second testing round passed its gate and the Definition of Done (twelve items) on a fresh clone of `622bef2` on 2026-10-28; nothing pushed.
+P18 · Third testing round (v1.3). In progress. Done and committed: docs merged (D-101 to D-109, merge rulings D-110), the addendum deleted.
 
-v1.1 (P16) passed its gate and the Definition of Done on 2026-10-27; v1.0 (P0 to P15) on 2026-10-26.
+v1.2 (P17) passed its gate and the Definition of Done (twelve items) on 2026-10-28; v1.1 (P16) passed its gate and the Definition of Done on 2026-10-27; v1.0 (P0 to P15) on 2026-10-26.
 
 ## Next action
 
-None for the Builder. What remains is the owner's end list below.
+Build P18 step 2: the schema fields (`Preview.fill`, optional `cropKey`, `Instance.hiddenAtCapture`, the two captured reasons), `pipelineVersion` 1.3.0 and the upgrade's 1.3 step with its tests.
 
 Environment note: the repository sits on an iCloud-synced Desktop and macOS evicts files (`ls -lO` shows `dataless`); a read then blocks while iCloud downloads. `find . -type f -flags +dataless -print0 | xargs -0 cat > /dev/null` brings them back.
+
+### P18 plan
+
+Read for P18: CLAUDE.md, STATUS, decisions D-001 to D-100, handoff, the v1.3 addendum, partner.md, partner-log.md, plan (P17, the Definition of Done), and every document it amends (components, motion, copy, pages, design-system, preview-fidelity, capture-and-states, component-detection, motion-capture, data-model, evals, glossary).
+
+1. Docs merged (done): D-101 to D-109 (the addendum's nine, in its order) and D-110 (merge rulings); the addendum deleted.
+2. Schema and upgrade (`packages/schema/src/run-document.ts`, `enums.ts`, `labels.ts`; `packages/pipeline/src/version.ts`, `upgrade.ts`): `Preview.fill`, `cropKey` optional, `Instance.hiddenAtCapture`, `hidden-until-focus` and `no-crop`, `stats.previews` keys; the 1.3 step. Tests: `upgrade.test.ts` (v1.0 and v1.1 fixture documents, idempotent, the unwritten-key preview, dangling pattern ids), a references test over every fixture run, the seed documents and the versioned fixtures.
+3. Pipeline naming and attribution (`components/naming.ts`, `components/model.ts`, `components/motion.ts`): `404 page` context, the pattern's own element; recordings re-recorded for the affected requests. Tests in `components.test.ts` and the motion attachment tests.
+4. Capture (`capture/snapshot-script.ts`, `capture/candidates.ts`, `stages/capture.ts`, `stages/components.ts`, `stages/previews.ts`): the hidden-at-capture rule with `clip` and `clip-path`, the focusable exception, the focus crop as the preview, the drop rule, the `no-crop` form, the fill read. Tests: snapshot rule unit tests, the clean fixture's skip link (`fixtures/src/clean-family/`, the generated sites, `expected.json`).
+5. Previews (`previews/build.ts`, the state rule writer, `previews/sanitize.ts`): `:hover`, `:focus-visible`, `:active` rules in the default document; security suite cases; the link-click frame test.
+6. Web, previews (`PreviewFrame`, `FitPreview`, `ComponentCard`, `ChipGroup` sm, panel stage): pointer, overlay on the body with the touch rule, the 0.6× floor with clip and fade, captions, the drawer at 1:1 with horizontal scroll, the contrast fallback (a pure function in `apps/web/lib`) and the card Ground toggle, the `no-crop` CodeBlock card, the hidden-until-focus caption.
+7. Web, Motion (`EasingCard`, `DurationStrip`, `ReplayButton`, `KeyframesList`, `PatternList`): stage at card width, log axis with the label budget (pure layout function, unit-tested), popover ticks, fixed-width Replay, six keyframes with the toggle, the chip at rest on the scaled start state. Catalog states `Wide range`, `Dense`, `Dark on dark`, a long keyframes list.
+8. Web, tokens (`TokensSection`): the Radius and Shadow row, 72 px swatches, the blur gap (pure function, unit-tested), the dead `sample44` class removed.
+9. Skeleton heights re-measured (easing stage, keyframes list, token cards) and the ±4 px test.
+10. e2e (`tests/e2e/v13.spec.ts`): Replay width, chip rest and return, card frame hover, touch tap and name click open the drawer, card Ground toggle, drawer horizontal scroll, long-task with 12 easings at card width.
+11. Copy (`strings.ts`), qa:copy; evals in replay with the skip link; seed and fixture runs regenerated; qa:design review at three viewports; goldens updated once and logged; axe.
+12. Real-site check: the owner's portfolio and modernsoftworks.com fresh through the queue, `P18 real-site check` in STATUS; the Long list measured and decided; traceability, README, CHANGELOG 1.3.0, verify:all on a fresh clone, the Definition of Done (thirteen items).
 
 ### P17 plan
 
@@ -412,6 +429,16 @@ a { text-decoration: none; }
 
 ## Phase checklist
 
+P18 gate (docs/plan.md):
+
+- [ ] Screenshots at 1440, 820 and 390 of the Motion section (clean, `Wide range`, `Dense`, 12 easings), Tokens with Radius and Shadow, a hovered card, a clipped wide component, a `Dark on dark` card, a hidden-until-focus card and a `no-crop` card, reviewed; easing stages of a row at one height; no value label dropped on `Wide range` at 1440; `Dense` under 300 px tall at 390.
+- [ ] Playwright: ReplayButton width constant through a play; chip rest equals the scaled start and returns to it; card frame hover changes the root's computed style; a touch tap on the preview and a click on the name row open the drawer; the card Ground toggle repaints without opening the drawer; the drawer stage scrolls horizontally; the long-task test with 12 easings at card width.
+- [ ] Unit: scale function; contrast fallback; shadow gap; log axis and label budget; synthetic page context; hidden-at-capture rule; every reference resolves in every fixture run, seed and versioned document.
+- [ ] Security: `pnpm test:security` over default previews with state rules; a link click inside a card frame leaves its URL unchanged.
+- [ ] Evals in replay at thresholds with the clean fixture's skip link; live-rate floor unchanged on the three fixtures.
+- [ ] Real-site check: the portfolio and modernsoftworks.com fresh through the queue, under `P18 real-site check` (skip link mode and reason, cards on the contrast fallback, Button names on the 404 page, dropped-label count and the Long list ruling, three screenshots).
+- [ ] `pnpm qa:copy`, axe zero on the run page with the new controls, `pnpm verify:all` green; the Definition of Done re-run in full (thirteen items).
+
 P17 gate (docs/plan.md):
 
 - [x] `pnpm showcase --add` on a local run puts it first on the home page; `--remove` takes it down; a sparse run is refused with the stated message.
@@ -510,6 +537,16 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-110 · Rulings from merging the v1.3 addendum: ids and the 1.3.0 upgrade step, the motion components' real folder, the attribution rule in motion-capture.md, the 16 px duration mark, a `sm` Chip for the card's Ground toggle, the ground caption in the drawer only, labels for the two new reasons, `no-crop` excluded from the real-site live rate, `fill: null` on upgrade, the no-capture CodeBlock, three glossary entries.
+- D-109 · A ground within ΔE 5 of the component's fill is swapped for the opposite tone; `Preview.fill` recorded; the Ground toggle on the card.
+- D-108 · Hidden-at-capture rule; a hidden focusable element previews its focus crop (`hidden-until-focus`); unseen hidden components dropped; `no-crop` with no key.
+- D-107 · Card previews no lower than 0.6×, clipped with a fade and captioned; the drawer at 1:1 with horizontal scroll.
+- D-106 · Card previews take the pointer: state rules in the default preview, the link overlay on the card body (whole card on touch); frames stay `sandbox=""` and `tabindex="-1"`.
+- D-105 · The synthetic not-found page's naming context is `404 page`; a pattern belongs to the component that owns its own element.
+- D-104 · Pattern chips at rest on the scaled start state; a fixed-width ReplayButton; six keyframes with Show all.
+- D-103 · Radius and Shadow in a full-width row with 72 px swatches and a blur-derived gap.
+- D-102 · Durations on a log axis with a two-row label budget; the Long list only if the measurement needs it.
+- D-101 · The easing stage at card width, 160 px tall, pinned to the card's bottom; the usage line always present.
 - D-100 · The showcase roster crawls modernsoftworks.com at `https://www.modernsoftworks.com/`; the bare host still answers 403.
 - D-099 · Compare's same-day title is `What changed today`; the open buttons take the run cards' date, and by order (`Open the earlier run`, `Open the later run`) when both runs share it.
 - D-098 · The build's P17 rulings: `pipeline:run` served previews as `file://` (fonts never loaded) and now serves storage over HTTP; every measured preview cause with its handling (clips below the cut, the 1 MB font cap, the masked comparison, the clipped page screenshot, the freeze settling animations, image pixels, layers, `:where()`, units, transforms, ancestors' opacity and scale, svg paint, container conditions, the layered reset carry, hidden inputs) and the causes not handled; the state-file security fix; the rates per round, ending 82.7, 81.7 and 72.5% live of checked; UI rulings (main-variant pinning, six stagger chips, Compare's unfinished reason, same-site promotion replaces the card, skeletons re-measured, the ambient QA mask); `messy-after`'s dark band and its drift deltas.
@@ -660,6 +697,8 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-29 · P18 · docs merged: the addendum's changes are in their documents, D-101 to D-110 logged, the addendum deleted.
+- 2026-10-29 · Session started · P18 · read CLAUDE.md, STATUS, decisions (D-001 to D-100), handoff, the v1.3 addendum, partner.md, partner-log.md, plan (P17 and the Definition of Done), components, motion, copy, pages, design-system, preview-fidelity, capture-and-states, component-detection, motion-capture, data-model, evals, glossary · tree reconciled (`apps/web/next-env.d.ts` rewritten by the dev server, restored; the addendum and prompts/v1-3.md committed by the Partner in `12b2667`) · `pnpm check` green.
 - 2026-10-28 · Build complete · v1.2 · the Definition of Done (twelve items) is green on a fresh clone of `622bef2`; nothing pushed.
 - 2026-10-28 · Gate passed · P17 · real-site live rates over the floor, upgrade and Compare on the owner's runs, modernsoftworks.com through the queue, screenshot review, verify:all on a fresh clone (third attempt: the first two found the reduced-motion network-idle wait and the catalog Compare goldens, both fixed).
 - 2026-10-28 · Session continued (after compaction) · P17 · re-read CLAUDE.md, STATUS, decisions D-091 to D-100, plan P17 and the Definition of Done · tree clean at `622bef2`.

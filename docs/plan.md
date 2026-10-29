@@ -284,6 +284,32 @@ Gate:
 - Real-site check: the owner's own site, run fresh, is pasted into STATUS under `P17 real-site check` with the live-rate table, the components-passing ratio and the Compare link against its previous run.
 - `pnpm verify:all` green; Definition of Done re-run in full.
 
+## P18 · The third testing round: the Motion section, token cards, previews that answer
+
+Follows: `docs/design/components.md` (PreviewFrame, Chip, RadiusSample, ShadowSample, ComponentCard, DurationStrip, EasingGrid, EasingCard, EasingStage, KeyframesList, PatternRow, ReplayButton, ComponentPanel, RegionSkeleton), `docs/design/motion.md` (Ambient loops, Performance rules), `docs/design/pages.md` (Run, Tokens and Components), `docs/design/copy.md`, `docs/design/design-system.md` (Spacing), `docs/specs/preview-fidelity.md` (Sizing, Preview ground, Contrast fallback, State rules in the default preview, Security tests, Tests), `docs/specs/capture-and-states.md` (DOM snapshot, Element candidates, States, Ground, What is written), `docs/specs/component-detection.md` (Element candidates, The model pass), `docs/specs/motion-capture.md` (Attachment to components), `docs/specs/data-model.md` (Upgrading stored documents, Instance, Preview, Stats), `docs/evals.md` (clean, Metrics), decisions D-101 to D-110.
+
+Build:
+
+- Merge `docs/v1-3-addendum.md` into the named documents, log its nine decisions (D-101 to D-109) and the merge rulings (D-110) in `docs/decisions.md`, delete the addendum, commit (`P18 · docs merged`). The motion components live in `apps/web/components/run/`, not `apps/web/components/run/motion/` (D-093 Affects, STATUS; D-110).
+- Schema and upgrade: `Preview.fill`, `Preview.cropKey` optional, `Instance.hiddenAtCapture`, the two `CapturedReason` values, `pipelineVersion` 1.3.0, the 1.3 upgrade step (fill null, dangling pattern ids removed, the unwritten-key preview to `no-crop`), tests on the v1.0 and v1.1 fixture documents.
+- Pipeline: the synthetic page's naming context and the re-recorded recordings; pattern attribution by the pattern's own element; hidden-at-capture candidates, `clip` and `clip-path` in the snapshot, the focus crop as the preview, the drop rule; the `no-crop` form; the fill read; state rules in the default preview document and the security suite over them; the clean fixture's skip link with its expectation.
+- Web, Motion: the EasingStage at card width and 160 px, dots 8 and 10, the stage pinned to the bottom, the empty usage line; the DurationStrip's log axis, label budget, popover ticks and the Long list measured once; the ReplayButton's fixed width; the KeyframesList's six and toggle; the PatternRow's centered column, 56 px chips at rest on the scaled start state, the play's return to rest; the catalog states (`Wide range`, `Dense`, `Dark on dark`, the long keyframes list); the skeleton heights re-measured.
+- Web, tokens: the Radius and Shadow row, 72 px swatches, the blur-derived gap and padding, values under the swatches, the dead class removed, skeletons re-measured.
+- Web, previews: the pointer reaching the frame, the overlay on the body with the touch rule, the 0.6× floor with clip and fade, the clipped caption, the drawer at 1:1 with horizontal scroll, the contrast fallback and the Ground toggle on the card, the code-only card for `no-crop`, the two captions.
+- Copy (`strings.ts` from copy.md), `pnpm qa:copy`; goldens updated once and logged; traceability regenerated; README; CHANGELOG `1.3.0`.
+
+The `duration-strip` catalog demo gains `Wide range` (the owner's site: 150, 200, 300, 350, 400, 500, 700, 900, 1000, 1200, 4000, 14000, 35000 ms, with 150 base, 200 slow, 300 slower, 150 most used) and `Dense` (linear.app's 26: 100, 120, 150, 160, 200, 250, 260, 300, 320, 350, 400, 450, 500, 700, 800, 960, 1000, 1200, 1250, 1300, 1500, 2000, 2200, 6000, 10000, 30000 ms, with 100 base, 120 slow, 150 slower); the `component-card` demo gains `Dark on dark` from the owner's site values (`#1A1A1A` on `#141414`).
+
+Gate:
+
+- Screenshots at 1440, 820 and 390 of the Motion section (the clean fixture, the `Wide range` and `Dense` strips, a 12-easing grid), the Tokens section with Radius and Shadow, a component card hovered, a clipped wide component, a `Dark on dark` card, a hidden-until-focus card and a `no-crop` card, reviewed against `docs/design/*` and `docs/quality-bar.md`; every easing stage in a row at the same height; no value label dropped on the `Wide range` strip at 1440; the `Dense` strip under 300 px tall at 390.
+- Playwright: the ReplayButton's width is identical before, during and after a play; the pattern chip's computed style at rest equals the scaled start state and returns to it after the play; hovering a card frame changes the root's computed style inside the frame; a tap on the preview under touch emulation opens the drawer and a click on the name row does too; the card Ground toggle repaints and does not open the drawer; the drawer stage scrolls horizontally on a component wider than it; the long-task test still passes with 12 easings at card width.
+- Unit: the scale function (floor, anchors, clipped edges); the contrast fallback; the shadow gap from the stored value; the log axis positions and the label budget; the synthetic page context; the hidden-at-capture rule on the snapshot; every reference in every fixture run, seed and versioned fixture document resolves.
+- Security: `pnpm test:security` passes over the default preview documents with state rules; a click on a link inside a card frame leaves the frame's URL unchanged.
+- Evals in replay at thresholds with the clean fixture's skip link; the live-rate floor unchanged on the three fixtures.
+- Real-site check: the owner's portfolio and modernsoftworks.com run fresh through the queue; pasted into STATUS under `P18 real-site check`: the skip link's preview mode and reason, the count of cards on the contrast fallback, the Button names on the 404 page, the durations strip's dropped-label count and whether the Long list was adopted, and three screenshots named in the log.
+- `pnpm qa:copy`, axe at zero violations on the run page with the new controls, `pnpm verify:all` green; the Definition of Done re-run in full.
+
 ## Definition of Done
 
 All true at once, on a clean checkout, with Docker services running and `DSE_MODEL_MODE=replay`:
@@ -300,3 +326,4 @@ All true at once, on a clean checkout, with Docker services running and `DSE_MOD
 10. STATUS says `Build complete` and the owner's end list is exactly what remains.
 11. The prompt export of every fixture run contains a Motion section, a Site variables block, a Default line per component, core components before page components, and no `var(--` reference to an undeclared name.
 12. Every read path upgrades stored run documents to the current shape by their `pipelineVersion`, and Compare renders any two complete runs of any version.
+13. A live component's card frame answers the pointer with the site's own hover and active styles, and no card preview renders below 0.6×.

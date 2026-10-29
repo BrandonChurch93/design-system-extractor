@@ -76,7 +76,7 @@ In the `components` stage, after instances and provenance:
 
 - Each component gets `motion.transitions`: for each state captured (`hover`, `focus`, `active`, `open`, `scrolled`), the list of `{ property, durationMs, easingTokenId | easing, delayMs }` taken from the matched `transition-*` declarations resolved on the default-state instance and from the `getAnimations()` records that fired during that state's capture. The state's `delta` entries gain `transition?: { durationMs, easing }` by property so a reader sees, in one row, what changes, to what, and how fast.
 - Each component gets `motion.animations`: CSS animations whose target is inside the component (name, duration, easing, iterations, trigger kind).
-- Each pattern whose target is inside a component instance gets that `componentId`, and the component gets `motion.patternIds`.
+- A pattern belongs to the component that owns the pattern's own selector element (`elementKey`): that element is a component instance or lies inside one. When no component owns it, the pattern has no `componentId` and the row shows the selector, even when another target of a staggered group is owned; a stagger led by a `span` is not a Button pattern (D-105). The component gets `motion.patternIds`.
 - A component with no transitions, no animations and no patterns has `motion: null` and the panel says "No motion found on this component."
 
 ## Drift
