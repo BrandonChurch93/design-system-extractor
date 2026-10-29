@@ -557,6 +557,7 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-111 · The build's P18 rulings: focusable means rendered; the hidden flag kept apart from tokens and checks and in clustering; the clean family's skip link; state rules written after the check and inert links; the touch cover link; card captions at the top and the toggle's surface track; the neutral state clears a selection; the event words; `clean-v1-2.json` and the references tests; the 56 px label rule; chips by row width; the Long list adopted by measurement; skeleton heights re-measured.
 - D-110 · Rulings from merging the v1.3 addendum: ids and the 1.3.0 upgrade step, the motion components' real folder, the attribution rule in motion-capture.md, the 16 px duration mark, a `sm` Chip for the card's Ground toggle, the ground caption in the drawer only, labels for the two new reasons, `no-crop` excluded from the real-site live rate, `fill: null` on upgrade, the no-capture CodeBlock, three glossary entries.
 - D-109 · A ground within ΔE 5 of the component's fill is swapped for the opposite tone; `Preview.fill` recorded; the Ground toggle on the card.
 - D-108 · Hidden-at-capture rule; a hidden focusable element previews its focus crop (`hidden-until-focus`); unseen hidden components dropped; `no-crop` with no key.
