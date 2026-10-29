@@ -53,11 +53,37 @@
   height: 40px;
 }
 
+.note {
+  composes: tag from '../styles/type.module.css';
+  position: absolute;
+  z-index: 2;
+  top: var(--dse-space-3);
+  left: var(--dse-space-3);
+  max-width: calc(100% - var(--dse-space-3) * 2);
+  padding: 2px var(--dse-space-2);
+  border-radius: var(--dse-radius-sm);
+  background: var(--dse-surface);
+  color: var(--dse-ink-2);
+  border: 1px solid var(--dse-line-soft);
+}
+
+/* No crop: the note, then the component's code, above the toggle's row. */
+.codeOnly {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--dse-space-2);
+  padding: var(--dse-space-3) var(--dse-space-3) 44px;
+}
+
+.codeOnly .note {
+  position: static;
+  align-self: flex-start;
+}
+
 .code {
-  align-self: stretch;
-  justify-self: stretch;
-  margin: var(--dse-space-3);
-  max-height: calc(100% - var(--dse-space-3) * 2 - 28px);
+  flex: 1;
+  min-height: 0;
   overflow: auto;
 }
 

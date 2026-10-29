@@ -40,8 +40,21 @@
   color: var(--dse-inverse-ink);
 }
 
+/* On a preview's ground, which may be dark, the chips sit on their own surface track. */
 .sm {
-  gap: var(--dse-space-1);
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--dse-line-soft);
+  border-radius: var(--dse-radius-pill);
+  background: var(--dse-surface);
+}
+
+.sm .chip {
+  border-color: transparent;
+}
+
+.sm .chip:hover {
+  border-color: var(--dse-line-strong);
 }
 
 .sm .chip {
@@ -75,8 +88,7 @@
 @media (max-width: 640px) {
   .sm {
     margin-inline: 0;
-    padding-inline: 0;
-    padding-block: 0;
+    padding: 2px;
     overflow: visible;
   }
 }
