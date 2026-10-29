@@ -10,13 +10,13 @@ None.
 
 ## Current phase
 
-P17 · Second testing round (v1.2). In progress. Done and committed: docs merged (D-091 to D-097), the upgrade on every read path with the v1.0 fixture document and `pnpm runs:parse`, the v1.2 schema, showcase `--add/--remove/--list`, the baseline live-rate table (below), ground and painted 4 px crops, clips below the 8,000 px cut, render order core first, the masked font comparison, the 1 MB font cap, animated state files, the security fix the state files found, checks up front (six cells, filter, Pills, opening line, exports and MCP), the ambient easing loops, the StateBar and PreviewStage, the halo band on `messy-after`, e2e for all of it (not yet run), traceability rows, version 1.2.0, CHANGELOG.
+Build complete (v1.2). P17 · Second testing round passed its gate and the Definition of Done (twelve items) on a fresh clone of `622bef2` on 2026-10-28; nothing pushed.
 
 v1.1 (P16) passed its gate and the Definition of Done on 2026-10-27; v1.0 (P0 to P15) on 2026-10-26.
 
 ## Next action
 
-The real-site live rates meet the floor (fourth round, `P17 real-site check`) and D-098 is written. Next: the final record-mode evals with results.json and the README table; `pnpm fixtures:runs`, the export goldens, `pnpm db:seed:fixtures`, the e2e suite; qa:design at three viewports and the qa:visual goldens once; modernsoftworks.com fresh through the queue; traceability, verify:all on a fresh clone, Docker smoke, doctor, the twelve Definition of Done items.
+None for the Builder. What remains is the owner's end list below.
 
 Environment note: the repository sits on an iCloud-synced Desktop and macOS evicts files (`ls -lO` shows `dataless`); a read then blocks while iCloud downloads. `find . -type f -flags +dataless -print0 | xargs -0 cat > /dev/null` brings them back.
 
@@ -414,13 +414,13 @@ a { text-decoration: none; }
 
 P17 gate (docs/plan.md):
 
-- [ ] `pnpm showcase --add` on a local run puts it first on the home page; `--remove` takes it down; a sparse run is refused with the stated message.
-- [ ] Compare renders `tx4mehptdf` (v1.0) against `mhxvphzzfr` (v1.1) with every row; `/r/tx4mehptdf` renders; the v1.0 fixture document test passes; `upgradeRunDocument` is idempotent.
-- [ ] The Motion section loops in sync, pauses off screen, passes the long-task test, and is still under reduced motion (Playwright: the dot does not move); screenshots at 1440, 820, 390 reviewed.
-- [ ] Live rate meets the thresholds on clean, tailwind and css-in-js and on the three real sites; the per-reason table below; linear.app at the visitor timeout has every core component checked; the `messy-after` dark-band button has no halo at 2× zoom; pinning Hover reaches the recorded values after the recorded duration; `pnpm test:security` passes on the state files.
-- [ ] The stat strip shows six cells at every viewport with no orphan; the `Passing all checks` filter and the restyled CheckBadge render per spec; `pnpm qa:copy` passes.
-- [ ] Real-site check: modernsoftworks.com fresh, pasted under `P17 real-site check` with the live-rate table, components passing and the Compare link against `mhxvphzzfr`.
-- [ ] `pnpm verify:all` green; goldens updated once and logged; Definition of Done re-run in full (twelve items).
+- [x] `pnpm showcase --add` on a local run puts it first on the home page; `--remove` takes it down; a sparse run is refused with the stated message.
+- [x] Compare renders `tx4mehptdf` (v1.0) against `mhxvphzzfr` (v1.1) with every row; `/r/tx4mehptdf` renders; the v1.0 fixture document test passes; `upgradeRunDocument` is idempotent.
+- [x] The Motion section loops in sync, pauses off screen, passes the long-task test, and is still under reduced motion (Playwright: the dot does not move); screenshots at 1440, 820, 390 reviewed.
+- [x] Live rate meets the thresholds on clean, tailwind and css-in-js and on the three real sites; the per-reason table below; linear.app at the visitor timeout has every core component checked; the `messy-after` dark-band button has no halo at 2× zoom; pinning Hover reaches the recorded values after the recorded duration; `pnpm test:security` passes on the state files.
+- [x] The stat strip shows six cells at every viewport with no orphan; the `Passing all checks` filter and the restyled CheckBadge render per spec; `pnpm qa:copy` passes.
+- [x] Real-site check: modernsoftworks.com fresh, pasted under `P17 real-site check` with the live-rate table, components passing and the Compare link against `mhxvphzzfr`.
+- [x] `pnpm verify:all` green; goldens updated once and logged; Definition of Done re-run in full (twelve items).
 
 P16 gate (docs/plan.md):
 
@@ -432,6 +432,21 @@ P16 gate (docs/plan.md):
 - [x] Panel Motion block, Compare rows and /open reviewed the same way.
 - [x] Fresh local run on stripe.com: prompt with a Motion section, 46 observed patterns, zero undeclared `var(--`, no numeric names; under `P16 real-site check` above.
 - [x] `pnpm verify:all` green on a fresh clone; goldens updated for v1.1 and logged (D-090: the final set follows the final live eval); Definition of Done re-run in full (eleven items, below).
+
+v1.2 Definition of Done (P17), all true at once on a fresh clone of `622bef2` with the Docker services running and `DSE_MODEL_MODE=replay` (2026-10-28):
+
+- [x] 1. `pnpm verify:all` green on a fresh clone in 3,800 s: check, seed check, 751 tests (613 unit), security 51, e2e 235, full evals at thresholds with the motion, naming, export-integrity and live-rate rows (live rate clean 28 of 28, messy 30 of 31, tailwind 28 of 28, css-in-js 28 of 28, library 22 of 22), build, visual 128, axe 185, billing 17, Lighthouse (home 100/100/100/100, run 99/100/100/100), copy, audit (no high; one moderate, GHSA-67mh-4wv8-2f99, as in v1.0).
+- [x] 2. Every phase gate P0 to P17 recorded below with its date.
+- [x] 3. `docs/traceability.md` maps every `##` and `###` section of the 21 spec and design documents, the P17 changes included, with no gap (`scripts/test/traceability.test.ts`).
+- [x] 4. `docs/decisions.md` records every deviation (D-001 to D-100); Known limitations lists each with its decision id.
+- [x] 5. `pnpm docker:smoke` builds the worker image from the root and completes the clean fixture in it (9 pages, 9 colors, 28 components, 28 live previews, 47 of 49 checks); `pnpm --filter web build` succeeds.
+- [x] 6. The flag-off test passes (inside verify:all).
+- [x] 7. `pnpm qa:copy` passes (620 files).
+- [x] 8. `pnpm run doctor --production --env fixtures/env/production.sample` passes.
+- [x] 9. The working tree is clean and committed; there is no remote, nothing was pushed.
+- [x] 10. STATUS says `Build complete`, and the owner's end list below is exactly what remains.
+- [x] 11. The prompt export of every fixture run has a Motion section, a Site variables block, a Default line per component, core components before page-specific ones, and no `var(--` to an undeclared name (the export-integrity eval row: 0 undeclared on all five fixtures).
+- [x] 12. Every read path (the run page and its API, Compare, /open, MCP `--run`, CLI `serve`) upgrades a stored document by its `pipelineVersion` (`upgrade.test.ts`: the v1.0 fixture document parses, the upgrade is idempotent); Compare renders `tx4mehptdf` (v1.0) against `mhxvphzzfr` (v1.1) with every row, `mhxvphzzfr` against the fresh `qgc6npq1au` (v1.2), and the seed's `seedv10cln` against `seedclean0` (e2e).
 
 v1.1 Definition of Done (P16), all true at once on a fresh clone of `570874d` with the Docker services running and `DSE_MODEL_MODE=replay` (2026-10-27):
 
@@ -463,6 +478,8 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 - [x] 10. STATUS says `Build complete`, and the owner's end list below is exactly what remains.
 
 ## Gates passed
+
+- P17 · Second testing round (v1.2) · 2026-10-28 · addendum merged and deleted (D-091 to D-096, merge rulings D-097), the build's rulings D-098 to D-100 · root cause verified (`tx4mehptdf` 447 issues, `mhxvphzzfr` clean) and the upgrade on every read path; Compare and `/r/tx4mehptdf` on the owner's runs · showcase `--add`, `--remove`, `--list` on the local database · previews measured per cause on three real sites at 15 min and handled in four rounds: 32.0, 35.0, 27.5% live of checked before, 82.7, 81.7, 72.5% after (floor 70%) · linear.app at the visitor timeout, all 87 core components checked · ground and the `messy-after` halo check · state files, pinning Hover e2e, security suite on state files · ambient easing loops (long-task, shared start, off screen, reduced motion e2e) · checks up front (six cells with no orphan, the filter, CheckBadge, opening line) · modernsoftworks.com fresh through the queue (`qgc6npq1au`, 60 of 74 live, 30 of 71 passing, Compare against `mhxvphzzfr`) · final record-mode evals in `fixtures/results.json` and the README · qa:design 165 reviewed at 1440, 820 and 390, goldens updated once and logged (plus the Compare goldens after D-099) · axe 185 zero violations · traceability · CHANGELOG 1.2.0, version 1.2.0 · verify:all green on a fresh clone, Docker smoke, web build, doctor on the production sample · P17 model spend about $0.30 (18 local real-site runs $0.286, the queue run $0.011, plus the record evals); build spend under $1 of $20.
 
 - P16 · Fidelity: motion, site variables, naming, export integrity (v1.1) · 2026-10-27 · addendum merged and deleted (D-081 to D-089), the build's rulings D-090 · evals: final live (record) run 55 of 55 published in `fixtures/results.json` and the README, replay 55 of 55, fallback 55 of 55 · variable resolution on every fixture export, every component prompt and the three frozen partial documents · `motion.css` and `motion.json` goldens · Motion section, panel Motion block, Compare and /open reviewed at 1440, 820 and 390 (duration labels and type row names fixed after review) · Replay under reduced motion (e2e, both halves) · stripe.com real-site check pasted above, two real-site defects fixed (0 ms durations, undeclared theme and runtime variables) · skeleton heights re-measured · axe zero violations (landmarks named apart) · visual goldens updated after the final live eval, the catalog compared section by section · README features, Motion screenshot and table, CHANGELOG 1.1.0, version 1.1.0 · verify:all green on a fresh clone, Docker smoke, web build, doctor on the production sample · build spend $0.56 of $20.
 
@@ -643,6 +660,9 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-28 · Build complete · v1.2 · the Definition of Done (twelve items) is green on a fresh clone of `622bef2`; nothing pushed.
+- 2026-10-28 · Gate passed · P17 · real-site live rates over the floor, upgrade and Compare on the owner's runs, modernsoftworks.com through the queue, screenshot review, verify:all on a fresh clone (third attempt: the first two found the reduced-motion network-idle wait and the catalog Compare goldens, both fixed).
+- 2026-10-28 · Session continued (after compaction) · P17 · re-read CLAUDE.md, STATUS, decisions D-091 to D-100, plan P17 and the Definition of Done · tree clean at `622bef2`.
 - 2026-10-28 · Session started · P17 · read CLAUDE.md, STATUS, decisions (D-001 to D-090), handoff, plan, the v1.2 addendum, partner.md, partner-log.md, showcase, data-model, preview-fidelity, capture-and-states, checks, exports-and-mcp, pages, components, motion, copy, evals, the runbook's step 11, glossary · tree reconciled (`apps/web/next-env.d.ts` rewritten by the dev server, restored; the addendum and prompts/v1-2.md committed by the Partner in `6b25fc6`) · `pnpm check` green.
 - 2026-10-27 · Build complete · v1.1 · the Definition of Done is green on a fresh clone; nothing pushed.
 - 2026-10-27 · Gate passed · P16 · evals 55 of 55 live, replay and fallback, stripe.com check, screenshot review, verify:all on a fresh clone.
