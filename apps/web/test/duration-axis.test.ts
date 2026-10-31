@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { labelRows, logPositions, triggerTicks } from '../lib/duration-axis';
+import { labeledCount, labelInset, labelRows, logPositions, triggerTicks } from '../lib/duration-axis';
 
 // The strip's log axis and label budget (D-102).
 
@@ -46,5 +46,22 @@ describe('the strip\'s triggers', () => {
     const xs = logPositions(dense, 290);
     const on = xs.filter((_, i) => triggerTicks(xs, dense.map(() => 1))[i]);
     for (let i = 1; i < on.length; i++) expect(on[i]! - on[i - 1]!).toBeGreaterThanOrEqual(24);
+  });
+});
+
+describe('the strip after the v1.3 review (D-112)', () => {
+  it('makes every tick whose value label dropped a trigger, then the rest at the target spacing', () => {
+    expect(triggerTicks([0, 10, 20, 60], [1, 1, 9, 1], [false, true, false, false])).toEqual([false, true, false, true]);
+  });
+  it('ends the scale at 2,000 ms when the Long list holds the rest', () => {
+    const xs = logPositions([100, 1000], 1000, 2000);
+    expect(xs[0]).toBe(0);
+    expect(xs[1]).toBeCloseTo(1000 * (1 / Math.log10(20)));
+  });
+  it('counts a tick as labeled only when its value and its role both show', () => {
+    expect(labeledCount([0, 1, null, 0], ['Base', 'Slow', null, null], [0, null, null, null])).toBe(2);
+  });
+  it('insets the axis by half the widest label', () => {
+    expect(labelInset(['150 ms', '35,000 ms', null])).toBe(Math.ceil((9 * 7.3) / 2));
   });
 });

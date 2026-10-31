@@ -46,8 +46,10 @@
   cursor: pointer;
 }
 
+/* A drawn tick takes no pointer, so a trigger beside it keeps its whole target (D-112). */
 span.tick {
   cursor: default;
+  pointer-events: none;
 }
 
 .value {
@@ -104,7 +106,7 @@ span.tick {
 .long {
   display: grid;
   gap: var(--dse-space-2);
-  min-width: 180px;
+  min-width: 220px;
 }
 
 .longHead {
@@ -121,15 +123,34 @@ span.tick {
 }
 
 .longRow {
-  composes: meta from '../../styles/type.module.css';
-  display: flex;
-  gap: var(--dse-space-2);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--dse-space-4);
+  width: 100%;
+  min-height: 24px;
   padding: 0;
   border: 0;
   background: transparent;
   color: var(--dse-ink);
   cursor: pointer;
   text-align: left;
+}
+
+span.longRow {
+  cursor: default;
+}
+
+.longName {
+  composes: meta from '../../styles/type.module.css';
+  overflow-wrap: anywhere;
+}
+
+.longValue {
+  composes: hex from '../../styles/type.module.css';
+  color: var(--dse-ink-2);
+  text-align: right;
+  white-space: nowrap;
 }
 
 .longRole {

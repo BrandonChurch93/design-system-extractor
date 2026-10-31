@@ -87,6 +87,8 @@ test('hovering a card frame plays the site\'s hover inside it, and the frame sta
   await card.scrollIntoViewIfNeeded();
   const iframe = card.getByTestId('card-preview').locator('iframe');
   await expect(iframe).toBeVisible();
+  // The frame takes its src once mounted; its own load marks it (D-112).
+  await expect(iframe).toHaveAttribute('data-loaded', 'true');
   const frame = (await (await iframe.elementHandle())!.contentFrame())!;
   await frame.waitForLoadState('load');
   const bg = () => frame.evaluate(() => getComputedStyle(document.querySelector('.dse-root > :first-child')!).backgroundColor);
@@ -193,4 +195,17 @@ test('the easing stages of a row sit at one height, and the Dense strip stays un
   const dense = page.getByText('Dense', { exact: true }).locator('xpath=..').getByTestId('duration-strip');
   await dense.scrollIntoViewIfNeeded();
   expect(await dense.evaluate((el) => el.getBoundingClientRect().height)).toBeLessThan(300);
+  // Every label stays inside the strip's box, and a drawn tick takes no pointer (D-112).
+  const shape = await dense.evaluate((el) => {
+    const box = el.getBoundingClientRect();
+    const labels = [...el.querySelectorAll('[data-testid="duration-tick"] span')].filter((s) => !s.classList.contains('visually-hidden') && s.textContent).map((s) => s.getBoundingClientRect());
+    return {
+      outside: labels.filter((r) => r.left < box.left - 0.5 || r.right > box.right + 0.5).length,
+      drawn: [...el.querySelectorAll('[data-testid="duration-tick"] > span')].map((s) => getComputedStyle(s).pointerEvents),
+      longRows: [...el.querySelectorAll('[data-testid="duration-long"] li')].length,
+    };
+  });
+  expect(shape.outside).toBe(0);
+  expect(shape.drawn.every((p) => p === 'none')).toBe(true);
+  expect(shape.longRows).toBe(4);
 });
