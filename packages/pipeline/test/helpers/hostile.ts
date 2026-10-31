@@ -25,6 +25,7 @@ export const hostileCases: Hostile[] = [
   { name: 'meta refresh', markup: `<div data-dse-id="e1"><meta http-equiv="refresh" content="0;url=${BEACON}/refresh">x</div>` },
   { name: 'base tag', markup: `<div data-dse-id="e1"><base href="${BEACON}/"><a href="page">x</a></div>` },
   { name: 'custom property exfiltration', markup: '<div data-dse-id="e1">x</div>', rules: [{ selector: 'div', declarations: [['background', 'url(var(--x))'], ['border-image', 'var(--x)']] }], vars: { '--x': `url(${BEACON}/var.png)` } },
+  { name: 'comment opener inside a string', markup: `<div data-dse-id="e1" style='background-image: url("data:image/png,/*"), url("${BEACON}/*/")'>x</div>`, rules: [{ selector: 'div', declarations: [['background-image', `url("data:image/png,/*"), url("${BEACON}/*/")`], ['color', '"/*" } body{} "*/"']] }] },
   { name: '@font-face off-site', markup: '<div data-dse-id="e1" style="font-family: Evil">x</div>', rules: [{ selector: 'div', declarations: [['src', `url(${BEACON}/f.woff2)`], ['font-family', 'Evil']] }] },
 ];
 

@@ -6,10 +6,39 @@ import { GOOGLE_FONTS_CSS, GOOGLE_FONTS_FILES } from './constants';
 
 export type CssPolicy = { storageBase: string };
 
+/**
+ * Comments removed the way a browser reads them: a `/*` inside a quoted string is text, not a comment,
+ * so the strings are read first (D-112).
+ */
+export function stripComments(value: string): string {
+  let out = '';
+  let quote = '';
+  for (let i = 0; i < value.length; i++) {
+    const ch = value[i]!;
+    if (quote) {
+      out += ch;
+      if (ch === '\\') out += value[++i] ?? '';
+      else if (ch === quote) quote = '';
+      continue;
+    }
+    if (ch === '"' || ch === "'") {
+      quote = ch;
+      out += ch;
+      continue;
+    }
+    if (ch === '/' && value[i + 1] === '*') {
+      const end = value.indexOf('*/', i + 2);
+      i = end < 0 ? value.length : end + 1;
+      continue;
+    }
+    out += ch;
+  }
+  return out;
+}
+
 /** CSS text with comments removed and escapes decoded, lowercased, for the checks only. */
 export function normalizeCss(value: string): string {
-  return value
-    .replace(/\/\*[\s\S]*?\*\//g, '')
+  return stripComments(value)
     .replace(/\\([0-9a-f]{1,6})\s?/gi, (_m, hex: string) => String.fromCodePoint(parseInt(hex, 16)))
     .replace(/\\(.)/g, '$1')
     .toLowerCase();
@@ -27,14 +56,17 @@ function allowedUrl(target: string, policy: CssPolicy): boolean {
  */
 export function sanitizeDeclaration(name: string, value: string, policy: CssPolicy): { name: string; value: string } | null {
   const n = normalizeCss(name).trim();
-  const v = normalizeCss(value);
   if (!/^(--[\w-]+|-?[a-z][a-z-]*)$/.test(n)) return null;
   if (n === 'behavior' || n === '-moz-binding') return null;
-  if (/expression\s*\(|-moz-binding|behavior\s*:|@import|javascript:|vbscript:/.test(v)) return null;
-  // Outside a quoted string no value has a brace or a `<`: they are how a value leaves its rule or its style element.
-  if (/[{}<]/.test(v.replace(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g, '""'))) return null;
-  if (/image-set\s*\(|(^|[^-\w])src\s*\(/.test(v)) return null;
-  for (const m of v.matchAll(/url\s*\(\s*([^)]*)\)/g)) if (!allowedUrl(m[1]!, policy)) return null;
+  // Every check reads the normalized text and the raw text, so no reading of comments or escapes can hide a value (D-112).
+  for (const v of [normalizeCss(value), value.toLowerCase()]) {
+    if (/expression\s*\(|-moz-binding|behavior\s*:|@import|javascript:|vbscript:/.test(v)) return null;
+    // Outside a quoted string no value has a brace or a `<`: they are how a value leaves its rule or its style element.
+    if (/[{}<]/.test(v.replace(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g, '""'))) return null;
+    if (/image-set\s*\(|(^|[^-\w])src\s*\(/.test(v)) return null;
+    for (const m of v.matchAll(/url\s*\(\s*([^)]*)\)/g)) if (!allowedUrl(m[1]!, policy)) return null;
+  }
+  const v = normalizeCss(value);
   if (n === 'position' && /\b(fixed|sticky)\b/.test(v)) return { name, value: 'relative' };
   return { name, value };
 }

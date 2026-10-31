@@ -77,6 +77,7 @@ Serving:
 A test suite of hostile component markup and CSS, each asserting the sanitized output and that rendering in the sandbox produces no network request outside the allowlist and executes no script:
 
 - the same hostile values written as state deltas, which reach the default preview's `:hover`, `:focus-visible` and `:active` rules and the state files (D-106); a click on a link inside a card frame leaves the frame's URL unchanged.
+- a comment opener inside a quoted string (`url("data:image/png,/*"), url("https://evil.example/*/")`, `"/*" } body{} "*/"`): the sanitizer reads quoted strings before comments, as a browser does, and checks the raw text as well as the normalized text (D-112).
 - inline `onclick`, `onerror` on `img`, `javascript:` href, `srcdoc` iframe, `svg` with `script` and `foreignObject`, `style` with `expression()`, `url(javascript:…)`, `@import`, `position: fixed` overlay, a `form` with an external `action`, a `data:text/html` src, a `meta refresh`, a `base` tag, CSS custom property exfiltration via `url(var(--x))`, an `@font-face` pointing off-site.
 
 Any new sanitizer bypass found later is added to this suite before it is fixed.

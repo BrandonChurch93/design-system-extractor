@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import type { MatchedStyles } from '../src/capture/matched-css';
 import type { SheetScan } from '../src/capture/sheet-scan';
 import { buildPreview, rescope, statePreview, viewportUnits, withPlaceholders, withStateRules } from '../src/previews/build';
-import { sanitizeMarkup } from '../src/previews/sanitize';
+import { sanitizeDeclaration, sanitizeMarkup, stripComments } from '../src/previews/sanitize';
 import { FontCopier, fontsFor } from '../src/previews/fonts';
 import { diffPercent } from '../src/previews/render';
 import { snap } from './helpers/snap';
@@ -187,6 +187,14 @@ describe('the preview builder', () => {
     expect(out).not.toContain('<script');
     expect(out).not.toContain('body {');
     expect(out).toContain('opacity: 0.5;');
+  });
+
+  it('security: reads quoted strings before comments, and checks the raw text as well (D-112)', () => {
+    expect(stripComments('a /* x */ b "/* kept */" c')).toBe('a  b "/* kept */" c');
+    expect(sanitizeDeclaration('background-image', 'url("data:image/png,/*"), url("https://evil.example/*/")', policy)).toBeNull();
+    expect(sanitizeDeclaration('color', '"/*" } body{} "*/"', policy)).toBeNull();
+    expect(sanitizeDeclaration('color', 'red /* a note */', policy)).toEqual({ name: 'color', value: 'red /* a note */' });
+    expect(sanitizeDeclaration('background-image', 'url("data:image/png;base64,AAAA")', policy)).not.toBeNull();
   });
 
   it('turns images and embeds into aria-hidden blocks of their size, radius and average color', () => {

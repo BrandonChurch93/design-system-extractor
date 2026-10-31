@@ -18,6 +18,9 @@ const hostileDelta = [
   { property: 'border-color', from: '#000', to: '#111</style><script>window.__pwned = 1</script><style>', transition: { durationMs: 200, easing: 'steps(2)' } },
   { property: 'cursor', from: 'auto', to: `url(${BEACON}/cursor.png), auto` },
   { property: 'box-shadow', from: 'none', to: '0 0 0 2px #2458E6', transition: { durationMs: 120, easing: 'cubic-bezier(0.2, 0, 0, 1)' } },
+  // A comment opener inside a string is text: read the other way it hid a url( and a brace (D-112).
+  { property: 'background-image', from: 'none', to: `url("data:image/png,/*"), url("${BEACON}/*/")` },
+  { property: 'color', from: '#000', to: '"/*" } body{} "*/"' },
 ];
 const storageBase = `http://localhost:${port}`;
 const dir = mkdtempSync(join(tmpdir(), 'dse-security-'));

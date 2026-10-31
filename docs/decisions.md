@@ -1015,5 +1015,6 @@ Affects: `docs/specs/capture-and-states.md`, `docs/specs/component-detection.md`
 Date: 2026-10-31 · Context: the Partner's review of v1.3 (`docs/partner-log.md`, 2026-10-29) sent twelve fixes; each names the document it must match, and some left a choice open or reversed an earlier ruling. The entries below are added as the fixes land.
 Decision:
 - Loaded frames. A preview iframe takes its `src` only after the client has mounted it, so its `load` always reaches PreviewFrame's handler and sets `data-loaded`; an iframe with no `src` loads `about:blank` first, which does not count. QA waits for every frame and crop to be marked (lazy ones far below the fold excepted), and refuses a shot whose live preview region is one flat fill. The hovered card and the scrolling drawer are QA states shot as elements, so the pointer's hover holds.
-Reasoning: a golden is evidence only when what it shows was painted.
-Affects: `docs/evals.md`, `apps/web/components/PreviewFrame.tsx`, `tests/qa/`.
+- The CSS sanitizer reads quoted strings before comments, as a browser does, so a `/*` inside a string never swallows the text after it; every check runs on the normalized text and on the raw text.
+Reasoning: a golden is evidence only when what it shows was painted; a check that reads a value differently from the browser checks something else.
+Affects: `docs/evals.md`, `docs/specs/preview-fidelity.md`, `apps/web/components/PreviewFrame.tsx`, `packages/pipeline/src/previews/sanitize.ts`, `tests/qa/`.
