@@ -10,13 +10,13 @@ None.
 
 ## Current phase
 
-Build complete (v1.3). P18 · Third testing round passed its gate and the Definition of Done (thirteen items) on a fresh clone of `d835b9b` on 2026-10-29; nothing pushed.
+Fixes after the v1.3 review (in progress). P18 passed its gate and the Definition of Done on 2026-10-29 (`d835b9b`); the Partner's review (`docs/partner-log.md`, 2026-10-29) sent twelve fixes, each committed as `Fix · {item}`, then verify:all again.
 
 v1.2 (P17) passed its gate and the Definition of Done (twelve items) on 2026-10-28; v1.1 (P16) passed its gate and the Definition of Done on 2026-10-27; v1.0 (P0 to P15) on 2026-10-26.
 
 ## Next action
 
-None for the Builder. What remains is the owner's end list below.
+Fix item 1 of the v1.3 review: QA waits for every preview frame's `load`, fails a flat live preview region, and gains the hovered-card and scrolling-drawer states.
 
 Environment note: the repository sits on an iCloud-synced Desktop and macOS evicts files (`ls -lO` shows `dataless`); a read then blocks while iCloud downloads. `find . -type f -flags +dataless -print0 | xargs -0 cat > /dev/null` brings them back.
 
@@ -748,6 +748,7 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-10-31 · Session started · fixes after the v1.3 review · read CLAUDE.md, STATUS, decisions D-101 to D-111, the Partner's 2026-10-29 log entry, preview-fidelity, capture-and-states, checks, component-detection, data-model, pages, components · tree clean at `32541ba` · `pnpm check` green.
 - 2026-10-29 · Build complete · v1.3 · the Definition of Done (thirteen items) is green on a fresh clone of `d835b9b`; nothing pushed.
 - 2026-10-29 · Gate passed · P18 · the real-site check, the screenshot review, axe, verify:all on a fresh clone (second attempt: the first found six integration expectations still at 28 components).
 - 2026-10-29 · P18 · docs merged: the addendum's changes are in their documents, D-101 to D-110 logged, the addendum deleted.
