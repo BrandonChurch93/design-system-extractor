@@ -23,7 +23,14 @@ export function pageSegment(path: string): string {
   return seg && seg !== 'index' ? seg : 'home';
 }
 
-/** The nearest ancestor landmark, or section with a heading (its first two words), else the page's last path segment. */
+/** A section heading names a context only when it is short enough to be one: three words at most (D-112). */
+const HEADING_WORDS = 3;
+
+/**
+ * The nearest ancestor landmark, or a section whose heading has three words at most (the whole
+ * heading), else the page's last path segment. A longer heading is a sentence, not a place, so the
+ * walk goes on past it.
+ */
 export function contextOf(it: Item): string {
   for (const a of ancestors(it.snapshot, it.el)) {
     const byRole = a.role ? roleLandmarks[a.role] : undefined;
@@ -31,11 +38,15 @@ export function contextOf(it: Item): string {
     if (landmarks[a.tag]) return landmarks[a.tag]!;
     if (a.tag === 'section') {
       const h = descendants(it.snapshot, a).find((d) => /^h[1-6]$/.test(d.tag) && d.text.trim());
-      if (h) return h.text.trim().toLowerCase().split(/\s+/).slice(0, 2).join(' ').replace(/[^\p{L}\p{N} ]/gu, '');
+      const words = h ? h.text.trim().toLowerCase().replace(/[^\p{L}\p{N} ]/gu, ' ').split(/\s+/).filter(Boolean) : [];
+      if (words.length && words.length <= HEADING_WORDS) return words.join(' ');
     }
   }
   return pageSegment(it.page.path);
 }
+
+/** A page as the naming prompt writes it: its path, or `404 page` for the synthetic missing page (D-105, D-112). */
+export const promptPath = (path: string) => (isSyntheticNotFoundPath(path) ? '404 page' : path);
 
 export const endsInDigit = (name: string) => /\d\s*\)?$/.test(name.trim());
 

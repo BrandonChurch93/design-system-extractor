@@ -9,7 +9,7 @@ import { classify } from '../src/components/classify';
 import { classesAllowMerge, clusterItems, structureSimilarity, toneOnly } from '../src/components/cluster';
 import { baseTokens, itemsFrom } from '../src/components/items';
 import { fallbackNames, validName } from '../src/components/model';
-import { endsInDigit, ordinal, pageSegment, slugsOf, uniqueNames } from '../src/components/naming';
+import { contextOf, endsInDigit, ordinal, pageSegment, promptPath, slugsOf, uniqueNames } from '../src/components/naming';
 import { LocalStorage, MemoryRunContext } from '../src/context';
 import { ModelClient, type ModelClientOptions } from '../src/models/client';
 import { nameVariants, splitVariants } from '../src/components/variants';
@@ -170,7 +170,7 @@ describe('fallback names', () => {
     const list = [at(0, 2), at(0, 4), at(0, 7), at(1, 8), at(0, 9), at(0, 8)].map((first) => ({ name: 'Button', first }));
     list.push({ name: 'Step 2', first: at(0, 8) });
     const renamed = uniqueNames(list);
-    expect(list.map((x) => x.name)).toEqual(['Button', 'Button (footer)', 'Button (pricing for)', 'Button (start)', 'Button (footer, home)', 'Button (home)', 'Step (home)']);
+    expect(list.map((x) => x.name)).toEqual(['Button', 'Button (footer)', 'Button (pricing for teams)', 'Button (start)', 'Button (footer, home)', 'Button (home)', 'Step (home)']);
     expect(renamed).toEqual([{ from: 'Step 2', to: 'Step (home)' }]);
     expect(list.every((x) => !endsInDigit(x.name))).toBe(true);
     expect(pageSegment('/docs/getting-started/')).toBe('getting started');
@@ -262,5 +262,17 @@ describe('the components stage', () => {
     expect(out.at(-1)!.group).toBe('navigation');
     const buttons = out.filter((c) => c.group === 'buttons').map((c) => c.instances.length);
     expect(buttons).toEqual([...buttons].sort((a, b) => b - a));
+  });
+});
+
+describe('the naming context after the v1.3 review (D-112)', () => {
+  it('takes a section heading of three words at most, walks past a longer one, and writes 404 page for the probe path', () => {
+    const page = snap([body, { tag: 'section', parent: 0 }, { tag: 'h2', parent: 1, text: 'Beautiful and accessible websites for teams' }, { tag: 'button', parent: 1 }, { tag: 'section', parent: 0 }, { tag: 'h2', parent: 4, text: 'Our process' }, { tag: 'button', parent: 4 }]);
+    const items = itemsFrom(fakeCapture([{ path: '/', desktop: page }]));
+    const at = (index: number) => items.find((it) => it.el.index === index)!;
+    expect(contextOf(at(3))).toBe('home');
+    expect(contextOf(at(6))).toBe('our process');
+    expect(promptPath('/8780d3aa06-does-not-exist')).toBe('404 page');
+    expect(promptPath('/pricing')).toBe('/pricing');
   });
 });

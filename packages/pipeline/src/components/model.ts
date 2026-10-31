@@ -7,7 +7,7 @@ import { prompts } from '../models/prompts/index.generated';
 import type { Guess } from './classify';
 import { representative, styleDifference } from './cluster';
 import type { Item } from './items';
-import { contextOf } from './naming';
+import { contextOf, promptPath } from './naming';
 
 // The two component model calls (docs/specs/model-calls.md): naming and typing in batches of 8,
 // then collisions between same-named clusters. Every failure keeps the rule answer.
@@ -33,7 +33,7 @@ export function validName(name: string): boolean {
 
 function describe(d: Draft): string {
   const it = representative(d.items);
-  const pages = [...new Set(d.items.map((i) => i.page.path))];
+  const pages = [...new Set(d.items.map((i) => promptPath(i.page.path)))];
   const f = it.fp;
   return [
     `${d.id} guess ${d.guess.type} ${d.guess.confidence}`,
