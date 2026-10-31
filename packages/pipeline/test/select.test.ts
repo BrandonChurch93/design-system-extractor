@@ -148,8 +148,9 @@ describe('the select model pass', () => {
   it('replays the recorded messy fixture call, and a miss in strict replay throws', async () => {
     const files = readdirSync(join(recordingsDir, 'select'));
     expect(files.length).toBeGreaterThan(0);
-    const rec = JSON.parse(readFileSync(join(recordingsDir, 'select', files[0]!), 'utf8')) as { text: string };
-    expect(JSON.parse(rec.text).pageIds).toHaveLength(12);
+    // The messy fixture's recorded answer picks 12 pages; file names are hashes, so it is found by its answer.
+    const picks = files.map((f) => JSON.parse(JSON.parse(readFileSync(join(recordingsDir, 'select', f), 'utf8')).text).pageIds as string[]);
+    expect(picks.some((p) => p.length === 12)).toBe(true);
     const strict = ctxWith({ mode: 'replay', recordingsDir, strictReplay: true });
     await expect(select(strict, discovered)).rejects.toBeInstanceOf(ReplayMissError);
     const lenient = ctxWith({ mode: 'replay', recordingsDir });
