@@ -1009,3 +1009,11 @@ Decision:
 - Skeleton heights re-measured on the clean run at 1440: the duration strip 147 (it was 171), the easing group 424 (358), the keyframes and patterns 978 (977), the Radius and Shadow row 274 for each card (new); the ±4 px test holds them.
 Reasoning: each is the closest faithful reading of the documents; the clustering ruling extends an existing distinction to the new flag rather than letting the model's wording decide structure.
 Affects: `docs/specs/capture-and-states.md`, `docs/specs/component-detection.md`, `docs/specs/preview-fidelity.md`, `docs/design/components.md`, `docs/design/copy.md`, `docs/evals.md`, `STATUS.md`.
+
+## D-112 · Rulings from fixing the v1.3 review
+
+Date: 2026-10-31 · Context: the Partner's review of v1.3 (`docs/partner-log.md`, 2026-10-29) sent twelve fixes; each names the document it must match, and some left a choice open or reversed an earlier ruling. The entries below are added as the fixes land.
+Decision:
+- Loaded frames. A preview iframe takes its `src` only after the client has mounted it, so its `load` always reaches PreviewFrame's handler and sets `data-loaded`; an iframe with no `src` loads `about:blank` first, which does not count. QA waits for every frame and crop to be marked (lazy ones far below the fold excepted), and refuses a shot whose live preview region is one flat fill. The hovered card and the scrolling drawer are QA states shot as elements, so the pointer's hover holds.
+Reasoning: a golden is evidence only when what it shows was painted.
+Affects: `docs/evals.md`, `apps/web/components/PreviewFrame.tsx`, `tests/qa/`.

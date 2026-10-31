@@ -1,7 +1,7 @@
 import { mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { test } from '@playwright/test';
-import { freezeClock, qaPages, settle, viewports, withFullHeight } from './pages';
+import { expectPreviewsPainted, freezeClock, qaPages, settle, viewports, waitForPreviews, withFullHeight } from './pages';
 
 // Design QA: the evidence the gate reviews (docs/evals.md). Writes qa/{page}/{viewport}/{state}.png,
 // a keyboard focus walk per page, and qa/index.html.
@@ -20,7 +20,16 @@ for (const vp of viewports) {
         if (st.setup) await st.setup(page);
         const dir = join(out, p.name, vp.name);
         mkdirSync(dir, { recursive: true });
-        await withFullHeight(page, () => page.screenshot({ path: join(dir, `${st.name}.png`) }));
+        if (st.element) {
+          await expectPreviewsPainted(page, st.element(page));
+          await st.element(page).screenshot({ path: join(dir, `${st.name}.png`) });
+          return;
+        }
+        await withFullHeight(page, async () => {
+          await waitForPreviews(page);
+          await expectPreviewsPainted(page);
+          await page.screenshot({ path: join(dir, `${st.name}.png`) });
+        });
       });
     }
 

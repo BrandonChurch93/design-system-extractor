@@ -1,3 +1,5 @@
+'use client';
+import { useState, useSyncExternalStore, type SyntheticEvent } from 'react';
 import styles from './PreviewFrame.module.css';
 
 type PreviewFrameProps = {
@@ -10,15 +12,30 @@ type PreviewFrameProps = {
   lazy?: boolean;
 };
 
-/** Never srcdoc (D-017): the preview document's own CSP governs it, as in the worker's check. */
+/**
+ * Never srcdoc (D-017): the preview document's own CSP governs it, as in the worker's check.
+ * `data-loaded` marks a frame or crop that has fired `load`, which QA waits for before any shot; the
+ * frame takes its `src` once mounted, so its load can never fire before the handler is there.
+ */
+const noop = () => () => {};
+
 export function PreviewFrame({ mode, src, title, width, height, lazy }: PreviewFrameProps) {
+  const [loaded, setLoaded] = useState(false);
+  // False on the server and during hydration, true after: the client's own render sets the frame's src.
+  const mounted = useSyncExternalStore(noop, () => true, () => false);
+  // A crop already loaded when hydration attaches its handler is read from its state.
+  const crop = (el: HTMLImageElement | null) => {
+    if (el?.complete && el.naturalWidth > 0 && !loaded) queueMicrotask(() => setLoaded(true));
+  };
+  // An iframe with no src yet loads about:blank first; only the preview's own load counts.
+  const marks = { 'data-preview-frame': mode, 'data-loaded': loaded || undefined, onLoad: (e: SyntheticEvent<Element>) => e.currentTarget.getAttribute('src') && setLoaded(true) };
   if (mode === 'captured') {
     // eslint-disable-next-line @next/next/no-img-element -- storage-origin crops at their CSS size
-    return <img src={src} alt={title} width={width} height={height} className={styles.frame} loading={lazy ? 'lazy' : undefined} />;
+    return <img ref={crop} src={src} alt={title} width={width} height={height} className={styles.frame} loading={lazy ? 'lazy' : undefined} {...marks} />;
   }
   return (
     <iframe
-      src={src}
+      src={mounted ? src : undefined}
       title={title}
       sandbox=""
       width={width}
@@ -27,6 +44,7 @@ export function PreviewFrame({ mode, src, title, width, height, lazy }: PreviewF
       referrerPolicy="no-referrer"
       className={styles.frame}
       tabIndex={-1}
+      {...marks}
     />
   );
 }

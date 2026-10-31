@@ -1,4 +1,6 @@
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
+import { PNG } from 'pngjs';
+import { RunResponse } from '@dse/schema';
 import { demoIndex } from '../../apps/web/components/catalog/demo-index';
 
 // Every page and state that design QA, visual regression and axe cover. Each phase adds its pages.
@@ -11,6 +13,8 @@ export type QaState = {
   before?: (page: Page) => Promise<void>;
   /** Runs after the page has settled: opening a popover, a panel, a disclosure. */
   setup?: (page: Page) => Promise<void>;
+  /** Shoot this element as it stands after setup (a hover held by the pointer), not the whole page. */
+  element?: (page: Page) => Locator;
 };
 export type QaPage = { name: string; path: string; states: QaState[]; mask?: string[]; axeExclude?: string[] };
 
@@ -33,6 +37,28 @@ export const withBlocked = (detail: unknown) => async (page: Page) => {
   await page.addInitScript((d) => window.sessionStorage.setItem('dse_blocked', JSON.stringify(d)), detail);
 };
 const usage = { used: 1.94, budget: 2, runsToday: 41, resetsAt: '2026-10-27T06:00:00.000Z' };
+
+/** The first live card of a seeded run, hovered: its frame's root in the site's hover state (D-106). */
+const hoveredCard = (page: Page) => page.locator('#components [data-testid="component-card"]').filter({ has: page.locator('iframe[data-preview-frame="live"]') }).first();
+async function hoverCard(page: Page) {
+  const card = hoveredCard(page);
+  await card.evaluate((el) => el.scrollIntoView({ block: 'center', behavior: 'instant' }));
+  await waitForPreviews(page);
+  await card.locator('iframe').hover();
+  await page.waitForTimeout(600);
+}
+
+/** The panel on the run's widest live component, its stage scrolled part way: 1:1 and scrolling sideways (D-107). */
+async function openWideDrawer(page: Page) {
+  const doc = RunResponse.parse(await (await page.request.get('/api/runs/seedclean0')).json()).document;
+  const wide = doc.components!.filter((c) => c.preview.mode === 'live').sort((a, b) => b.preview.width - a.preview.width)[0]!;
+  await page.goto(`/r/seedclean0?c=${wide.id}`);
+  await settle(page);
+  const scroller = page.getByTestId('preview-stage').locator('[data-ground]').first();
+  await scroller.evaluate((el) => el.scrollTo({ left: Math.round((el.scrollWidth - el.clientWidth) / 2), behavior: 'instant' }));
+  await waitForPreviews(page);
+  await page.waitForTimeout(400);
+}
 
 /** The first component of a seeded run, opened in its panel by clicking its card. */
 async function openFirstComponent(page: Page) {
@@ -89,6 +115,8 @@ export const qaPages: QaPage[] = [
       { name: 'share-open', setup: async (page) => void (await page.getByRole('button', { name: 'Share' }).click(), await page.waitForTimeout(400)) },
       { name: 'pages-open', setup: async (page) => void (await page.getByRole('button', { name: /^\d+ pages$/ }).click(), await page.waitForTimeout(400)) },
       { name: 'panel', setup: openFirstComponent },
+      { name: 'card-hover', setup: hoverCard, element: hoveredCard },
+      { name: 'drawer-scroll', setup: openWideDrawer, element: (page) => page.getByTestId('preview-stage') },
       { name: 'queued', path: '/r/seedqueue0' },
       { name: 'after-select', path: '/r/seedprog01' },
       { name: 'after-tokens', path: '/r/seedprog02' },
@@ -200,7 +228,35 @@ export async function settle(page: Page): Promise<void> {
   // Bounded: prefetches of routes that do not exist yet never settle.
   await page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => {});
   for (const f of page.frames()) await f.waitForLoadState('load', { timeout: 5000 }).catch(() => {});
+  await waitForPreviews(page);
   await page.waitForTimeout(1200);
+}
+
+/** Every preview frame and crop on the page has fired `load` (PreviewFrame's `data-loaded`), bounded. */
+export async function waitForPreviews(page: Page): Promise<void> {
+  await page
+    .waitForFunction(() => [...document.querySelectorAll('[data-preview-frame]')].every((el) => el.hasAttribute('data-loaded') || (el as HTMLImageElement).loading === 'lazy' && el.getBoundingClientRect().top > window.innerHeight * 3), undefined, { timeout: 15_000 })
+    .catch(() => {});
+}
+
+/**
+ * A shot is refused when a live preview's region is one flat fill: the frame had not painted. Each
+ * region of a loaded live frame in view must hold at least two colors.
+ */
+export async function expectPreviewsPainted(page: Page, scope?: Locator): Promise<void> {
+  const regions = (scope ?? page.locator('body')).locator('[data-ground]:has(> * iframe[data-preview-frame="live"][data-loaded])');
+  const n = await regions.count();
+  for (let i = 0; i < n; i++) {
+    const r = regions.nth(i);
+    if (!(await r.isVisible())) continue;
+    const box = await r.boundingBox();
+    if (!box || box.width < 8 || box.height < 8) continue;
+    const png = PNG.sync.read(await r.screenshot({ animations: 'disabled' }));
+    const d = png.data;
+    let flat = true;
+    for (let p = 0; p < d.length && flat; p += 4 * 7) if (Math.abs(d[p]! - d[0]!) > 8 || Math.abs(d[p + 1]! - d[1]!) > 8 || Math.abs(d[p + 2]! - d[2]!) > 8) flat = false;
+    if (flat) throw new Error(`a live preview region is a flat fill (${await r.getAttribute('data-ground')}): its frame had not painted`);
+  }
 }
 
 /**

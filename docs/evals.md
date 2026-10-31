@@ -137,7 +137,7 @@ Selection exactness is 100% on all five. The `pnpm evals` command fails if any c
 
 ## Visual regression
 
-`pnpm qa:visual`: Playwright screenshots of every page and state at 1440 × 900, 820 × 1180 and 390 × 844, compared with committed goldens in `apps/web/test/goldens/` using a 0.1% pixel threshold with anti-aliasing ignored. The first run of a page generates its golden; from then on a diff fails the gate and an intentional update requires a line in STATUS saying which page changed and why. Goldens use fixture runs seeded by `pnpm db:seed:fixtures`, so they are deterministic. The run page goldens change once in P16 (the Motion section) and the update is logged.
+`pnpm qa:visual`: Playwright screenshots of every page and state at 1440 × 900, 820 × 1180 and 390 × 844, compared with committed goldens in `apps/web/test/goldens/` using a 0.1% pixel threshold with anti-aliasing ignored. The first run of a page generates its golden; from then on a diff fails the gate and an intentional update requires a line in STATUS saying which page changed and why. Goldens use fixture runs seeded by `pnpm db:seed:fixtures`, so they are deterministic. The run page goldens change once in P16 (the Motion section) and the update is logged. Before any shot, QA waits for every preview frame and crop on the page to fire `load` (PreviewFrame's `data-loaded`), and a shot whose live preview region is one flat fill fails: the frame had not painted. The run page states include a card hovered (its frame's root in the site's hover state) and the drawer scrolling a component wider than its stage (D-112).
 
 ## Design QA
 
