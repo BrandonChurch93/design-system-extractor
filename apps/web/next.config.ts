@@ -19,6 +19,8 @@ const config: NextConfig = {
   distDir: process.env.DSE_NEXT_DIST || '.next',
   outputFileTracingRoot: repoRoot,
   transpilePackages: ['@dse/schema', '@dse/pipeline'],
+  // Font file names carry their content hash, so a browser may keep them for good.
+  headers: async () => [{ source: '/fonts/:file*', headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }] }],
   env: {
     // Derived, never set by hand (docs/specs/v2-seams.md).
     NEXT_PUBLIC_BILLING_ENABLED: process.env.BILLING_ENABLED === 'true' ? 'true' : 'false',

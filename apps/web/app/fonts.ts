@@ -1,15 +1,2 @@
-import { JetBrains_Mono, Plus_Jakarta_Sans } from 'next/font/google';
-
-export const sans = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--dse-font-sans-face',
-  display: 'swap',
-});
-
-export const mono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--dse-font-mono-face',
-  display: 'swap',
-});
+/** The latin files every page paints with first; the faces are in `styles/fonts.css` (D-112). */
+export const fontPreloads = ['/fonts/plus-jakarta-sans-latin.842b550a.woff2', '/fonts/jetbrains-mono-latin.9a321a2c.woff2'];

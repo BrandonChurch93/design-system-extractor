@@ -21,7 +21,7 @@
   --dse-skeleton: #EFEBE7;
   --dse-scrim: #23201E14;
 
-  /* Families (next/font sets --dse-font-sans-face and --dse-font-mono-face on <html>) */
+  /* Families (styles/fonts.css sets --dse-font-sans-face and --dse-font-mono-face on :root) */
   --dse-font-sans: var(--dse-font-sans-face), 'Plus Jakarta Sans', system-ui, sans-serif;
   --dse-font-mono: var(--dse-font-mono-face), 'JetBrains Mono', ui-monospace, monospace;
 

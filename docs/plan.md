@@ -45,7 +45,7 @@ Gate:
 Follows: `docs/design/design-system.md`, `docs/design/motion.md`, `docs/design/components.md` (Primitives), `docs/quality-bar.md`.
 
 Build:
-- `apps/web/styles/tokens.css` with every token as `--dse-*`; fonts through `next/font/google`; global reset; the breakpoint media queries.
+- `apps/web/styles/tokens.css` with every token as `--dse-*`; fonts through `next/font/google` (self-hosted from committed files since D-112); global reset; the breakpoint media queries.
 - Motion utilities: Motion variants for the six moves and their reverses, GSAP helpers for draw, extend, count, wipe; a `useReducedMotion` gate; the stagger helper with the cap.
 - Primitives: TopNav, Footer, SectionNav, Button, Chip and ChipGroup, Tag, Pill, Card, Input, Tabs, Popover, Sheet, Toast, Skeleton, Meter, CodeBlock, LiveLog, EmptyState, StateCard, Swatch (all sizes), PaletteStrip.
 - `/catalog` rendering each primitive in every state at desktop and 390 frames with sample data and its token list; `noindex`.

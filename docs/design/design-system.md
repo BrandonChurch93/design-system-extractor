@@ -42,7 +42,7 @@ The one tinted value in the system is the card shadow (below), which carries a t
 
 ## Type
 
-Two families, self-hosted through `next/font/google` so they load with the page and never flash.
+Two families, self-hosted from files committed in `apps/web/public/fonts` (Plus Jakarta Sans 2.071, JetBrains Mono 2.211, each subset with its Google Fonts unicode range, the latin files preloaded, fallback faces with metric overrides) so they load with the page, never flash, and render the same in every build (D-112).
 
 - `sans`: Plus Jakarta Sans 400, 500, 600, 700. Everything read.
 - `mono`: JetBrains Mono 400, 500. Everything counted, measured, identified or quoted: hex values, selectors, counts in tables, timestamps, code, the live log. Numbers inside prose stay sans with `font-variant-numeric: tabular-nums`.
