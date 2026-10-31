@@ -9,6 +9,12 @@ describe('the card scale (D-107)', () => {
     expect(fitPreview({ w: 400, h: 44 }, room, 16)).toEqual({ scale: (339 - 32) / 400, anchored: false, clipRight: false, clipBottom: false });
     expect(fitPreview({ w: 200, h: 180 }, room, 16).scale).toBeCloseTo(120 / 180);
   });
+  it('fits the whole region, counting the anchored inset once: 520 px in 339 is cut, 330 is not (D-112)', () => {
+    const region = { w: 339, h: 152 };
+    expect(fitPreview({ w: 520, h: 44 }, region, 16)).toMatchObject({ scale: 0.6, anchored: true, clipRight: true, clipBottom: false });
+    expect(fitPreview({ w: 330, h: 44 }, region, 16)).toMatchObject({ anchored: false, clipRight: false, clipBottom: false });
+  });
+
   it('stops at 0.6×, anchored top-left, and says which edges it cuts', () => {
     expect(fitPreview({ w: 880, h: 96 }, room, 16)).toEqual({ scale: 0.6, anchored: true, clipRight: true, clipBottom: false });
     expect(fitPreview({ w: 300, h: 400 }, room, 16)).toEqual({ scale: 0.6, anchored: true, clipRight: false, clipBottom: true });

@@ -56,7 +56,8 @@ export function FitPreview({ preview, base, title, padding = 16, htmlKey, cropKe
   useEffect(() => {
     const el = box.current;
     if (!el || fit === 'actual') return;
-    const ro = new ResizeObserver(([e]) => e && setRoom({ w: e.contentRect.width, h: e.contentRect.height }));
+    // The region's border box: an anchored preview's own inset must not shrink the room it is fitted to (D-112).
+    const ro = new ResizeObserver(([e]) => e && setRoom({ w: e.borderBoxSize[0]?.inlineSize ?? e.contentRect.width, h: e.borderBoxSize[0]?.blockSize ?? e.contentRect.height }));
     ro.observe(el);
     return () => ro.disconnect();
   }, [fit]);

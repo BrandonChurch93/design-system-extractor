@@ -8,14 +8,19 @@ export const ANCHOR_INSET = 16;
 
 export type Fit = { scale: number; anchored: boolean; clipRight: boolean; clipBottom: boolean };
 
-export function fitPreview(size: { w: number; h: number }, room: { w: number; h: number }, padding: number): Fit {
-  const fits = Math.min(1, (room.w - padding * 2) / size.w, (room.h - padding * 2) / size.h);
+/**
+ * `region` is the whole preview region (its border box), never the box left inside an anchored inset,
+ * so the inset is counted once (D-112). An anchored preview is cut on an edge when it reaches into
+ * that edge's inset, where the fade then sits.
+ */
+export function fitPreview(size: { w: number; h: number }, region: { w: number; h: number }, padding: number): Fit {
+  const fits = Math.min(1, (region.w - padding * 2) / size.w, (region.h - padding * 2) / size.h);
   if (fits >= SCALE_FLOOR) return { scale: fits, anchored: false, clipRight: false, clipBottom: false };
   const scale = SCALE_FLOOR;
   return {
     scale,
     anchored: true,
-    clipRight: ANCHOR_INSET + size.w * scale > room.w + 0.5,
-    clipBottom: ANCHOR_INSET + size.h * scale > room.h + 0.5,
+    clipRight: ANCHOR_INSET + size.w * scale > region.w - ANCHOR_INSET + 0.5,
+    clipBottom: ANCHOR_INSET + size.h * scale > region.h - ANCHOR_INSET + 0.5,
   };
 }
