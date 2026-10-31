@@ -53,7 +53,10 @@ const at = (iso: string, ms: number) => new Date(Date.parse(iso) + ms).toISOStri
 // A complete v1.0 document of the clean fixture, stored in its own shape, for the upgrade's Compare test (D-092).
 const v10File = resolve(root, 'packages/pipeline/test/fixtures/runs/clean-v1-0.json');
 const v10Id = 'seedv10cln';
-const allIds = [...seed.runs.map((r) => r.id), ...seed.progress.map((p) => p.id), ...seed.blocked.map((b) => b.id), ...seed.synthetic.map((x) => x.id), v10Id];
+// The v1.2 build's clean run, for the frames of documents stored before 1.3.0 (D-112).
+const v12File = resolve(root, 'packages/pipeline/test/fixtures/runs/clean-v1-2.json');
+const v12Id = 'seedv12cln';
+const allIds = [...seed.runs.map((r) => r.id), ...seed.progress.map((p) => p.id), ...seed.blocked.map((b) => b.id), ...seed.synthetic.map((x) => x.id), v10Id, v12Id];
 
 if (env.NODE_ENV === 'production') throw new Error('the fixture seed is for development and test databases only');
 
@@ -67,6 +70,7 @@ if (process.argv.includes('--if-missing')) {
     seed.blocked.every((b) => rows.some((x) => x.id === b.id && x.status === 'blocked')) &&
     seed.synthetic.every((y) => rows.some((x) => x.id === y.id && x.qaFrozen)) &&
     rows.some((x) => x.id === v10Id && x.status === 'complete') &&
+    rows.some((x) => x.id === v12Id && x.status === 'complete') &&
     content.success &&
     content.data.entries.length === seed.runs.length;
   if (present) {
@@ -290,34 +294,40 @@ for (const y of seed.synthetic) {
   if (lines.length) await svc.db.insert(tables.runEvents).values(lines.map((e, i) => ({ runId: y.id, ts: at(startedAt, (i + 1) * 900), stage: e.stage, substage: e.substage, level: e.level, message: e.message, data: e.data })));
 }
 
-// The v1.0 document as v1.0 stored it: never parsed here, since the read paths upgrade it. Its
-// component and page ids are the clean seed run's, so that run's files serve it.
-const v10 = JSON.parse(readFileSync(v10File, 'utf8')) as RunDocumentPartial & { id: string };
-if (v10.id !== v10Id) throw new Error(`${v10File} must carry the id ${v10Id}`);
-for (const key of await svc.storage.list(`runs/${cleanId}/`)) {
-  const body = await svc.storage.get(key);
-  if (body) await svc.storage.put(key.replace(`runs/${cleanId}/`, `runs/${v10Id}/`), body);
+// Documents as earlier builds stored them: never parsed here, since the read paths upgrade them.
+// Their component and page ids are the clean seed run's, so that run's files serve them.
+async function seedStored(file: string, id: string, from?: string) {
+  const text = readFileSync(file, 'utf8');
+  const doc = JSON.parse(from ? text.replaceAll(from, id) : text) as RunDocumentPartial & { id: string };
+  if (doc.id !== id) throw new Error(`${file} must carry the id ${id}`);
+  for (const key of await svc.storage.list(`runs/${cleanId}/`)) {
+    const body = await svc.storage.get(key);
+    if (body) await svc.storage.put(key.replace(`runs/${cleanId}/`, `runs/${id}/`), body);
+  }
+  await svc.db.insert(tables.runs).values({
+    id,
+    url: doc.url!,
+    host: doc.host!,
+    status: 'complete',
+    visitorId: 'seedqaruns000000',
+    priority: 0,
+    pageCap: 12,
+    includeUrls: [],
+    viewports: doc.viewports ?? ['desktop', 'mobile'],
+    pipelineVersion: doc.pipelineVersion!,
+    document: doc,
+    stats: doc.stats ?? null,
+    createdAt: doc.createdAt!,
+    startedAt: doc.startedAt ?? null,
+    finishedAt: doc.finishedAt ?? null,
+    durationMs: doc.durationMs ?? null,
+    retentionUntil: null,
+    qaFrozen: true,
+  });
+  return doc;
 }
-await svc.db.insert(tables.runs).values({
-  id: v10Id,
-  url: v10.url!,
-  host: v10.host!,
-  status: 'complete',
-  visitorId: 'seedqaruns000000',
-  priority: 0,
-  pageCap: 12,
-  includeUrls: [],
-  viewports: v10.viewports ?? ['desktop', 'mobile'],
-  pipelineVersion: v10.pipelineVersion!,
-  document: v10,
-  stats: v10.stats ?? null,
-  createdAt: v10.createdAt!,
-  startedAt: v10.startedAt ?? null,
-  finishedAt: v10.finishedAt ?? null,
-  durationMs: v10.durationMs ?? null,
-  retentionUntil: null,
-  qaFrozen: true,
-});
+const v10 = await seedStored(v10File, v10Id);
+const v12 = await seedStored(v12File, v12Id, 'evalclean0');
 
 const content = ShowcaseContent.parse({ generatedAt: seed.generatedAt, appUrl: seed.appUrl, entries });
 writeFileSync(contentFile, `${JSON.stringify(content, null, 2)}\n`);
@@ -330,7 +340,7 @@ for (const r of seed.runs) {
 console.log(`blocked · ${seed.blocked.map((b) => `${b.id} ${b.site}`).join(' · ')}`);
 console.log(`synthetic · ${seed.synthetic.map((y) => `${y.id} ${y.kind}`).join(' · ')}`);
 console.log(`frozen · ${seed.progress.map((p) => `${p.id} after ${p.through}`).join(' · ')}`);
-console.log(`v1.0 document · ${v10Id} (pipeline ${v10.pipelineVersion})`);
+console.log(`stored documents · ${v10Id} (pipeline ${v10.pipelineVersion}) · ${v12Id} (pipeline ${v12.pipelineVersion})`);
 console.log(`showcase · ${entries.length} entries written to apps/web/content/showcase.json`);
 
 fixtures?.close();

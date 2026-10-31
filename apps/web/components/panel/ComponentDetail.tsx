@@ -11,7 +11,8 @@ import { Button } from '../Button';
 import { CaptureViewer } from '../CaptureViewer';
 import { ChipGroup } from '../ChipGroup';
 import { CodeBlock } from '../CodeBlock';
-import { FitPreview } from '../FitPreview';
+import { FitPreview, PreviewInert } from '../FitPreview';
+import { storedBefore } from '../../lib/version';
 import { mainVariant, PreviewStage } from './PreviewStage';
 import { Tabs } from '../Tabs';
 import { Tag } from '../Tag';
@@ -115,6 +116,7 @@ export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel 
   const seenLine = (n: number) => fill(P.seenOn, { paths: seenPaths.slice(0, 4).join(', '), n: count(n) });
 
   return (
+    <PreviewInert.Provider value={storedBefore(doc, '1.3.0')}>
     <div className={styles.detail}>
       <section className={styles.section} aria-labelledby={`v-${c.id}`}>
         <div className={styles.sectionHead}>
@@ -311,6 +313,7 @@ export function ComponentDetail({ doc, component: c, base, runUrl, headingLevel 
 
       <p className={styles.caption}>{fill(P.footer, { paths: seenPaths.slice(0, 4).join(', '), n: count(Math.max(0, seen.length - 4)), path: first.path, viewport: viewportPx })}</p>
     </div>
+    </PreviewInert.Provider>
   );
 }
 

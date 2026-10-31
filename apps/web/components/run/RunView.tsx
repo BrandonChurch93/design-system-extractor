@@ -27,6 +27,8 @@ import { RunHeader } from './RunHeader';
 import { StageRail } from './StageRail';
 import { StatStrip, runStats } from './StatStrip';
 import { TokensSection } from './TokensSection';
+import { storedBefore } from '../../lib/version';
+import { PreviewInert } from '../FitPreview';
 import styles from './RunView.module.css';
 
 export const POLL_MS = 1500;
@@ -194,7 +196,7 @@ export function RunView({ initial, storageBase, appUrl, contactEmail, partial, l
   );
 
   return (
-    <>
+    <PreviewInert.Provider value={storedBefore(doc, '1.3.0')}>
       <main id="main" className={styles.main} data-run-status={run.status}>
         <RunHeader
           host={doc.host ?? ''}
@@ -256,6 +258,6 @@ export function RunView({ initial, storageBase, appUrl, contactEmail, partial, l
         )}
       </main>
       <Footer context={footer} />
-    </>
+    </PreviewInert.Provider>
   );
 }

@@ -10,6 +10,8 @@ type PreviewFrameProps = {
   width: number;
   height: number;
   lazy?: boolean;
+  /** A document stored before 1.3.0: the frame takes no pointer (D-112). */
+  inert?: boolean;
 };
 
 /**
@@ -19,7 +21,7 @@ type PreviewFrameProps = {
  */
 const noop = () => () => {};
 
-export function PreviewFrame({ mode, src, title, width, height, lazy }: PreviewFrameProps) {
+export function PreviewFrame({ mode, src, title, width, height, lazy, inert }: PreviewFrameProps) {
   const [loaded, setLoaded] = useState(false);
   // False on the server and during hydration, true after: the client's own render sets the frame's src.
   const mounted = useSyncExternalStore(noop, () => true, () => false);
@@ -43,6 +45,8 @@ export function PreviewFrame({ mode, src, title, width, height, lazy }: PreviewF
       loading={lazy ? 'lazy' : undefined}
       referrerPolicy="no-referrer"
       className={styles.frame}
+      style={inert ? { pointerEvents: 'none' } : undefined}
+      data-inert={inert || undefined}
       tabIndex={-1}
       {...marks}
     />

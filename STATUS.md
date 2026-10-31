@@ -721,6 +721,7 @@ Previews and capture (v1.3, D-108, D-109, D-111)
 - A component hidden until focus is checked as it sits at rest: the tap target of an `sr-only` link whose box is 1 px reads as a failure, though a keyboard user sees it full size (D-111).
 - Every link inside a preview document points at its own page, so a site rule that selects links by their `href` value no longer matches in the preview; the exported code keeps the site's links (D-111).
 - On a dense durations strip (ticks closer than 24 px, as on a phone), only the most used ticks of each cluster open their token: a 24 px target cannot fit every tick, and a pressed target must not overlap another (D-111).
+- Runs made before v1.3 keep inert previews: their stored preview documents still carry the site's absolute links, so their frames take no pointer and do not play hover (D-112).
 - Runs made before v1.3 have no recorded fill, so the contrast fallback never applies to them; their cards keep the sampled ground (D-110).
 
 ## Toolchain notes

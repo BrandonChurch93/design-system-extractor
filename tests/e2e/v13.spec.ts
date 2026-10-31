@@ -138,6 +138,19 @@ test('on touch, a tap on the card preview opens the drawer (D-106)', async ({ br
   await context.close();
 });
 
+test('frames of a document stored before 1.3.0 take no pointer; current ones do (D-112)', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const doc = await run(page, 'seedv12cln');
+  expect(doc.pipelineVersion).toBe('1.2.0');
+  for (const [id, inert] of [['seedv12cln', 'none'], ['seedclean0', 'auto']] as const) {
+    await page.goto(`/r/${id}`);
+    const frame = page.locator('#components iframe[data-preview-frame="live"]').first();
+    await frame.scrollIntoViewIfNeeded();
+    await expect(frame).toBeVisible();
+    expect(await frame.evaluate((el) => getComputedStyle(el).pointerEvents)).toBe(inert);
+  }
+});
+
 test('the drawer shows a component wider than its stage at 1:1, scrolling sideways (D-107)', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   const doc = await run(page, 'seedclean0');

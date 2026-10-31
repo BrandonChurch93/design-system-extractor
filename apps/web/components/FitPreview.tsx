@@ -11,6 +11,12 @@ import styles from './FitPreview.module.css';
 /** Where a local run has no image server, the caption that stands in for a crop or preview (/open). */
 export const PreviewPlaceholder = createContext<string | undefined>(undefined);
 
+/**
+ * True for a document stored before 1.3.0: its preview markup still carries the site's absolute links,
+ * so its frames keep `pointer-events: none` and a click inside one can never navigate it (D-112).
+ */
+export const PreviewInert = createContext(false);
+
 /** The scale written as copy says: two decimals at most, trailing zeros dropped (`0.8`, `0.65`). */
 export const scaleText = (scale: number) => String(Math.floor(scale * 100) / 100);
 
@@ -45,6 +51,7 @@ type Props = {
 export function FitPreview({ preview, base, title, padding = 16, htmlKey, cropKey, showCaptured = true, lazy, ground, showScale = true, reload, fit = 'fit', code }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const placeholder = useContext(PreviewPlaceholder);
+  const inert = useContext(PreviewInert);
   const [room, setRoom] = useState<{ w: number; h: number } | null>(null);
   useEffect(() => {
     const el = box.current;
@@ -79,7 +86,7 @@ export function FitPreview({ preview, base, title, padding = 16, htmlKey, cropKe
       {src ? (
         <div className={styles.scaled} style={{ width: w * scale, height: h * scale }}>
           <div data-fit style={{ width: w, height: h, transform: scale === 1 ? undefined : `scale(${scale})`, transformOrigin: 'top left' }}>
-            <PreviewFrame key={`${src}|${reload ?? 0}`} mode={preview.mode === 'live' ? 'live' : 'captured'} src={src} title={title} width={w} height={h} lazy={lazy} />
+            <PreviewFrame key={`${src}|${reload ?? 0}`} mode={preview.mode === 'live' ? 'live' : 'captured'} src={src} title={title} width={w} height={h} lazy={lazy} inert={inert} />
           </div>
         </div>
       ) : noCrop && code ? (
