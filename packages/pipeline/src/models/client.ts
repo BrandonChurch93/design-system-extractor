@@ -1,4 +1,4 @@
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import Anthropic from '@anthropic-ai/sdk';
 import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
@@ -62,6 +62,8 @@ export type ModelClientOptions = {
   meter?: BudgetMeter;
   /** Strict replay throws on a miss instead of falling back. */
   strictReplay?: boolean;
+  /** Record mode replays an answer already recorded and calls the model only for a miss, so one changed request does not re-ask the rest. */
+  keep?: boolean;
   /** Test seam: replaces the SDK call. */
   transport?: (req: { model: string; system: string; content: ContentBlock[]; jsonSchema: unknown; maxTokens: number; timeoutMs: number; feedback?: string; size: ModelSize }) => Promise<{ text: string; usage: Usage }>;
   /** Called with every cost record, for budget counters and logs. */
@@ -108,6 +110,7 @@ export class ModelClient {
   async call<T>(req: ModelRequest<T>): Promise<ModelResult<T>> {
     const hash = requestHash(hashable(req as ModelRequest<unknown>));
     if (this.opts.mode === 'replay') return this.replay(req, hash);
+    if (this.opts.keep && existsSync(this.recordingPath(req.purpose, hash))) return this.replay(req, hash);
 
     const allowed = await this.meter.allowLive();
     if (!allowed.ok) return { ok: false, reason: 'budget', detail: allowed.reason, cost: [] };

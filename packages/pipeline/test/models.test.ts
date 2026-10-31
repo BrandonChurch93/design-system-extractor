@@ -125,4 +125,16 @@ describe('record and replay', () => {
     expect(written[0]).toMatch(/^components-[0-9a-f]{12}\.txt$/);
     expect(readFileSync(join(misses, written[0]!), 'utf8')).toBe('Items: c9 card\n[image]');
   });
+
+  it('with keep, records only the requests that have no recording', async () => {
+    const dir = tmp();
+    await new ModelClient({ mode: 'record', recordingsDir: dir, transport: async () => ({ text: '{"pick":"a"}', usage }) }).call(request());
+    let calls = 0;
+    const keeper = new ModelClient({ mode: 'record', recordingsDir: dir, keep: true, transport: async () => (calls++, { text: '{"pick":"b"}', usage }) });
+    expect(await keeper.call(request())).toMatchObject({ ok: true, data: { pick: 'a' } });
+    expect(calls).toBe(0);
+    expect(await keeper.call(request({ content: [{ type: 'text', text: 'Items: c2 link' }] }))).toMatchObject({ ok: true, data: { pick: 'b' } });
+    expect(calls).toBe(1);
+    expect(readdirSync(join(dir, 'components'))).toHaveLength(2);
+  });
 });

@@ -2,7 +2,7 @@
   "purpose": "select",
   "size": "small",
   "model": "claude-haiku-5-5",
-  "text": "{\"pageIds\": [\"7nufn618\", \"9fef5gf1\", \"x14c1b2d\", \"61tph2pv\", \"3zfti0sm\", \"v7320oju\", \"i2lw590e\", \"8gan3t77\", \"ot783ra2\", \"rky7hk1t\", \"53lpiccn\"]}",
+  "text": "{\"pageIds\": [\"7nufn618\", \"9fef5gf1\", \"7pnx8a3a\", \"x14c1b2d\", \"61tph2pv\", \"3zfti0sm\", \"v7320oju\", \"i2lw590e\", \"8gan3t77\", \"hsxeq86s\", \"53lpiccn\", \"ot783ra2\"]}",
   "usage": {
     "input_tokens": 657,
     "cache_creation_input_tokens": 796,
@@ -11,7 +11,7 @@
       "ephemeral_5m_input_tokens": 796,
       "ephemeral_1h_input_tokens": 0
     },
-    "output_tokens": 101,
+    "output_tokens": 111,
     "output_tokens_details": {
       "thinking_tokens": 0
     },
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-31T17:51:36.032Z",
+  "recordedAt": "2026-10-29T18:01:08.510Z",
   "request": "Page cap: 12.\nMandatory ids: 7nufn618.\n\nid | path | title | h1 | source | score | template | reason\n7nufn618 | / | Tidewater · Release notes your team will read | Release notes your team will actually read. | start | 3.0 | - | home\n9fef5gf1 | /pricing | Pricing · Tidewater | Pricing | nav | 4.0 | - | tables-toggles\n7pnx8a3a | /contact | Contact · Tidewater | Contact | nav | 3.0 | - | forms\nx14c1b2d | /docs | Documentation · Tidewater | Documentation | nav | 3.0 | - | code-blocks\n61tph2pv | /features | Features · Tidewater | Features | nav | 3.0 | - | nav\n3zfti0sm | /login | Sign in · Tidewater | Sign in | header | 3.0 | - | forms-errors\nv7320oju | /signup | Create your account · Tidewater | Create your account | header | 3.0 | - | forms\ni2lw590e | /9af1db26a5-does-not-exist | Not found · Tidewater | This page is not here. | synthetic | 2.0 | - | empty-state\n8gan3t77 | /changelog | Changelog · Tidewater | Changelog | sitemap | 2.0 | - | badges-timeline\nhsxeq86s | /docs/getting-started | Getting started · Tidewater | Getting started | nav | 1.5 | - | code-blocks\n53lpiccn | /about | About · Tidewater | About Tidewater | sitemap | 1.0 | about ×2 | about\not783ra2 | /blog | Blog · Tidewater | Blog | sitemap | 1.0 | - | list-template\nrky7hk1t | /blog/release-notes-week-1 | Faster digests · Tidewater blog | Faster digests | sitemap | 1.0 | blog ×12 | post-template"
 }

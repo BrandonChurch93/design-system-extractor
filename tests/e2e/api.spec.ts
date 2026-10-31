@@ -54,7 +54,7 @@ test('the compare page shows the messy-after deltas', async ({ page }) => {
   // messy-after's dark band (D-094) adds one gray (#0B0D10) and three components to the v1.1 deltas.
   await expect(page.getByText('Grays · 4 fewer, still 2 to go')).toBeVisible();
   await expect(page.getByText('Components · 5 new')).toBeVisible();
-  for (const name of ['Band button', 'Feature card (night mode)']) await expect(page.getByRole('row', { name: new RegExp(`^${name.replace(/[()]/g, '\\$&')} New`) })).toBeVisible();
+  for (const name of ['Band button', 'Feature card (night mode digests)']) await expect(page.getByRole('row', { name: new RegExp(`^${name.replace(/[()]/g, '\\$&')} New`) })).toBeVisible();
   await expect(page.getByRole('row', { name: /Button Changed 7 variants 6 variants/ })).toBeVisible();
   for (const name of ['Newsletter input', 'Status badge']) await expect(page.getByRole('row', { name: new RegExp(`^${name} Changed`) })).toBeVisible();
   await expect(page.getByRole('row', { name: /^Toast New/ })).toBeVisible();
