@@ -97,6 +97,15 @@ const wideNav: Component = { ...comps[1]!, id: 'catwide0', name: 'Main navigatio
 const skipLink: Component = { ...comps[0]!, id: 'catskip0', name: 'Skip link', preview: { mode: 'captured', capturedReason: 'hidden-until-focus', cropKey: 'catalog/sample-crop.png', width: 128, height: 58, ground: '#FFFFFF', fill: '#2458E6' } };
 const noCrop: Component = { ...comps[0]!, id: 'catnocr0', name: 'Skip link', preview: { mode: 'captured', capturedReason: 'no-crop', width: 0, height: 0, fill: null }, code: { html: '<a class="skip-link" href="#main">Skip to content</a>', css: '' } };
 
+// The badge's label reads 3 of 4: three passes, one failure, one check that does not apply.
+const threeOfFour = [
+  { check: 'contrast' as const, status: 'pass' as const, detail: '12.6:1 on white' },
+  { check: 'focus-visible' as const, status: 'pass' as const, detail: '2 px ring, 5.8:1 against white' },
+  { check: 'tap-target' as const, status: 'pass' as const, detail: '44 × 44 at 390 px' },
+  { check: 'label' as const, status: 'fail' as const, detail: 'No name found' },
+  { check: 'reduced-motion' as const, status: 'na' as const, detail: 'Not applicable' },
+];
+
 function Wide({ children }: { children: ReactNode }) {
   return <div className={styles.fullWidth}>{children}</div>;
 }
@@ -307,7 +316,7 @@ export const pageDemos: Demo[] = [
       { label: runPage.preview.noCrop, node: <div className={styles.cardBox}><ComponentCard component={noCrop} href="#" base={sampleBase} tokens={cardTokens(noCrop, names)} /></div> },
       { label: 'StatesStrip', node: <StatesStrip states={comps[0]!.states} base={sampleBase} name={comps[0]!.name} /> },
       { label: runPage.components.badgeAll, node: <CheckBadge checks={comps.find((c) => passesAll(c.checks))!.checks} name={comps.find((c) => passesAll(c.checks))!.name} /> },
-      { label: fill(runPage.components.badgeSome, { passed: '3', applicable: '4' }), node: <CheckBadge checks={comps.find((c) => c.checks.some((r) => r.status === 'fail'))?.checks ?? []} name="Icon button" /> },
+      { label: fill(runPage.components.badgeSome, { passed: '3', applicable: '4' }), node: <CheckBadge checks={threeOfFour} name="Icon button" /> },
       { label: checkStatusLabels.na, node: <span className={styles.row} data-testid="check-badge-none"><CheckBadge checks={[]} name="Divider" /></span> },
     ],
   },

@@ -31,7 +31,7 @@ Decision: `diffPct ≤ 2.5` → `mode: live`; otherwise `mode: captured` with `c
 
 ## Why previews fall back, measured
 
-Every run records the count of previews by mode and captured reason in `stats.previews` (`live`, `diff`, `css-too-large`, `fonts-unavailable`, `not-checked`; D-095), and the previews event states them. The baseline from the owner's two runs, before any change (the Partner, 2026-10-28):
+Every run records the count of previews by mode and captured reason in `stats.previews` (`live`, `diff`, `css-too-large`, `fonts-unavailable`, `not-checked`; D-095; and `hidden-until-focus` and `no-crop` since v1.3, D-108), and the previews event states them. The baseline from the owner's two runs, before any change (the Partner, 2026-10-28):
 
 | Run | live | diff | fonts-unavailable | not-checked | total |
 | --- | --- | --- | --- | --- | --- |
@@ -44,6 +44,8 @@ On modernsoftworks every fallback is a real render difference (median diff 2.5 %
 - `fonts-unavailable`: the masked comparison above.
 - `css-too-large`: the cap is measured after reset filtering; a cap that demotes a plain button is too low.
 - `not-checked`: the previews share of the time budget ran out (D-066). Not a fidelity cause: the order of render checks decides which components are checked before the cut.
+- `hidden-until-focus`: the component is hidden at rest and previews its focus crop, as a keyboard user sees it; there is nothing at rest to check (D-108).
+- `no-crop`: the crop could not be cut (the box lies outside the screenshot); the card shows the component's code (D-108).
 
 The measured causes, the handling added for each and the live rates before and after are recorded in D-098 (the build's P17 rulings) and in STATUS (`P17 real-site check`). Causes out of scope, which a captured preview may keep: a background video, a canvas, a third-party embed (D-095).
 
@@ -54,7 +56,7 @@ Applied to markup before storage, with a whitelist sanitizer (DOMPurify in a jsd
 Markup:
 
 - Remove: `script`, `noscript`, `template`, `iframe`, `frame`, `object`, `embed`, `applet`, `link`, `meta`, `base`, `form` is kept but its `action` and `method` removed, `input` kept with `name` removed and `type` limited to text-like types and `checkbox`, `radio`, `submit`, `button`, and `hidden`, which stays hidden (D-098).
-- Remove every attribute starting with `on`, every `href` or `src` or `srcset` or `xlink:href` or `formaction` or `poster` that is not `https:` or a relative path or `data:image/`; `javascript:`, `vbscript:`, `data:text` are removed with the attribute. Relative `href` values are rewritten to `#` (previews never navigate). `target` removed. `style` attributes are kept but passed through the CSS sanitizer. `id` attributes are prefixed `dse-` to avoid clashing with the app. `class` kept. `data-*` kept except `data-dse-*` which is stripped.
+- Remove every attribute starting with `on`, every `href` or `src` or `srcset` or `xlink:href` or `formaction` or `poster` that is not `https:` or a relative path or `data:image/`; `javascript:`, `vbscript:`, `data:text` are removed with the attribute. In the preview document every `href` on a link (`a`, `area`, an svg `a`), absolute or relative, is rewritten to `#`, so a click inside a frame never leaves it; the exported code keeps the site's links (D-106, D-111). `target` removed. `style` attributes are kept but passed through the CSS sanitizer. `id` attributes are prefixed `dse-` to avoid clashing with the app. `class` kept. `data-*` kept except `data-dse-*` which is stripped.
 - SVG: `script`, `foreignObject`, `use` with external href, `animate*`, `set` removed; `href` to external removed.
 
 CSS (applied to every declaration in the preview stylesheet and every `style` attribute):

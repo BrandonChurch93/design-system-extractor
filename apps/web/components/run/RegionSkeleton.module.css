@@ -84,3 +84,36 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* The Radius and Shadow cards, measured on the clean fixture at each breakpoint (D-103, D-112). */
+.radiusCard {
+  --dse-token-row: 274px;
+}
+
+.shadowCard {
+  --dse-token-row: 274px;
+}
+
+@media (max-width: 1023px) {
+  .radiusCard {
+    --dse-token-row: 274px;
+  }
+
+  .shadowCard {
+    --dse-token-row: 274px;
+  }
+}
+
+@media (max-width: 640px) {
+  .radiusCard {
+    --dse-token-row: 274px;
+  }
+
+  .shadowCard {
+    --dse-token-row: 274px;
+  }
+}
+
+.cardControls {
+  opacity: 0.6;
+}

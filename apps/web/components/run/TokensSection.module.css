@@ -78,6 +78,13 @@
   grid-column: 1 / -1;
 }
 
+/* Below desktop each card takes the full row, so a shadow list never wraps in a half-width card (D-112). */
+@media (max-width: 1023px) {
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .typeList {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

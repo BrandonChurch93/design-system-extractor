@@ -2,7 +2,7 @@
   "purpose": "narrative",
   "size": "large",
   "model": "claude-sonnet-5-5",
-  "text": "{\"narrative\":\"Nothing drifts here. The system is built from nine colors, nine type styles and 11 spacing steps, and every spacing step sits on the grid. No colors sit near a neighbor, no type styles overlap and no component variants need collapsing. The proposed set keeps the same 11 spacing steps and nine type styles, with three grays. Every pair of text and background keeps its contrast ratio.\",\"designSystemIntro\":\"This design system was extracted from localhost:4100 across nine pages. It holds nine colors, nine type styles, 11 spacing steps and 29 components.\"}",
+  "text": "{\"narrative\": \"Nothing drifts in this system. It is built from nine colors, nine type styles and 11 spacing steps, all on the grid. No colors sit within reach of a neighbor, no spacing values sit off the grid and no type styles overlap. The proposed set keeps the same 11 spacing steps and nine type styles, with three grays. Every pair of text and background keeps its contrast ratio.\", \"designSystemIntro\": \"This design system was extracted from localhost:4100 across nine pages. It holds nine colors, nine type styles, 11 spacing steps and 29 components.\"}",
   "usage": {
     "input_tokens": 192,
     "cache_creation_input_tokens": 0,
@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-29T17:53:43.031Z",
+  "recordedAt": "2026-10-31T17:42:51.345Z",
   "request": "{\"host\":\"localhost:4100\",\"colors\":9,\"typeStyles\":9,\"spacingSteps\":11,\"components\":29,\"pages\":9,\"headline\":\"Nothing to collapse. 9 colors, 11 spacing steps, all on the grid.\",\"supporting\":[],\"numbers\":[],\"findings\":{\"nearDuplicateColors\":0,\"offGrid\":[],\"variantCollapses\":0,\"typeNearDuplicates\":0},\"proposal\":{\"grays\":3,\"spacingSteps\":11,\"typeStyles\":9,\"contrastKept\":true}}"
 }

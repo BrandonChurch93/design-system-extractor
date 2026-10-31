@@ -46,11 +46,28 @@
   border-bottom: 1px solid var(--dse-line-soft);
 }
 
-.ground {
-  position: absolute;
-  right: var(--dse-space-3);
-  bottom: var(--dse-space-3);
+/* The control strip: a hairline above (the region's) and below, the captions left, the toggle right. */
+.controls {
+  position: relative;
   z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--dse-space-3);
+  min-height: 32px;
+  padding: var(--dse-space-1) var(--dse-space-3);
+  border-bottom: 1px solid var(--dse-line-soft);
+}
+
+.captions {
+  composes: caption from '../../styles/type.module.css';
+  display: grid;
+  min-width: 0;
+  color: var(--dse-muted);
+}
+
+.controls > :last-child {
+  flex: none;
 }
 
 .body {

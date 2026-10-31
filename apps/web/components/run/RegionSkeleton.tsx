@@ -6,8 +6,6 @@ export type SkeletonRegion = 'palette' | 'type' | 'spacing' | 'radius' | 'shadow
 const range = (n: number) => Array.from({ length: n }, (_, i) => i);
 /** The clean fixture's Motion section at 1440 (D-080; re-measured for v1.3's easing stage, keyframes list and chips, D-111). */
 const MOTION = { strip: 147, easing: 424, patterns: 978 };
-/** The clean fixture's Radius and Shadow cards at 1440 (D-103). */
-const TOKEN_ROW = { radius: 274, shadow: 274 };
 
 /**
  * A run page region before its stage lands, at the height of a typical result so nothing below it
@@ -45,7 +43,8 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
       );
     case 'radius':
     case 'shadow':
-      return <Skeleton height={TOKEN_ROW[region]} radius="lg" />;
+      // Heights per breakpoint, measured on the clean fixture's cards (D-103, D-112).
+      return <Skeleton height="var(--dse-token-row)" radius="lg" className={region === 'radius' ? styles.radiusCard : styles.shadowCard} />;
     case 'motion':
       return (
         <span className={styles.stack} aria-hidden="true">
@@ -74,6 +73,8 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
             {range(6).map((i) => (
               <li key={i} className={styles.card}>
                 <Skeleton height={152} on="surface" />
+                {/* The control strip under the preview region (D-112). */}
+                <Skeleton height={33} on="surface" className={styles.cardControls} />
                 <span className={styles.cardBody}>
                   <Skeleton height={16} width="50%" on="surface" />
                   <Skeleton height={12} width="80%" on="surface" />

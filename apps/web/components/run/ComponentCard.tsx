@@ -40,13 +40,24 @@ type Props = {
 export function ComponentCard({ component: c, href, base, tokens, opened, reveal, onOpen }: Props) {
   const site = c.preview.ground ?? c.ground;
   // A ground that matches the component's own fill starts on the opposite tone (D-109).
-  const [ground, setGround] = useState<Ground>(() => contrastFallback(c.preview.fill, site) ?? 'site');
+  const fallback = contrastFallback(c.preview.fill, site);
+  const [ground, setGround] = useState<Ground>(() => fallback ?? 'site');
+  const [scale, setScale] = useState<string | null>(null);
   const paint = paintFor(ground, site);
+  // The contrast caption shows while the toggle is on the tone the fallback chose (D-112).
+  const why = fallback && ground === fallback ? (fallback === 'light' ? runPage.preview.groundLight : runPage.preview.groundDark) : null;
   return (
     <article className={styles.card} data-opened={opened || undefined} data-testid="component-card">
       <div className={styles.preview} style={paint ? { background: paint } : undefined} data-testid="card-preview">
-        <FitPreview preview={c.preview} base={base} title={fill(runPage.previewTitle, { name: c.name })} lazy ground={paint} fit="card" code={c.code.html} />
-        <GroundToggle value={ground} onChange={setGround} size="sm" className={styles.ground} />
+        <FitPreview preview={c.preview} base={base} title={fill(runPage.previewTitle, { name: c.name })} lazy ground={paint} fit="card" code={c.code.html} onCaption={setScale} />
+      </div>
+      {/* Under the region, so nothing covers the component: the captions left, the toggle right (D-112). */}
+      <div className={styles.controls} data-testid="card-controls">
+        <p className={styles.captions}>
+          {scale ? <span>{scale}</span> : null}
+          {why ? <span>{why}</span> : null}
+        </p>
+        <GroundToggle value={ground} onChange={setGround} size="sm" />
       </div>
       {/* On touch the whole card opens the drawer (D-106). The body's reveal clips its own overlay to the body, so the card carries this one; the name link is the one a reader reaches. */}
       <Link href={href} scroll={false} className={styles.cover} tabIndex={-1} aria-hidden="true" onClick={(e) => {

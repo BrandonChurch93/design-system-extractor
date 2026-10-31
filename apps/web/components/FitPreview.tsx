@@ -42,13 +42,15 @@ type Props = {
   fit?: 'fit' | 'card' | 'actual';
   /** The component's markup, shown when no crop could be cut (D-108). */
   code?: string;
+  /** The scale caption goes to the caller (the card's control strip, D-112) instead of over the preview. */
+  onCaption?: (caption: string | null) => void;
 };
 
 /**
  * A component preview on its ground. The live preview is a sandboxed frame at the size the render check
  * measured; a captured one is its crop; one with no crop is its code.
  */
-export function FitPreview({ preview, base, title, padding = 16, htmlKey, cropKey, showCaptured = true, lazy, ground, showScale = true, reload, fit = 'fit', code }: Props) {
+export function FitPreview({ preview, base, title, padding = 16, htmlKey, cropKey, showCaptured = true, lazy, ground, showScale = true, reload, fit = 'fit', code, onCaption }: Props) {
   const box = useRef<HTMLDivElement>(null);
   const placeholder = useContext(PreviewPlaceholder);
   const inert = useContext(PreviewInert);
@@ -74,6 +76,7 @@ export function FitPreview({ preview, base, title, padding = 16, htmlKey, cropKe
   // Why a preview is not the element at rest is said at the region's top, in place of the Captured tag (D-108, D-111).
   const note = noCrop ? P.noCrop : preview.capturedReason === 'hidden-until-focus' && !cropKey ? P.hiddenUntilFocus : null;
   const caption = src && showScale && room && scale < 0.995 ? fill(cut ? P.scaleCut : P.scale, { scale: scaleText(scale) }) : null;
+  useEffect(() => onCaption?.(caption), [caption, onCaption]);
   return (
     <div
       ref={box}
@@ -83,7 +86,7 @@ export function FitPreview({ preview, base, title, padding = 16, htmlKey, cropKe
       data-scale={fit === 'card' ? scaleText(scale) : undefined}
       data-cut={cut || undefined}
     >
-      {note ? <span className={styles.note}>{note}</span> : null}
+      {note ? <span className={`${styles.note} ${preview.mode === 'captured' && showCaptured && !noCrop ? styles.noteBeside : ''}`}>{note}</span> : null}
       {src ? (
         <div className={styles.scaled} style={{ width: w * scale, height: h * scale }}>
           <div data-fit style={{ width: w, height: h, transform: scale === 1 ? undefined : `scale(${scale})`, transformOrigin: 'top left' }}>
@@ -97,8 +100,8 @@ export function FitPreview({ preview, base, title, padding = 16, htmlKey, cropKe
       ) : null}
       {placed.clipRight ? <span className={styles.fadeRight} style={{ background: `linear-gradient(to right, transparent, ${paint})` }} aria-hidden="true" /> : null}
       {placed.clipBottom ? <span className={styles.fadeBottom} style={{ background: `linear-gradient(to bottom, transparent, ${paint})` }} aria-hidden="true" /> : null}
-      {preview.mode === 'captured' && showCaptured && !note ? <span className={styles.captured}>{runPage.captured}</span> : null}
-      {caption ? <span className={styles.scale}>{caption}</span> : null}
+      {preview.mode === 'captured' && showCaptured && !noCrop ? <span className={styles.captured}>{runPage.captured}</span> : null}
+      {caption && !onCaption ? <span className={styles.scale}>{caption}</span> : null}
     </div>
   );
 }

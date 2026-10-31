@@ -73,9 +73,16 @@ export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId }: { pa
   const [previewed, setPreviewed] = useState(false);
   const playing = phase !== 'rest';
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const frames = useRef<number[]>([]);
+  // Stop and unmount cancel the frames as well as the timers, so a frame queued by a play never lands after it (D-112).
   const clear = () => {
     timers.current.forEach(clearTimeout);
     timers.current = [];
+    frames.current.forEach(cancelAnimationFrame);
+    frames.current = [];
+  };
+  const twoFrames = (next: () => void) => {
+    frames.current.push(requestAnimationFrame(() => frames.current.push(requestAnimationFrame(next))));
   };
   useEffect(() => clear, []);
   useEffect(() => {
@@ -92,13 +99,13 @@ export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId }: { pa
     setPhase('start');
     const after = (ms: number, next: () => void) => timers.current.push(setTimeout(next, ms));
     // Two frames so the start is painted before the transition to the end begins.
-    requestAnimationFrame(() => requestAnimationFrame(() => setPhase('end')));
+    twoFrames(() => setPhase('end'));
     const run = Math.min(total, PLAY_CAP_MS);
     if (total > PLAY_CAP_MS) after(run, () => setPhase('snap'));
     after(run + HOLD_MS, () => setPhase('out'));
     after(run + HOLD_MS + FADE_MS, () => {
       setPhase('in');
-      requestAnimationFrame(() => requestAnimationFrame(() => setPhase('rest')));
+      twoFrames(() => setPhase('rest'));
     });
     after(run + HOLD_MS + FADE_MS * 2 + 50, () => setPreviewed(true));
   };

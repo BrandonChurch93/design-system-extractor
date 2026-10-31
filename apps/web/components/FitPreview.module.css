@@ -67,13 +67,18 @@
   border: 1px solid var(--dse-line-soft);
 }
 
-/* No crop: the note, then the component's code, above the toggle's row. */
+/* Beside the Captured tag the note leaves the tag its corner (D-112). */
+.noteBeside {
+  max-width: calc(100% - var(--dse-space-3) * 3 - 72px);
+}
+
+/* No crop: the note, then the component's code, which fades at the region's bottom (D-112). */
 .codeOnly {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: var(--dse-space-2);
-  padding: var(--dse-space-3) var(--dse-space-3) 44px;
+  padding: var(--dse-space-3);
 }
 
 .codeOnly .note {
@@ -81,10 +86,18 @@
   align-self: flex-start;
 }
 
+/* Lines wrap on a card (the drawer's Code section keeps them whole), and the block fades out at the region's bottom. */
 .code {
   flex: 1;
   min-height: 0;
-  overflow: auto;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 24px), transparent);
+}
+
+.code pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow: hidden;
 }
 
 .scaled iframe,

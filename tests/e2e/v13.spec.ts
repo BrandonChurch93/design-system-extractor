@@ -209,3 +209,26 @@ test('the easing stages of a row sit at one height, and the Dense strip stays un
   expect(shape.drawn.every((p) => p === 'none')).toBe(true);
   expect(shape.longRows).toBe(4);
 });
+
+for (const width of [1440, 820, 390]) {
+  test(`the Radius and Shadow row: one column below desktop, its skeleton at the real height, at ${width} (D-112)`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    const measure = async (id: string) => {
+      await page.goto(`/r/${id}`);
+      const row = page.locator('#tokens [class*="pair"]').first();
+      await row.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(600);
+      return row.evaluate((el) => ({ h: Math.round(el.getBoundingClientRect().height), cols: getComputedStyle(el).gridTemplateColumns.split(' ').length }));
+    };
+    const real = await measure('seedclean0');
+    const skeleton = await measure('seedprog01');
+    expect(real.cols).toBe(width > 1023 ? 2 : 1);
+    expect(Math.abs(skeleton.h - real.h), `${skeleton.h} vs ${real.h}`).toBeLessThanOrEqual(4);
+    if (width === 820) {
+      await page.goto('/r/seedclean0');
+      const items = page.getByTestId('shadow-samples').locator('li');
+      const tops = await items.evaluateAll((els) => new Set(els.map((e) => Math.round(e.getBoundingClientRect().top))).size);
+      expect(tops).toBe(1);
+    }
+  });
+}

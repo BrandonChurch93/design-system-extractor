@@ -1,0 +1,24 @@
+{
+  "purpose": "components",
+  "size": "small",
+  "model": "claude-haiku-5-5",
+  "text": "{\"items\": [{\"id\": \"c25\", \"type\": \"textarea\", \"name\": \"Text area\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c26\", \"type\": \"tabs\", \"name\": \"Feature tabs\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c27\", \"type\": \"button\", \"name\": \"Tab button\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c28\", \"type\": \"alert\", \"name\": \"Notice\", \"isComponent\": true, \"variantHint\": \"tone (warning, success) and whether a call to action is included\"}, {\"id\": \"c29\", \"type\": \"empty-state\", \"name\": \"Not found panel\", \"isComponent\": true, \"variantHint\": null}]}",
+  "usage": {
+    "input_tokens": 609,
+    "cache_creation_input_tokens": 1564,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 1564,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 234,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-31T17:39:48.417Z",
+  "request": "Items:\nc25 guess textarea 0.98, textarea, classes textarea, no children, in contact, text \"\", 2 instances on 1 page (/contact), variants Default, no picture\nc26 guess tabs 0.95, div role tablist, classes tabs, inside button:3, in features, text \"Digests Slack Pages\", 2 instances on 1 page (/features), variants Default, no picture\nc27 guess button 0.95, button role tab, classes tab, no children, in features, text \"Digests\", 6 instances on 1 page (/features), variants Default, no picture\nc28 guess alert 0.8, div role status, classes alert alert-success, inside div:2 p:1 span:1 svg:1, in features, text \"Digests are included in every plan. Compare plans\", 4 instances on 2 pages (/features, /docs/getting-started), variants Warning, Success, picture below\nc29 guess empty-state 0.6, section, classes empty-state, inside a:1 h1:1 p:1 span:1 svg:1, in 404 page, text \"This page is not here. It may have moved when the docs were reorganized. Back to\", 2 instances on 1 page (404 page), variants Default, picture below\nPicture of c28:\n[image]\nPicture of c29:\n[image]"
+}
