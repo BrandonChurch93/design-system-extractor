@@ -64,6 +64,7 @@ async function openWideDrawer(page: Page) {
 async function openFirstComponent(page: Page) {
   await page.locator('#components article h3 a').first().click();
   await page.locator('[role="dialog"] h2').first().waitFor();
+  await waitForPreviews(page);
   await page.waitForTimeout(800);
 }
 
@@ -234,9 +235,20 @@ export async function settle(page: Page): Promise<void> {
 
 /** Every preview frame and crop on the page has fired `load` (PreviewFrame's `data-loaded`), bounded. */
 export async function waitForPreviews(page: Page): Promise<void> {
-  await page
-    .waitForFunction(() => [...document.querySelectorAll('[data-preview-frame]')].every((el) => el.hasAttribute('data-loaded') || (el as HTMLImageElement).loading === 'lazy' && el.getBoundingClientRect().top > window.innerHeight * 3), undefined, { timeout: 15_000 })
-    .catch(() => {});
+  // Every preview frame and crop in view; one outside it may be lazy and never load, and is not shot.
+  const inView = () =>
+    [...document.querySelectorAll('[data-preview-frame]')].every((el) => {
+      const r = el.getBoundingClientRect();
+      return el.hasAttribute('data-loaded') || r.bottom <= 0 || r.top >= window.innerHeight || r.width === 0;
+    });
+  await page.waitForFunction(inView, undefined, { timeout: 15_000 }).catch(() => {});
+  // The catalog's phone frames hold previews of their own, one document down: those frames in view.
+  const vh = page.viewportSize()?.height ?? 0;
+  for (const f of page.frames().filter((x) => x.url().includes('/catalog/frame/'))) {
+    const box = await (await f.frameElement()).boundingBox().catch(() => null);
+    if (!box || box.y + box.height <= 0 || box.y >= vh) continue;
+    await f.waitForFunction(() => [...document.querySelectorAll('[data-preview-frame]')].every((el) => el.hasAttribute('data-loaded')), undefined, { timeout: 15_000 }).catch(() => {});
+  }
 }
 
 /**
@@ -251,10 +263,21 @@ export async function expectPreviewsPainted(page: Page, scope?: Locator): Promis
     if (!(await r.isVisible())) continue;
     const box = await r.boundingBox();
     if (!box || box.width < 8 || box.height < 8) continue;
-    const png = PNG.sync.read(await r.screenshot({ animations: 'disabled' }));
-    const d = png.data;
+    // A region under an open panel or sheet shows the panel, not its frame.
+    const onTop = await r.evaluate((el) => {
+      const b = el.getBoundingClientRect();
+      const hit = document.elementFromPoint(b.left + b.width / 2, b.top + b.height / 2);
+      return Boolean(hit && (hit === el || el.contains(hit)));
+    });
+    if (!onTop) continue;
+    // A loaded frame paints in its own process a moment later: up to 3 s before the shot is refused.
     let flat = true;
-    for (let p = 0; p < d.length && flat; p += 4 * 7) if (Math.abs(d[p]! - d[0]!) > 8 || Math.abs(d[p + 1]! - d[1]!) > 8 || Math.abs(d[p + 2]! - d[2]!) > 8) flat = false;
+    for (let attempt = 0; attempt < 7 && flat; attempt++) {
+      if (attempt) await page.waitForTimeout(500);
+      const d = PNG.sync.read(await r.screenshot({ animations: 'disabled' })).data;
+      flat = true;
+      for (let p = 0; p < d.length && flat; p += 4 * 7) if (Math.abs(d[p]! - d[0]!) > 8 || Math.abs(d[p + 1]! - d[1]!) > 8 || Math.abs(d[p + 2]! - d[2]!) > 8) flat = false;
+    }
     if (flat) throw new Error(`a live preview region is a flat fill (${await r.getAttribute('data-ground')}): its frame had not painted`);
   }
 }

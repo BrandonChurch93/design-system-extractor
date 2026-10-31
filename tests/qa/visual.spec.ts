@@ -35,13 +35,18 @@ for (const vp of viewports) {
 const catalog = qaPages.find((x) => x.name === 'catalog')!;
 for (const vp of viewports) {
   test(`catalog · ${vp.name} · sections`, async ({ page }) => {
-    test.setTimeout(600_000);
+    test.setTimeout(1_200_000);
     await page.setViewportSize({ width: vp.width, height: vp.height });
     await freezeClock(page);
     await page.goto(catalog.path);
     await settle(page);
     const mask = (catalog.mask ?? []).map((m) => page.locator(m));
     await expect.soft(page).toHaveScreenshot(`catalog/${vp.name}/top.png`, { animations: 'disabled', caret: 'hide', mask });
+    // The viewport takes the tallest section's height once, so every preview frame of a section is in view
+    // and painted when it is shot: Chromium does not paint a frame outside the viewport (D-112).
+    const tallest = await page.evaluate(() => Math.max(...[...document.querySelectorAll('[data-catalog-section]')].map((el) => Math.ceil(el.getBoundingClientRect().height))));
+    await page.setViewportSize({ width: vp.width, height: Math.max(vp.height, tallest + 40) });
+    await page.waitForTimeout(700);
     for (const d of demoIndex) {
       const section = page.locator(`[data-catalog-section="${d.slug}"]`);
       await section.evaluate((el) => el.scrollIntoView({ block: 'start' }));

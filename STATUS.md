@@ -166,6 +166,10 @@ Read for P11: pages, components, copy, motion, quality-bar, design-system, expor
 
 During the first full e2e pass Docker Desktop's engine stopped answering (its API returned 500), which took the services down mid-run; Docker was restarted, `pnpm run doctor` passed, the seed was intact, and the failed files were re-run green.
 
+## Fixes after the v1.3 review: screenshots and goldens (2026-10-31)
+
+`pnpm qa:design` 168 captured (the run page gains `card-hover` and `drawer-scroll`), reviewed at 1440, 820 and 390 for the review's items 1, 6, 8 and 9: the hovered card shows the ghost button's hover inside its frame; the drawer scrolls the 1440 px header at 1:1; the durations strip labels every value at 1440 with the scale ending at 2,000 ms beside two-column Long rows, keeps its labels inside the card at 390 and the Dense state under 300 px; Radius and Shadow take a full row each at 820 and 390 (one shadow row at 820); the card's control strip holds the scale and ground captions on the left and the toggle on the right, nothing over the component, nothing touching at 390, the `Captured` tag back in its corner beside the hidden note. The visual goldens were updated once for the fixes (`--update-snapshots=all`): the run pages, the panel, the catalog sections with cards, strips, tokens and previews. The review found the catalog goldens of P18 held unpainted preview frames: Chromium does not paint a frame outside the viewport and a catalog section is taller than it, so QA now sizes the viewport to the tallest section once, waits for the previews in view (the phone frames' too), and refuses a shot whose visible live region is one flat fill; every catalog card now shows its preview at all three widths. `pnpm qa:axe` 191 of 191 with zero violations.
+
 ## P18 real-site check
 
 ### The owner's portfolio and modernsoftworks.com, fresh through the queue (2026-10-29)
