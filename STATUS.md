@@ -172,6 +172,15 @@ During the first full e2e pass Docker Desktop's engine stopped answering (its AP
 
 ## P18 real-site check
 
+### After the v1.3 review fixes (2026-10-31): the owner's sites again, fresh through the queue
+
+The renamed Buttons need a fresh run (names are written at extraction), so both sites ran again on the fixed pipeline: brandonchurchportfolio.com `xujbk11f37` (143 s, $0.0072, 15 components, 11 live of 15, the skip link `hidden-until-focus`) and modernsoftworks.com `po9l29stzj` (250 s, $0.0086, 95 components, 78 live of 95 · 82.1%, core 53 of 66, 42 of 89 passing, the skip link `hidden-until-focus`, 37 cards on the contrast fallback).
+
+- Buttons on modernsoftworks.com: `Button (home)` (was `Button (beautiful and)`: the hero's six-word heading is no context now), `Button (404 page)`, `Button (aside)`, `Button (components)`, `Button (home, second)`, `Button (home, third)`, and `Button (accessibility emergency)`, which a two-word section heading names and the three-word rule keeps. No name holds the probe path, and no pattern reference dangles.
+- The skip links' tap target is measured in their focus state: modernsoftworks.com's passes at 195 × 75; the portfolio's fails at `21 px tall, 23 short`, which is the focused link's real height, not the 1 px box at rest.
+- The cards: the scale and ground captions and the Ground toggle sit in the control strip under each preview, the Accordion trigger cut at 0.6× with its fade, the skip link shown focused with its note at the top-left and the `Captured` tag in its corner. Screenshots: `docs/real-site-check/p18-modernsoftworks-cards.png` (1440), `docs/real-site-check/p18-modernsoftworks-cards-390.png` (390), `docs/real-site-check/p18-portfolio-skip-link.png`.
+- Re-opening the fresh portfolio run found a real fault: a pattern's color written as `rgb(12 10 9 / 85%)` made the pattern row's swatch fail the page (the near-white test read hex only). The swatch now reads any CSS color, with a unit test, before these screenshots were taken.
+
 ### The owner's portfolio and modernsoftworks.com, fresh through the queue (2026-10-29)
 
 `pnpm dev` (web and worker), `POST /api/runs` at the visitor timeout, on the final P18 pipeline.
