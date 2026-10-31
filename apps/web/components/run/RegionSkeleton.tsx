@@ -73,8 +73,8 @@ export function RegionSkeleton({ region }: { region: SkeletonRegion }) {
             {range(6).map((i) => (
               <li key={i} className={styles.card}>
                 <Skeleton height={152} on="surface" />
-                {/* The control strip under the preview region (D-112). */}
-                <Skeleton height={33} on="surface" className={styles.cardControls} />
+                {/* The control strip under the preview region: the clean fixture's two rows average 59 (39, and 79 where a card holds both captions; D-112). */}
+                <Skeleton height={59} on="surface" className={styles.cardControls} />
                 <span className={styles.cardBody}>
                   <Skeleton height={16} width="50%" on="surface" />
                   <Skeleton height={12} width="80%" on="surface" />

@@ -176,9 +176,13 @@ test('no card preview renders below 0.6×, and a cut one says so (D-107)', async
   expect(scales.length).toBeGreaterThan(0);
   expect(Math.min(...scales)).toBeGreaterThanOrEqual(0.6);
   await page.goto('/catalog');
-  const cut = page.locator('[data-cut]').first();
-  await cut.scrollIntoViewIfNeeded();
-  await expect(cut).toContainText(', cut to fit');
+  // On a card the caption sits in the control strip under the region, which nothing in the region covers (D-112).
+  const card = page.locator('[data-testid="component-card"]').filter({ has: page.locator('[data-cut]') }).first();
+  await card.scrollIntoViewIfNeeded();
+  await expect(card.getByTestId('card-controls')).toContainText(', cut to fit');
+  const region = await card.getByTestId('card-preview').boundingBox();
+  const strip = await card.getByTestId('card-controls').boundingBox();
+  expect(strip!.y).toBeGreaterThanOrEqual(region!.y + region!.height - 0.5);
 });
 
 test('the easing stages of a row sit at one height, and the Dense strip stays under 300 px at 390 (D-101, D-102)', async ({ page }) => {
@@ -232,3 +236,24 @@ for (const width of [1440, 820, 390]) {
     }
   });
 }
+
+test('the contrast caption shows in the strip while the toggle is on the fallback tone; nothing in the strip touches at 390 (D-112)', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/r/seedclean0');
+  await page.locator('#components').scrollIntoViewIfNeeded();
+  const strips = page.locator('#components [data-testid="card-controls"]');
+  const n = await strips.count();
+  expect(n).toBeGreaterThan(0);
+  for (let i = 0; i < n; i++) {
+    const [text, toggle] = await strips.nth(i).evaluate((el) => [el.querySelector('p')!.getBoundingClientRect(), el.querySelector('[role="radiogroup"]')!.getBoundingClientRect()].map((r) => ({ left: r.left, right: r.right })));
+    expect(text!.right).toBeLessThanOrEqual(toggle!.left);
+  }
+  const cards = page.locator('#components [data-testid="component-card"]');
+  const at = await cards.evaluateAll((els, t) => els.findIndex((e) => e.textContent?.includes(t)), runPage.preview.groundDark);
+  expect(at).toBeGreaterThanOrEqual(0);
+  const fallback = cards.nth(at);
+  await fallback.scrollIntoViewIfNeeded();
+  await expect(fallback.getByRole('radio', { name: runPage.preview.grounds.dark })).toHaveAttribute('aria-checked', 'true');
+  await fallback.getByRole('radio', { name: runPage.preview.grounds.site }).click();
+  await expect(fallback.getByTestId('card-controls')).not.toContainText(runPage.preview.groundDark);
+});
