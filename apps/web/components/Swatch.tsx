@@ -1,4 +1,4 @@
-import { isNearWhite } from '@dse/pipeline/color';
+import { nearWhite } from '../lib/palette';
 import type { ButtonHTMLAttributes, Ref } from 'react';
 import styles from './Swatch.module.css';
 
@@ -17,7 +17,7 @@ type SwatchProps = {
 
 /** An extracted color, unadjusted. A button that opens the token's popover. */
 export function Swatch({ value, size = 'xl', caption, showHex = size !== 'mini', forceState, className, type = 'button', ...rest }: SwatchProps) {
-  const edge = isNearWhite(value);
+  const edge = nearWhite(value);
   return (
     <button type={type} className={`${styles.swatch} ${styles[size]} ${className ?? ''}`} data-force={forceState} {...rest}>
       <span className={`${styles.chip} ${edge ? styles.edge : ''}`} style={{ background: value }} />
