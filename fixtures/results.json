@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29T17:54:49.734Z",
+  "generatedAt": "2026-10-31T17:45:04.202Z",
   "mode": "record",
   "through": "done",
   "pipelineVersion": "1.3.0",
@@ -83,7 +83,7 @@
           "predicted": 29,
           "expected": 29,
           "matched": 29,
-          "nameAgreement": 0.759,
+          "nameAgreement": 0.724,
           "namesValid": true,
           "misses": [],
           "extras": []
@@ -231,7 +231,7 @@
           "predicted": 31,
           "expected": 31,
           "matched": 31,
-          "nameAgreement": 0.645,
+          "nameAgreement": 0.742,
           "namesValid": true,
           "misses": [],
           "extras": []
@@ -531,7 +531,7 @@
           "predicted": 29,
           "expected": 29,
           "matched": 29,
-          "nameAgreement": 0.586,
+          "nameAgreement": 0.69,
           "namesValid": true,
           "misses": [],
           "extras": []
@@ -679,7 +679,7 @@
           "predicted": 22,
           "expected": 22,
           "matched": 22,
-          "nameAgreement": 0.364,
+          "nameAgreement": 0.318,
           "namesValid": true,
           "misses": [],
           "extras": []

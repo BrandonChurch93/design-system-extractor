@@ -15,7 +15,7 @@ You are building an interface that must match this design system exactly.
   --color-gray-900: #1F1F1F;
   --color-blue-900: #0B1F3A;
   --color-blue-600: #2458E6;
-  --color-blue-600-alt: #1C4EDB;
+  --color-blue-link: #1C4EDB;
   --color-teal-500: #0F8A8A;
   --color-success: #15803D;
   --color-danger: #DC2626;
@@ -170,7 +170,7 @@ Motion: hover · background-color · 160 ms · ease-out-quad; active · backgrou
 Checks: all pass
 
 ```css
-a { color: var(--color-blue-600-alt); text-decoration: none; }
+a { color: var(--color-blue-link); text-decoration: none; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-8); height: 44px; padding: 0px var(--space-20); border: 1px solid transparent; border-radius: var(--radius-sm); font-size: 14px; line-height: 20px; font-weight: 600; cursor: pointer; transition: background-color var(--duration-160) var(--ease-out-quad), color var(--duration-160) var(--ease-out-quad), transform var(--duration-160) var(--ease-out-quad), box-shadow var(--duration-160) var(--ease-out-quad); }
 .btn-ghost { background: transparent; color: var(--color-blue-900); }
 ```

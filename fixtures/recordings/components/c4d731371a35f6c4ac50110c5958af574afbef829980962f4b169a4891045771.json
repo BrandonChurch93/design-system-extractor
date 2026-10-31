@@ -1,0 +1,24 @@
+{
+  "purpose": "components",
+  "size": "small",
+  "model": "claude-haiku-5-5",
+  "text": "{\"items\": [{\"id\": \"c25\", \"type\": \"tag\", \"name\": \"Tab\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c26\", \"type\": \"alert\", \"name\": \"Notice\", \"isComponent\": true, \"variantHint\": \"tone and whether it carries an action button\"}, {\"id\": \"c27\", \"type\": \"card\", \"name\": \"Promo card\", \"isComponent\": true, \"variantHint\": \"striped dark ground\"}, {\"id\": \"c28\", \"type\": \"tag\", \"name\": \"Step marker\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c29\", \"type\": \"card\", \"name\": \"Dark band\", \"isComponent\": true, \"variantHint\": \"dark ground with inset card\"}, {\"id\": \"c30\", \"type\": \"button\", \"name\": \"Band button\", \"isComponent\": true, \"variantHint\": \"light fill on dark ground\"}, {\"id\": \"c31\", \"type\": \"card\", \"name\": \"Dark card\", \"isComponent\": true, \"variantHint\": null}, {\"id\": \"c32\", \"type\": \"button\", \"name\": \"Share button\", \"isComponent\": true, \"variantHint\": \"icon only\"}]}",
+  "usage": {
+    "input_tokens": 1057,
+    "cache_creation_input_tokens": 1564,
+    "cache_read_input_tokens": 0,
+    "cache_creation": {
+      "ephemeral_5m_input_tokens": 1564,
+      "ephemeral_1h_input_tokens": 0
+    },
+    "output_tokens": 367,
+    "output_tokens_details": {
+      "thinking_tokens": 0
+    },
+    "service_tier": "standard",
+    "inference_geo": "global",
+    "speed": "standard"
+  },
+  "recordedAt": "2026-10-31T17:52:36.789Z",
+  "request": "Items:\nc25 guess button 0.95, button role tab, classes tab, no children, in features, text \"Digests\", 6 instances on 1 page (/features), variants Default, no picture\nc26 guess alert 0.8, div role status, classes alert alert-success, inside div:2 p:1 span:1 svg:1, in features, text \"Digests are included in every plan. Compare plans\", 2 instances on 1 page (/features), variants Default, picture below\nc27 guess card 0.6, section, classes promo, inside h3:1 p:1, in features, text \"Ship notes on Fridays Teams that publish weekly see twice the readers.\", 2 instances on 1 page (/features), variants Default, picture below\nc28 guess tag 0.7, li, classes step, no children, in features, text \"1 Connect\", 6 instances on 1 page (/features), variants Default, picture below\nc29 guess card 0.6, section, classes dark-band, inside a:1 article:1 h3:1 p:1, in features, text \"Start writing Night mode digests Every digest reads on a dark ground too.\", 2 instances on 1 page (/features), variants Default, picture below\nc30 guess button 0.95, a, classes band-button, no children, in night mode digests, text \"Start writing\", 2 instances on 1 page (/features), variants Default, no picture\nc31 guess card 0.6, article, classes band-card, inside h3:1 p:1, in night mode digests, text \"Night mode digests Every digest reads on a dark ground too.\", 2 instances on 1 page (/features), variants Default, picture below\nc32 guess button 0.95, button, classes share-button, inside svg:1, in changelog, text \"\", 4 instances on 2 pages (/changelog, /blog/release-notes-week-1), variants Default, no picture\nPicture of c26:\n[image]\nPicture of c27:\n[image]\nPicture of c28:\n[image]\nPicture of c29:\n[image]\nPicture of c31:\n[image]"
+}

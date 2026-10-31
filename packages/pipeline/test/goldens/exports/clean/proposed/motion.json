@@ -154,14 +154,14 @@
         "value": 0.25
       },
       "start": {
-        "opacity": "0.02",
-        "transform": "translateY(15.6px)"
+        "opacity": "0",
+        "transform": "translateY(16px)"
       },
       "end": {
         "opacity": "1",
         "transform": "translateY(0px)"
       },
-      "durationMs": 402,
+      "durationMs": 401,
       "delayMs": 0,
       "easing": null,
       "iterations": 1,

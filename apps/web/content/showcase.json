@@ -326,17 +326,17 @@
       "order": 6,
       "stats": {
         "colors": 19,
-        "typeStyles": 10,
+        "typeStyles": 9,
         "spacingSteps": 11,
-        "components": 36,
-        "checksPassed": 56,
-        "checksApplicable": 63,
+        "components": 34,
+        "checksPassed": 51,
+        "checksApplicable": 57,
         "componentsPassing": {
-          "passed": 26,
-          "applicable": 33
+          "passed": 25,
+          "applicable": 31
         },
         "previews": {
-          "live": 35,
+          "live": 33,
           "diff": 1,
           "css-too-large": 0,
           "fonts-unavailable": 0,
@@ -348,35 +348,35 @@
       "palette": [
         {
           "value": "#1F1F1F",
-          "share": 0.351
+          "share": 0.349
         },
         {
           "value": "#FFFFFF",
-          "share": 0.145
+          "share": 0.146
         },
         {
           "value": "#0B1F3A",
-          "share": 0.082
+          "share": 0.077
         },
         {
           "value": "#D1D1D1",
-          "share": 0.075
-        },
-        {
-          "value": "#E1E1E1",
-          "share": 0.061
+          "share": 0.073
         },
         {
           "value": "#737373",
-          "share": 0.06
+          "share": 0.064
+        },
+        {
+          "value": "#E1E1E1",
+          "share": 0.059
         },
         {
           "value": "#505050",
-          "share": 0.054
+          "share": 0.057
         },
         {
-          "value": "#2458E6",
-          "share": 0.041
+          "value": "#1C4EDB",
+          "share": 0.042
         }
       ]
     }

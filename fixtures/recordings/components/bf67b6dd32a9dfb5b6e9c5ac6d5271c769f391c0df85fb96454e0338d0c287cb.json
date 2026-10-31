@@ -19,6 +19,6 @@
     "inference_geo": "global",
     "speed": "standard"
   },
-  "recordedAt": "2026-10-29T18:02:44.893Z",
+  "recordedAt": "2026-10-31T17:53:04.182Z",
   "request": "Items:\nc1 guess header 0.95, header, no class names, inside a:1, in home, text \"Acme\", 2 instances on 1 page (/), variants Default, no picture\nc2 guess input 0.98, input, no class names, no children, in home, text \"\", 4 instances on 1 page (/), variants Default, no picture\nc3 guess button 0.95, button, no class names, no children, in home, text \"Sign in\", 2 instances on 1 page (/), variants Default, no picture"
 }
