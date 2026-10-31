@@ -134,6 +134,10 @@ function toV13(doc: Json): void {
   const comps: Json[] = Array.isArray(doc.components) ? doc.components : [];
   let recount = false;
   for (const c of comps) {
+    // The default state's crop is the same key that was never written (D-108, D-112).
+    if (isObject(c.preview) && c.preview.width === 0 && c.preview.height === 0 && Array.isArray(c.states)) {
+      for (const s of c.states) if (isObject(s) && s.state === 'default') delete s.cropKey;
+    }
     for (const p of [c.preview, ...(Array.isArray(c.variants) ? c.variants.map((v: Json) => v.preview) : [])]) {
       if (!isObject(p)) continue;
       if (!('fill' in p)) p.fill = null;

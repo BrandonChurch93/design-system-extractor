@@ -91,6 +91,10 @@ describe('the 1.3 step (D-105, D-108, D-109)', () => {
     expect(p).toMatchObject({ mode: 'captured', capturedReason: 'no-crop' });
     expect(p.cropKey).toBeUndefined();
     expect(p.htmlKey).toBeUndefined();
+    // Nothing in the document names the key that was never written.
+    const upgraded = doc.components.find((x) => x.id === c.id)!;
+    expect(upgraded.states.find((s) => s.state === 'default')!.cropKey).toBeUndefined();
+    expect(JSON.stringify(upgraded)).not.toContain(c.preview.cropKey);
     expect(doc.stats.previews!['no-crop']).toBe(1);
     expect(doc.stats.previews!.live).toBe(v12.stats.previews.live - 1);
   });
