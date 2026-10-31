@@ -14,6 +14,8 @@ export const keys = {
   componentMobile: (runId: string, componentId: string) => `${component(runId, componentId)}/mobile.png`,
   variantCrop: (runId: string, componentId: string, variantId: string) => `${component(runId, componentId)}/variants/${variantId}/default.png`,
   componentPreview: (runId: string, componentId: string) => `${component(runId, componentId)}/preview.html`,
+  /** The focus crop a component hidden until focus previews, apart from its focus state's crop (D-108, D-112). */
+  componentPreviewFocus: (runId: string, componentId: string) => `${component(runId, componentId)}/preview-focus.png`,
   componentStatePreview: (runId: string, componentId: string, state: State) => `${component(runId, componentId)}/preview-${state}.html`,
   variantPreview: (runId: string, componentId: string, variantId: string) => `${component(runId, componentId)}/variants/${variantId}/preview.html`,
   variantStatePreview: (runId: string, componentId: string, variantId: string, state: State) =>

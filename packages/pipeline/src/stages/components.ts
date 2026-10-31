@@ -354,7 +354,7 @@ async function assemble(ctx: RunContext, w: Working, id: string, tokens: Tokens)
   // Hidden at rest on every instance: the preview is the focus crop, as the site shows it to a keyboard user (D-108).
   const shownBy = w.items.every((it) => it.el.hidden) ? w.items.find(focusShown) : undefined;
   const focusRec = shownBy && focusShown(shownBy);
-  const focusShot = shownBy && focusRec ? await put(ctx, keys.componentCrop(ctx.runId, id, 'focus'), withGround(focusRec.crop, shownBy, groundOf(shownBy), focusRec.delta)) : null;
+  const focusShot = shownBy && focusRec ? await put(ctx, keys.componentPreviewFocus(ctx.runId, id), withGround(focusRec.crop, shownBy, groundOf(shownBy), focusRec.delta)) : null;
 
   const instances: Component['instances'] = w.items.map((it) => ({
     id: instanceId(it),

@@ -255,8 +255,8 @@ for (const y of seed.synthetic) {
       durationMs: 64_000,
       sparse: true,
       components,
-      // The cut components' patterns go with them, so every reference resolves (D-105).
-      ...(cleanDoc.motion ? { motion: { ...cleanDoc.motion, patterns: cleanDoc.motion.patterns.map((p) => (p.componentId && !components.some((c) => c.id === p.componentId) ? (({ componentId: _, ...rest }) => rest)(p) : p)) } } : {}),
+      // The cut components' patterns go with them, so every reference resolves (D-105, data-model.md).
+      ...(cleanDoc.motion ? { motion: { ...cleanDoc.motion, patterns: cleanDoc.motion.patterns.filter((p) => !p.componentId || components.some((c) => c.id === p.componentId)) } } : {}),
       checks: {
         summary: { passed, failed: results.length - passed, total: components.length * 5, applicable: results.length },
         byCheck: (cleanDoc.checks?.byCheck ?? []).map((b) => {

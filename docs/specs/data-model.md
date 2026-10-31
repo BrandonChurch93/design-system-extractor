@@ -169,7 +169,7 @@ Enums (`packages/schema/src/enums.ts`), every one with a Zod enum and a label ma
 ## Storage keys
 
 - Pages: `runs/{runId}/pages/{pageId}/{viewport}.png`, plus the intermediate `…/{viewport}.snapshot.json.gz` and `…/{viewport}.css.json.gz` (deleted after `done` unless `DSE_KEEP_INTERMEDIATE=1`).
-- Components: `runs/{runId}/components/{componentId}/{state}.png` (crops), `…/source-{viewport}.png`, `…/mobile.png` (the 390 px crop for a responsive variant), `…/variants/{variantId}/default.png` (each variant's crop), `…/preview.html` (default state, self-contained), `…/preview-{state}.html` (one per captured state of a live component), `…/variants/{variantId}/preview.html` and `…/variants/{variantId}/preview-{state}.html`, and `…/img-{elementId}.png` beside a preview, each image of the component cut from the page screenshot for its placeholder (up to 400 KB, D-098).
+- Components: `runs/{runId}/components/{componentId}/{state}.png` (crops), `…/source-{viewport}.png`, `…/mobile.png` (the 390 px crop for a responsive variant), `…/variants/{variantId}/default.png` (each variant's crop), `…/preview.html` (default state, self-contained), `…/preview-{state}.html` (one per captured state of a live component), `…/preview-focus.png` (the focus crop a component hidden until focus previews, apart from its focus state's crop; D-112), `…/variants/{variantId}/preview.html` and `…/variants/{variantId}/preview-{state}.html`, and `…/img-{elementId}.png` beside a preview, each image of the component cut from the page screenshot for its placeholder (up to 400 KB, D-098).
 - Run: `runs/{runId}/og.png`.
 - Motion adds no keys: patterns carry no crops.
 - Showcase: `showcase/showcase.json`.
