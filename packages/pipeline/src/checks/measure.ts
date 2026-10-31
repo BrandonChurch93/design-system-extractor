@@ -161,8 +161,22 @@ export function focusOf(delta: StyleDelta[], reachedByKeyboard: boolean, before:
   return { status: 'fail', detail: 'No visible change on focus', shortfall: 3 };
 }
 
+/**
+ * The box a reader can reach for an instance hidden at rest: its focus state's, the width and height
+ * the focus delta records over its own (D-112); null when no focus state shows it.
+ */
+export function focusBox(el: SnapElement, focus: { hidden?: boolean; delta: { property: string; to: string }[] } | undefined): { w: number; h: number } | null {
+  if (!focus || focus.hidden) return null;
+  const size = (p: 'width' | 'height', at: number) => {
+    const d = focus.delta.find((x) => x.property === p);
+    const v = d ? Number.parseFloat(d.to) : Number.NaN;
+    return Number.isFinite(v) ? v : at;
+  };
+  return { w: size('width', el.w), h: size('height', el.h) };
+}
+
 /** Tap target: the instance's box at 390 px must be 44 × 44 CSS px; the smaller side is reported. */
-export function tapOf(el: SnapElement): Measured {
+export function tapOf(el: { w: number; h: number }): Measured {
   const w = Math.round(el.w);
   const h = Math.round(el.h);
   if (w >= 44 && h >= 44) return { status: 'pass', detail: `${w} × ${h} at 390 px`, measured: { w, h }, shortfall: 0 };

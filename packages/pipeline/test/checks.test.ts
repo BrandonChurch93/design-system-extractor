@@ -2,7 +2,7 @@ import { PNG } from 'pngjs';
 import { describe, expect, it } from 'vitest';
 import type { CheckResult, ColorToken, Component, Tokens } from '@dse/schema';
 import { contrastRatio, formatRatio } from '../src/color/contrast';
-import { contrastOf, focusOf, groundOf, labelOf, motionOf, sampleGround, tapOf } from '../src/checks/measure';
+import { contrastOf, focusBox, focusOf, groundOf, labelOf, motionOf, sampleGround, tapOf } from '../src/checks/measure';
 import { findCandidates } from '../src/capture/candidates';
 import { itemsFrom, type Item } from '../src/components/items';
 import { checkComponent, summarize } from '../src/stages/checks';
@@ -260,3 +260,18 @@ describe('detail strings', () => {
   });
 });
 
+
+describe('tap target for a component hidden until focus (D-112)', () => {
+  const el = (w: number, h: number) => ({ w, h }) as Parameters<typeof focusBox>[0];
+  it('measures the classic 1 px sr-only link in its focus state', () => {
+    const box = focusBox(el(1, 1), { delta: [{ property: 'width', to: '160px' }, { property: 'height', to: '44px' }] })!;
+    expect(tapOf(box)).toMatchObject({ status: 'pass', detail: '160 × 44 at 390 px' });
+  });
+  it('measures a clip-path link at its own box, which focus does not change', () => {
+    expect(tapOf(focusBox(el(134, 44), { delta: [{ property: 'outline-width', to: '2px' }] })!)).toMatchObject({ status: 'pass', detail: '134 × 44 at 390 px' });
+  });
+  it('has no box when no focus state shows it', () => {
+    expect(focusBox(el(1, 1), undefined)).toBeNull();
+    expect(focusBox(el(1, 1), { hidden: true, delta: [] })).toBeNull();
+  });
+});

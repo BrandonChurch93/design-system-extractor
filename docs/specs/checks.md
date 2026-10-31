@@ -32,9 +32,9 @@ Detail strings: pass `{px} px ring, {ratio} against {ground}` · pass `Backgroun
 
 ## 3 · Tap target
 
-At the mobile viewport, the instance's bounding box must be at least 44 × 44 CSS px. Exempt: links inside a sentence of prose, which are not components anyway. Components with no mobile instance are `na`.
+At the mobile viewport, the instance's bounding box must be at least 44 × 44 CSS px. Exempt: links inside a sentence of prose, which are not components anyway. Components with no mobile instance are `na`. An instance flagged `hiddenAtCapture` (a skip link) is measured in its focus state at 390, the state the reader can reach: its box with the width and height its focus delta records; with no focus state that shows it, the result is `na` (D-112).
 
-Detail strings: pass `{w} × {h} at 390 px` · fail `{h} px tall, {shortfall} short` or `{w} px wide, {shortfall} short` (the smaller dimension) · na `Not present at 390 px`.
+Detail strings: pass `{w} × {h} at 390 px` · fail `{h} px tall, {shortfall} short` or `{w} px wide, {shortfall} short` (the smaller dimension) · na `Not present at 390 px` · na `Hidden at rest; no focus state`.
 
 ## 4 · Label present
 

@@ -1,5 +1,5 @@
 import { Check, type CheckResult, type Checks, type Component, type ComponentType, type Tokens } from '@dse/schema';
-import { contrastOf, focusOf, groundOf, labelOf, motionOf, na, tapOf, type Measured } from '../checks/measure';
+import { contrastOf, focusBox, focusOf, groundOf, labelOf, motionOf, na, tapOf, type Measured } from '../checks/measure';
 import type { Item } from '../components/items';
 import { stateOf } from '../components/variants';
 import type { RunContext } from '../context';
@@ -62,8 +62,14 @@ export function checkComponent(c: Component, src: NonNullable<ReturnType<Compone
   let tapNa = na();
   if (interactive) {
     const phone = src.items.filter((it) => it.viewport === 'mobile' && !it.revealed);
-    tap = worst(phone.map((it) => ({ it, m: tapOf(it.el) })), true);
-    tapNa = na('Not present at 390 px');
+    // An instance hidden at rest is measured in its focus state, the one a reader can reach (D-112).
+    const measured = phone.flatMap((it) => {
+      if (!it.el.hidden) return [{ it, m: tapOf(it.el) }];
+      const box = focusBox(it.el, (it.vc.states[it.el.d] ?? []).find((r) => r.state === 'focus'));
+      return box ? [{ it, m: tapOf(box) }] : [];
+    });
+    tap = worst(measured, true);
+    tapNa = na(phone.length && phone.every((it) => it.el.hidden) ? 'Hidden at rest; no focus state' : 'Not present at 390 px');
   }
 
   let label: Scored | null = null;
