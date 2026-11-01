@@ -128,10 +128,11 @@ test('on touch, a tap on the card preview opens the drawer (D-106)', async ({ br
   await page.goto('/r/seedclean0');
   expect(await page.evaluate(() => matchMedia('(hover: none)').matches)).toBe(true);
   const card = page.locator('#components [data-testid="component-card"]').first();
-  await card.scrollIntoViewIfNeeded();
   // A real tap at the point: the cover link takes it, as it should, so the locator's own tap would wait on it forever.
-  // Tapped once the card has entered and the page answers taps.
+  // Tapped once the card has entered and the page answers taps; scrolled each time, because a smooth scroll
+  // started while the page hydrates can stop short with the card still below the fold.
   await expect(async () => {
+    await card.scrollIntoViewIfNeeded();
     const box = (await card.getByTestId('card-preview').boundingBox())!;
     await page.touchscreen.tap(box.x + 40, box.y + 40);
     await expect(page.getByTestId('preview-stage')).toBeVisible({ timeout: 1500 });
