@@ -244,8 +244,9 @@ export async function waitForPreviews(page: Page): Promise<void> {
   await page.waitForFunction(inView, undefined, { timeout: 15_000 }).catch(() => {});
   // The catalog's phone frames hold previews of their own, one document down: those frames in view.
   const vh = page.viewportSize()?.height ?? 0;
-  for (const f of page.frames().filter((x) => x.url().includes('/catalog/frame/'))) {
-    const box = await (await f.frameElement()).boundingBox().catch(() => null);
+  // A frame route opened on its own is the main frame, and a frame can detach while the page settles: both are skipped.
+  for (const f of page.frames().filter((x) => x !== page.mainFrame() && !x.isDetached() && x.url().includes('/catalog/frame/'))) {
+    const box = await f.frameElement().then((el) => el.boundingBox()).catch(() => null);
     if (!box || box.y + box.height <= 0 || box.y >= vh) continue;
     await f.waitForFunction(() => [...document.querySelectorAll('[data-preview-frame]')].every((el) => el.hasAttribute('data-loaded')), undefined, { timeout: 15_000 }).catch(() => {});
   }
