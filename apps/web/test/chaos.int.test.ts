@@ -88,7 +88,7 @@ describe('chaos · a worker killed mid-run', () => {
     }, 300_000, 500);
     await next.close();
 
-    expect(done.status).toBe('complete');
+    expect(done.status, done.events.slice(-4).map((e) => `${e.stage}: ${e.message}`).join('\n')).toBe('complete');
     expect(done.events.filter((e) => e.stage === 'queue')).toHaveLength(1);
     expect((await h.queue.getJob(id))?.attemptsStarted).toBe(2);
     expect(await runsLeft(who)).toBe(1);
