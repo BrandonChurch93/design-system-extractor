@@ -10,13 +10,15 @@ None.
 
 ## Current phase
 
-Fixes after the v1.3 review (in progress). P18 passed its gate and the Definition of Done on 2026-10-29 (`d835b9b`); the Partner's review (`docs/partner-log.md`, 2026-10-29) sent twelve fixes, each committed as `Fix · {item}`, then verify:all again.
+Build complete (v1.3, with the review's fixes). The Partner's review (`docs/partner-log.md`, 2026-10-29) sent twelve fixes; each is committed as `Fix · {item}`, with four more found while verifying them (below), all ruled in D-112. The Definition of Done (thirteen items) is green again on a fresh clone of `a69fec0` (2026-11-01). P18 had passed its gate and the Definition of Done on 2026-10-29 (`d835b9b`).
 
 v1.2 (P17) passed its gate and the Definition of Done (twelve items) on 2026-10-28; v1.1 (P16) passed its gate and the Definition of Done on 2026-10-27; v1.0 (P0 to P15) on 2026-10-26.
 
 ## Next action
 
-Fix item 1 of the v1.3 review: QA waits for every preview frame's `load`, fails a flat live preview region, and gains the hovered-card and scrolling-drawer states.
+None. The build is complete; what remains is the owner's list under `What Brandon must do at the end`.
+
+Found while verifying the review's fixes, each a `Fix ·` commit and a D-112 bullet: messy-after keeps its 12-page selection (re-recording for the naming rule had dropped `/contact` and Compare's two fixed checks; `scripts/record-extra.ts --keep` now records only the misses); the app's fonts are self-hosted from committed files (Google Fonts began serving a different build of Plus Jakarta Sans 2.071, which moved glyphs on every golden of a fresh build); the touch tap e2e scrolls on every attempt; QA's catalog frame wait skips the main frame; the chaos test names the events of a run that ends other than complete.
 
 Environment note: the repository sits on an iCloud-synced Desktop and macOS evicts files (`ls -lO` shows `dataless`); a read then blocks while iCloud downloads. `find . -type f -flags +dataless -print0 | xargs -0 cat > /dev/null` brings them back.
 
@@ -167,6 +169,9 @@ Read for P11: pages, components, copy, motion, quality-bar, design-system, expor
 During the first full e2e pass Docker Desktop's engine stopped answering (its API returned 500), which took the services down mid-run; Docker was restarted, `pnpm run doctor` passed, the seed was intact, and the failed files were re-run green.
 
 ## Fixes after the v1.3 review: screenshots and goldens (2026-10-31)
+
+After the messy-after restore (2026-10-31): the home and Compare goldens at 1440, 820 and 390 (13 files) updated once and reviewed: Compare shows 12 pages on both sides, five new components with `Feature card (night mode digests)` named by its three-word heading, and two fixed checks (Newsletter input, Status badge); the showcase card reads 36 components and 56 of 63 checks, as before the naming re-record. With the fonts self-hosted, `pnpm qa:visual` 134 of 134 on a fresh build with no golden changed.
+
 
 `pnpm qa:design` 168 captured (the run page gains `card-hover` and `drawer-scroll`), reviewed at 1440, 820 and 390 for the review's items 1, 6, 8 and 9: the hovered card shows the ghost button's hover inside its frame; the drawer scrolls the 1440 px header at 1:1; the durations strip labels every value at 1440 with the scale ending at 2,000 ms beside two-column Long rows, keeps its labels inside the card at 390 and the Dense state under 300 px; Radius and Shadow take a full row each at 820 and 390 (one shadow row at 820); the card's control strip holds the scale and ground captions on the left and the toggle on the right, nothing over the component, nothing touching at 390, the `Captured` tag back in its corner beside the hidden note. The visual goldens were updated once for the fixes (`--update-snapshots=all`): the run pages, the panel, the catalog sections with cards, strips, tokens and previews. The review found the catalog goldens of P18 held unpainted preview frames: Chromium does not paint a frame outside the viewport and a catalog section is taller than it, so QA now sizes the viewport to the tallest section once, waits for the previews in view (the phone frames' too), and refuses a shot whose visible live region is one flat fill; every catalog card now shows its preview at all three widths. `pnpm qa:axe` 191 of 191 with zero violations.
 
@@ -499,6 +504,22 @@ P16 gate (docs/plan.md):
 - [x] Fresh local run on stripe.com: prompt with a Motion section, 46 observed patterns, zero undeclared `var(--`, no numeric names; under `P16 real-site check` above.
 - [x] `pnpm verify:all` green on a fresh clone; goldens updated for v1.1 and logged (D-090: the final set follows the final live eval); Definition of Done re-run in full (eleven items, below).
 
+v1.3 Definition of Done after the review's fixes, all true at once on a fresh clone of `a69fec0` with the Docker services running and `DSE_MODEL_MODE=replay` (2026-11-01):
+
+- [x] 1. `pnpm verify:all` green on a fresh clone in 3,955 s: check, seed check, 801 tests (659 unit), security 54, e2e 256, full evals at thresholds (live rate clean 28 of 29, messy 30 of 31, tailwind 28 of 29, css-in-js 28 of 29, library 22 of 22; the skip links captured `hidden-until-focus`), build, visual 134, axe 191, billing 17, Lighthouse (home 100/100/100/100, run 99/100/100/100), copy (647 files), audit (no high; two moderate advisories in dev tooling, GHSA-67mh-4wv8-2f99 and GHSA-g3hv-75wg-m249, under Known limitations).
+- [x] 2. Every phase gate P0 to P18 recorded below with its date, and the fixes after the review.
+- [x] 3. `docs/traceability.md` maps every `##` and `###` section of the 21 spec and design documents, the fixes' code and tests included (the fonts, `keep`), with no gap (`scripts/test/traceability.test.ts`).
+- [x] 4. `docs/decisions.md` records every deviation (D-001 to D-112); Known limitations lists each with its decision id.
+- [x] 5. `pnpm docker:smoke` builds the worker image from the root and completes the clean fixture in it (9 pages, 9 colors, 29 components, 28 live previews, 50 of 52 checks); `pnpm --filter web build` succeeds.
+- [x] 6. The flag-off test passes (inside verify:all).
+- [x] 7. `pnpm qa:copy` passes (647 files).
+- [x] 8. `pnpm run doctor --production --env fixtures/env/production.sample` passes.
+- [x] 9. The working tree is clean and committed; there is no remote, nothing was pushed.
+- [x] 10. STATUS says `Build complete`, and the owner's end list below is exactly what remains.
+- [x] 11. The prompt export of every fixture run has a Motion section, a Site variables block, a Default line per component, core components before page-specific ones, and no `var(--` to an undeclared name (the export-integrity eval row: 0 undeclared on all five fixtures).
+- [x] 12. Every read path upgrades a stored document by its `pipelineVersion` through the 1.3 step, and a document stored before 1.3.0 opens with inert preview frames (`upgrade.test.ts`; the `seedv12cln` e2e); every reference resolves in every committed and seeded document.
+- [x] 13. A live component's card frame answers the pointer with the site's own hover and active styles, and no card preview renders below 0.6× (`tests/e2e/v13.spec.ts`, `apps/web/test/preview-fit.test.ts`); the scale and ground captions sit in the card's control strip and nothing in it touches at 390.
+
 v1.3 Definition of Done (P18), all true at once on a fresh clone of `d835b9b` with the Docker services running and `DSE_MODEL_MODE=replay` (2026-10-29):
 
 - [x] 1. `pnpm verify:all` green on a fresh clone in 3,959 s: check, seed check, 785 tests (643 unit), security 53, e2e 243, full evals at thresholds with the motion, naming, export-integrity and live-rate rows (live rate clean 28 of 29, messy 30 of 31, tailwind 28 of 29, css-in-js 28 of 29, library 22 of 22; the clean family's skip link captured `hidden-until-focus` as expected), build, visual 128, axe 185, billing 17, Lighthouse (home 100/100/100/100, run 99/100/100/100), copy, audit (no high; one moderate, GHSA-67mh-4wv8-2f99, as in v1.0).
@@ -561,6 +582,8 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 
 ## Gates passed
 
+- Fixes after the v1.3 review · 2026-11-01 · the twelve items of the Partner's 2026-10-29 review, each committed as `Fix · {item}`, and the four found while verifying them, ruled in D-112 · screenshots of items 1, 6, 8 and 9 reviewed at 1440, 820 and 390, goldens updated once and logged above · the owner's portfolio and modernsoftworks.com fresh through the queue with the renamed Buttons and the card controls, under `P18 real-site check` · `pnpm verify:all` green on a fresh clone of `a69fec0` in 3,955 s, `docker:smoke` and the web build green.
+
 - P18 · Third testing round (v1.3) · 2026-10-29 · addendum merged and deleted (D-101 to D-109, merge rulings D-110), the build's rulings D-111 · schema 1.3.0 and the upgrade's 1.3 step, every reference resolving in every fixture, seed and versioned document · the 404 page context and pattern attribution · the hidden-at-capture rule, the skip link shown focused, the drop rule, no-crop, the fill · state rules in the default preview, inert links, the security suite over both · card previews that take the pointer (body overlay, touch cover), the 0.6× floor with clip and fade, the drawer at 1:1, the contrast fallback and the card Ground toggle · the easing stage at card width, the log-axis durations strip with its label budget and the Long list adopted by measurement, the fixed-width Replay, six keyframes, chips at rest on the start · Radius and Shadow in their own row · catalog states · skeletons re-measured · the real-site check on the owner's portfolio and modernsoftworks.com through the queue · record evals in `fixtures/results.json` · qa:design 165 reviewed at 1440, 820 and 390, goldens updated once and logged, axe 185 zero violations · traceability, README, CHANGELOG 1.3.0, version 1.3.0 · verify:all green on a fresh clone, Docker smoke, web build, doctor on the production sample · build spend $1.03 of $20 on the meter (the two queue runs $0.016 more).
 
 - P17 · Second testing round (v1.2) · 2026-10-28 · addendum merged and deleted (D-091 to D-096, merge rulings D-097), the build's rulings D-098 to D-100 · root cause verified (`tx4mehptdf` 447 issues, `mhxvphzzfr` clean) and the upgrade on every read path; Compare and `/r/tx4mehptdf` on the owner's runs · showcase `--add`, `--remove`, `--list` on the local database · previews measured per cause on three real sites at 15 min and handled in four rounds: 32.0, 35.0, 27.5% live of checked before, 82.7, 81.7, 72.5% after (floor 70%) · linear.app at the visitor timeout, all 87 core components checked · ground and the `messy-after` halo check · state files, pinning Hover e2e, security suite on state files · ambient easing loops (long-task, shared start, off screen, reduced motion e2e) · checks up front (six cells with no orphan, the filter, CheckBadge, opening line) · modernsoftworks.com fresh through the queue (`qgc6npq1au`, 60 of 74 live, 30 of 71 passing, Compare against `mhxvphzzfr`) · final record-mode evals in `fixtures/results.json` and the README · qa:design 165 reviewed at 1440, 820 and 390, goldens updated once and logged (plus the Compare goldens after D-099) · axe 185 zero violations · traceability · CHANGELOG 1.2.0, version 1.2.0 · verify:all green on a fresh clone, Docker smoke, web build, doctor on the production sample · P17 model spend about $0.30 (18 local real-site runs $0.286, the queue run $0.011, plus the record evals); build spend under $1 of $20.
@@ -594,6 +617,7 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-112 · Rulings from fixing the v1.3 review: loaded frames before any shot, the CSS sanitizer reads strings before comments, inert frames for documents stored before 1.3.0, the fit by border box, the durations axis to 2,000 ms with the Long list, the three-word heading context, Radius and Shadow in one column below desktop, the card's control strip, tap targets measured focused, a swatch reads any CSS color, messy-after keeps its contact page, the app's fonts self-hosted, the touch e2e scroll, QA's frame wait, the minimatch advisory.
 - D-111 · The build's P18 rulings: focusable means rendered; the hidden flag kept apart from tokens and checks and in clustering; the clean family's skip link; state rules written after the check and inert links; the touch cover link; card captions at the top and the toggle's surface track; the neutral state clears a selection; the event words; `clean-v1-2.json` and the references tests; the 56 px label rule; chips by row width; the Long list adopted by measurement; skeleton heights re-measured.
 - D-110 · Rulings from merging the v1.3 addendum: ids and the 1.3.0 upgrade step, the motion components' real folder, the attribution rule in motion-capture.md, the 16 px duration mark, a `sm` Chip for the card's Ground toggle, the ground caption in the drawer only, labels for the two new reasons, `no-crop` excluded from the real-site live rate, `fill: null` on upgrade, the no-capture CodeBlock, three glossary entries.
 - D-109 · A ground within ΔE 5 of the component's fill is swapped for the opposite tone; `Preview.fill` recorded; the Ground toggle on the card.
@@ -713,6 +737,7 @@ Detection
 Storage and platform
 - Stored objects cannot carry `X-Content-Type-Options: nosniff` (S3 metadata); every upload has the right Content-Type instead (D-035).
 - `pnpm audit` reports one moderate advisory, GHSA-67mh-4wv8-2f99 (esbuild's dev server, reached only through drizzle-kit's dev tooling, never in the app or the worker); no high (P14).
+- `pnpm audit` also reports GHSA-g3hv-75wg-m249 since 2026-11-01: minimatch 3.1.5 under ESLint 9, a slow match on hostile glob patterns. Only the linter reaches it, on patterns the repository writes; the fix is minimatch 11, which ESLint 9 cannot load, so it waits for ESLint's own update (D-112).
 - jsdom stays at 29.1.1 because jsdom 30 needs Node 22.22 (D-053).
 
 Interface
@@ -748,6 +773,7 @@ Previews and capture (v1.3, D-108, D-109, D-111)
 - Node 22.14, pnpm 9.15.9, TypeScript 5.9.3 (the native 7.x compiler is not yet supported by Next.js tooling), ESLint 9 (ESLint 10 is not supported by the React, jsx-a11y and import plugins that `eslint-config-next` uses), Next.js 16.4, React 19.3, Zod 4.6, Vitest 5, Playwright 1.64 with its Chromium.
 - Queue and API (P10): tests use Redis logical database 15 and `dse_test`; the API route handlers are plain `Request`/`Response` functions, so integration tests call them directly with the harness in `apps/web/test/helpers/harness.ts`. `pnpm db:seed:fixtures` takes about ten minutes (six runs, concurrency 1) and refuses to run while a worker heartbeat is live: stop `pnpm dev` first. `pnpm db:seed:check` seeds only when the seed is missing. Sites outside the eval fixtures are recorded with `env DSE_MODEL_MODE=record pnpm exec node scripts/run.mjs tsx scripts/record-extra.ts messy-after walled` (listed in `fixtures/recordings/extra.json`, kept by prune); add `--keep` to replay what is recorded and record only the misses, which with both sites named also deletes the listed recordings neither reads. Next 16 rejects unknown exports from `route.ts` files: keep helpers in `lib/`.
 - Internal packages `@dse/schema` and `@dse/pipeline` are consumed as TypeScript source; the worker, MCP and CLI bundles inline them with tsup.
+- Other agent sessions on this machine: a `pkill -f playwright_chromiumdev_profile` in any of them kills every Playwright browser here, the tests' and the pipeline's, and shows up as `Target page, context or browser has been closed` in whatever test is running (2026-10-31: a lumen-kit session did this every 10 to 15 minutes and cost five verify:all runs). Check `ps` for foreign Playwright Chrome before a long gate.
 - Root scripts load `.env.local` (or `DOTENV_FILE`) through `scripts/run.mjs` without overriding variables already set, so `env DSE_MODEL_MODE=live pnpm evals` wins.
 
 ## What Brandon must do at the end
@@ -761,6 +787,8 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-11-01 · Build complete · v1.3 with the review's fixes · the Definition of Done (thirteen items) green on a fresh clone of `a69fec0`; nothing pushed.
+- 2026-11-01 · Gate passed · fixes after the v1.3 review · verify:all on a fresh clone (tenth attempt: the messy-after selection, the Google Fonts build, a flaky touch tap and the QA frame wait were fixed; five attempts were lost to another session's `pkill` of every Playwright browser).
 - 2026-10-31 · Session started · fixes after the v1.3 review · read CLAUDE.md, STATUS, decisions D-101 to D-111, the Partner's 2026-10-29 log entry, preview-fidelity, capture-and-states, checks, component-detection, data-model, pages, components · tree clean at `32541ba` · `pnpm check` green.
 - 2026-10-29 · Build complete · v1.3 · the Definition of Done (thirteen items) is green on a fresh clone of `d835b9b`; nothing pushed.
 - 2026-10-29 · Gate passed · P18 · the real-site check, the screenshot review, axe, verify:all on a fresh clone (second attempt: the first found six integration expectations still at 28 components).
