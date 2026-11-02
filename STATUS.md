@@ -808,6 +808,8 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-11-02 · Session started · deploy v1 and plan v2 (`prompts/deploy-and-v2.md`) · read CLAUDE.md, STATUS, decisions D-001 to D-115, plan (Definition of Done), deploy-runbook, v2-plan, v2-seams · tree clean at `180872d`, no remote yet.
+
 - 2026-11-02 · Stop · pushing approved by the owner (D-115, deny rules removed in `02bc666`); `.env.production.local` prepared; the next session pushes and deploys with him (`prompts/deploy-and-v2.md`).
 - 2026-11-02 · Fix · the duration ticks' hydration mismatch the owner saw on the dev server (D-114); no other mismatch on any main page at three widths; check green.
 - 2026-11-02 · Build complete · v1.3 with the lists fix · nothing pushed.
