@@ -10,13 +10,13 @@ None.
 
 ## Current phase
 
-Fix · the lists (in progress, 2026-11-02): the owner's request, sent by the Partner as `prompts/v1-3-lists.md` (`04e8e2a`), that the Patterns list and the drift Evidence table show six rows then `Show all`, as the KeyframesList does (D-104). Before it: build complete (v1.3, with the review's fixes). The Partner's review (`docs/partner-log.md`, 2026-10-29) sent twelve fixes; each is committed as `Fix · {item}`, with four more found while verifying them (below), all ruled in D-112. The Definition of Done (thirteen items) is green again on a fresh clone of `a69fec0` (2026-11-01). P18 had passed its gate and the Definition of Done on 2026-10-29 (`d835b9b`).
+Build complete (v1.3, with the review's fixes and the lists fix). The lists fix (2026-11-02, `f33e150`, D-113) is the owner's request, sent by the Partner as `prompts/v1-3-lists.md` (`04e8e2a`), that the Patterns list and the drift Evidence table show six rows then `Show all`, as the KeyframesList does (D-104); `env DSE_MODEL_MODE=replay pnpm verify:all` passed on the clean tree in 4,011 s. The Partner's review (`docs/partner-log.md`, 2026-10-29) sent twelve fixes; each is committed as `Fix · {item}`, with four more found while verifying them (below), all ruled in D-112. The Definition of Done (thirteen items) is green again on a fresh clone of `a69fec0` (2026-11-01). P18 had passed its gate and the Definition of Done on 2026-10-29 (`d835b9b`).
 
 v1.2 (P17) passed its gate and the Definition of Done (twelve items) on 2026-10-28; v1.1 (P16) passed its gate and the Definition of Done on 2026-10-27; v1.0 (P0 to P15) on 2026-10-26.
 
 ## Next action
 
-Built and committed as `Fix · Patterns and near-duplicates show six rows then Show all`: documents, D-113, strings, the three lists, the skeleton, the catalog state, `tests/e2e/lists.spec.ts` (7 of 7), qa:copy, unit 659 of 659, the screenshot review and the goldens (above). Remaining: `env DSE_MODEL_MODE=replay pnpm verify:all` on the clean tree, then STATUS back to Build complete.
+None. The build is complete; what remains is the owner's list under `What Brandon must do at the end`.
 
 ### Lists fix plan (2026-11-02)
 
@@ -598,6 +598,8 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 
 ## Gates passed
 
+- Fix · the lists · 2026-11-02 · Patterns and near-duplicates show six rows then Show all (D-113), `f33e150` · `tests/e2e/lists.spec.ts` 7 of 7 · screenshots of the Evidence table, the long pattern list and the Motion skeleton reviewed at 1440, 820 and 390, one defect fixed (Replay past the card at 390) · goldens updated once, 43 files reviewed · `env DSE_MODEL_MODE=replay pnpm verify:all` green on the clean tree in 4,011 s: check, seed check, 801 tests (659 unit), security 54, e2e 263, evals at thresholds, build, visual 134, axe 191, billing 17, Lighthouse, copy, audit (no high; the two known moderate advisories).
+
 - Fixes after the v1.3 review · 2026-11-01 · the twelve items of the Partner's 2026-10-29 review, each committed as `Fix · {item}`, and the four found while verifying them, ruled in D-112 · screenshots of items 1, 6, 8 and 9 reviewed at 1440, 820 and 390, goldens updated once and logged above · the owner's portfolio and modernsoftworks.com fresh through the queue with the renamed Buttons and the card controls, under `P18 real-site check` · `pnpm verify:all` green on a fresh clone of `a69fec0` in 3,955 s, `docker:smoke` and the web build green.
 
 - P18 · Third testing round (v1.3) · 2026-10-29 · addendum merged and deleted (D-101 to D-109, merge rulings D-110), the build's rulings D-111 · schema 1.3.0 and the upgrade's 1.3 step, every reference resolving in every fixture, seed and versioned document · the 404 page context and pattern attribution · the hidden-at-capture rule, the skip link shown focused, the drop rule, no-crop, the fill · state rules in the default preview, inert links, the security suite over both · card previews that take the pointer (body overlay, touch cover), the 0.6× floor with clip and fade, the drawer at 1:1, the contrast fallback and the card Ground toggle · the easing stage at card width, the log-axis durations strip with its label budget and the Long list adopted by measurement, the fixed-width Replay, six keyframes, chips at rest on the start · Radius and Shadow in their own row · catalog states · skeletons re-measured · the real-site check on the owner's portfolio and modernsoftworks.com through the queue · record evals in `fixtures/results.json` · qa:design 165 reviewed at 1440, 820 and 390, goldens updated once and logged, axe 185 zero violations · traceability, README, CHANGELOG 1.3.0, version 1.3.0 · verify:all green on a fresh clone, Docker smoke, web build, doctor on the production sample · build spend $1.03 of $20 on the meter (the two queue runs $0.016 more).
@@ -754,7 +756,7 @@ Detection
 Storage and platform
 - Stored objects cannot carry `X-Content-Type-Options: nosniff` (S3 metadata); every upload has the right Content-Type instead (D-035).
 - `pnpm audit` reports one moderate advisory, GHSA-67mh-4wv8-2f99 (esbuild's dev server, reached only through drizzle-kit's dev tooling, never in the app or the worker); no high (P14).
-- `pnpm audit` also reports GHSA-g3hv-75wg-m249 since 2026-11-01: minimatch 3.1.5 under ESLint 9, a slow match on hostile glob patterns. Only the linter reaches it, on patterns the repository writes; the fix is minimatch 11, which ESLint 9 cannot load, so it waits for ESLint's own update (D-112).
+- `pnpm audit` also reports GHSA-g3hv-75wg-m249 since 2026-11-01: minimatch 3.1.5 under ESLint 9, a slow match on hostile glob patterns. On 2026-11-02 it also names minimatch 10.2.6 under typescript-eslint (counted as a third moderate finding), likewise lint tooling only. Only the linter reaches it, on patterns the repository writes; the fix is minimatch 11, which ESLint 9 cannot load, so it waits for ESLint's own update (D-112).
 - jsdom stays at 29.1.1 because jsdom 30 needs Node 22.22 (D-053).
 
 Interface
@@ -804,6 +806,8 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-11-02 · Build complete · v1.3 with the lists fix · nothing pushed.
+- 2026-11-02 · Gate passed · Fix · the lists · verify:all in replay on the clean tree at `f33e150` (4,011 s).
 - 2026-11-02 · Session started · Fix · the lists · read CLAUDE.md, STATUS, decisions (D-077, D-080, D-098, D-101 to D-112), partner-log, `prompts/v1-3-lists.md`, components, copy, pages, motion, drift (Evidence) · tree clean at `04e8e2a`.
 - 2026-11-01 · Build complete · v1.3 with the review's fixes · the Definition of Done (thirteen items) green on a fresh clone of `a69fec0`; nothing pushed.
 - 2026-11-01 · Gate passed · fixes after the v1.3 review · verify:all on a fresh clone (tenth attempt: the messy-after selection, the Google Fonts build, a flaky touch tap and the QA frame wait were fixed; five attempts were lost to another session's `pkill` of every Playwright browser).
