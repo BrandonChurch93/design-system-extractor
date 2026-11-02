@@ -322,7 +322,7 @@ All true at once, on a clean checkout, with Docker services running and `DSE_MOD
 6. The flag-off test passes.
 7. `pnpm qa:copy` passes.
 8. `pnpm run doctor --production --env fixtures/env/production.sample` passes.
-9. The working tree is clean, committed, never pushed.
+9. The working tree is clean and committed; it is pushed only when the owner asks (D-115).
 10. STATUS says `Build complete` and the owner's end list is exactly what remains.
 11. The prompt export of every fixture run contains a Motion section, a Site variables block, a Default line per component, core components before page components, and no `var(--` reference to an undeclared name.
 12. Every read path upgrades stored run documents to the current shape by their `pipelineVersion`, and Compare renders any two complete runs of any version.

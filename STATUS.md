@@ -16,7 +16,7 @@ v1.2 (P17) passed its gate and the Definition of Done (twelve items) on 2026-10-
 
 ## Next action
 
-None. The build is complete; what remains is the owner's list under `What Brandon must do at the end`.
+Deploy v1 with the owner, then plan v2 (`prompts/deploy-and-v2.md`). First: push `main` to `origin` (D-115; the remote is not added yet: this session's loaded settings still denied it). `.env.production.local` is prepared (gitignored, mode 600): the Anthropic key from `.env.local`, generated `DSE_JOB_ENCRYPTION_KEY` and `DSE_ADMIN_TOKEN`, the app URL, contact email and caps; six `PASTE_` values wait for Supabase and Upstash.
 
 ### Lists fix plan (2026-11-02)
 
@@ -635,6 +635,7 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-115 · The owner pushes through Claude: `origin` is github.com/BrandonChurch93/design-system-extractor; push `main` when he asks, no force push, no pull requests.
 - D-114 · Inline lengths the server renders carry two decimals at most: the duration ticks' hydration mismatch in development, fixed and held by a server-render test.
 - D-113 · Patterns and near-duplicates show six rows, then Show all: the shared count and `Show fewer`, revealed pattern rows as motion elements that preview as they enter, the Evidence rows' wipe, the Motion skeleton measured at 1440, 820 and 390, the catalog's long pattern list.
 - D-112 · Rulings from fixing the v1.3 review: loaded frames before any shot, the CSS sanitizer reads strings before comments, inert frames for documents stored before 1.3.0, the fit by border box, the durations axis to 2,000 ms with the Long list, the three-word heading context, Radius and Shadow in one column below desktop, the card's control strip, tap targets measured focused, a swatch reads any CSS color, messy-after keeps its contact page, the app's fonts self-hosted, the touch e2e scroll, QA's frame wait, the minimatch advisory.
@@ -800,13 +801,14 @@ Previews and capture (v1.3, D-108, D-109, D-111)
 
 Keep this list current. It is the only hands-on work he will do.
 
-1. Follow `docs/deploy-runbook.md`.
+1. Follow `docs/deploy-runbook.md` with a Claude session (`prompts/deploy-and-v2.md`): Supabase, Upstash and a Railway account are his; `.env.production.local` is already filled except the six `PASTE_` values.
 2. modernsoftworks.com still answers Hostinger's 403 at the bare host (checked again 2026-10-29); the www host serves the site, and the roster crawls `https://www.modernsoftworks.com/` (D-100), so step 11 of the runbook includes it. Pointing the bare host at the site (a redirect to www in Hostinger) is optional.
 
 ## Session log
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-11-02 · Stop · pushing approved by the owner (D-115, deny rules removed in `02bc666`); `.env.production.local` prepared; the next session pushes and deploys with him (`prompts/deploy-and-v2.md`).
 - 2026-11-02 · Fix · the duration ticks' hydration mismatch the owner saw on the dev server (D-114); no other mismatch on any main page at three widths; check green.
 - 2026-11-02 · Build complete · v1.3 with the lists fix · nothing pushed.
 - 2026-11-02 · Gate passed · Fix · the lists · verify:all in replay on the clean tree at `f33e150` (4,011 s).

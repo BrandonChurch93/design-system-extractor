@@ -1051,3 +1051,11 @@ Date: 2026-11-02 · Context: the owner, testing on the dev server, saw a React h
 Decision: the DurationStrip rounds each tick position to two decimals, which stays within six significant digits for any strip under 10,000 px; the shift is under 0.005 px. A server-render test holds every position to two decimals.
 Reasoning: the console must stay clean in development as well as in production; two decimals are below a device pixel at any scale.
 Affects: `apps/web/components/run/DurationStrip.tsx`, `apps/web/test/duration-strip-ssr.test.ts`.
+
+## D-115 · The owner pushes through Claude
+
+Date: 2026-11-02 · Context: the build ran with the owner away, so CLAUDE.md rule 8 forbade pushing, adding a remote and pull requests, and `.claude/settings.json` denied `git push` and `git remote add`. With the build complete, the owner created `github.com/BrandonChurch93/design-system-extractor`, asked Claude to push, and had the two deny rules removed (`02bc666`).
+Decision: the remote is `origin` at that repository. Claude commits as before and pushes `main` when the owner asks or approves it in the session; never a force push, never a pull request. CLAUDE.md rule 8 and the Definition of Done's item 9 say so.
+Reasoning: the owner's instruction; the old rule existed only because no one could review a push during the build.
+Affects: `CLAUDE.md`, `docs/plan.md`, `.claude/settings.json`.
+
