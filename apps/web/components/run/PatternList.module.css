@@ -25,6 +25,11 @@
   border-bottom: 0;
 }
 
+.more {
+  justify-self: start;
+  margin-top: var(--dse-space-5);
+}
+
 .main {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

@@ -10,13 +10,25 @@ None.
 
 ## Current phase
 
-Build complete (v1.3, with the review's fixes). The Partner's review (`docs/partner-log.md`, 2026-10-29) sent twelve fixes; each is committed as `Fix · {item}`, with four more found while verifying them (below), all ruled in D-112. The Definition of Done (thirteen items) is green again on a fresh clone of `a69fec0` (2026-11-01). P18 had passed its gate and the Definition of Done on 2026-10-29 (`d835b9b`).
+Fix · the lists (in progress, 2026-11-02): the owner's request, sent by the Partner as `prompts/v1-3-lists.md` (`04e8e2a`), that the Patterns list and the drift Evidence table show six rows then `Show all`, as the KeyframesList does (D-104). Before it: build complete (v1.3, with the review's fixes). The Partner's review (`docs/partner-log.md`, 2026-10-29) sent twelve fixes; each is committed as `Fix · {item}`, with four more found while verifying them (below), all ruled in D-112. The Definition of Done (thirteen items) is green again on a fresh clone of `a69fec0` (2026-11-01). P18 had passed its gate and the Definition of Done on 2026-10-29 (`d835b9b`).
 
 v1.2 (P17) passed its gate and the Definition of Done (twelve items) on 2026-10-28; v1.1 (P16) passed its gate and the Definition of Done on 2026-10-27; v1.0 (P0 to P15) on 2026-10-26.
 
 ## Next action
 
-None. The build is complete; what remains is the owner's list under `What Brandon must do at the end`.
+Built and committed as `Fix · Patterns and near-duplicates show six rows then Show all`: documents, D-113, strings, the three lists, the skeleton, the catalog state, `tests/e2e/lists.spec.ts` (7 of 7), qa:copy, unit 659 of 659, the screenshot review and the goldens (above). Remaining: `env DSE_MODEL_MODE=replay pnpm verify:all` on the clean tree, then STATUS back to Build complete.
+
+### Lists fix plan (2026-11-02)
+
+Read: CLAUDE.md, STATUS, decisions D-077, D-080, D-098, D-101 to D-112, partner-log (2026-11-02), `prompts/v1-3-lists.md`, components.md (Run page, In-progress run, Motion), copy.md (Run page), pages.md (Run page), motion.md, drift.md (Evidence).
+
+1. Documents: components.md PatternList and EvidenceTable, RegionSkeleton's motion rows; copy.md Show all; pages.md Motion and Drift sentences; D-113 for the rulings.
+2. `apps/web/copy/strings.ts`: `showAllPatterns`, `showAllNearDuplicates`, `showFewer` shared.
+3. `apps/web/components/run/PatternList.tsx` (six, the toggle, revealed rows extend in staggers of 12 as motion elements so the auto-preview's observer keeps its row), `DriftSection.tsx` and its CSS (Evidence: six, the toggle inside the Card, the ChecksTable's row wipe), `KeyframesList.tsx` (shared count).
+4. Catalog: `pattern-list` gains `Long list` (the first twelve patterns of `u5wb4o3to9`, modernsoftworks.com, P18), the drift demo already holds messy's 18 evidence rows.
+5. RegionSkeleton: the Motion section measured at 1440, 820 and 390 on `seedclean0` (5 patterns, so six rows change nothing there) against `seedprog01`; the ±4 px test.
+6. Tests: `tests/e2e/lists.spec.ts` (Patterns on the catalog's long list: six, all twelve, Show fewer with focus kept and no hidden row playing; Evidence on `seedmessy0`: six, all 18, Show fewer with focus kept; reduced motion shows the rows at once; Replay inside its row at 390; the Motion skeleton at three widths).
+7. Gate: qa:copy, qa:design review at three viewports, qa:visual goldens once (Drift on the messy runs, the catalog states), axe, verify:all in replay on a clean tree.
 
 Found while verifying the review's fixes, each a `Fix ·` commit and a D-112 bullet: messy-after keeps its 12-page selection (re-recording for the naming rule had dropped `/contact` and Compare's two fixed checks; `scripts/record-extra.ts --keep` now records only the misses); the app's fonts are self-hosted from committed files (Google Fonts began serving a different build of Plus Jakarta Sans 2.071, which moved glyphs on every golden of a fresh build); the touch tap e2e scrolls on every attempt; QA's catalog frame wait skips the main frame; the chaos test names the events of a run that ends other than complete.
 
@@ -174,6 +186,10 @@ After the messy-after restore (2026-10-31): the home and Compare goldens at 1440
 
 
 `pnpm qa:design` 168 captured (the run page gains `card-hover` and `drawer-scroll`), reviewed at 1440, 820 and 390 for the review's items 1, 6, 8 and 9: the hovered card shows the ghost button's hover inside its frame; the drawer scrolls the 1440 px header at 1:1; the durations strip labels every value at 1440 with the scale ending at 2,000 ms beside two-column Long rows, keeps its labels inside the card at 390 and the Dense state under 300 px; Radius and Shadow take a full row each at 820 and 390 (one shadow row at 820); the card's control strip holds the scale and ground captions on the left and the toggle on the right, nothing over the component, nothing touching at 390, the `Captured` tag back in its corner beside the hidden note. The visual goldens were updated once for the fixes (`--update-snapshots=all`): the run pages, the panel, the catalog sections with cards, strips, tokens and previews. The review found the catalog goldens of P18 held unpainted preview frames: Chromium does not paint a frame outside the viewport and a catalog section is taller than it, so QA now sizes the viewport to the tallest section once, waits for the previews in view (the phone frames' too), and refuses a shot whose visible live region is one flat fill; every catalog card now shows its preview at all three widths. `pnpm qa:axe` 191 of 191 with zero violations.
+
+## Fix · the lists: screenshots and goldens (2026-11-02)
+
+`pnpm qa:design` 171 of 171 captured. The changed regions were also shot as elements at 1440, 820 and 390, collapsed and open: the Evidence table on `seedmessy0` (six rows, `Show all 18 near-duplicates` inside the Card under a `line-soft` rule, all 18 open, `Show fewer`), the catalog's long pattern list (six rows, `Show all 12 patterns`, all twelve open with chips and Replay), and the Motion skeleton. The review found one defect, fixed in D-113. At 390 a stacked pattern row with a stagger of four or five pushed its Replay past the card's edge, because the chips took the row's whole width; they now take the row less the ReplayButton, three chips at 390, and an e2e test holds it. `qa:visual` goldens were updated once (`--update-snapshots=all`). The pixel-identical rewrites were restored, which leaves 43 files: the Drift section on `seedmessy0` at three widths and in the catalog (six rows and the button); the catalog pattern list with `Long list`; the in-progress run pages and the skeleton and Motion demos, taller at 820 (+81) and 390 (+500) for the measured Motion skeleton; the catalog ReplayButton demo at 390 (three chips). The rest are the same content moved by a pixel of sub-pixel layout below the taller catalog sections (component card, component grid, easing cards, checks section, stage rail, compare, recent run row, pricing section), each reviewed side by side.
 
 ## P18 real-site check
 
@@ -617,6 +633,7 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-113 · Patterns and near-duplicates show six rows, then Show all: the shared count and `Show fewer`, revealed pattern rows as motion elements that preview as they enter, the Evidence rows' wipe, the Motion skeleton measured at 1440, 820 and 390, the catalog's long pattern list.
 - D-112 · Rulings from fixing the v1.3 review: loaded frames before any shot, the CSS sanitizer reads strings before comments, inert frames for documents stored before 1.3.0, the fit by border box, the durations axis to 2,000 ms with the Long list, the three-word heading context, Radius and Shadow in one column below desktop, the card's control strip, tap targets measured focused, a swatch reads any CSS color, messy-after keeps its contact page, the app's fonts self-hosted, the touch e2e scroll, QA's frame wait, the minimatch advisory.
 - D-111 · The build's P18 rulings: focusable means rendered; the hidden flag kept apart from tokens and checks and in clustering; the clean family's skip link; state rules written after the check and inert links; the touch cover link; card captions at the top and the toggle's surface track; the neutral state clears a selection; the event words; `clean-v1-2.json` and the references tests; the 56 px label rule; chips by row width; the Long list adopted by measurement; skeleton heights re-measured.
 - D-110 · Rulings from merging the v1.3 addendum: ids and the 1.3.0 upgrade step, the motion components' real folder, the attribution rule in motion-capture.md, the 16 px duration mark, a `sm` Chip for the card's Ground toggle, the ground caption in the drawer only, labels for the two new reasons, `no-crop` excluded from the real-site live rate, `fill: null` on upgrade, the no-capture CodeBlock, three glossary entries.
@@ -787,6 +804,7 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-11-02 · Session started · Fix · the lists · read CLAUDE.md, STATUS, decisions (D-077, D-080, D-098, D-101 to D-112), partner-log, `prompts/v1-3-lists.md`, components, copy, pages, motion, drift (Evidence) · tree clean at `04e8e2a`.
 - 2026-11-01 · Build complete · v1.3 with the review's fixes · the Definition of Done (thirteen items) green on a fresh clone of `a69fec0`; nothing pushed.
 - 2026-11-01 · Gate passed · fixes after the v1.3 review · verify:all on a fresh clone (tenth attempt: the messy-after selection, the Google Fonts build, a flaky touch tap and the QA frame wait were fixed; five attempts were lost to another session's `pkill` of every Playwright browser).
 - 2026-10-31 · Session started · fixes after the v1.3 review · read CLAUDE.md, STATUS, decisions D-101 to D-111, the Partner's 2026-10-29 log entry, preview-fidelity, capture-and-states, checks, component-detection, data-model, pages, components · tree clean at `32541ba` · `pnpm check` green.

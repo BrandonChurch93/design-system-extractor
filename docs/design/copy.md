@@ -153,7 +153,7 @@ Plain, confident, factual. Numbers first. Short sentences. No hype, no apology, 
 - Preview titles (read by screen readers): `{name} preview` · `{name} · {state} preview`
 - Check badge (D-096): `All checks` when every applicable check passes · `{passed} of {applicable} checks` otherwise · nothing when no check applies
 - Passed counts (the Checks passed and Components passing cells, the ChecksTable's Passed column, Compare's Checks column): `{passed} of {applicable}`
-- Show all: `Show all {n} components`
+- Show all: `Show all {n} components` · `Show all {n} patterns` · `Show all {n} near-duplicates`; `Show fewer` is shared with the keyframes list (D-113)
 - Checks heading: `Automated checks`
 - Disclaimer sentence (required wherever checks are summarized): `The measurable subset of WCAG 2.2, run on every component. Not an accessibility audit.`
 - Checks opening line (D-096): `{passed} of {applicable} components pass every check that applies to them.` (when one component has checks that apply: `{passed} of 1 component passes every check that applies to it.`)

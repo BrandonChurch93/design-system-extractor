@@ -112,6 +112,8 @@ export const runPage = {
   statLabels: { colors: 'Colors', typeStyles: 'Type styles', spacingSteps: 'Spacing steps', components: 'Components', checksPassed: 'Checks passed', componentsPassing: 'Components passing' },
   componentsPassingCaption: 'pass every check that applies',
   passedOf: '{passed} of {applicable}',
+  /** The open state of every Show all on the run page but the component grid's (D-104, D-113). */
+  showFewer: 'Show fewer',
   palette: { label: 'Palette', caption: '{name} · {uses} uses' },
   tokenPopover: {
     uses: '{n} uses',
@@ -165,7 +167,7 @@ export const runPage = {
     durationsLabeled: '{n} durations · {k} labeled',
     long: 'Long',
     showAllKeyframes: 'Show all {n} keyframes',
-    showFewer: 'Show fewer',
+    showAllPatterns: 'Show all {n} patterns',
     pagesMore: '· {n} more',
     uses: '{n} uses',
     oneUse: '1 use',
@@ -275,6 +277,7 @@ export const runPage = {
     unchanged: 'unchanged',
     proposalFooter: 'Every proposed pair keeps or improves its contrast ratio on the surfaces it is used on.',
     evidence: { a: 'Near-duplicate', b: 'And', delta: 'Delta', seenOn: 'Seen on', uses: 'Uses' },
+    showAllEvidence: 'Show all {n} near-duplicates',
   },
   exports: {
     heading: 'Exports',

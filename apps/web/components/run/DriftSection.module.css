@@ -177,6 +177,11 @@
   overflow-wrap: anywhere;
 }
 
+.tableFoot {
+  padding: var(--dse-space-3) var(--dse-space-5);
+  border-top: 1px solid var(--dse-line-soft);
+}
+
 @media (max-width: 1023px) {
   .numbers {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -220,6 +225,10 @@
   .table td {
     padding: 0;
     border: 0;
+  }
+
+  .tableFoot {
+    padding: var(--dse-space-3) var(--dse-space-4);
   }
 }
 

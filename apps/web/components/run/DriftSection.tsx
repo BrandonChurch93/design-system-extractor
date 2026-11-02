@@ -1,9 +1,11 @@
 'use client';
+import { useState } from 'react';
 import { ArrowRight } from 'lucide-react';
 import type { DriftNumber, RunDocumentPartial } from '@dse/schema';
 import { fill } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
 import { count } from '../../lib/format';
+import { Button } from '../Button';
 import { Card } from '../Card';
 import { FitPreview } from '../FitPreview';
 import { RegionSkeleton } from './RegionSkeleton';
@@ -11,6 +13,7 @@ import { Swatch } from '../Swatch';
 import { CountUp } from '../motion/CountUp';
 import { Enter } from '../motion/Enter';
 import { Section } from './Section';
+import { FIRST_ROWS, revealIndex } from './show-all';
 import { TokenPopover, tokenInfo } from './TokenPopover';
 import styles from './DriftSection.module.css';
 
@@ -106,10 +109,13 @@ function Collapses({ doc, base }: { doc: RunDocumentPartial; base?: string }) {
   );
 }
 
+/** Six rows, the rest behind Show all, each row's first cell wiping in as the ChecksTable's do (D-113). */
 function Evidence({ doc }: { doc: RunDocumentPartial }) {
+  const [all, setAll] = useState(false);
   const rows = doc.drift!.evidence;
   if (!rows.length) return null;
   const E = D.evidence;
+  const shown = all ? rows : rows.slice(0, FIRST_ROWS);
   return (
     <Card className={styles.tableCard}>
       <table className={styles.table}>
@@ -123,9 +129,13 @@ function Evidence({ doc }: { doc: RunDocumentPartial }) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((r, i) => (
-            <tr key={`${r.a}-${r.b}-${i}`}>
-              <td>{r.a}</td>
+          {shown.map((r, i) => (
+            <tr key={`${r.a}-${r.b}-${i}`} data-testid="evidence-row">
+              <td>
+                <Enter as="span" move="wipe" index={i < FIRST_ROWS ? i : revealIndex(i)}>
+                  {r.a}
+                </Enter>
+              </td>
               <td>{r.b}</td>
               <td>{r.delta}</td>
               <td className={styles.paths}>{r.pages.join(', ')}</td>
@@ -134,6 +144,13 @@ function Evidence({ doc }: { doc: RunDocumentPartial }) {
           ))}
         </tbody>
       </table>
+      {rows.length > FIRST_ROWS ? (
+        <div className={styles.tableFoot}>
+          <Button variant="ghost" aria-expanded={all} onClick={() => setAll(!all)} data-testid="show-all">
+            {all ? runPage.showFewer : fill(D.showAllEvidence, { n: count(rows.length) })}
+          </Button>
+        </div>
+      ) : null}
     </Card>
   );
 }

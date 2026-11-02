@@ -1,17 +1,22 @@
 'use client';
 import Link from 'next/link';
+import { motion } from 'motion/react';
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import type { MotionPattern, RunDocumentPartial } from '@dse/schema';
 import { fill, motionKindLabels } from '@dse/schema/labels';
 import { runPage } from '../../copy/strings';
 import { chipValues } from '../../lib/chip-scale';
-import { dots } from '../../lib/format';
+import { count, dots } from '../../lib/format';
 import { durationText, easingName, suggestedEasing, triggerPhrase } from '../../lib/motion-view';
+import { variantsFor } from '../../lib/motion';
 import { usePrefersReducedMotion } from '../../lib/motion/reduced';
+import { useEntered } from '../../lib/motion/use-entered';
+import { Button } from '../Button';
 import { Pill } from '../Pill';
 import { Swatch } from '../Swatch';
 import { Tag } from '../Tag';
 import { ReplayButton } from './ReplayButton';
+import { FIRST_ROWS, revealIndex } from './show-all';
 import styles from './PatternList.module.css';
 
 const M = runPage.motion;
@@ -53,8 +58,10 @@ function Change({ property, from, to }: { property: string; from?: string; to?: 
 
 /** A staggered pattern plays this many chips at most (D-098). */
 const STAGGER_CHIPS = 6;
-/** A chip and its gap; the chips take at most 40% of a row, or the whole row once stacked. */
+/** A chip and its gap; the chips take at most 40% of a row, or once stacked the row beside the ReplayButton. */
 const CHIP_STEP = 64;
+/** The gap between the chips and the ReplayButton (`space-3`). */
+const REPLAY_GAP = 12;
 /** The ambient hold and fade a play ends with before it returns to rest (D-104). */
 const HOLD_MS = 500;
 const FADE_MS = 150;
@@ -64,11 +71,15 @@ const PLAY_CAP_MS = 12_000;
 /** rest: the scaled start, opacity floored; start: the true scaled start; end; out: fading; in: back at rest, faded in. */
 type Phase = 'rest' | 'start' | 'end' | 'snap' | 'out' | 'in';
 
-export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId }: { pattern: MotionPattern; doc: RunDocumentPartial; hrefFor?: (id: string) => string; onOpen?: (id: string) => void; captionId?: string }) {
+/** One pattern; `reveal` is its place in the stagger when Show all revealed it. */
+export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId, reveal }: { pattern: MotionPattern; doc: RunDocumentPartial; hrefFor?: (id: string) => string; onOpen?: (id: string) => void; captionId?: string; reveal?: number }) {
   const reduced = usePrefersReducedMotion();
   const row = useRef<HTMLLIElement>(null);
+  const entered = useEntered(row);
   const [phase, setPhase] = useState<Phase>('rest');
   const [width, setWidth] = useState(0);
+  const [replayWidth, setReplayWidth] = useState(0);
+  const replayRef = useRef<HTMLSpanElement>(null);
   // The auto-preview (D-093): the chip plays once when the row scrolls into view; Replay follows.
   const [previewed, setPreviewed] = useState(false);
   const playing = phase !== 'rest';
@@ -88,11 +99,17 @@ export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId }: { pa
   useEffect(() => {
     const el = row.current;
     if (!el) return;
-    const ro = new ResizeObserver(([e]) => e && setWidth(e.contentRect.width));
+    const ro = new ResizeObserver(([e]) => {
+      if (!e) return;
+      setWidth(e.contentRect.width);
+      setReplayWidth(replayRef.current?.getBoundingClientRect().width ?? 0);
+    });
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
-  const chips = p.stagger ? Math.max(1, Math.min(p.stagger.count, STAGGER_CHIPS, Math.floor(((width < 600 ? width : width * 0.4) + 8) / CHIP_STEP) || 1)) : 1;
+  // Stacked on a phone, the ReplayButton shares the chips' line, so the chips take what it leaves.
+  const room = width < 600 ? width - replayWidth - REPLAY_GAP : width * 0.4;
+  const chips = p.stagger ? Math.max(1, Math.min(p.stagger.count, STAGGER_CHIPS, Math.floor((room + 8) / CHIP_STEP) || 1)) : 1;
   const total = p.durationMs + p.delayMs + (p.stagger ? (chips - 1) * p.stagger.stepMs : 0);
   const play = () => {
     clear();
@@ -153,8 +170,8 @@ export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId }: { pa
         return { ...chipStyle(chipValues(p.start, true)), transition: previewed ? `opacity ${FADE_MS}ms linear` : 'none' };
     }
   };
-  return (
-    <li ref={row} className={styles.row} data-testid="pattern-row" data-previewed={previewed || reduced || undefined}>
+  const body = (
+    <>
       <div className={styles.main}>
         <div className={styles.head}>
           <Pill variant="soft">{motionKindLabels[p.kind]}</Pill>
@@ -197,21 +214,38 @@ export function PatternRow({ pattern: p, doc, hrefFor, onOpen, captionId }: { pa
             </span>
           ))}
         </span>
-        <span className={styles.replayButton} data-shown={previewed || reduced || undefined}>
+        <span ref={replayRef} className={styles.replayButton} data-shown={previewed || reduced || undefined}>
           <ReplayButton playing={playing} onToggle={toggle} captionId={captionId} />
         </span>
       </div>
-    </li>
+    </>
+  );
+  const attrs = { ref: row, className: styles.row, 'data-testid': 'pattern-row', 'data-previewed': previewed || reduced || undefined, 'data-playing': playing || undefined };
+  if (reveal === undefined) return <li {...attrs}>{body}</li>;
+  // A motion element of its own, not a wrapper, so the auto-preview and the chips' width observe the row itself.
+  return (
+    <motion.li {...attrs} style={{ transformOrigin: 'left center' }} data-move="extend" variants={variantsFor('extend', reduced)} custom={reveal} initial="hidden" animate={entered ? 'shown' : 'hidden'}>
+      {body}
+    </motion.li>
   );
 }
 
-/** A Card of PatternRows in the document's order. */
+/** A Card of PatternRows in the document's order: six, the rest behind Show all (D-113). Collapsing unmounts the hidden rows, which stops their play. */
 export function PatternList({ patterns, doc, hrefFor, onOpen, captionId }: { patterns: MotionPattern[]; doc: RunDocumentPartial; hrefFor?: (id: string) => string; onOpen?: (id: string) => void; captionId?: string }) {
+  const [all, setAll] = useState(false);
+  const shown = all ? patterns : patterns.slice(0, FIRST_ROWS);
   return (
-    <ul className={styles.list}>
-      {patterns.map((p) => (
-        <PatternRow key={p.id} pattern={p} doc={doc} hrefFor={hrefFor} onOpen={onOpen} captionId={captionId} />
-      ))}
-    </ul>
+    <>
+      <ul className={styles.list} data-testid="pattern-list">
+        {shown.map((p, i) => (
+          <PatternRow key={p.id} pattern={p} doc={doc} hrefFor={hrefFor} onOpen={onOpen} captionId={captionId} reveal={i < FIRST_ROWS ? undefined : revealIndex(i)} />
+        ))}
+      </ul>
+      {patterns.length > FIRST_ROWS ? (
+        <Button variant="ghost" className={styles.more} aria-expanded={all} onClick={() => setAll(!all)} data-testid="show-all">
+          {all ? runPage.showFewer : fill(M.showAllPatterns, { n: count(patterns.length) })}
+        </Button>
+      ) : null}
+    </>
   );
 }

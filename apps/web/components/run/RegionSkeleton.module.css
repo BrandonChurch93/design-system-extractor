@@ -85,6 +85,29 @@
   }
 }
 
+/* The Motion section, measured on the clean fixture at each breakpoint: the duration strip, one easing
+   card of the two drawn, and the keyframes and patterns cards with the gap between them; at 390 the
+   lists also hold the section caption's second line, which the skeleton's header does not have (D-113). */
+.motion {
+  --dse-motion-strip: 147px;
+  --dse-motion-easing: 424px;
+  --dse-motion-lists: 978px;
+}
+
+@media (max-width: 1023px) {
+  .motion {
+    --dse-motion-lists: 1059px;
+  }
+}
+
+@media (max-width: 640px) {
+  .motion {
+    --dse-motion-strip: 175px;
+    --dse-motion-easing: 374px;
+    --dse-motion-lists: 1550px;
+  }
+}
+
 /* The Radius and Shadow cards, measured on the clean fixture at each breakpoint (D-103, D-112). */
 .radiusCard {
   --dse-token-row: 274px;

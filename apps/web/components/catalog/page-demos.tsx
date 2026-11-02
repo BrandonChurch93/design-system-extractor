@@ -42,6 +42,7 @@ import { StatesStrip } from '../run/StatesStrip';
 import { TokenBody, tokenInfo } from '../run/TokenPopover';
 import { TokensSection } from '../run/TokensSection';
 import type { Demo } from './demos';
+import { longPatterns } from './long-patterns';
 import { cleanDoc, messyDoc, progressRun, sampleBase } from './sample-runs';
 import styles from './Catalog.module.css';
 
@@ -288,7 +289,10 @@ export const pageDemos: Demo[] = [
     name: 'PatternList and PatternRow',
     tokens: ['pill soft', 'code', 'caption', 'meta', 'tag', 'swatch mini', 'surface-tint', 'ink (block)', 'line-soft'],
     frameHeight: 1500,
-    states: () => [{ label: stateLabels.default, wide: true, node: <Card><PatternList patterns={motionDoc.motion?.patterns ?? []} doc={motionDoc} hrefFor={() => '#'} /></Card> }],
+    states: () => [
+      { label: stateLabels.default, wide: true, node: <Card><PatternList patterns={motionDoc.motion?.patterns ?? []} doc={motionDoc} hrefFor={() => '#'} /></Card> },
+      { label: 'Long list', wide: true, node: <Card><PatternList patterns={longPatterns} doc={motionDoc} hrefFor={() => '#'} /></Card> },
+    ],
   },
   {
     slug: 'replay-button',
