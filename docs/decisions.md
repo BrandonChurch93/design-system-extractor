@@ -1044,3 +1044,10 @@ Decision:
 - Catalog: `pattern-list` gains `Long list`, the first twelve patterns of `u5wb4o3to9` (modernsoftworks.com, P18). Their component and easing ids are left out because they resolve to nothing in the catalog sample. The drift demo's messy sample already holds 18 evidence rows. No seeded run has more than six patterns, so the Patterns e2e runs on the catalog and the Evidence e2e on `seedmessy0` (18 rows).
 Reasoning: the owner's request, applied the way D-104 already applies it to keyframes. The skeleton measurement keeps the rule that nothing below a region moves when it fills, now at the three widths every page is reviewed at.
 Affects: `docs/design/components.md`, `docs/design/copy.md`, `docs/design/pages.md`, `apps/web/copy/strings.ts`, `apps/web/components/run/PatternList.tsx`, `apps/web/components/run/DriftSection.tsx`, `apps/web/components/run/KeyframesList.tsx`, `apps/web/components/run/RegionSkeleton.tsx`, the catalog, `tests/e2e/lists.spec.ts`, `docs/traceability.md`.
+
+## D-114 · Inline lengths the server renders carry two decimals at most
+
+Date: 2026-11-02 · Context: the owner, testing on the dev server, saw a React hydration mismatch on the DurationStrip: the server wrote tick positions such as `left: 65.75860145844834px`, Chrome keeps six significant digits of an inline length (`65.7586px`), and in development React compares what the browser kept with the client's value. The tests run production builds, which do not report hydration mismatches, so no gate saw it. A scan of every main page at 1440, 820 and 390 on the dev server found no other mismatch.
+Decision: the DurationStrip rounds each tick position to two decimals, which stays within six significant digits for any strip under 10,000 px; the shift is under 0.005 px. A server-render test holds every position to two decimals.
+Reasoning: the console must stay clean in development as well as in production; two decimals are below a device pixel at any scale.
+Affects: `apps/web/components/run/DurationStrip.tsx`, `apps/web/test/duration-strip-ssr.test.ts`.

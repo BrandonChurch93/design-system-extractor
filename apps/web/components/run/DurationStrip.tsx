@@ -87,7 +87,8 @@ export function DurationStrip({ durations, doc, head }: { durations: Duration[];
                 </Tag>
               );
               return (
-                <li key={d.name} className={styles.at} style={{ left: `${xs[i]}px` }} data-testid="duration-tick">
+                // Two decimals: Chrome keeps six significant digits of an inline length, and hydration compares what it kept (D-114).
+                <li key={d.name} className={styles.at} style={{ left: `${Math.round(xs[i]! * 100) / 100}px` }} data-testid="duration-tick">
                   {t ? <TokenPopover info={t} trigger={(p) => tick(p)} /> : tick()}
                 </li>
               );

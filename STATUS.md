@@ -635,6 +635,7 @@ P15, the Definition of Done in `docs/plan.md`, all true at once on a fresh clone
 
 Mirror of the entries added to `docs/decisions.md`, newest first.
 
+- D-114 · Inline lengths the server renders carry two decimals at most: the duration ticks' hydration mismatch in development, fixed and held by a server-render test.
 - D-113 · Patterns and near-duplicates show six rows, then Show all: the shared count and `Show fewer`, revealed pattern rows as motion elements that preview as they enter, the Evidence rows' wipe, the Motion skeleton measured at 1440, 820 and 390, the catalog's long pattern list.
 - D-112 · Rulings from fixing the v1.3 review: loaded frames before any shot, the CSS sanitizer reads strings before comments, inert frames for documents stored before 1.3.0, the fit by border box, the durations axis to 2,000 ms with the Long list, the three-word heading context, Radius and Shadow in one column below desktop, the card's control strip, tap targets measured focused, a swatch reads any CSS color, messy-after keeps its contact page, the app's fonts self-hosted, the touch e2e scroll, QA's frame wait, the minimatch advisory.
 - D-111 · The build's P18 rulings: focusable means rendered; the hidden flag kept apart from tokens and checks and in clustering; the clean family's skip link; state rules written after the check and inert links; the touch cover link; card captions at the top and the toggle's surface track; the neutral state clears a selection; the event words; `clean-v1-2.json` and the references tests; the 56 px label rule; chips by row width; the Long list adopted by measurement; skeleton heights re-measured.
@@ -806,6 +807,7 @@ Keep this list current. It is the only hands-on work he will do.
 
 Newest first. One line per session start, one per gate passed, one per stop. Keep it short.
 
+- 2026-11-02 · Fix · the duration ticks' hydration mismatch the owner saw on the dev server (D-114); no other mismatch on any main page at three widths; check green.
 - 2026-11-02 · Build complete · v1.3 with the lists fix · nothing pushed.
 - 2026-11-02 · Gate passed · Fix · the lists · verify:all in replay on the clean tree at `f33e150` (4,011 s).
 - 2026-11-02 · Session started · Fix · the lists · read CLAUDE.md, STATUS, decisions (D-077, D-080, D-098, D-101 to D-112), partner-log, `prompts/v1-3-lists.md`, components, copy, pages, motion, drift (Evidence) · tree clean at `04e8e2a`.
