@@ -59,8 +59,6 @@
       "Bash(lighthouse:*)"
     ],
     "deny": [
-      "Bash(git push:*)",
-      "Bash(git remote add:*)",
       "Bash(gh pr:*)",
       "Bash(gh repo:*)",
       "Bash(sudo:*)",
